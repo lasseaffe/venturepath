@@ -39,3 +39,38 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local scripts & downloads
+download-playlist.js
+spotmate-download.js
+sort-spotmate-downloads.js
+free-download-playlist.py
+collect-fails.js
+restart-node-scripts.ps1
+downloads/
+debug_batch/
+debug_batch_2/
+debug_output/
+runlog.txt
+final_job_run.log
+
+# local docs & marketing PDFs
+*.pdf
+awesome-design-md/
+modern-ui-blueprint/
+claude-obsidian/
+features_rundown.md
+improvement_new_features.md
+improvement_suggestions.md
+HolyFlex_Summary_of_Operations.md
+README-download.md
+README-free-download.md
+"New Text Document.txt"
+"New Text Document (2).txt"
+
+# scripts dir (local utilities)
+scripts/
+
+# claude worktrees & local state
+.claude/worktrees/
+*.txt

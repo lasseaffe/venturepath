@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -v \"^$\")",
+      "Bash(node -e ' *)",
+      "Read(//c/Users/lasse/AppData/Local/Temp/claude/c--Users-lasse-Desktop-holyflex/bc038cd1-a938-4dc0-80b5-3363096b947b/tasks/**)",
+      "Read(//mnt/c/Users/lasse/Desktop/whatscooking/src/**)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Read(//c/Users/lasse/**)",
+      "Bash(ollama run *)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\lasse\\Desktop",
+      "C:\\Users\\lasse\\.config"
+    ]
+  }
+}
