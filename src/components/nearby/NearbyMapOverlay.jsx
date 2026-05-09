@@ -146,7 +146,7 @@ export default function NearbyMapOverlay({ anchor: defaultAnchor, onClose }) {
         {error && (
           <p className="text-xs text-center py-2" style={{ color: 'var(--status-alert)' }}>{error}</p>
         )}
-        {!loading && !error && results.length === 0 && (
+        {!loading && !error && results.length === 0 && anchor && (
           <p className="text-xs text-center py-2" style={{ color: 'var(--text-muted)' }}>No places found.</p>
         )}
         <div className="space-y-2">
