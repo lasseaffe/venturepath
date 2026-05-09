@@ -24,6 +24,7 @@ export function useNearbySearch(defaultAnchor = '') {
   const [inspireLabel, setInspireLabel] = useState(null);
 
   const geoCache = useRef({});
+  const inspiringRef = useRef(false);
 
   async function resolveGeo(name) {
     if (geoCache.current[name]) return geoCache.current[name];
@@ -54,10 +55,11 @@ export function useNearbySearch(defaultAnchor = '') {
   const mounted = useRef(false);
   useEffect(() => {
     if (!mounted.current) { mounted.current = true; if (!anchor.trim()) return; }
+    if (inspiringRef.current) return; // suppress during inspire
     setRaw([]);
     setInspireLabel(null);
     search();
-  }, [anchor, category]);
+  }, [anchor, category, search]);
 
   function setAnchor(val) {
     setAnchorRaw(val);
@@ -108,23 +110,24 @@ export function useNearbySearch(defaultAnchor = '') {
   }
 
   async function inspire() {
-    setLoading(true);
     setError(null);
     try {
       const prompt = `You are a local travel expert. The user is in "${anchor.trim()}". Suggest one OpenTripMap kinds string (comma-separated values only from: cultural, historic, foods, restaurants, cafe, bar, natural, parks, museums, theatres_and_entertainments, sport, architecture) and a short display label (max 3 words). Reply with valid JSON only, no markdown: {"kinds":"...","label":"..."}`;
       const text = await callInspireAI(prompt);
       const parsed = JSON.parse(text);
       if (!parsed.kinds) throw new Error('Bad AI response');
+      inspiringRef.current = true;
       setInspireLabel(parsed.label);
       setCategory(parsed.kinds);
       await search(parsed.kinds);
+      inspiringRef.current = false;
     } catch {
       const pick = FALLBACK_KINDS[Math.floor(Math.random() * FALLBACK_KINDS.length)];
+      inspiringRef.current = true;
       setInspireLabel(pick.label);
       setCategory(pick.kinds);
       await search(pick.kinds);
-    } finally {
-      setLoading(false);
+      inspiringRef.current = false;
     }
   }
 
