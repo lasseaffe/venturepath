@@ -15,7 +15,7 @@ export default function NearbyDrawer({ anchor: defaultAnchor, onSelectPlace }) {
     category, setCategory,
     sortBy, setSortBy,
     results, loading, error,
-    inspireLabel, inspire,
+    inspire,
   } = useNearbySearch(defaultAnchor);
 
   function toggleOpen() {
@@ -131,7 +131,7 @@ export default function NearbyDrawer({ anchor: defaultAnchor, onSelectPlace }) {
                 className="w-full py-2 rounded-lg text-xs font-semibold text-white transition-opacity"
                 style={{ background: 'var(--cta)', opacity: loading ? 0.6 : 1 }}
               >
-                {loading ? 'Searching…' : inspireLabel ? `✨ ${inspireLabel}` : '✨ Inspire me'}
+                {loading ? 'Searching…' : '✨ Inspire me'}
               </button>
 
               {/* Results */}
