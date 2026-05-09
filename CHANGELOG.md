@@ -1,5 +1,10 @@
 # VenturePath — CHANGELOG
 
+## [0.9.1] — 2026-05-10 — Environment Variable Documentation
+
+### Added
+- **`.env.example`** — Created with documented entries for all optional API keys: VITE_ORS_API_KEY, VITE_FSQ_API_KEY, VITE_OTM_API_KEY, VITE_ANTHROPIC_API_KEY. Each entry includes comment describing its purpose, fallback behavior if missing, and signup link where applicable.
+
 ## [0.9.0] — 2026-05-10 — Proximity Re-ranking for Stop Search
 
 ### Added
