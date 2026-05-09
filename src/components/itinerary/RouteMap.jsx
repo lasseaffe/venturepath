@@ -1,14 +1,16 @@
-import { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Polyline, Marker, Popup, useMap } from 'react-leaflet';
+import { useState, useEffect, useRef } from 'react';
+import { AnimatePresence } from 'framer-motion';
+import { MapContainer, TileLayer, Polyline, Marker, Popup, Circle, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { useTripStore } from '../../store/useTripStore';
+import StopEditor from '../trip/StopEditor';
+import { geocodeLocation } from '../../utils/geocodeEngine';
 
-// Fix Leaflet default icon path issue with Vite
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+  iconUrl:       'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+  shadowUrl:     'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
 
 const MODE_COLOR = {
@@ -19,29 +21,46 @@ const MODE_COLOR = {
 };
 const DEFAULT_COLOR = '#E67E22';
 
-// Static coordinate lookup for default Operation Patagonia legs
+const MODE_ICON = { flight: '✈', bus: '🚌', foot: '🥾', boat: '⛵' };
+
+// Static coordinates for the default Operation Patagonia legs
 const DEFAULT_COORDS = {
-  1: [-33.4569, -70.6483], // SCL (Santiago)
-  2: [-53.1638, -70.9171], // PUQ (Punta Arenas)
+  1: [-33.4569, -70.6483], // SCL — Santiago
+  2: [-53.1638, -70.9171], // PUQ — Punta Arenas
   3: [-51.0,    -72.9   ], // Trailhead Camp
   4: [-50.94,   -73.41  ], // Torres del Paine
   5: [-33.4569, -70.6483], // Back to SCL
 };
 
-function modeIcon(mode) {
-  return { flight: '✈', bus: '🚌', foot: '🥾', boat: '⛵' }[mode] ?? '📍';
+// Generate intermediate great-circle points for arced flight paths
+function arcPoints(from, to, steps = 24) {
+  const [lat1, lng1] = from.map(d => d * Math.PI / 180);
+  const [lat2, lng2] = to.map(d => d * Math.PI / 180);
+  const pts = [];
+  for (let i = 0; i <= steps; i++) {
+    const f = i / steps;
+    const A = Math.sin((1 - f) * 1) / Math.sin(1); // simplified — use linear blend
+    const lat = lat1 + (lat2 - lat1) * f;
+    const lng = lng1 + (lng2 - lng1) * f;
+    // Lift the midpoint to create a visible arc
+    const lift = Math.sin(f * Math.PI) * 0.08 * Math.abs(lat2 - lat1 + (lng2 - lng1));
+    pts.push([(lat + lift) * 180 / Math.PI, lng * 180 / Math.PI]);
+  }
+  return pts;
 }
 
-function makePin(num, color) {
+function makePin(num, color, isActive) {
   return L.divIcon({
     className: '',
     iconAnchor: [18, 36],
-    popupAnchor: [0, -36],
+    popupAnchor: [0, -40],
     html: `
       <div style="
         width:36px;height:36px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);
         background:${color};display:flex;align-items:center;justify-content:center;
-        box-shadow:0 2px 8px rgba(0,0,0,0.5);
+        box-shadow:0 2px 8px rgba(0,0,0,${isActive ? 0.9 : 0.5});
+        border:${isActive ? '2px solid #fff' : 'none'};
+        transition:all 0.2s;
       ">
         <span style="transform:rotate(45deg);font-size:13px;font-weight:700;color:#0d1b2a;">${num}</span>
       </div>`,
@@ -56,22 +75,77 @@ function MapFlyTo({ coords }) {
   return null;
 }
 
-export default function RouteMap({ className = '' }) {
-  const { legs } = useTripStore();
-  const [selectedLegId, setSelectedLegId] = useState(null);
+function FitBounds({ coords }) {
+  const map = useMap();
+  const fitted = useRef(false);
+  useEffect(() => {
+    if (!fitted.current && coords.length >= 2) {
+      map.fitBounds(coords, { padding: [40, 40] });
+      fitted.current = true;
+    }
+  }, [coords, map]);
+  return null;
+}
 
-  const coords = legs.map(l => l.coords ?? DEFAULT_COORDS[l.id] ?? null).filter(Boolean);
+function FlyToDestination({ destination }) {
+  const map = useMap();
+  const lastDestination = useRef(null);
+  useEffect(() => {
+    if (!destination || destination === lastDestination.current) return;
+    lastDestination.current = destination;
+    geocodeLocation(destination).then(coords => {
+      if (coords) map.flyTo([coords.lat, coords.lng], 8, { duration: 1.5 });
+    });
+  }, [destination, map]);
+  return null;
+}
+
+export default function RouteMap({ className = '' }) {
+  const { legs, trip } = useTripStore();
+  const [selectedLegId, setSelectedLegId] = useState(null);
+  const [editorOpen, setEditorOpen] = useState(false);
+  const [editingLeg, setEditingLeg] = useState(null); // null = add mode
+
+  function openAdd() { setEditingLeg(null); setEditorOpen(true); }
+  function openEdit(leg) { setEditingLeg(leg); setEditorOpen(true); }
+
+  const resolvedCoords = legs.map(l => l.coords ?? DEFAULT_COORDS[l.id] ?? null);
+
+  // Build per-leg segments: each segment connects leg[i] → leg[i+1]
+  const segments = [];
+  for (let i = 0; i < legs.length - 1; i++) {
+    const from = resolvedCoords[i];
+    const to   = resolvedCoords[i + 1];
+    if (!from || !to) continue;
+    const leg = legs[i];
+    const color = MODE_COLOR[leg.mode] ?? DEFAULT_COLOR;
+    const pending = leg.status !== 'confirmed';
+    const positions = leg.mode === 'flight' ? arcPoints(from, to) : [from, to];
+    segments.push({ leg, positions, color, pending });
+  }
+
+  const validCoords = resolvedCoords.filter(Boolean);
+  const center = validCoords.length ? validCoords[0] : [-51, -72];
 
   const selectedCoords = (() => {
     const leg = legs.find(l => l.id === selectedLegId);
     if (!leg) return null;
-    return leg.coords ?? DEFAULT_COORDS[leg.id] ?? null;
+    const idx = legs.indexOf(leg);
+    return resolvedCoords[idx] ?? null;
   })();
 
-  const center = coords.length ? coords[0] : [-51, -72];
-  const bounds = coords.length >= 2 ? coords : null;
-
   return (
+    <>
+    <AnimatePresence>
+      {editorOpen && (
+        <StopEditor
+          leg={editingLeg}
+          defaultFrom={legs.length ? legs[legs.length - 1].to : ''}
+          onClose={() => setEditorOpen(false)}
+        />
+      )}
+    </AnimatePresence>
+
     <div className={`tactical-panel flex overflow-hidden ${className}`} style={{ height: 460 }}>
       {/* Sidebar */}
       <div className="hidden md:block w-44 shrink-0 overflow-y-auto border-r border-[#2a2f36] p-2 space-y-1">
@@ -82,7 +156,7 @@ export default function RouteMap({ className = '' }) {
           return (
             <button
               key={l.id}
-              onClick={() => setSelectedLegId(l.id)}
+              onClick={() => { setSelectedLegId(l.id); openEdit(l); }}
               className={`w-full text-left flex items-start gap-2 p-2 rounded transition-colors text-xs font-mono ${
                 active
                   ? 'bg-[#E67E22]/10 border border-[#E67E22]/30'
@@ -97,21 +171,55 @@ export default function RouteMap({ className = '' }) {
               </span>
               <div className="min-w-0">
                 <div className="text-slate-200 truncate">{l.to}</div>
-                <div className="text-slate-500 text-[10px] mt-0.5">{modeIcon(l.mode)} {l.durationH}h</div>
+                <div className="text-slate-500 text-[10px] mt-0.5">
+                  {MODE_ICON[l.mode] ?? '📍'} {l.durationH}h
+                </div>
+                <div
+                  className="text-[9px] mt-0.5 font-mono"
+                  style={{ color: l.status === 'confirmed' ? '#64dc82' : '#ffc850' }}
+                >
+                  {l.status.toUpperCase()}
+                </div>
               </div>
             </button>
           );
         })}
+
+        {/* Add stop */}
+        <button
+          onClick={openAdd}
+          className="w-full mt-1 py-1.5 text-xs font-mono rounded transition-colors"
+          style={{ color: 'var(--accent)', border: '1px dashed var(--accent)', background: 'transparent' }}
+        >
+          + Add Stop
+        </button>
+
+        {/* Legend */}
+        <div className="pt-3 border-t border-[#2a2f36] space-y-1">
+          <div className="label-tag text-[10px] px-1 mb-1">MODE</div>
+          {Object.entries(MODE_COLOR).map(([mode, color]) => (
+            <div key={mode} className="flex items-center gap-1.5 px-1 text-[10px] font-mono text-slate-400">
+              <span className="w-3 h-0.5 rounded" style={{ background: color, display: 'inline-block' }} />
+              {mode}
+            </div>
+          ))}
+          <div className="pt-1 border-t border-[#2a2f36] space-y-0.5">
+            <div className="flex items-center gap-1.5 px-1 text-[10px] font-mono text-slate-400">
+              <span className="w-3 h-px" style={{ background: '#aaa', display: 'inline-block' }} /> confirmed
+            </div>
+            <div className="flex items-center gap-1.5 px-1 text-[10px] font-mono text-slate-400">
+              <span className="w-3" style={{ display: 'inline-block', borderTop: '1px dashed #aaa' }} /> pending
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Map */}
-      <div className="flex-1 relative">
+      <div className="flex-1 relative" style={{ marginRight: editorOpen ? 320 : 0, transition: 'margin 0.3s ease', minWidth: 0 }}>
         <MapContainer
           center={center}
           zoom={5}
           style={{ height: '100%', width: '100%', background: '#0d1b2a' }}
-          bounds={bounds}
-          boundsOptions={{ padding: [40, 40] }}
         >
           <TileLayer
             url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
@@ -119,35 +227,50 @@ export default function RouteMap({ className = '' }) {
             maxZoom={20}
           />
 
+          {validCoords.length >= 2
+            ? <FitBounds coords={validCoords} />
+            : <FlyToDestination destination={trip?.destination} />
+          }
           {selectedCoords && <MapFlyTo coords={selectedCoords} />}
 
-          <Polyline
-            positions={coords}
-            pathOptions={{ color: '#E67E22', weight: 2, dashArray: '6 4', opacity: 0.75 }}
-          />
+          {/* Per-leg colored segments */}
+          {segments.map(({ leg, positions, color, pending }) => (
+            <Polyline
+              key={leg.id}
+              positions={positions}
+              pathOptions={{
+                color,
+                weight: selectedLegId === leg.id ? 3 : 2,
+                dashArray: pending ? '6 5' : null,
+                opacity: selectedLegId && selectedLegId !== leg.id ? 0.35 : 0.85,
+              }}
+            />
+          ))}
 
-          {legs.map(l => {
-            const pos = l.coords ?? DEFAULT_COORDS[l.id];
+          {/* Markers */}
+          {legs.map((l, i) => {
+            const pos = resolvedCoords[i];
             if (!pos) return null;
             const color = MODE_COLOR[l.mode] ?? DEFAULT_COLOR;
+            const isActive = l.id === selectedLegId;
             return (
               <Marker
                 key={l.id}
                 position={pos}
-                icon={makePin(l.id, color)}
+                icon={makePin(l.id, color, isActive)}
                 eventHandlers={{ click: () => setSelectedLegId(l.id) }}
               >
                 <Popup>
-                  <div style={{ fontFamily: 'monospace', fontSize: 12, minWidth: 140 }}>
+                  <div style={{ fontFamily: 'monospace', fontSize: 12, minWidth: 150 }}>
                     <div style={{ fontWeight: 700, color: '#E67E22', marginBottom: 4 }}>
-                      {modeIcon(l.mode)} {l.to}
+                      {MODE_ICON[l.mode] ?? '📍'} {l.to}
                     </div>
                     <div style={{ color: '#ccc' }}>{l.from} → {l.to}</div>
                     <div style={{ color: '#888', marginTop: 4 }}>
-                      {l.durationH}h · {l.distanceKm} km
+                      {l.durationH}h · {l.distanceKm.toLocaleString()} km
                     </div>
                     <div style={{
-                      marginTop: 4,
+                      marginTop: 6,
                       display: 'inline-block',
                       padding: '2px 6px',
                       borderRadius: 3,
@@ -162,8 +285,18 @@ export default function RouteMap({ className = '' }) {
               </Marker>
             );
           })}
+
+          {/* Pulse ring on selected marker */}
+          {selectedCoords && (
+            <Circle
+              center={selectedCoords}
+              radius={35000}
+              pathOptions={{ color: '#E67E22', fillColor: '#E67E22', fillOpacity: 0.08, weight: 1, opacity: 0.5 }}
+            />
+          )}
         </MapContainer>
       </div>
     </div>
+    </>
   );
 }
