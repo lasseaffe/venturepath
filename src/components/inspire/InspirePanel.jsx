@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useInspireData, matchCity } from '../../hooks/useInspireData';
+import ReportButton from './ReportButton.jsx';
 
 const CATEGORY_META = {
   landmark:      { label: 'LANDMARK',      dot: '#E67E22' },
@@ -69,10 +70,17 @@ export default function InspirePanel({ open, dayLabel, onClose, onAddBlock }) {
               Inspire Me
             </div>
             <div className="text-[11px] font-mono font-bold text-white tracking-wider mt-0.5 uppercase">
-              {city ? `${city.name}, ${city.country}` : 'Loading…'}
+              {loading ? 'Loading…' : city ? `${city.name}, ${city.country}` : dayLabel || 'Explore'}
             </div>
           </div>
           <div className="flex items-center gap-2">
+            {city && (
+              <ReportButton
+                cityId={city.id}
+                cityName={city.name}
+                country={city.country}
+              />
+            )}
             <button
               onClick={shuffleCity}
               title="Try another destination"
@@ -118,14 +126,42 @@ export default function InspirePanel({ open, dayLabel, onClose, onAddBlock }) {
           )}
 
           {!loading && !error && !city && (
-            <div className="flex flex-col items-center justify-center py-20 gap-3 px-4">
-              <div className="text-2xl opacity-30">✦</div>
-              <div className="text-[10px] font-mono text-slate-600 tracking-widest text-center">
-                NO DESTINATION DATA
+            <div className="flex flex-col gap-0">
+              <div className="flex flex-col items-center py-10 gap-3 px-4">
+                <div className="text-2xl opacity-30">✦</div>
+                <div className="text-[10px] font-mono text-slate-500 tracking-widest text-center">
+                  NO DATA FOR THIS DESTINATION
+                </div>
+                <div className="text-[9px] font-mono text-slate-600 text-center leading-relaxed max-w-[240px]">
+                  {dayLabel
+                    ? `"${dayLabel}" isn't in our database yet. Browse curated destinations below or shuffle for inspiration.`
+                    : 'Select a city below to explore local intel.'}
+                </div>
+                <button
+                  onClick={shuffleCity}
+                  className="mt-1 text-[9px] font-mono px-3 py-1.5 rounded border border-[#E67E22]/40 text-[#E67E22] hover:bg-[#E67E22]/10 transition-colors tracking-widest"
+                >
+                  ↺ INSPIRE ME ANYWAY
+                </button>
               </div>
-              <div className="text-[9px] font-mono text-slate-700 text-center leading-relaxed">
-                Add a destination to your day label (e.g. "Day 1 — Tokyo") to get local intel.
-              </div>
+              {cities.length > 0 && (
+                <div className="px-4 pb-4">
+                  <div className="text-[8px] font-mono text-slate-600 tracking-widest mb-2 uppercase">
+                    Browse destinations
+                  </div>
+                  <div className="flex gap-1.5 flex-wrap">
+                    {cities.map(c => (
+                      <button
+                        key={c.id}
+                        onClick={() => setSelectedCity(c)}
+                        className="text-[8px] font-mono px-2 py-1 rounded border border-[#1e2328] text-[#4b5563] hover:border-[#E67E22]/50 hover:text-[#E67E22] transition-colors tracking-widest uppercase"
+                      >
+                        {c.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -218,12 +254,21 @@ export default function InspirePanel({ open, dayLabel, onClose, onAddBlock }) {
                             <span className="text-[11px] font-mono font-bold text-white truncate">
                               {poi.name}
                             </span>
-                            <span
-                              className="text-[7px] font-mono tracking-widest shrink-0 px-1.5 py-0.5 rounded"
-                              style={{ background: `${meta.dot}22`, color: meta.dot, border: `1px solid ${meta.dot}44` }}
-                            >
-                              {meta.label}
-                            </span>
+                            <div className="flex items-center gap-1.5 shrink-0">
+                              <span
+                                className="text-[7px] font-mono tracking-widest px-1.5 py-0.5 rounded"
+                                style={{ background: `${meta.dot}22`, color: meta.dot, border: `1px solid ${meta.dot}44` }}
+                              >
+                                {meta.label}
+                              </span>
+                              <ReportButton
+                                cityId={city.id}
+                                cityName={city.name}
+                                country={city.country}
+                                poiId={poi.id}
+                                small
+                              />
+                            </div>
                           </div>
                           <p className="text-[10px] mt-1 leading-relaxed" style={{ color: '#4b5563' }}>
                             {poi.description}
