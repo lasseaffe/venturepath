@@ -4,7 +4,7 @@
  * Returns array of issue objects (without id/reportedAt — queue.js adds those).
  */
 
-const NON_ASCII_RE = /[^ -]/g;
+const NON_ASCII_RE = /[^\x00-\x7F]/g;
 const GENERIC_DESC_RE = /^A notable (landmark|food|activity|hidden_gem|place) in .+\.$/;
 
 export function detectIssues(cityObj) {
@@ -38,17 +38,20 @@ export function detectIssues(cityObj) {
 
   // Per-POI checks
   for (const poi of cityObj.pois) {
-    // Non-English description (>25% non-ASCII chars)
-    const nonAscii = (poi.description.match(NON_ASCII_RE) ?? []).length;
-    const ratio = nonAscii / Math.max(poi.description.length, 1);
-    if (ratio > 0.25) {
+    // Non-English description: strip the POI name itself before scoring so local
+    // spellings (Háskóli Íslands, Schloss, Château…) don't falsely trigger.
+    // Flag only when >55% of the remaining body text is non-ASCII.
+    const bodyText = poi.description.replace(poi.name, '').trim();
+    const nonAscii = (bodyText.match(NON_ASCII_RE) ?? []).length;
+    const ratio = nonAscii / Math.max(bodyText.length, 1);
+    if (ratio > 0.55) {
       issues.push({
         cityId:   cityObj.id,
         cityName: cityObj.name,
         country:  cityObj.country,
         type:     'wrong_language',
         poiId:    poi.id,
-        detail:   `Description appears non-English (${Math.round(ratio * 100)}% non-ASCII): "${poi.description.slice(0, 80)}"`,
+        detail:   `Description body appears non-English (${Math.round(ratio * 100)}% non-ASCII): "${poi.description.slice(0, 80)}"`,
         source:   'auto_detect',
       });
     }
