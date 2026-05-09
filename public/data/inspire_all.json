@@ -3164,6 +3164,2900 @@
           "notes": null
         }
       ]
+    },
+    {
+      "id": "copenhagen",
+      "name": "Copenhagen",
+      "country": "Denmark",
+      "continent": "Europe",
+      "tags": [
+        "arts",
+        "travel"
+      ],
+      "description": "Copenhagen is the capital and most populous city of both the country of Denmark and the wider Kingdom of Denmark, with a population of 667,000 people in the municipality and 1.4 million in the urban area. The city is situated mainly on the island of Zealand (Sjælland), with a smaller part on the island of Amager. Copenhagen is separated from Malmö, Sweden, by the Øresund strait. The Øresund Bridge connects the two cities by rail and road.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/2018_-_Christiansborg_from_the_Marble_Bridge.jpg/3840px-2018_-_Christiansborg_from_the_Marble_Bridge.jpg",
+      "pois": [
+        {
+          "id": "activity-cirkusbygningen",
+          "name": "Cirkusbygningen",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Circus Building (Danish: Cirkusbygningen) on Axel Torv in Copenhagen, Denmark. is a circular building completed in 1886 to serve as a venue for circus performances. The last circus to use the buil",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.wallmans.dk/dk/Default.aspx"
+        },
+        {
+          "id": "activity-dagmar",
+          "name": "Dagmar",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Dagmar Teatret er en af de ældste nuværende biografer i København.Dagmarteatrets teaterbygning samme sted blev revet ned i 1937 og erstattet af det nuværende Dagmarhus. Biografen fungerede under 2. ve",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://www.nfbio.dk/dagmar;http://www.dagmar.dk"
+        },
+        {
+          "id": "activity-dagmar-theatre",
+          "name": "Dagmar Theatre",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Dagmarteatret er et nu nedlagt københavnsk teater opkaldt efter kejserinde Dagmar.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-landsoldaten-med-den-lille-hornbl-ser",
+          "name": "Landsoldaten med den lille hornblæser",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Landsoldaten med den lille hornblæser er en statue af bronze på fundament af granit, som blev rejst i 1899 som et monument over de Slesvigske krige. Den står ved H.C. Andersens Boulevard, ikke langt f",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-palads",
+          "name": "Palads",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Palads Teatret (the Palads Cinema), also known simply as the Palads, is a cinema operated by Nordisk Film in Copenhagen, Denmark. It offers a wide selection of films in its 17 auditoriums, more than i",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://www.nfbio.dk/biografer/palads;http://www.nfbio.dk/biografer/palads"
+        },
+        {
+          "id": "activity-palads-biograferne",
+          "name": "Palads Biograferne",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Palads Teatret (the Palads Cinema), also known simply as the Palads, is a cinema operated by Nordisk Film in Copenhagen, Denmark. It offers a wide selection of films in its 17 auditoriums, more than i",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.nfbio.dk/biografer/palads"
+        },
+        {
+          "id": "activity-pantomimeteatret",
+          "name": "Pantomimeteatret",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Pantomime Theatre (Danish: Pantomimeteateret) is an open-air theatre located in the Tivoli Gardens in Copenhagen, Denmark. As indicated by the name, it is primarily used for pantomime theatre in t",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.skuespilhus.dk/"
+        },
+        {
+          "id": "activity-dragon-fountain",
+          "name": "Dragon Fountain",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Dragon Fountain is a fountain located in the City Hall Square in Copenhagen, Denmark. It was designed by Joakim Skovgaard in collaboration with Thorvald Bindesbøll and features a bull in combat wi",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-assault-on-copenhagen",
+          "name": "Assault on Copenhagen",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The Battle of Copenhagen also known as the Assault on Copenhagen on 11 February 1659 was a major battle during the Second Northern War, taking place during the siege of Copenhagen by the Swedish army.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-vesterport",
+          "name": "Vesterport",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Vesterport var en af Københavns fire byporte, beliggende på det nuværende Rådhuspladsen. De tre andre byporte til København var Østerport, Nørreport og Amagerport.Vesterport blev opført i 1583 og sene",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-liberty-column",
+          "name": "Liberty Column",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Liberty Memorial (Danish: Frihedsstøtten), located in front of Central Station in Copenhagen, Denmark, is a 20 meter tall obelisque erected in memory of the peasant reforms in 1788 which led to th",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.kulturarv.dk/1001fortaellinger/da_DK/frihedsstoetten-vesterbrogade-koebenhavn"
+        },
+        {
+          "id": "activity-the-lure-players",
+          "name": "The Lure Players",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Lur Blowers (Danish: Lurblæserne) is a monument located next to City Hall in Copenhagen, Denmark, consisting of a bronze sculpture of two lur players mounted on top of a tall terracotta column. Th",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-caritas-well",
+          "name": "Caritas Well",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Caritas Well (Danish: Caritasbrønden), also known as the Caritas Fountain (Danish: Caritasspringvandet), is the oldest fountain in Copenhagen, Denmark. It was built in 1608 by Christian IV and is ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-georg-zo-ga",
+          "name": "Georg Zoëga",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Statue of Georg Zoëga is a statue of the Danish archeologist Georg Zoëga located in the garden of the Ny Carlsberg Glyptotek, facing Tietgensgade, in Copenhagen, Denmark. It was created by Ludvig ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-louis-tussaud-s-wax-museum",
+          "name": "Louis Tussaud's Wax Museum",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Louis Tussaud's Wax Museum var et museum med voksfigurer i København ved siden af Tivoli.Museet blev oprettet i det tidligere kunstindustrimuseum i 1974 som en del af en mindre britisk kæde grundlagt ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-h-c-andersen-slottet",
+          "name": "H.C. Andersen Slottet",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "H.C. Andersen Slottet (også Tivolislottet) er i dag navnet på den bygning, der ligger på H.C. Andersens Boulevard overfor Københavns Rådhus på hjørnet af Tivoli. Tivoli erhvervede den i 1978 og gav de",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-museum-of-copenhagen",
+          "name": "Museum of Copenhagen",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Museum of Copenhagen (Danish: Københavns Bymuseum) is the official museum of Copenhagen, Denmark, documenting the city's history from the 12th century to the present.The Museum of Copenhagen was f",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://cphmuseum.kk.dk/;https://cphmuseum.kk.dk"
+        },
+        {
+          "id": "activity-tycho-brahe-planetarium",
+          "name": "Tycho Brahe Planetarium",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Tycho Brahe Planetarium is located at the southern end of the lake Skt. Jørgens Sø in Copenhagen, Denmark. It was designed by MAA Knud Munk (1936-2016) and opened on November 1, 1989. It is named ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.tycho.dk;http://planetariet.dk/"
+        }
+      ]
+    },
+    {
+      "id": "prague",
+      "name": "Prague",
+      "country": "Czech Republic",
+      "continent": "Europe",
+      "tags": [
+        "historic",
+        "travel"
+      ],
+      "description": "Prague is the capital and largest city of the Czech Republic and the historical capital of Bohemia. Located on the Vltava River, the city has a population of about 1.4 million, making it the twelfth-largest city in the European Union. Its metropolitan area is home to approximately 2.3 million people.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/a/a7/Prague_%286365119737%29.jpg",
+      "pois": [
+        {
+          "id": "activity-jan-hus",
+          "name": "Jan Hus",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Jan Hus Memorial stands at one end of Old Town Square, Prague in the Czech Republic. The huge monument depicts victorious Hussite warriors and Protestants who were forced into exile 200 years afte",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-jan-hus-memorial",
+          "name": "Jan Hus Memorial",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Jan Hus Memorial stands at one end of Old Town Square, Prague in the Czech Republic. The huge monument depicts victorious Hussite warriors and Protestants who were forced into exile 200 years afte",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-old-town-square",
+          "name": "Old Town Square",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Old Town Square (Czech: Staroměstské náměstí [ˈstaroˌmɲɛstskɛː ˈnaːmɲɛsciː] or colloquially Staromák [ˈstaromaːk] (listen)) is a historic square in the Old Town quarter of Prague, the capital of the C",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-national-gallery-prague",
+          "name": "National Gallery Prague",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The National Gallery Prague (Czech: Národní galerie Praha, NGP), formerly the National Gallery in Prague (Národní galerie v Praze), is a state-owned art gallery in Prague, which manages the largest co",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://www.ngprague.cz/en;https://www.ngprague.cz/"
+        },
+        {
+          "id": "activity-the-city-gallery-prague",
+          "name": "The City Gallery Prague",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Galerie hlavního města Prahy je česká kulturní - galerijní, vzdělávací a muzeální instituce. Založena byla 1. května 1963. Mezi její hlavní poslání patří v prvé řadě sbírková činnost v oblasti českého",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://www.ghmp.cz/"
+        },
+        {
+          "id": "activity-maria-column",
+          "name": "Maria column",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Marian column of Prague is a religious monument consisting of a column topped with a statue of the Virgin Mary, located in the city's Old Town Square. The original column was erected in 1650, shor",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://www.marianskysloup.cz/"
+        },
+        {
+          "id": "activity-virgin-mary",
+          "name": "Virgin Mary",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Marian column of Prague is a religious monument consisting of a column topped with a statue of the Virgin Mary, located in the city's Old Town Square. The original column was erected in 1650, shor",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-stone-bell-house",
+          "name": "Stone Bell House",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Stone Bell House is located at the Old Town Square in Prague. It is located next to the Kinský Palace, on the corner of Old Town Square and Týnská street.The house is named after the stone bell em",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-historic-centre-of-prague",
+          "name": "Historic Centre of Prague",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "プラハ歴史地区（プラハれきしちく）はチェコ、プラハにあるユネスコ世界遺産の日本における呼称である。1992年に登録された。プラハ市街中心部、ヴルタヴァ川の東岸に位置する旧市街から南の新市街まで、西岸のフラッチャニ地区およびマラー・ストラナ地区、計866ha が登録対象地域となっており、11世紀から18世紀にかけてのさまざまな時代様式の建築物が残る。プラハ城 聖ヴィート大聖堂 聖イジー聖堂 (St.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-saint-john-of-nepomuk",
+          "name": "Saint John of Nepomuk",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Svatý Jan Nepomucký jako almužník je socha Ferdinanda Maxmiliána Brokoffa asi z roku 1725, která stojí před jižním průčelím kostela svatého Ducha v Praze spolu s krucifixem z roku 1888.Podstavec sochy",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-franz-kafka",
+          "name": "Franz Kafka",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "A statue of Franz Kafka by artist Jaroslav Róna was installed on Vězeňská street in the Jewish Quarter of Prague, Czech Republic in December 2003. It is situated near the Spanish Synagogue. It depicts",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-rabbi-loew",
+          "name": "Rabbi Loew",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The statue of Judah Loew ben Bezalel is an outdoor sculpture by Ladislav Šaloun, installed at New City Hall in Prague, Czech Republic.Media related to Rabbi Löw by Ladislav Šaloun at Wikimedia Commons",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-old-town-city-hall-tower",
+          "name": "Old Town City Hall Tower",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Old Town Hall in Prague, the capital of the Czech Republic, is one of the city's most visited monuments. It is located in Old Town Square.In 1338 the councillors of the Old Town bought a large pat",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-old-town-city-hall",
+          "name": "Old Town City Hall",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Old Town Hall in Prague, the capital of the Czech Republic, is one of the city's most visited monuments. It is located in Old Town Square.In 1338 the councillors of the Old Town bought a large pat",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-prague-city-tourism",
+          "name": "Prague City Tourism",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Galerie hlavního města Prahy je česká kulturní - galerijní, vzdělávací a muzeální instituce. Založena byla 1. května 1963. Mezi její hlavní poslání patří v prvé řadě sbírková činnost v oblasti českého",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://www.ghmp.cz/;https://www.prague.eu/"
+        },
+        {
+          "id": "activity-city-of-prague-museum-house-at-the-golden-ring",
+          "name": "City of Prague Museum - House at the Golden Ring",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The City of Prague Museum is located in Prague, Czech Republic. Langweil's Model of Prague is exhibited in the main building of the museum.Museum buildings include: Main Building, Podskalí Custom Hous",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.muzeumprahy.cz/;http://www.muzeumprahy.cz"
+        },
+        {
+          "id": "activity-sex-machines-museum",
+          "name": "Sex Machines Museum",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Sex Machines Museum (abbreviated SMM) is a sex museum in Prague, Czech Republic, which has a collection of sex devices. Established in 2002, it is located near the Old Town Square. The official websit",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.sexmachinesmuseum.com;http://www.sexmachinesmuseum.com/en_page.html"
+        },
+        {
+          "id": "food-al-minuto",
+          "name": "Al Minuto",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Dům U Minuty je dům čp. 3 na pražském Starém Městě v Praze 1, na Staroměstském náměstí č. 2, mezi Staroměstskou radnicí a domem U Zlatého rohu. Je chráněn jako kulturní památka České republiky.",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "id": "rome",
+      "name": "Rome",
+      "country": "Italy",
+      "continent": "Europe",
+      "tags": [
+        "port city",
+        "culture",
+        "travel"
+      ],
+      "description": "Rome is the capital city and most populated comune (municipality) of Italy. It is also the administrative centre of the Lazio region and of the Metropolitan City of Rome. A special comune named Roma Capitale with a population of 2.7 million in an area of 1,287.36 km2 (497.1 mi2), Rome is the third most populous city in the European Union by population within city limits. The Metropolitan City of Rome Capital, with a population of 4.2 million, is the most populous metropolitan city in Italy. Its metropolitan area is the third-most populous within Italy. Rome is located in the central-western po",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/7/7e/Trevi_Fountain%2C_Rome%2C_Italy_2_-_May_2007.jpg",
+      "pois": [
+        {
+          "id": "activity-historical-museum-of-infantry",
+          "name": "Historical museum of infantry",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Il museo storico della Fanteria è sito in piazza Santa Croce di Gerusalemme 9 tra il museo storico dei granatieri di Sardegna ed il museo nazionale degli strumenti musicali, nel rione Esquilino a Roma",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-st-bibiana",
+          "name": "St Bibiana",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Saint Bibiana is a sculpture by the Italian artist Gian Lorenzo Bernini. It sits in the high altar of the church of Santa Bibiana in Rome. Bernini received his first payment for the work in 1624, and ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-teatro-ambra-jovinelli",
+          "name": "Teatro Ambra Jovinelli",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Teatro Ambra Jovinelli (literally \"Ambra Jovinelli Theater\"), formerly known just as Teatro Jovinelli, is a theatre located in Rome, Italy.It was founded by the theater organizer Giuseppe Jovinell",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.ambrajovinelli.org;https://www.ambrajovinelli.org/"
+        },
+        {
+          "id": "activity-museo-storico-dei-granatieri-di-sardegna",
+          "name": "Museo storico dei granatieri di Sardegna",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Il Museo storico dei Granatieri di Sardegna si trova in piazza Santa Croce in Gerusalemme 7 a Roma.L'idea di raccogliere tutti i reperti storici dei granatieri di Sardegna venne nel 1899 al comandante",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.esercito.difesa.it/Comunicazione/Musei/Granatieri/Pagine/default.aspx"
+        },
+        {
+          "id": "activity-museo-storico-della-liberazione",
+          "name": "Museo Storico della Liberazione",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Museum of the Liberation of Rome (Italian: Museo storico della Liberazione - Roma) is located in an apartment building at Via Tasso 145, Rome, close to the basilica of St. John Lateran. It records",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.viatasso.eu/"
+        },
+        {
+          "id": "activity-amphitheatre-castrense",
+          "name": "Amphitheatre Castrense",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Amphitheatrum Castrense is a Roman amphitheatre in Rome, next to the church of Santa Croce in Gerusalemme. Both the Amphiteatrum and the Circus Varianus were part of the palatial villa known as th",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-museo-nazionale-degli-strumenti-musicali",
+          "name": "Museo Nazionale degli Strumenti Musicali",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The National Museum of Musical Instruments is situated in the Palazzina Samoggia in Rome. The museum, owned by the MIBACT since December 2014 is one of 43 museums pertaining to the Polo museale del La",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.museostrumentimusicali.beniculturali.it;http://www.museostrumentimusicali.it/"
+        },
+        {
+          "id": "activity-chiostro-di-san-giovanni-in-laterano",
+          "name": "Chiostro di San Giovanni in Laterano",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Cathedral of the Most Holy Savior and of Saints John the Baptist and John the Evangelist in the Lateran (Italian: Santissimo Salvatore e Santi Giovanni Battista ed Evangelista in Laterano), also k",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.vatican.va/various/basiliche/san_giovanni/index_it.htm"
+        },
+        {
+          "id": "food-trattoria-pizzeria-porta-maggiore",
+          "name": "Trattoria Pizzeria Porta Maggiore",
+          "category": "food",
+          "icon": "🍽",
+          "description": "The Porta Maggiore (\"Larger Gate\"), or Porta Prenestina, is one of the eastern gates in the ancient but well-preserved 3rd-century Aurelian Walls of Rome.Through the gate ran two ancient roads: the Vi",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "http://trattoriapizzeriaportamaggiore.com"
+        },
+        {
+          "id": "landmark-tempio-di-minerva-medica",
+          "name": "Tempio di Minerva Medica",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The erroneously named Temple of Minerva Medica is, in fact, a ruined nymphaeum of Imperial Rome, lying between the via Labicana and Aurelian Walls and just inside the line of the Anio Vetus. Once part",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": "https://www.soprintendenzaspecialeroma.it/schede/tempio-di-minerva-medica-cosiddetto_3117/"
+        },
+        {
+          "id": "landmark-horti-liciniani",
+          "name": "Horti Liciniani",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The Horti Liciniani was a luxurious complex of an ancient Roman villa with large gardens and outdoor rooms originally belonging to the gens Licinia. It was located in Rome on the Esquiline hill betwee",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-il-tempio-di-minerva",
+          "name": "Il Tempio di Minerva",
+          "category": "food",
+          "icon": "🍽",
+          "description": "The erroneously named Temple of Minerva Medica is, in fact, a ruined nymphaeum of Imperial Rome, lying between the via Labicana and Aurelian Walls and just inside the line of the Anio Vetus. Once part",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "https://www.soprintendenzaspecialeroma.it/schede/tempio-di-minerva-medica-cosiddetto_3117/"
+        },
+        {
+          "id": "landmark-aurelian-walls",
+          "name": "Aurelian Walls",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The Aurelian Walls (Italian: Mura aureliane) are a line of city walls built between 271 AD and 275 AD in Rome, Italy, during the reign of the Roman Emperors Aurelian and Probus. They superseded the ea",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-porta-maggiore",
+          "name": "Porta Maggiore",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The Porta Maggiore (\"Larger Gate\"), or Porta Prenestina, is one of the eastern gates in the ancient but well-preserved 3rd-century Aurelian Walls of Rome.Through the gate ran two ancient roads: the Vi",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-larger-gate",
+          "name": "Larger Gate",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The Porta Maggiore (\"Larger Gate\"), or Porta Prenestina, is one of the eastern gates in the ancient but well-preserved 3rd-century Aurelian Walls of Rome.Through the gate ran two ancient roads: the Vi",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-vatican-historical-museum",
+          "name": "Vatican Historical Museum",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Vatican Historical Museum (Italian: Museo storico vaticano) is one of the sections of the Vatican Museums. It was founded in 1973 at the behest of Pope Paul VI, and was initially hosted in environ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-casa-dell-architettura",
+          "name": "Casa dell'Architettura",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Acquario Romano (Roman Aquarium) is situated in Piazza Manfredo Fanti, Rome, Italy.Designed by Ettore Bernich and built between 1885 and 1887, the building hosted an aquarium for few years. It was",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://www.casadellarchitettura.it/"
+        },
+        {
+          "id": "activity-museo-di-storia-della-medicina",
+          "name": "Museo di Storia della Medicina",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Il Museo di storia della medicina dell'Università La Sapienza di Roma, fondato da Adalberto Pazzini nel 1938, è situato in viale dell'Università a Roma e rientra tra i musei del Polo museale La Sapien",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://web.uniroma1.it/museostoriamedicina/"
+        }
+      ]
+    },
+    {
+      "id": "vienna",
+      "name": "Vienna",
+      "country": "Austria",
+      "continent": "Europe",
+      "tags": [
+        "culture",
+        "travel"
+      ],
+      "description": "Vienna is the capital, most populous city, and one of the nine states of Austria. It is Austria's primate city, with just over two million inhabitants. Its larger metropolitan area has a population of nearly 2.9 million, representing nearly one-third of the country's population. Vienna is the cultural, economic, and political centre of the country, the fifth-largest city by population in the European Union, and the most populous of the cities on the river Danube.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Schoenbrunn_philharmoniker_2012.jpg/3840px-Schoenbrunn_philharmoniker_2012.jpg",
+      "pois": [
+        {
+          "id": "activity-virgilkapelle",
+          "name": "Virgilkapelle",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Vergilius Chapel (German: Virgilkapelle) is an underground crypt next to the Stephansdom in Vienna. It is rectangular in form (approximately 6 meters by 10), with six niches. Today, it lies approx",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-treasure-of-st-stephen-s-cathedral",
+          "name": "Treasure of St. Stephen's Cathedral",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "St. Stephen's Cathedral (more commonly known by its German title: Stephansdom) is the mother church of the Roman Catholic Archdiocese of Vienna and the seat of the Archbishop of Vienna, Christoph Card",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.domschatz.wien;https://stephanskirche.at/"
+        },
+        {
+          "id": "activity-stephansdom-crypt",
+          "name": "Stephansdom Crypt",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "St. Stephen's Cathedral (more commonly known by its German title: Stephansdom) is the mother church of the Roman Catholic Archdiocese of Vienna and the seat of the Archbishop of Vienna, Christoph Card",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://stephanskirche.at/"
+        },
+        {
+          "id": "activity-saint-stephen-s-cathedral",
+          "name": "Saint Stephen's Cathedral",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "St. Stephen's Cathedral (more commonly known by its German title: Stephansdom) is the mother church of the Roman Catholic Archdiocese of Vienna and the seat of the Archbishop of Vienna, Christoph Card",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://stephanskirche.at/;https://www.stephanskirche.at/"
+        },
+        {
+          "id": "activity-stephansplatz",
+          "name": "Stephansplatz",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Stephansplatz is a square at the geographical centre of Vienna. It is named after its most prominent building, the Stephansdom, Vienna's cathedral and one of the tallest churches in the world. Bef",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-treasury-of-the-teutonic-order",
+          "name": "Treasury of the Teutonic Order",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Church of the Teutonic Order (German: Deutschordenskirche), also known as the Church of Saint Elisabeth of Hungary (German: Hl. Elisabeth von Ungarn), is the mother church of the Teutonic Order, a",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.deutscher-orden.at/;http://www.deutscher-orden.at"
+        },
+        {
+          "id": "activity-graben",
+          "name": "Graben",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Graben is one of the most famous streets in Vienna's first district, the city center. It begins at Stock-im-Eisen-Platz next to the Palais Equitable, and ends at the junction of Kohlmarkt and Tuch",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-historic-centre-of-vienna",
+          "name": "Historic Centre of Vienna",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Das historische Zentrum von Wien ist neben dem Schloss und Garten von Schönbrunn eine von zwei UNESCO-Welterbestätten in der österreichischen Hauptstadt Wien. Das aus einer Kern- und einer Außenzone b",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-stock-im-eisen",
+          "name": "Stock im Eisen",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The Stock im Eisen (German: \"staff in iron\") is the midsection of a tree-trunk from the Middle Ages, a so-called nail-tree (Nagelbaum), into which hundreds of nails have been pounded for good luck ove",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-battle-of-vienna",
+          "name": "Battle of Vienna",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The Battle of Vienna took place at Kahlenberg Mountain near Vienna on 12 September 1683 after the imperial city had been besieged by the Ottoman Empire for two months. The battle was fought by the Hol",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-siege-of-vienna",
+          "name": "Siege of Vienna",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The siege of Vienna, in 1529, was the first attempt by the Ottoman Empire to capture the city of Vienna, Austria. Suleiman the Magnificent, sultan of the Ottomans, attacked the city with over 100,000 ",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-grabmal-kaiser-friedrichs-iii",
+          "name": "Grabmal Kaiser Friedrichs III.",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Das Grab Kaiser Friedrichs III. ist ein monumentales Werk, das sich im Apostelchor der Domkirche St. Stephan zu Wien befindet. 1513 wurde der Leichnam Kaiser Friedrich III. dort beigesetzt. Die Grabpl",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-cenotaph-of-rudolf-iv",
+          "name": "Cenotaph of Rudolf IV",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Das Kenotaph für Herzog Rudolf IV. ist ein Werk aus dem Mittelalter, das sich in der Domkirche St. Stephan zu Wien befindet. Das Kenotaph ist leer, Rudolf IV. (auch genannt der Stifter) und seine Gema",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-greta-keller",
+          "name": "Greta Keller",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Margaretha \"Greta\" Keller (February 8, 1903 – November 11, 1977) was an Austrian and American cabaret singer and actress.Born Margaretha Keller in Vienna, Austria, she studied dance from the age of ei",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-dom-museum-wien",
+          "name": "Dom Museum Wien",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Das Dom Museum Wien ist ein Museum der Erzdiözese Wien im Zwettlerhof neben dem Erzbischöflichen Palais am Stephansplatz 6.Das Erzbischöfliche Dom- und Diözesanmuseum wurde über Initiative von Kardina",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.dommuseum.at;http://www.dommuseum.at/"
+        },
+        {
+          "id": "activity-mozarthaus-vienna",
+          "name": "Mozarthaus Vienna",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Mozarthaus Vienna was Mozart's residence from 1784 to 1787. This building in Vienna's Old Town, not far from St. Stephen's Cathedral, is his only surviving Viennese residence and is now a museum.T",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://www.mozarthausvienna.at/;https://www.mozarthausvienna.at/en/"
+        },
+        {
+          "id": "food-do-co-am-stephansplatz",
+          "name": "DO&CO am Stephansplatz",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Stephansplatz is an important destination and interchange station in the Vienna U-Bahn system. It is located under the Stephansplatz and is served by lines U1 and U3. It is located in the Innere Stadt",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "http://www.doco.com/de/restaurants/"
+        },
+        {
+          "id": "food-cantinetta-antinori",
+          "name": "Cantinetta Antinori",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Continental Europe or mainland Europe is the contiguous continent of Europe, excluding its surrounding islands. It can also be referred to ambiguously as the European continent, – which can conversely",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "http://www.cantinetta-antinori.com"
+        }
+      ]
+    },
+    {
+      "id": "bornholm",
+      "name": "Bornholm",
+      "country": "Denmark",
+      "continent": "Europe",
+      "tags": [
+        "travel"
+      ],
+      "description": "Bornholm is a Danish island in the Baltic Sea, to the east of the rest of Denmark, south of Sweden, northeast of Germany and north of Poland.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/0c/Wybrze%C5%BCe_Bornholmu.JPG",
+      "pois": [
+        {
+          "id": "activity-bornholms-middelaldercenter",
+          "name": "Bornholms Middelaldercenter",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Bornholms Middelaldercenter (Bornholm's Medieval Centre) is a family attraction near Østerlars in northeastern Bornholm, Denmark.On 14 hectares (35 acres) of land just to the north of the village of Ø",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://bornholmsmiddelaldercenter.dk/;https://bornholmsmiddelaldercenter.dk/"
+        },
+        {
+          "id": "activity-naturbornholm",
+          "name": "NaturBornholm",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "NaturBornholm, located in Aakirkeby, is an interpretive centre on the Danish island of Bornholm. It is dedicated to the geology and natural history of the island. It was inaugurated on 16 May 2000.The",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.naturbornholm.dk;http://www.naturbornholm.dk/"
+        },
+        {
+          "id": "activity-bornholms-automobilmuseum",
+          "name": "Bornholms Automobilmuseum",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Bornholms Automobilmuseum er et teknisk museum med flere end 80 biler, traktorer og motorcykler. Museet ligger lige sydøst for Aakirkeby på Bornholm. Det blev åbnet den 5. maj 1989 og består primært a",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.bornholmsautomobilmuseum.dk/"
+        },
+        {
+          "id": "landmark-lilleborg",
+          "name": "Lilleborg",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Lilleborg is a ruined castle in the Almindingen forest in the centre of the Danish island of Bornholm. It is situated close to the main road from Rønne to Svaneke. Of the Danish fortresses built in th",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-gamleborg",
+          "name": "Gamleborg",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Gamleborg, also known as Gamleborg Viking Fortress, was the first fortification on the Danish island of Bornholm. Built around 750 AD, it was the seat of the kings of Bornholm during the Viking age (7",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-vestermariestenene-1-6",
+          "name": "Vestermariestenene 1-6",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Die Runensteine von Vestermarie stehen (einer liegt) auf dem Friedhof von Vestermarie auf der dänischen Ostseeinsel Bornholm. Südwestlich des Kirchturms liegt ein Feld mit sechs aufgestellten Runenste",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-sterlars-stenen-1",
+          "name": "Østerlars-stenen 1",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Der Runenstein 1 von Østerlars (dänisch Østerlarsker-sten 1) steht auf dem Friedhof der Kirche von Østerlars auf der dänischen Insel Bornholm.Der 1643 gefundene, gut erhaltene Runenstein (DR 397 oder ",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-sterlarsker-2",
+          "name": "Østerlarsker 2",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Der 1921 im Turm eingemauert gefundene leicht beschädigte Runenstein 2 von Østerlars (oder DK Bh 49 auch DR 398) stammt vom Übergang der Wikingerzeit zum Frühmittelalter (1025–1075 n. Chr.) Er steht i",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-the-gunulf-stone",
+          "name": "The Gunulf stone",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Der Runenstein 5 von Østermarie (auch Øster Mariesten 1; DR 394 oder DK Bh 55 genannt) wurde 1877 auf dem Friedhof der Kirche von Østermarie gefunden, wo er nur knapp unter der Erde lag.Der Runenstein",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-the-st-blinge-stone",
+          "name": "The Støblinge stone",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Der Runenstein 2 von Østermarie (dänisch Østermarie-sten 2 – auch DR 391 oder DK Bh 52 genannt) besteht aus drei zusammengesetzten Fragmenten. Der Runenstein steht aufrecht zwischen der neuen Kirche u",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-the-t-rskel-stone",
+          "name": "The Tærskel stone",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Der Runenstein 3 von Østermarie (dänisch Østermarie-sten 3 – auch DK Bh 53 oder DR 392 genannt) wird erstmals 1624 im Bericht des Priesters erwähnt. Er lag als Schwellenstein vor dem Karnhaus der Kirc",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-rytterkn-gten",
+          "name": "Rytterknægten",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "Rytterknægten is the highest point on the Danish island of Bornholm at 162 metres (531 ft) above sea level. The bierg is situated on a wooded bedrock of gaiter formations in the middle of Almindingen ",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "id": "stockholm",
+      "name": "Stockholm",
+      "country": "Sweden",
+      "continent": "Europe",
+      "tags": [
+        "beaches",
+        "travel"
+      ],
+      "description": "Stockholm is the capital and most populous city of Sweden, as well as the largest urban area in the Nordic countries. Approximately 1 million people live in the municipality, with 1.6 million in the urban area, and 2.5 million in the metropolitan area. The city stretches across fourteen islands where Lake Mälaren flows into the Baltic Sea. Outside the city to the east, and along the coast, is the island chain of the Stockholm archipelago. The area has been settled since the Stone Age, in the 6th millennium BC, and was founded as a city in 1252 by Swedish statesman Birger Jarl. The city serves ",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Royal_Dramatic_Theatre_Stockholm.jpg/3840px-Royal_Dramatic_Theatre_Stockholm.jpg",
+      "pois": [
+        {
+          "id": "activity-gustav-ii-adolf",
+          "name": "Gustav II Adolf",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Gustav II Adolfs staty i Stockholm är en ryttarstaty skapad av Pierre Hubert L'Archevêque och Johan Tobias Sergel, som står på Gustav Adolfs torg i Stockholm. Statyn invigdes den 17 november 1796, soc",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-ulla-kraitz",
+          "name": "Ulla Kraitz",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Ulla-Britt Kraitz, född Stenqvist 19 augusti 1936 i Stockholm, är en svensk målare, keramiker och skulptör.Ulla Kraitz är utbildad vid Konstfack 1954–1958 och bedrev konststudier i Spanien 1958–1959. ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-norrbrolejonen",
+          "name": "Norrbrolejonen",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Norrbrolejonen är två lejonskulpturerna i brons intill Gustav Adolfs torg i Stockholm. Lejonen är placerade till öster och väster om Norrbros norra landfäste. Skulpturerna är kopior av två egyptiska l",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-royal-swedish-opera",
+          "name": "Royal Swedish Opera",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Royal Swedish Opera (Swedish: Kungliga Operan) is an opera and ballet company based in Stockholm, Sweden.The building is located in the center of Sweden's capital Stockholm in the borough of Norrmalm,",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://www.operan.se/;http://www.operan.se"
+        },
+        {
+          "id": "activity-museum-of-mediterranean-near-east-antiquities",
+          "name": "Museum of Mediterranean & Near East Antiquities",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Medelhavsmuseet (The Museum of Mediterranean and Near Eastern Antiquities) is a museum in central Stockholm focused around collections of mainly ancient objects from the Mediterranean area and the Nea",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.medelhavsmuseet.se;http://www.varldskulturmuseerna.se/medelhavsmuseet/"
+        },
+        {
+          "id": "activity-gustavianska-operan",
+          "name": "Gustavianska operan",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Gustavianska operahuset även kallad Gustav III:s opera var en opera vid Gustav Adolfs torg i Stockholm. Den uppfördes 1782, på Gustav III:s initiativ, och revs 1892 för att ge plats åt nuvarande Kungl",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-caf-opera",
+          "name": "Café Opera",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Café Opera is a café and nightclub in Stockholm, Sweden in the Royal Swedish Opera building and part of the Opera Cellar (Operakällaren). It serves as a bistro, brasserie and tearoom during the day bu",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "http://www.cafeopera.se/"
+        },
+        {
+          "id": "activity-laura-ford",
+          "name": "Laura Ford",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Laura Ford (born 1961) in Cardiff, Wales is a British sculptor.Growing up in a travelling fairground family, Ford was educated at Stonar School in Wiltshire, and then at Bath Academy of Art from 1978 ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-battle-of-brunkeberg",
+          "name": "Battle of Brunkeberg",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The Battle of Brunkeberg was fought on 10 October 1471 between the Swedish regent Sten Sture the Elder and forces led by Danish king Christian I. Sture won a decisive victory.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-arvfurstens-palats",
+          "name": "Arvfurstens palats",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Arvfurstens palats (Palace of the Hereditary Prince) is a palace located at Gustav Adolfs Torg in central Stockholm.Designed by Erik Palmstedt, the palace was originally the private residence of Princ",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-kvarteret-johannes-st-rre",
+          "name": "Kvarteret Johannes större",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Johannes större är ett kvarter på Norrmalm i Stockholms innerstad. Det mycket centralt belägna kvarter omges av Fredsgatan i söder, Gustav Adolfs torg i öster, Jakobsgatan i norr och Drottninggatan i ",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-sager-house",
+          "name": "Sager House",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The Sager House (Swedish: Sagerska huset) or Sager Palace (Sagerska palatset) is the official residence of the Prime Minister of Sweden, located at Strömgatan 18 in central Stockholm.The Sager House i",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-riksgropen",
+          "name": "Riksgropen",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Riksgropen var den populära benämningen på den grop som uppstod under de arkeologiska utgrävningarna av Riksplan framför Riksdagshuset på Helgeandsholmen i Stockholm.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-sols-ngaren",
+          "name": "Solsångaren",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Solsångaren är en skulptur av Carl Milles. Skulpturen är i brons och avtäcktes 21 oktober 1926 längst ut på Strömparterren i Stockholm till minne av Esaias Tegnér. Statyn skall gestalta Tegnérs dikt S",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-museum-of-medieval-stockholm",
+          "name": "Museum of Medieval Stockholm",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Museum of Medieval Stockholm (Swedish: Stockholms medeltidsmuseum), centrally located north of the Royal Palace, was constructed around old monuments excavated in an extensive archaeological dig (",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://medeltidsmuseet.stockholm.se/;https://medeltidsmuseet.stockholm.se/in-english/"
+        },
+        {
+          "id": "activity-dance-museum",
+          "name": "Dance Museum",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Dansmuseet (the Dance Museum) is a museum for the performing and visual arts located in Stockholm, Sweden. Opened in 1953 in the basement of the Royal Swedish Opera, it originally displayed a large co",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.dansmuseet.se"
+        },
+        {
+          "id": "activity-wetterling",
+          "name": "Wetterling",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Wetterling Gallery är ett galleri för samtidskonst beläget vid Kungsträdgården 3 i Stockholm.Galleriet grundades av Björn Wetterling 1978 och visar måleri, teckning, skulptur och installation. Galleri",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.wetterlinggallery.com"
+        },
+        {
+          "id": "activity-royal-academy-of-fine-arts",
+          "name": "Royal Academy of Fine Arts",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Konstakademiens hus (historiskt även Sparreska palatset, Bielkeska huset) är en byggnad eller palats beläget i kvarteret Uttern på Fredsgatan 12 i Stockholm, ursprungligen uppfört 1671 och senast omby",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://konstakademien.se/"
+        }
+      ]
+    },
+    {
+      "id": "reykjavik",
+      "name": "Reykjavik",
+      "country": "Iceland",
+      "continent": "Europe",
+      "tags": [
+        "travel"
+      ],
+      "description": "Reykjavík is the capital and largest city of Iceland. It is located on the southern shore of the Faxaflói bay in southwest Iceland and has a latitude of 64°08′ N, making it the world's northernmost capital of a sovereign state. Reykjavík has a population of around 139,000 as of 2025, and the surrounding Capital Region has a population of around 249,000, constituting approximately 64% of Iceland's population.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Reykjav%C3%ADk%2C_view_from_Hallgr%C3%ADmskirkja_%282%29.jpg/3840px-Reykjav%C3%ADk%2C_view_from_Hallgr%C3%ADmskirkja_%282%29.jpg",
+      "pois": [
+        {
+          "id": "activity-kjarvalssta-ir",
+          "name": "Kjarvalsstaðir",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "A notable activity in Reykjavik.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.listasafnreykjavikur.is/desktopdefault.aspx/tabid-2173/3432_read-6298/;http://listasafnreykjavikur.is/kjarvalsstadir"
+        },
+        {
+          "id": "activity-reykjav-k-park-and-zoo",
+          "name": "Reykjavík Park and Zoo",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Fjölskyldu- og húsdýragarðurinn er skemmtigarður og dýragarður í Laugardal í Reykjavík. Hann er staðsettur við hliðina á Grasagarði Reykjavíkur.Húsdýragarðurinn var opnaður þann 19. maí 1990. Fjölskyl",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-hofdi-house",
+          "name": "Hofdi house",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Höfði (Icelandic pronunciation: [ˈhœvðɪ]) is a house in Reykjavík, Iceland, best known as the location for the 1986 Reykjavík Summit meeting of President Ronald Reagan of the United States and General",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-botanical-garden-of-reykjavik",
+          "name": "Botanical Garden of Reykjavik",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Reykjavík Botanic Garden (Latin: Hortus Botanicus Reykjavikensis, Icelandic: Grasagarður Reykjavíkur [ˈkraːsaˌkarðʏr ˈreiːcaˌviːkʏr̥]) is a botanical garden located in the district of Laugardalur in R",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-skjuhl",
+          "name": "Öskjuhlíð",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Öskjuhlíð (Icelandic pronunciation: [ˈœscʏˌl̥iːθ]) is a hill in the centre of Reykjavík, Iceland. It is 61 metres (200 ft) above sea level. The hill is a designated outdoors area and is covered with t",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-the-living-art-museum",
+          "name": "The Living Art Museum",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Living Art Museum (Nýló) is a not-for-profit, artist-run museum and exhibition platform for innovative and experimental contemporary art in Reykjavík, Iceland. The Living Art Museum is committed t",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-leifur-ericson",
+          "name": "Leifur Ericson",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Leif Erikson, Leiv Eiriksson or Leif Ericson also known as Leif the Lucky (Old Norse Leifr hinn Heppni) (c. 970 – c. 1020) was a Norse explorer from Iceland. He is thought to have been the first Europ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-national-theatre-of-iceland",
+          "name": "National Theatre of Iceland",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The National Theatre of Iceland (Icelandic: Þjóðleikhúsið, pronounced [ˈθjouðˌleikˌhuːsɪθ]) in Reykjavík, is the national theatre of Iceland. The theater, designed by Guðjón Samúelsson, was formally o",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://leikhusid.is/;http://thjodleikhusid.is/?PageID=8"
+        },
+        {
+          "id": "landmark-hallgrimsharpan",
+          "name": "Hallgrimsharpan",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Hallgrímur Pétursson (1614 – 27 October 1674) was an Icelandic poet and a minister at Hvalsneskirkja and Saurbær in Hvalfjörður. Being one of the most prominent Icelandic poets, the Hallgrímskirkja in",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-jon-sigurdsson",
+          "name": "Jon Sigurdsson",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Jón Sigurðsson (17 June 1811 – 7 December 1879) was the leader of the 19th century Icelandic independence movement.Born at Hrafnseyri, in Arnarfjörður in the Westfjords area of Iceland, he was the son",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-holavallagar-ur",
+          "name": "Holavallagarður",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Hólavallagarður (oft kallaður Hólavallakirkjugarður og stundum einnig Suðurgötu(kirkju)garður) er stór kirkjugarður í vesturbæ Reykjavíkur.Hólavallagarður er stærsti íslenski kirkjugarðurinn frá 19. ö",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-imagine-peace-tower",
+          "name": "Imagine Peace Tower",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The Imagine Peace Tower (Icelandic: Friðarsúlan [ˈfrɪːðarˌsuːlan], \"the peace column\") is a memorial to John Lennon from his widow, Yoko Ono, located on Viðey Island in Kollafjörður Bay near Reykjavík",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": "http://imaginepeacetower.com;http://imaginepeacetower.com/"
+        },
+        {
+          "id": "activity-the-culture-house",
+          "name": "The Culture House",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Safnahúsið (Icelandic pronunciation: [ˈsapnaˌhuːsɪθ], \"the Culture House\"), formerly Þjóðmenningarhúsið [ˈθjouðˌmɛnːiŋkarˌhuːsɪθ], is an exhibition space in Reykjavík, Iceland, which houses an exhibit",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-national-gallery-of-iceland",
+          "name": "National Gallery of Iceland",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The National Gallery of Iceland (Icelandic: Listasafn Íslands [ˈlɪstaˌsapn ˈistlan(t)s]) is an art museum in Reykjavík which contains a collection of Icelandic art. The gallery features artwork of fam",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.listasafn.is"
+        },
+        {
+          "id": "activity-the-icelandic-phallological-museum",
+          "name": "The Icelandic Phallological Museum",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Icelandic Phallological Museum (Icelandic: Hið íslenska reðasafn [ˈhɪːð ˈistlɛnska ˈrɛːðaˌsapn̥]), located in Reykjavík, Iceland, houses the world's largest display of penises and penile parts. As",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://www.phallus.is/;http://www.phallus.is/"
+        },
+        {
+          "id": "activity-reykjav-k-871-2",
+          "name": "Reykjavík 871±2",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Settlement Exhibition Reykjavík 871±2 is an exhibition on the settlement of Reykjavík, Iceland, created by the Reykjavik City Museum. The exhibition is based on the archaeological excavation of th",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.minjasafnreykjavikur.is/english/desktopdefault.aspx/tabid-4206/"
+        },
+        {
+          "id": "food-dill",
+          "name": "Dill",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Dill is a New Nordic restaurant in Reykjavík, opened in 2009. It was the first restaurant in Iceland to be awarded a Michelin star, in 2017.Dill opened in 2009, shortly after the economic crash of 200",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "https://www.dillrestaurant.is/"
+        },
+        {
+          "id": "food-ristorante-italia",
+          "name": "Ristorante Italia",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Laugavegur (Icelandic pronunciation: [ˈlœiːɣaˌvɛːɣʏr̥]) is the primary commercial artery of downtown Reykjavík, Iceland and one of the oldest shopping streets. The name means \"wash road\", as it used t",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "id": "bangkok",
+      "name": "Bangkok",
+      "country": "Thailand",
+      "continent": "Asia",
+      "tags": [
+        "port city",
+        "travel"
+      ],
+      "description": "Bangkok, officially known in Thai as Krung Thep Maha Nakhon and colloquially as Krung Thep, is the capital and most populous city of Thailand. The city occupies 1,568.7 square kilometres (605.7 sq mi) in the Chao Phraya River delta in central Thailand and has an estimated population of 11.4 million people as of 2024, 15.9% of the country's population. Over 17.4 million people live within the surrounding Bangkok Metropolitan Region as of the 2021 estimate, making Bangkok a megacity and an extreme primate city, dwarfing Thailand's other urban centres in both size and importance to the national e",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/02/Bangkok_Montage_2024_2.jpg",
+      "pois": [
+        {
+          "id": "activity-sala-chaloem-thai",
+          "name": "Sala Chaloem Thai",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Sala Chaloem Thai (Thai: ศาลาเฉลิมไทย, pronounced [sǎː.lāː t͡ɕʰā.lɤ̌ːm tʰāj]), abbreviated as Chaloem Thai (เฉลิมไทย), was a former movie theatre in Bangkok, located at the corner of Ratchadamnoen Ave",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-mahakan-fort",
+          "name": "Mahakan Fort",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "ป้อมมหากาฬ ตั้งอยู่บริเวณเชิงสะพานผ่านฟ้าลีลาศ ติดกับถนนมหาไชย แขวงบวรนิเวศ เขตพระนคร กรุงเทพมหานคร ทางด้านหลังมีกำแพงเมืองพระนครหลงเหลืออยู่ป้อมมหากาฬสร้างขึ้นในรัชสมัยพระบาทสมเด็จพระพุทธยอดฟ้าจุฬาโล",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-talaphat-suksa-school",
+          "name": "Talaphat Suksa School",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "วังวรวรรณ หรือ วังแพร่งนรา เป็นวังที่ประทับของ พระเจ้าบรมวงศ์เธอ กรมพระนราธิปประพันธ์พงศ์ ต้นราชสกุลวรวรรณ อยู่ทางทิศเหนือของวังสะพานช้างโรงสี ต่อมาวังนี้ถูกเวนคืนเพื่อนำพื้นที่มาสร้างเป็นถนน ตามโครงก",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-king-prajadhipok-museum",
+          "name": "King Prajadhipok Museum",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "King Prajadhipok Museum is a museum in Pom Prap Sattru Phai District, Bangkok, Thailand. The building has three floors of permanent exhibitions relating to royal life of King Prajadhipok and Queen Ram",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-rommaninat-park",
+          "name": "Rommaninat Park",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Rommaninat Park or spelt Romaneenart Park (Thai: สวนรมณีนาถ, pronounced [sǔan rōm.mā.nīː.nâːt]; lit. 'park of woman who was regent'), commonly known as Khuk Kao (คุกเก่า, lit: \"old prison\") is a publi",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://minpininteraction.com/bkk_static/park05.asp"
+        },
+        {
+          "id": "activity-khao-san-road",
+          "name": "Khao San Road",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Khaosan Road or Khao San Road (Thai: ถนนข้าวสาร, RTGS: Thanon Khao San, pronounced [tʰā.nǒn kʰâ(ː)w sǎːn]) is a short (410 m (1,345 ft) long) street in central Bangkok, Thailand constructed in 1892 du",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-bangkok-city-pillar-shrine-theater-free",
+          "name": "Bangkok City Pillar Shrine Theater (free)",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "ศาลหลักเมืองกรุงเทพมหานคร เป็นศาลที่สร้างขึ้นมาพร้อมกับการสถาปนากรุงรัตนโกสินทร์เป็นราชธานี ตามธรรมเนียมพิธีพราหมณ์ว่า ก่อนที่จะสร้างเมืองจะต้องทำพิธียกเสาหลักเมืองในที่อันเป็นชัยภูมิสำคัญ เพื่อเป็นสิ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-chalerm-krung-royal-theatre",
+          "name": "Chalerm Krung Royal Theatre",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Sala Chalermkrung Royal Theatre (Thai: ศาลาเฉลิมกรุง;RTGS: Sala Chaloem Krung) was originally a movie theatre in Bangkok, Thailand built in Modernist style on Charoengkrung Road. It was opened on 3 Ju",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.salachalermkrung.com/;http://www.salachalermkrung.com"
+        },
+        {
+          "id": "landmark-giant-swing",
+          "name": "Giant Swing",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The Giant Swing (Thai: เสาชิงช้า, RTGS: Sao Chingcha, pronounced [sǎw t͡ɕʰīŋ.t͡ɕʰáː] pronunciation ) is a religious structure in Sao Chingcha Subdistrict, Phra Nakhon District, Bangkok, Thailand. Loca",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": "http://www.bma.go.th/bmaeng/phranakhon/giant_swing.html"
+        },
+        {
+          "id": "landmark-democracy-monument",
+          "name": "Democracy Monument",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The Democracy Monument (Thai: อนุสาวรีย์ประชาธิปไตย, romanized: Anusawari Prachathipatai) is a public monument in the city center of Bangkok, capital of Thailand. It occupies a traffic circle on the w",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-mahakan-fort",
+          "name": "Mahakan Fort",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "ป้อมมหากาฬ ตั้งอยู่บริเวณเชิงสะพานผ่านฟ้าลีลาศ ติดกับถนนมหาไชย แขวงบวรนิเวศ เขตพระนคร กรุงเทพมหานคร ทางด้านหลังมีกำแพงเมืองพระนครหลงเหลืออยู่ป้อมมหากาฬสร้างขึ้นในรัชสมัยพระบาทสมเด็จพระพุทธยอดฟ้าจุฬาโล",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-pig-memorial",
+          "name": "Pig Memorial",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Pig Memorial (Thai: อนุสาวรีย์หมู) is a memorial in Phra Borom Maha Ratchawang sub-district, Phra Nakhon district, Bangkok. It is located in the inner city or Rattanakosin Island which is a historic a",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-memorial-of-expeditionary-force",
+          "name": "Memorial of Expeditionary Force",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "อนุสาวรีย์ทหารอาสาสงครามโลกครั้งที่ 1 เป็นอนุสาวรีย์ที่ตั้งอยู่ ณ ถนนสามเหลี่ยมตรงมุมด้านทิศเหนือของท้องสนามหลวง ตรงข้ามพิพิธภัณฑสถานแห่งชาติ พระนคร เป็นอนุสรณ์แก่ทหารไทยที่ไปร่วมรบในสมรภูมิยุโรป หลัง",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-phra-phuttha-sihing",
+          "name": "Phra Phuttha Sihing",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Phra Phuttha Sihing (Thai: พระพุทธสิหิงค์) is a highly revered image of the Gautama Buddha in Bangkok, Thailand, second in importance only after the Emerald Buddha. The image is currently housed a",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-museum-of-the-emerald-buddha-temple",
+          "name": "Museum of the Emerald Buddha Temple",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Emerald Buddha (Thai: พระแก้วมรกต Phra Kaeo Morakot, or พระพุทธมหามณีรัตนปฏิมากร Phra Phuttha Maha Mani Rattana Patimakon) is an image of the meditating Gautama Buddha seated in a meditative postu",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-national-art-gallery",
+          "name": "National Art Gallery",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The National Gallery (Thai: พิพิธภัณฑสถานแห่งชาติ หอศิลป) is an art gallery and one of Thailand's national museums. It is located on Chao Fa Road in Bangkok's historic Phra Nakhon District, and is hou",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-bangkok-national-gallery",
+          "name": "Bangkok National Gallery",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Bangkok National Museum (Thai: พิพิธภัณฑสถานแห่งชาติ พระนคร, RTGS: Phiphitthaphanthasathan Haeng Chat Phra Nakhon) is the main branch museum of the National Museums in Thailand and also one of the",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://finearts.go.th/museumbangkok"
+        },
+        {
+          "id": "activity-silpakorn-university-art-gallery",
+          "name": "Silpakorn University Art Gallery",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Silapakorn University Art Gallery (Thai: หอศิลป์ มหาวิทยาลัยศิลปากร; RTGS: Hosin Mahawitthayalai Sinlapakon) is an art gallery and museum in Bangkok, Thailand. It is a building in Silpakorn University",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "id": "bali",
+      "name": "Bali",
+      "country": "Indonesia",
+      "continent": "Asia",
+      "tags": [
+        "culture",
+        "travel"
+      ],
+      "description": "Bali is an Indonesian island and province and the westernmost of the Lesser Sunda Islands. East of Java and west of Lombok, the province includes the island of Bali and a few smaller offshore islands, notably Nusa Penida, Nusa Lembongan, and Nusa Ceningan to the southeast. The provincial capital, Denpasar, is the most populous city in the Lesser Sunda Islands and the second-largest, after Makassar, in Eastern Indonesia. The Denpasar metropolitan area is the extended metropolitan area around Denpasar. The upland town of Ubud in Greater Denpasar is considered as Bali's cultural centre. The provi",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Bali_in_Indonesia_%28special_marker%29.svg/1280px-Bali_in_Indonesia_%28special_marker%29.svg.png",
+      "pois": [
+        {
+          "id": "activity-museum-bali",
+          "name": "Museum Bali",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Bali Museum is a museum of art and history located in Denpasar, Bali, Indonesia.The museum was built in 1931 by architect P.J. Moojen, near the location of the former royal palace of Denpasar, whi",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-museum-agung-bung-karno",
+          "name": "Museum Agung Bung Karno",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Museum Agung Bung Karno is located in Denpasar, Bali. This four-story building houses collections related to Indonesia's first President Sukarno ranging from books, speeches and writings, to bicycles,",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-bali-shell-museum",
+          "name": "Bali Shell Museum",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Bali Museum is a museum of art and history located in Denpasar, Bali, Indonesia.The museum was built in 1931 by architect P.J. Moojen, near the location of the former royal palace of Denpasar, whi",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-sanur",
+          "name": "Sanur",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "Sanur (Indonesian: Pantai Sanur, pronounced sah-noor) is a coastal stretch of beach east of Denpasar in southeast Bali (about a 30-minute drive from Ngurah Rai International Airport), which has grown ",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "id": "seoul",
+      "name": "Seoul",
+      "country": "South Korea",
+      "continent": "Asia",
+      "tags": [
+        "travel"
+      ],
+      "description": "Seoul, officially Seoul Special Metropolitan City, is the capital and largest city of South Korea, and the largest city in the whole of Korea. The broader Seoul Metropolitan Area, encompassing Seoul, Gyeonggi Province and Incheon, emerged as the world's sixth largest metropolitan economy in 2022, behind New York, Tokyo, Los Angeles, Paris, and London, and hosts more than half of South Korea's population. Although Seoul's population peaked at over 10 million, it has gradually decreased since 2014, standing at about 9.6 million residents as of 2024. Seoul is the seat of the South Korean governme",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/%EC%A4%91%ED%99%94%EC%A0%84%EC%9D%98_%EB%82%AE.jpg/3840px-%EC%A4%91%ED%99%94%EC%A0%84%EC%9D%98_%EB%82%AE.jpg",
+      "pois": [
+        {
+          "id": "activity-",
+          "name": "대한성공회 서울주교좌성당 모자이크 제단화",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "대한성공회 서울주교좌성당 모자이크 제단화는 서울특별시 중구 세종대로 21길 15 대한성공회 서울주교좌성당에 있는 그림이다. 또한 대한민국의 등록문화재 제676호이다. 다만, 이 제단화가 있는 대한성공회 서울주교좌성당 건물 자체는 서울특별시에서 별도로 서울특별시 유형문화재 제35호로 지정하였다.유물명 : 대한성공회 서울주교좌성당 모자이크 제단화 수량 : 1점",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-deoksugung-palace",
+          "name": "Deoksugung Palace",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Deoksugung, also known as Gyeongun-gung, Deoksugung Palace, or Deoksu Palace, is a walled compound of palaces in Seoul that was inhabited by members of Korea's royal family during the Joseon monarchy ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.deoksugung.go.kr"
+        },
+        {
+          "id": "activity-cheonggyecheon",
+          "name": "Cheonggyecheon",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Cheonggyecheon (Hangul: 청계천, Korean pronunciation: [t͡ʃʰʌŋ.gje.t͡ʃʰʌn]) is a 10.9-kilometre-long (6.8 mi), modern public recreation space in downtown Seoul, South Korea. The massive urban renewal proj",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-cheonggye-plaza-spring",
+          "name": "Cheonggye Plaza (Spring)",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "스프링(Spring)은 서울특별시 종로구 청계1가 청계광장에 위치한 설치미술 작품이다. 스웨덴 출신의 미국 팝아티스트 클래스 올덴버그와 코샤 밴 브룽겐의 공동작품이다. 외관은 인도양에서 서식하는 다슬기의 모습을 상징적으로 표현한 것이다.스프링은 높이 20미터이며 지름은 6미터, 총 중량은 9톤에 이른다. 위로 올라갈수록 좁아지는 외관은 코샤 밴 브룽겐이 제",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-spring",
+          "name": "Spring",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "스프링(Spring)은 서울특별시 종로구 청계1가 청계광장에 위치한 설치미술 작품이다. 스웨덴 출신의 미국 팝아티스트 클래스 올덴버그와 코샤 밴 브룽겐의 공동작품이다. 외관은 인도양에서 서식하는 다슬기의 모습을 상징적으로 표현한 것이다.스프링은 높이 20미터이며 지름은 6미터, 총 중량은 9톤에 이른다. 위로 올라갈수록 좁아지는 외관은 코샤 밴 브룽겐이 제",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-national-museum-of-modern-and-contemporary-art-deoksugung-branch",
+          "name": "National Museum of Modern and Contemporary Art Deoksugung Branch",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Национальный музей современного искусства в Сеуле — национальный музей в Южной Корее, открыт 13 ноября 2013 года. Является одним из трёх филиалов Национального музея современного искусства Кореи, кото",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.mmca.go.kr;www.mmca.go.kr;http://www.mmca.go.kr/"
+        },
+        {
+          "id": "activity-ilmin-museum-of-art",
+          "name": "Ilmin Museum of Art",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Ilmin Museum of Art is a private art museum of South Korea, located on Sejongno street in Jongno-gu, a central district of Seoul, known for exhibiting mainly Korean art. The museum was established and",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.ilmin.org/;http://ilmin.org/"
+        },
+        {
+          "id": "activity-seoul-museum-of-art",
+          "name": "Seoul Museum of Art",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Seoul Museum of Art is an art museum operated by Seoul City Council and located in central of Seoul, South Korea.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://sema.seoul.go.kr/"
+        },
+        {
+          "id": "activity-gwanghwamun-square-statue-of-admniral-yi-sun-shin",
+          "name": "Gwanghwamun Square Statue of Admniral Yi Sun Shin",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Gwanghwamun Plaza (Korean: 광화문광장; Hanja: 光化門廣場, also known as Gwanghwamun Square) is a public open space on Sejongno, Jongno-gu, Seoul, South Korea. The plaza was opened on 1 August 2009 by the Seoul ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-statue-of-admiral-yi-sun-sin",
+          "name": "Statue of Admiral Yi Sun-sin",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The statue of Admiral Yi Sun-sin is located at the Sejongno, Gwanghwamun Plaza in Seoul, South Korea. It is dedicated to the 16th-century Korean war hero, admiral Yi Sun-sin. It is considered one of S",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-namdaemunno-4-ga",
+          "name": "Namdaemunno 4-ga",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Namdaemun (Korean: 남대문; Hanja: 南大門, lit. 'South Great Gate'), officially known as the Sungnyemun (Korean: 숭례문; Hanja: 崇禮門, lit. 'Honoring Propriety Gate'), is one of the Eight Gates in the Fortress Wa",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-site-of-bosingak-belfry",
+          "name": "Site of Bosingak (Belfry)",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Bosingak is a large bell pavilion on Jongno in Seoul, South Korea. The bell in Bosingak gives Jongno its name, which literally means \"bell street\". It was originally constructed in 1396 but destroyed ",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-hammering-man",
+          "name": "Hammering Man",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Hammering Man is a series of monumental kinetic sculptures by Jonathan Borofsky. The two-dimensional painted steel sculptures were designed at different scales (from approximately 12 feet to 49 feet h",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-art-center-nabi",
+          "name": "Art center nabi",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Art Center Nabi is an art museum in Seorin-dong, Jongno-gu, Seoul, South Korea. It was relocated to the 4th floor of SK building of SK Group in 2000 and reborn as digital art museum.Art Center Nab",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.nabi.or.kr/"
+        },
+        {
+          "id": "activity-bank-of-korea-money-museum",
+          "name": "Bank of Korea Money Museum",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Bank of Korea Money Museum (Korean: 한국은행 화폐박물관; Hanja: 韓國銀行貨幣博物館), is an economics and numismatics museum in Seoul founded by the Bank of Korea in 2001. Its address is 39, Namdaemunno, Jung-gu, Seoul.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://museum.bok.or.kr/;http://museum.bok.or.kr/english/main/index.jsp"
+        },
+        {
+          "id": "activity-sejong-gallery",
+          "name": "Sejong Gallery",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Sejong Center for the Performing Arts is the largest arts and cultural complex in Seoul, South Korea. It has an interior area of 53,202m². It is situated in the center of the capital, on Sejongno, a m",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.sejongpac.or.kr/main/main_real.asp;http://www.sejongpac.or.kr/eng/main/main.asp"
+        },
+        {
+          "id": "activity-seoul-museum-of-history",
+          "name": "Seoul Museum of History",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Seoul Museum of History is a history museum located in Sinmunno 1 ga, Jongno-gu, Seoul, South Korea.Seoul was the capital of the Joseon Dynasty, and the Museum depicts the evolution from its prehistor",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.museum.seoul.kr/"
+        },
+        {
+          "id": "activity-national-museum-of-korean-contemporary-history",
+          "name": "National Museum of Korean Contemporary History",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The National Museum of Korean Contemporary History (대한민국역사박물관), which opened on December 26, 2012, is dedicated to researching, preserving, and exhibiting the modern and contemporary history of the Re",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.much.go.kr/;www.much.go.kr/"
+        }
+      ]
+    },
+    {
+      "id": "singapore",
+      "name": "Singapore",
+      "country": "Singapore",
+      "continent": "Asia",
+      "tags": [
+        "travel"
+      ],
+      "description": "Singapore, officially the Republic of Singapore, is an island country and city-state in Southeast Asia. Its territory comprises a main island, over 60 satellite islands and islets, and one outlying islet. The country is about one degree of latitude north of the equator, off the southern tip of the Malay Peninsula, bordering the Strait of Malacca to the west, the Singapore Strait to the south along with the Riau Islands in Indonesia, the South China Sea to the east and the Straits of Johor along with the State of Johor in Malaysia to the north.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Flag_of_Singapore.svg/960px-Flag_of_Singapore.svg.png",
+      "pois": [
+        {
+          "id": "activity-gv-funan",
+          "name": "GV Funan",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Funan (Chinese: 福南) is a mixed used development comprising a retail mall, two office towers and a serviced apartment tower in the Civic District in Singapore. The new development was built on the site",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.funan.com.sg"
+        },
+        {
+          "id": "activity-national-gallery-singapore",
+          "name": "National Gallery Singapore",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The National Gallery Singapore is a public institution and museum dedicated to art and culture located in the Civic District of Singapore. It oversees the world's largest public collection of Singapor",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://www.nationalgallery.sg/;http://www.nationalgallery.sg"
+        },
+        {
+          "id": "activity-victoria-theatre-and-concert-hall",
+          "name": "Victoria Theatre and Concert Hall",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Victoria Theatre and Concert Hall is a performing arts center in the Central Area of Singapore, situated along Empress Place. It is a complex of two buildings and a clock tower joined together by ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://www.vtvch.com/"
+        },
+        {
+          "id": "activity-raffles-landing-site",
+          "name": "Raffles' Landing Site",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Raffles's Landing Site is the location where tradition holds that Sir Stamford Raffles landed in on 28 January 1819. The site is located at Boat Quay within the Civic District, in the Downtown Core of",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-asian-civilisations-museum",
+          "name": "Asian Civilisations Museum",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Asian Civilisations Museum (ACM) is an institution which forms a part of the four museums in Singapore, the other three being the Peranakan Museum at Old Tao Nan School, the National Museum of Sin",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://acm.org.sg;http://acm.org.sg/"
+        },
+        {
+          "id": "activity-singapore-philatelic-museum",
+          "name": "Singapore Philatelic Museum",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Singapore Philatelic Museum (Chinese: 新加坡集邮博物馆) is a museum about the postal history of Singapore and its stamps.The museum, located at 23-B Coleman Street in Singapore, was formerly part of the A",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-esplanade-park",
+          "name": "Esplanade Park",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Esplanade Park is a park located at the Esplanade area within the Downtown Core district of Singapore.Built in 1943 when Singapore was ruled by Japan, the Esplanade Park is one of the oldest parks in ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-dalhousie-obelisk",
+          "name": "Dalhousie Obelisk",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The Dalhousie Obelisk is a memorial obelisk in the Civic District of Singapore, located on the north bank of the Singapore River in the Downtown Core, within the Central Area in Singapore's central bu",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-lim-bo-seng-memorial",
+          "name": "Lim Bo Seng Memorial",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The Lim Bo Seng Memorial is an octagonal pagoda-like war memorial at Esplanade Park, Singapore. It was erected in 1954 in honour of the late Lim Bo Seng for his heroic acts and selfless sacrifice duri",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-deng-xiaoping-1904-1997",
+          "name": "Deng Xiaoping (1904-1997)",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Deng Xiaoping (22 August 1904 – 19 February 1997), also known by his courtesy name Xixian (希贤), was a Chinese revolutionary and statesman who served as the paramount leader of the People's Republic of",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-president-ho-chi-minh-1890-1969",
+          "name": "President Ho Chi Minh (1890-1969)",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Hồ Chí Minh (; Vietnamese: [hò cǐ mīŋ̟] (listen), Saigon: [hò cǐ mɨ̄n]; Chữ Hán: 胡志明; 19 May 1890 – 2 September 1969), born Nguyễn Sinh Cung, also known as Nguyễn Tất Thành, Nguyễn Ái Quốc, Bác Hồ, or",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-prime-minister-jawaharlal-nehru-1889-1964",
+          "name": "Prime Minister Jawaharlal Nehru (1889-1964)",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Jawaharlal Nehru (; Hindi: [ˈdʒəʋɑːɦəɾˈlɑːl ˈneːɦɾuː] (listen); 14 November 1889 – 27 May 1964) was an Indian anti-colonial nationalist, secular humanist, social democrat, politician, and author who w",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-the-cenotaph-singapore",
+          "name": "The Cenotaph, Singapore",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The Cenotaph is a war memorial located within the Esplanade Park at Connaught Drive, within the Central Area in Singapore's central business district.The inscription at the base of the Cenotaph reads:",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-fullerton-building",
+          "name": "Fullerton Building",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The Fullerton Hotel Singapore is a five-star luxury hotel located near the mouth of the Singapore River, in the Downtown Core of the Central Area, Singapore. It was originally known as the Fullerton B",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": "http://www.fullertonhotel.com"
+        },
+        {
+          "id": "activity-peranakan-museum",
+          "name": "Peranakan Museum",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Peranakan Museum is a museum in Singapore specialising in Peranakan culture. A sister museum to the Asian Civilisations Museum, it is the first of its kind in the world, that explores Peranakan cu",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.peranakanmuseum.sg"
+        },
+        {
+          "id": "activity-fort-canning-centre",
+          "name": "Fort Canning Centre",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Singapore Pinacothèque de Paris was a private art museum formerly located in the Fort Canning Arts Centre at Fort Canning Park, Singapore. It opened to the public on 30 May 2015 and had its last day o",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.pinacotheque.com.sg"
+        },
+        {
+          "id": "activity-amoy-hotel",
+          "name": "Amoy Hotel",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Fuk Tak Chi Temple (Chinese: 海唇福德祠) was one of the oldest former temple in Singapore which has turned into a museum, built in 1824 by Cantonese and Hakka immigrants from Kwong Wai Siew (广惠肇三府). Tw",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://www.stayfareast.com/"
+        },
+        {
+          "id": "activity-8q-sam",
+          "name": "8Q SAM",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "SAM at 8Q is the annexe of Singapore Art Museum - Singapore's contemporary art museum. Located at the heart of the city, it derives its name from the museum's location at No. 8 Queen Street near Bras ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "id": "tokyo",
+      "name": "Tokyo",
+      "country": "Japan",
+      "continent": "Asia",
+      "tags": [
+        "arts",
+        "travel"
+      ],
+      "description": "Tokyo, officially the Tokyo Metropolis, is the capital and most populous city of Japan. With a population of over 14 million in the city proper in 2023, it is one of the most populous urban areas in the world. The Greater Tokyo Area, which includes Tokyo and parts of six neighboring prefectures, is the most populous metropolitan area in the world, with 41 million residents as of 2024.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/b/b2/Skyscrapers_of_Shinjuku_2009_January.jpg",
+      "pois": [
+        {
+          "id": "activity-shinjuku-central-park",
+          "name": "Shinjuku Central Park",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Shinjuku Central Park (新宿中央公園, Shinjuku chūō kōen) is a park in western Shinjuku, Tokyo, Japan. The park is bordered by Honnnan Dori and Kita Dori to the north, Junisha Dori to the west, Suido Dori or",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.city.shinjuku.lg.jp/seikatsu/file15_02_00001.html;https://parks.prfj.or.jp/shinjuku/"
+        },
+        {
+          "id": "activity-shinjuku-niagara-falls",
+          "name": "Shinjuku Niagara Falls",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Shinjuku Niagara Falls is a fountain in Tokyo's Shinjuku Central Park, in Shinjuku, Japan. The Tokyo Weekender has described the water feature as \"generously named\".Media related to Shinjuku Niagara F",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-memorial-museum-for-soldiers-detainees-in-siberia-and-postwar-repatriates",
+          "name": "Memorial Museum for Soldiers, Detainees in Siberia, and Postwar Repatriates",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "平和祈念展示資料館（へいわきねんてんじしりょうかん）は、東京都新宿区にある総務省委託の資料館。 日中戦争や太平洋戦争の体験者やシベリア抑留などの戦後強制抑留者の証言や資料を数多く展示している。入館は無料。新宿住友ビル33階。さきの大戦後の海外からの引揚者や強制抑留者など、関係者の証言や資料を常設展示している。館内では、企画展やビデオ放映、関連書籍を閲覧できるコーナーがあり、資料を有効活用して館外活",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://www.heiwakinen.go.jp/"
+        },
+        {
+          "id": "activity-sompo-museum-of-art",
+          "name": "Sompo Museum of Art",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "SOMPO美術館（そんぽびじゅつかん）は、東京都新宿区にある東郷青児の美術作品コレクションを中心とする美術館。公益財団法人SOMPO美術財団が運営している。安田火災海上保険（現：損害保険ジャパン）の前身会社時代からその作品をパンフレットやカレンダーに用い、支援するなど縁の深い東郷青児の協力の下、西新宿に本社ビルを新築する際に美術館設置構想が持ち上がり、 自作200点やコレクションを提供を受け、19",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://sompo-museum.org;http://www.sompo-japan.co.jp/museum/english/"
+        },
+        {
+          "id": "activity-space-zero",
+          "name": "Space Zero",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "スペース・ゼロ（英語：SPACE ZERO）は、東京都渋谷区代々木二丁目にある多目的ホール、または同ホールを運営する株式会社スペース・ゼロの通称である。ホールの正式名称は「こくみん共済 coopホール／スペース・ゼロ」。1988年（昭和63年）6月1日に、全労済の子会社として株式会社スペース・ゼロが設立された。1989年（平成元年）2月には、全労済設立30周年を記念して全労済ホール／スペース・ゼロ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-the-eye-of-shinjuku",
+          "name": "The Eye of Shinjuku",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Shinjuku Station (新宿駅, Shinjuku-eki) is a major railway station in the Shinjuku and Shibuya wards in Tokyo, Japan. In Shinjuku, it is part of the Nishi-Shinjuku and Shinjuku districts. In Shibuya, it ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.jreast.co.jp/estation/station/info.aspx?StationCd=866"
+        },
+        {
+          "id": "activity-lumine-the-yoshimoto",
+          "name": "LUMINE the YOSHIMOTO",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "ルミネtheよしもと（ルミネザよしもと、英語：LUMINE the YOSHIMOTO）は、吉本興業が運営するお笑い専門の劇場である。東京都新宿区、東日本旅客鉄道（JR東日本）新宿駅に隣接する商業ビル「LUMINE2」の7階にある。通称「ルミネ」。ルミネの無い関東以外、また吉本所属の芸人の発言で「ルミネ」といえば、この劇場のことを指すことが多い。ここは、元々ルミネホール「ACT」（アクト）という名",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-ntt-intercommunication-center",
+          "name": "NTT InterCommunication Center",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "NTT InterCommunication Center (ICC) is a media art gallery in Tokyo Opera City Tower in Shinjuku, Tokyo, Japan. It was established by NTT to commemorate the 100th anniversary of telephone service in J",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-godzilla-gojira",
+          "name": "Godzilla (Gojira)",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Godzilla head is a landmark and tourist attraction in Kabukichō, Shinjuku, Tokyo, Japan. The sculpture is accessible from Hotel Gracery Shinjuku's Godzilla Terrace, on the Shinjuku Toho Building. ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-hachiko-square",
+          "name": "Hachiko Square",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "A statue of Hachikō is installed outside Tokyo's Shibuya Station, in Japan.In April 1934, a bronze statue based in his likeness sculpted by Teru Andō was erected at Shibuya Station, and Hachikō himsel",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://www.welcome-shibuya.net/history/hachiko/"
+        },
+        {
+          "id": "activity-hachiko-memorial-statue",
+          "name": "Hachiko Memorial Statue",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "A statue of Hachikō is installed outside Tokyo's Shibuya Station, in Japan.In April 1934, a bronze statue based in his likeness sculpted by Teru Andō was erected at Shibuya Station, and Hachikō himsel",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-akasaka-imperial-estate",
+          "name": "Akasaka Imperial Estate",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The Akasaka Estate (赤坂御用地, Akasaka Goyōchi) is a park-like Japanese Imperial Estate, site of several major existing and former Imperial residences in the district of Moto-Akasaka, Minato Special Ward,",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-jorinji-temple",
+          "name": "Jorinji temple",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "浄輪寺（じょうりんじ）は、東京都新宿区弁天町にある日蓮宗の寺院。旧本山は池上本門寺。池上・大久保法縁。同寺は慶長17年（1612年）、江戸城付近にて、毘沙門天を携えた近江国（現在の滋賀県）佐々木氏の末裔により創建された。寛永12年（1635年）に現在地に移転する。境内には毘沙門堂の他、江戸時代の和算家・関孝和の墓がある（1958年、東京都史跡に指定）。本堂 毘沙門堂 墓地都営大江戸線牛込柳町駅から",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-takahashi-korekiyo-memorial-park",
+          "name": "Takahashi Korekiyo Memorial Park",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "高橋是清翁記念公園（たかはしこれきよおうきねんこうえん)は、東京都港区赤坂七丁目3番39号にある公園。第20代日本国総理大臣・高橋是清の邸宅跡であり、昭和13年（1938年）に高橋是清記念事業会が東京市に寄与し、昭和16年（1941年）に記念公園として開園したものである。1950年（昭和25年）、公園は港区に管理移行され、現在に至る。邸宅は移築され、都立小金井公園内の「江戸東京たてもの園」で公開さ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://www.akasaka-parks.jp/parks/takahashi"
+        },
+        {
+          "id": "activity-history-of-korekiyo-takahashi-memorial-park",
+          "name": "History of Korekiyo Takahashi Memorial Park",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "高橋是清翁記念公園（たかはしこれきよおうきねんこうえん)は、東京都港区赤坂七丁目3番39号にある公園。第20代日本国総理大臣・高橋是清の邸宅跡であり、昭和13年（1938年）に高橋是清記念事業会が東京市に寄与し、昭和16年（1941年）に記念公園として開園したものである。1950年（昭和25年）、公園は港区に管理移行され、現在に至る。邸宅は移築され、都立小金井公園内の「江戸東京たてもの園」で公開さ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://www.akasaka-parks.jp/parks/takahashi"
+        },
+        {
+          "id": "activity-tokyo-opera-city-art-gallery",
+          "name": "Tokyo Opera City Art Gallery",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "東京オペラシティアートギャラリー（とうきょうオペラシティアートギャラリー）は東京都新宿区初台にある東京オペラシティの中にある、近代美術や現代美術を中心とした美術館である。公益財団法人東京オペラシティ文化財団が運営管理している。1999年に開館した。年約4回ほどのペースで主に現代美術の企画展を開催している。寺田小太郎の寄贈作品を中心とした東京オペラシティコレクションも収蔵、公開している。収蔵作品は難",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://www.operacity.jp/ag/"
+        },
+        {
+          "id": "activity-shinjuku-ophthalmologist-gallery",
+          "name": "Shinjuku Ophthalmologist Gallery",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "新宿眼科画廊（しんじゅくがんかがろう）は、新宿区にある現代美術を中心にしたギャラリー及びアートスペース。現代アート、サブカルチャー、演劇の展覧会が多く開かれる。かつて新橋に存在した「新橋内科画廊」のオマージュとして開設。現代美術を中心に、写真、絵画、グラフィック、イラスト、インスタレーション、映像作品などを展示するためのジャンルを問わないアートスペース。大小合わせて4つのスペースを有し、小規模イベ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://www.gankagarou.com/"
+        },
+        {
+          "id": "activity-sato-art-museum",
+          "name": "Sato Art Museum",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "佐藤美術館（さとうびじゅつかん、英語: The Sato Museum of Art）は、東京都新宿区大京町にある美術館。公益財団法人佐藤国際文化育英財団が運営している。現在の公益財団法人の前身となった財団法人佐藤国際文化育英財団は、1990年3月に、第一不動産グループ創業者佐藤行雄によって、美術館の運営とともに、国内外の美術専攻学生への奨学援助や美術を通じた国際交流への貢献を目的に掲げて設立され",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://sato-museum.la.coocan.jp/"
+        }
+      ]
+    },
+    {
+      "id": "mexico-city",
+      "name": "Mexico City",
+      "country": "Mexico",
+      "continent": "North America",
+      "tags": [
+        "port city",
+        "culture",
+        "travel"
+      ],
+      "description": "Mexico City\nis the capital and most populous city of Mexico, as well as the most populous city in North America. It is one of the most important cultural and financial centers in the world, and is classified as an Alpha world city according to the Globalization and World Cities Research Network (GaWC) 2024 ranking. Mexico City is located in the Valley of Mexico within the high Mexican central plateau, at an altitude of 2,240 meters. The city has 16 boroughs or demarcaciones territoriales, which are in turn divided into neighborhoods or colonias.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Sobrevuelos_CDMX_HJ2A4913_%2825514321687%29_%28cropped%29.jpg/3840px-Sobrevuelos_CDMX_HJ2A4913_%2825514321687%29_%28cropped%29.jpg",
+      "pois": [
+        {
+          "id": "activity-museum-of-mexico-city",
+          "name": "Museum of Mexico city",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Museum of Mexico City (Museo de la Ciudad de Mexico) is located at Pino Suarez 30, a few blocks south of the Zocalo, on what was the Iztapalapa Causeway, near where Hernán Cortés and Moctezuma II ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.cultura.cdmx.gob.mx/"
+        },
+        {
+          "id": "activity-antigua-academia-de-san-carlos",
+          "name": "Antigua Academia de San Carlos",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Academy of San Carlos (Spanish: Academia de San Carlos) is located at 22 Academia Street in just northeast of the main plaza of Mexico City. It was the first major art academy and the first art mu",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://academiasancarlos.unam.mx/"
+        },
+        {
+          "id": "activity-national-palace",
+          "name": "National Palace",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The National Palace (Spanish: Palacio Nacional) is the seat of the federal executive in Mexico. Since 2018 it has also served as the official residence for the President of Mexico. It is located on Me",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-museo-nacional-de-las-culturas",
+          "name": "Museo Nacional de las Culturas",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Museo Nacional de las Culturas (MNC; National Museum of Cultures) is a national museum in Mexico City dedicated to education about the world's cultures, both past and present. It is housed in a co",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.museodelasculturas.mx/"
+        },
+        {
+          "id": "activity-jos-luis-cuevas-museum",
+          "name": "José Luis Cuevas Museum",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The José Luis Cuevas Museum is located just off the Zócalo within the Historic center of Mexico City, in Mexico City, Mexico. The museum and Church of Santa Inés were built as parts of the Convent of ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-house-of-the-first-print-shop-in-the-americas",
+          "name": "House of the First Print Shop in the Americas",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The House of the First Printing Press in the Americas (Spanish: Casa de la Primera Imprenta de América) at the corner of Moneda and Licenciado Primo Verdad streets in Mexico City was the home of the f",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-ex-teresa-arte-actual",
+          "name": "Ex Teresa Arte Actual",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Santa Teresa la Antigua is a former convent located in the historic center of Mexico City on Licenciado Primo de Verdad #6 just northeast of the city's main plaza. The complex ceased to be a convent i",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.exteresa.bellasartes.gob.mx/"
+        },
+        {
+          "id": "activity-museo-de-la-secretar-a-de-hacienda-y-cr-dito-p-blico",
+          "name": "Museo de la Secretaría de Hacienda y Crédito Público",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Museo de la Secretaría de Hacienda y Crédito Público is an art museum located in the historic center of Mexico City. It is housed in what was the Palacio del Arzobispado (Palace of the Archbishopr",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.shcp.gob.mx/difusion_cultural/museo_arte/Paginas/presentacion.aspx"
+        },
+        {
+          "id": "landmark-palace-of-the-viceroy",
+          "name": "Palace of the Viceroy",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Palacio del Virrey (Palace of the Viceroy), also known as Casa Real de los Virreyes (Royal House of the Viceroys) is the early name of the National Palace of Mexico, current seat of the federal execut",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-monumento-de-la-fundaci-n-de-m-xico-tenochtitlan",
+          "name": "Monumento de la Fundación de México-Tenochtitlan",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The Monumento a la Fundación de México-Tenochtitlán is installed near the government offices in the historic center of Mexico City, Mexico. The monument, designed by Carlos Marquina, was dedicated in ",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-houses-of-the-mayorazgo-de-guerrero",
+          "name": "Houses of the Mayorazgo de Guerrero",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The Houses of the Mayorazgo de Guerrero are historic buildings at 16 and 18 Moneda Street in Mexico City, located across from the Museum of Cultures in the historic center of the city and near Correo ",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-adoratorio-de-eh-catl",
+          "name": "Adoratorio de Ehécatl",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "El Adoratorio de Ehécatl es una estructura circular compuesta por cinco adoratorios superpuestos que fue hallada entre 1967 y 1970 durante los trabajos de excavación para la construcción de la estació",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-historic-downtown-of-mexico-city",
+          "name": "Historic downtown of Mexico City",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The historic center of Mexico City (Spanish: Centro Histórico de la Ciudad de México), also known as the Centro or Centro Histórico, is the central neighborhood in Mexico City, Mexico, focused on Zóca",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-casa-san-agust-n",
+          "name": "Casa San Agustín",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "La Casa San Agustín es un edificio considerado monumento ubicado en el Centro Histórico de la Ciudad de México, en la esquina de las calles Uruguay y 5 de Febrero, (anteriormente calles de Don Juan Ma",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-bust-of-cuauht-moc",
+          "name": "bust of Cuauhtémoc",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The bust of Cuauhtémoc was created by artist Jesús Fructuoso Contreras at the end of the 19th century. It was originally conceived by the artist as part of a set of sculptures of important Mexican his",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-entrance-to-templo-mayor",
+          "name": "Entrance to Templo Mayor",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Templo Mayor (Spanish: Main Temple) was the main temple of the Mexica people in their capital city of Tenochtitlan, which is now Mexico City. Its architectural style belongs to the late Postclassi",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-la-corte",
+          "name": "La Corte",
+          "category": "food",
+          "icon": "🍽",
+          "description": "The Supreme Court of Justice of the Nation (Spanish: Suprema Corte de Justicia de la Nación (SCJN) is the Mexican institution serving as the country's federal high court and the spearhead organisation",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "http://www.scjn.gob.mx/"
+        },
+        {
+          "id": "food-mercado-abelardo-rodriguez",
+          "name": "Mercado Abelardo Rodriguez",
+          "category": "food",
+          "icon": "🍽",
+          "description": "The Abelardo L. Rodriguez Market is a traditional public market located in the historic center of Mexico City, northeast of the main plaza, or Zocalo. It was built in 1934 as a prototype for a more mo",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "id": "new-york",
+      "name": "New York",
+      "country": "United States",
+      "continent": "North America",
+      "tags": [
+        "travel"
+      ],
+      "description": "New York most commonly refers to:New York City, the most populous city in the United States, located in the state of New York\nNew York (state), a state in the northeastern United States",
+      "image_url": "",
+      "pois": [
+        {
+          "id": "activity-lafayette-park",
+          "name": "LaFayette Park",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Lafayette Park Historic District is located in central Albany, New York, United States. It includes the park and the combination of large government buildings and small rowhouses on the neighborin",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-major-general-philip-schuyler",
+          "name": "Major General Philip Schuyler",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "A statue of Philip Schuyler (sometimes called Major General Philip Schuyler) is installed outside Albany City Hall in Albany, New York, United States. The memorial is slated for removal, as of June 20",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-the-egg-performing-arts-center",
+          "name": "The Egg Performing Arts Center",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Egg is a performing arts venue in Albany, New York. Named for its shape, the building was designed by Harrison & Abramovitz as part of the Empire State Plaza project, and built between 1966 and 19",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.theegg.org/"
+        },
+        {
+          "id": "activity-albany-bible-institute",
+          "name": "Albany Bible Institute",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Albany Institute of History & Art (AIHA) is a museum in Albany, New York, United States, \"dedicated to collecting, preserving, interpreting and promoting interest in the history, art, and culture ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.albanyinstitute.org/"
+        },
+        {
+          "id": "activity-albany-institute-of-history-and-art",
+          "name": "Albany Institute of History and Art",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Albany Institute of History & Art (AIHA) is a museum in Albany, New York, United States, \"dedicated to collecting, preserving, interpreting and promoting interest in the history, art, and culture ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.albanyinstitute.org/"
+        },
+        {
+          "id": "activity-tricentennial-park",
+          "name": "Tricentennial Park",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Tricentennial Park is an urban park in Albany, New York built to commemorate that city's three hundredth anniversary as an incorporated city and is the site of several statues and monuments. The park ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-albany-center-galleries",
+          "name": "Albany Center Galleries",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Albany Center Gallery is a nonprofit art space located in downtown Albany, New York. Supported by city, state, corporate and foundation funds, as well as fundraisers, individual donations and membersh",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://albanycentergallery.org"
+        },
+        {
+          "id": "activity-palace-theatre",
+          "name": "Palace Theatre",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Palace Theatre is an entertainment venue in downtown Albany, New York, located on the corner of Clinton Avenue (US 9) and North Pearl Street (NY 32). The theatre is operated by the Palace Performi",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.palacealbany.com;https://www.palacealbany.org/"
+        },
+        {
+          "id": "landmark-fort-frederick",
+          "name": "Fort Frederick",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Fort Frederick was a fort in Albany, New York from 1676–1789. Sitting atop State Street Hill (Capitol Hill) it replaced the earlier decaying Fort Orange along the Hudson River. The fort was named for ",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-downtown",
+          "name": "Downtown",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The Downtown Albany Historic District is a 19-block, 66-acre (27 ha) area of Albany, New York, United States, centered on the junction of State (New York State Route 5) and North and South Pearl stree",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-new-york-state-world-war-ii-memorial",
+          "name": "New York State World War II Memorial",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The New York State Women Veterans Memorial is located on Madison Avenue in Albany, New York. It commemorates the role of women in military service.The ground-breaking ceremony for the memorial was hel",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-women-veterans-memorial",
+          "name": "Women Veterans' Memorial",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The New York State Women Veterans Memorial is located on Madison Avenue in Albany, New York. It commemorates the role of women in military service.The ground-breaking ceremony for the memorial was hel",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-ten-broeck-triangle",
+          "name": "Ten Broeck Triangle",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The Arbor Hill Historic District–Ten Broeck Triangle, originally the Ten Broeck Historic District, is a seven-block area located within the Arbor Hill neighborhood north of what is today downtown Alba",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-center-square-hudson-park-historic-district",
+          "name": "Center Square/Hudson–Park Historic District",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The Center Square/Hudson–Park Historic District is located between Empire State Plaza and Washington Park in Albany, New York, United States. It is a 27-block, 99-acre (40 ha) area taking in both the ",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-new-york-state-museum-library-and-archives",
+          "name": "New York State Museum, Library, and Archives",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Cultural Education Center is on the south side of the Empire State Plaza in Albany, New York. Located on Madison Avenue, it faces northward towards the New York State Capitol building. Constructio",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-albany-visitors-center",
+          "name": "Albany Visitors Center",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Albany Center Gallery is a nonprofit art space located in downtown Albany, New York. Supported by city, state, corporate and foundation funds, as well as fundraisers, individual donations and membersh",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://albanycentergallery.org"
+        },
+        {
+          "id": "activity-new-york-state-museum-carousel",
+          "name": "New York State Museum Carousel",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The New York State Museum is a research-backed institution in Albany, New York, United States. It is located on Madison Avenue, attached to the south side of the Empire State Plaza, facing onto the pl",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.nysm.nysed.gov"
+        },
+        {
+          "id": "activity-ten-broeck-mansion",
+          "name": "Ten Broeck Mansion",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Ten Broeck Mansion in Albany, New York was built in 1797. It was listed on the National Register of Historic Places in 1971. A decade later it was included as a contributing property to the Arbor ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "id": "salt-lake-city",
+      "name": "Salt Lake City",
+      "country": "United States",
+      "continent": "North America",
+      "tags": [
+        "arts",
+        "travel"
+      ],
+      "description": "Salt Lake City, often shortened to Salt Lake or SLC, is the capital and most populous city of the U.S. state of Utah. It is the county seat of Salt Lake County, the most populous county in the state. The population was 199,723 at the 2020 census, while the Salt Lake City metropolitan area has an estimated 1.3 million residents and is the 46th-largest metropolitan area in the United States. It is also part of the larger Salt Lake City–Ogden–Provo combined statistical area, an urban corridor along a 120-mile (190 km) segment of the Wasatch Front with a population of approximately 2.8 million. It",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Salt_Lake_Union_Pacific_Railroad_Station%2C_South_Temple_at_400_West%2C_Central_City_West%2C_Salt_Lake_City%2C_UT%2C_USA.jpg/3840px-Salt_Lake_Union_Pacific_Railroad_Station%2C_South_Temple_at_400_West%2C_Central_City_West%2C_Salt_Lake_City%2C_UT%2C_USA.jpg",
+      "pois": [
+        {
+          "id": "activity-washington-square",
+          "name": "Washington Square",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Washington Square, or Washington Square Park, is a public park in Salt Lake City, Utah, United States. The park surrounds the Salt Lake City and County Building.Washington Square includes the entire c",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-the-leonardo",
+          "name": "The Leonardo",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Leonardo, located in downtown Salt Lake City, Utah, United States is a science and art museum where visitors can explore the ways that science, technology, art, and creativity connect. The museum ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.theleonardo.org/"
+        },
+        {
+          "id": "activity-eccles-theater",
+          "name": "Eccles Theater",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The George S. and Dolores Doré Eccles Theater (commonly shortened to the Eccles Theater) is located in Salt Lake City, Utah. It was opened in 2016. It hosts touring Broadway shows, concerts, and other",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://artsaltlake.org;https://artsaltlake.org/venue/eccles-theater/"
+        },
+        {
+          "id": "activity-celebration-of-life-monument",
+          "name": "Celebration of Life Monument",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Celebration of Life Monument is a visual art display in Salt Lake City, Utah, United States. The monument commemorates organ donors, and is located southeast of the Salt Lake City Public Library.T",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-pioneer-park",
+          "name": "Pioneer Park",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Pioneer Park is a public park in Salt Lake City's Rio Grande neighborhood, in the U.S. state of Utah. The site is listed on the National Register of Historic Places as Old Pioneer Fort Site.Features i",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.slcgov.com/cityparks/parks-pioneer-park"
+        },
+        {
+          "id": "activity-utah-museum-of-contemporary-art",
+          "name": "Utah Museum of Contemporary Art",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Utah Museum of Contemporary Art (UMOCA), formerly known as the Salt Lake Art Center, is a contemporary art museum. Located in Downtown Salt Lake City, the museum presents rotating exhibitions by l",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://www.utahmoca.org/;http://www.utahmoca.org/"
+        },
+        {
+          "id": "activity-abravanel-hall",
+          "name": "Abravanel Hall",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Abravanel Hall is a concert hall in Salt Lake City, Utah that is home to the Utah Symphony, and is part of the Salt Lake County Center for the Arts. The hall is an architectural landmark in the city, ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.slccfa.org/venues/abravanel-hall"
+        },
+        {
+          "id": "activity-old-hansen-planetarium",
+          "name": "Old Hansen Planetarium",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Old Hansen Planetarium at 15 South State Street in Salt Lake City, Utah has served many functions throughout its history. Originally built in 1904 as the Salt Lake City Public Library, the buildin",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-exchange-place-historic-district",
+          "name": "Exchange Place Historic District",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The Exchange Place Historic District in Downtown Salt Lake City, Utah, United States is a historic district that was listed on the National Register of Historic Places in 1978. It included ten contrib",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-brigham-young-monument",
+          "name": "Brigham Young Monument",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Brigham Young Monument (or Pioneer Monument) is a bronzed historical monument located on the north sidewalk of the intersection at Main and South Temple Streets of Salt Lake City, Utah. It was ere",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-seagull-monument",
+          "name": "Seagull Monument",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Seagull Monument is a small monument situated immediately in front of the Salt Lake Assembly Hall on Temple Square, in Salt Lake City, Utah. The Monument commemorates what some members of The Chur",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-eagle-gate-monument",
+          "name": "Eagle Gate Monument",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Eagle Gate monument is a historical monument—more in the form of an arch than a gate—seventy-six feet across, situated at the intersection of State Street at South Temple, adjacent to Temple Squar",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-warehouse-district",
+          "name": "Warehouse District",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The Warehouse District of Salt Lake City, Utah, is a historic district on the city's west side. The area has been occupied by artists, and worked on by developers. A small portion of its area was adde",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-mormon-pioneer-memorial-monument",
+          "name": "Mormon Pioneer Memorial Monument",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The Mormon Pioneer Memorial Monument (also known as the Brigham Young Cemetery) is a private cemetery and memorial. It was dedicated to the more than 6,000 Mormon pioneers who died making the journey ",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-church-history-museum",
+          "name": "Church History Museum",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Church History Museum, formerly the Museum of Church History and Art, is the premier museum operated by the Church History Department of The Church of Jesus Christ of Latter-day Saints (LDS Church",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://history.lds.org/place/church-history-museum?lang=eng"
+        },
+        {
+          "id": "activity-clark-planetarium",
+          "name": "Clark Planetarium",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Clark Planetarium is situated within The Gateway at the intersection of 400 West and 100 South in downtown Salt Lake City, Utah, United States. The Clark Planetarium opened in April 2003, replacin",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://clarkplanetarium.org/;http://www.clarkplanetarium.org"
+        },
+        {
+          "id": "activity-discovery-gateway-children-s-museum",
+          "name": "Discovery Gateway Children's Museum",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Discovery Gateway, formerly The Children's Museum of Utah (TCMU), is an interactive, hands-on children's museum located in downtown Salt Lake City, Utah, United States. Comprising over 60,000 square f",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-museum-of-utah-folk-art",
+          "name": "Museum of Utah Folk Art",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Chase Home Museum of Utah Folk Arts is operated by the Utah Division of Arts & Museums, and has been the permanent home of the Utah State Folk Arts Collection since 1987 and is the only museum in ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://artsandmuseums.utah.gov/chase-home-museum/"
+        }
+      ]
+    },
+    {
+      "id": "provo",
+      "name": "Provo",
+      "country": "United States",
+      "continent": "North America",
+      "tags": [
+        "travel"
+      ],
+      "description": "Provo or Provos may refer to:",
+      "image_url": "",
+      "pois": [
+        {
+          "id": "activity-harrison-arboretum-and-botany-pond",
+          "name": "Harrison Arboretum and Botany Pond",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Bertrand F. Harrison Arboretum, also known as the Brigham Young University Arboretum, is an arboretum located on a hill beside at 800 North Street on the campus of Brigham Young University in Prov",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-superintendent-s-residence-at-the-utah-state-hospital",
+          "name": "Superintendent's Residence at the Utah State Hospital",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Superintendent's Residence at the Utah State Hospital is a historic house located at the Utah State Hospital in east Provo, Utah, United States. It was listed on the National Register of Historic ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-statue-of-massasoit",
+          "name": "Statue of Massasoit",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "A statue of Massasoit by Cyrus E. Dallin is installed outside the Utah State Capitol in Salt Lake City, Utah, United States.Media related to Statue of Massasoit (Salt Lake City) at Wikimedia Commons",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-byu-museum-of-art",
+          "name": "BYU Museum of Art",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Brigham Young University Museum of Art, located in Provo, Utah, United States is the university's primary art museum and is one of the best attended university-campus art museums in the United Sta",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://moa.byu.edu/"
+        },
+        {
+          "id": "activity-recreation-center-for-the-utah-state-hospital",
+          "name": "Recreation Center for the Utah State Hospital",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Recreation Center For the Utah State Hospital is a historic amphitheater in eastern Provo, Utah, United States, that is listed on the National Register of Historic Places.The facility is located a",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-monte-l-bean-life-science-museum",
+          "name": "Monte L. Bean Life Science Museum",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Monte L. Bean Life Science Museum is a natural history museum housed at Brigham Young University (BYU) in Provo, Utah, United States.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://mlbean.byu.edu"
+        },
+        {
+          "id": "activity-byu-museum-of-paleontology",
+          "name": "BYU Museum of Paleontology",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Brigham Young University Museum of Paleontology was started in 1976 around the collection of James A. Jensen. For many years, it was known as the BYU Earth Science Museum, and most of the collecti",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://geology.byu.edu/museum/"
+        },
+        {
+          "id": "landmark-downtown",
+          "name": "Downtown",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The Provo Downtown Historic District is a 25-acre (10 ha) historic area located in Provo, Utah, United States. It is listed on the National Register of Historic Places.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-provo-east-central-historic-district",
+          "name": "Provo East Central Historic District",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The Provo East Central Historic District is a 260-acre (110 ha) historic district in Provo, Utah, United States that was listed on the National Register of Historic Places in 1998.The district It is r",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-provo-city-library",
+          "name": "Provo City Library",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "The Provo City Library is a public library serving residents of Provo and Orem in the U.S. state of Utah. It occupies the building of the former Brigham Young Academy, which was built in 1892. In 1976",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-y-mountain",
+          "name": "Y Mountain",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "Y Mountain is a mountain located directly east of Brigham Young University (BYU) in Provo, Utah, United States. The Slide Canyon, or Y Mountain Trail, leads to a large block Y located 1.06 miles (1.71",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-squaw-mountain",
+          "name": "Squaw Mountain",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "Bukid ang Squaw Mountain sa Tinipong Bansa. Ang Squaw Mountain nahimutang sa kondado sa Utah County ug estado sa Utah, sa sentro nga bahin sa nasod, 2,900 km sa kasadpan sa ulohang dakbayan Washington",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-rock-canyon",
+          "name": "Rock Canyon",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "Rock Canyon is located in the Wasatch Mountains, in east Provo, Utah, United States. It is popular with rock climbers and hikers (and a number of other outdoor enthusiasts of all types) due to its uni",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-buckley-mountain",
+          "name": "Buckley Mountain",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "Bukid ang Buckley Mountain sa Tinipong Bansa. Ang Buckley Mountain nahimutang sa kondado sa Utah County ug estado sa Utah, sa sentro nga bahin sa nasod, 2,900 km sa kasadpan sa ulohang dakbayan Washin",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-utah-lake-state-park",
+          "name": "Utah Lake State Park",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "Utah Lake State Park is a state park in west Provo, Utah, United States. The park is located at the west end of Provo Center Street on the east shore of Utah Lake (the largest fresh water lake in the ",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": "http://stateparks.utah.gov/parks/utah-lake/"
+        }
+      ]
+    },
+    {
+      "id": "dubai",
+      "name": "Dubai",
+      "country": "United Arab Emirates",
+      "continent": "Asia",
+      "tags": [
+        "beaches",
+        "travel"
+      ],
+      "description": "Dubai is the most populous city in the United Arab Emirates and the capital of the Emirate of Dubai. It is on a creek on the southeastern coast of the Persian Gulf. As of 2025, its population stands at 4 million, 92% of whom are expatriates. The wider urban area includes Sharjah and has a population of 5 million people as of 2023, while the Dubai–Sharjah–Ajman metropolitan area has a population of 6 million people.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/c/c7/Burj_Khalifa_2021.jpg/3840px-Burj_Khalifa_2021.jpg",
+      "pois": [
+        {
+          "id": "activity-dubai-miracle-garden",
+          "name": "Dubai Miracle Garden",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Dubai Miracle Garden (In Arabic: حديقة الزهور بدبي) is a flower garden located in the district of Dubailand, Dubai, United Arab Emirates. The garden was launched on Valentine's Day in 2013. It occ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://www.dubaimiraclegarden.com/"
+        }
+      ]
     }
   ]
 }

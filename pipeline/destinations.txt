@@ -10,6 +10,10 @@ Copenhagen, Denmark
 Prague, Czech Republic
 Rome, Italy
 Vienna, Austria
+Hamburg, Germany
+Bornholm, Denmark
+Stockholm, Sweden
+Reykjavik, Iceland
 
 # Asia
 Bangkok, Thailand
@@ -22,6 +26,8 @@ Tokyo, Japan
 Buenos Aires, Argentina
 Mexico City, Mexico
 New York, United States
+Salt Lake City, United States
+Provo, United States
 
 # Africa & Middle East
 Cape Town, South Africa
