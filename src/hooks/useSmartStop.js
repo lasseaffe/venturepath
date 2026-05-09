@@ -23,7 +23,7 @@ function useDebounceSearch(query, destCoords, tripDestination, delay = 400) {
   const timer = useRef(null);
 
   useEffect(() => {
-    if (!query.trim()) { setResults([]); return; }
+    if (!query?.trim()) { setResults([]); return; }
     clearTimeout(timer.current);
     timer.current = setTimeout(async () => {
       setSearching(true);
@@ -76,16 +76,16 @@ export function useSmartStop(trip) {
     }
   }, []);
 
-  function pickFrom(place) {
+  const pickFrom = useCallback((place) => {
     setFromQuery('');
     fromAC.clear();
     if (place.coords) {
       setFromCoords(place.coords);
       if (toCoords) triggerRoutesFetch(place.coords, toCoords);
     }
-  }
+  }, [toCoords, triggerRoutesFetch, fromAC]);
 
-  function pickTo(place) {
+  const pickTo = useCallback((place) => {
     setToQuery('');
     toAC.clear();
     if (place.coords) {
@@ -93,7 +93,7 @@ export function useSmartStop(trip) {
       setToPlaceType(place.type ?? null);
       if (fromCoords) triggerRoutesFetch(fromCoords, place.coords);
     }
-  }
+  }, [fromCoords, triggerRoutesFetch, toAC]);
 
   const visitDurationSuggestion = getVisitDurationSuggestion(toPlaceType);
 
