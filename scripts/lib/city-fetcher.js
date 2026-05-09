@@ -123,11 +123,14 @@ export async function countryNameToCode(countryName) {
   if (!countryName) return null;
   try {
     const res = await fetch(
-      `https://restcountries.com/v3.1/name/${encodeURIComponent(countryName)}?fields=cca2`,
+      `https://restcountries.com/v3.1/name/${encodeURIComponent(countryName)}?fields=cca2,name`,
     );
     if (!res.ok) return null;
     const data = await res.json();
-    return data?.[0]?.cca2?.toLowerCase() ?? null;
+    // Prefer exact common-name match to avoid e.g. "Caribbean Netherlands" before "Netherlands"
+    const needle = countryName.toLowerCase();
+    const match = data.find(c => c.name?.common?.toLowerCase() === needle) ?? data[0];
+    return match?.cca2?.toLowerCase() ?? null;
   } catch { return null; }
 }
 
@@ -176,6 +179,7 @@ export async function fetchCity(cityName, country, { verbose = true } = {}) {
 
   log('📍  Geocoding…');
   const geo = await otmGeocode(cityName, country);
+  if (!geo?.lat || !geo?.lon) throw new Error(`OTM geocode returned no coordinates for "${cityName}, ${country}" — city may be ambiguous or unknown`);
   log(`    → ${geo.lat.toFixed(4)}, ${geo.lon.toFixed(4)}`);
 
   const pois = [];
