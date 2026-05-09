@@ -1,37 +1,17 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTripStore } from '../../store/useTripStore';
-import { searchStops } from '../../utils/stopSearchEngine';
+import { useSmartStop } from '../../hooks/useSmartStop';
 import NearbyDrawer from '../nearby/NearbyDrawer';
 
-const MODES = [
-  { value: 'flight', label: '✈ Flight' },
-  { value: 'bus',    label: '🚌 Bus' },
-  { value: 'foot',   label: '🥾 Foot' },
-  { value: 'boat',   label: '⛵ Boat' },
-  { value: 'car',    label: '🚗 Car' },
-  { value: 'train',  label: '🚆 Train' },
-];
-
-function useLocationAutocomplete(query, tripDestination) {
-  const [results, setResults] = useState([]);
-  const [searching, setSearching] = useState(false);
-  const debounce = useRef(null);
-
-  useEffect(() => {
-    if (!query.trim()) { setResults([]); return; }
-    clearTimeout(debounce.current);
-    debounce.current = setTimeout(async () => {
-      setSearching(true);
-      const res = await searchStops(query, tripDestination);
-      setResults(res);
-      setSearching(false);
-    }, 400);
-    return () => clearTimeout(debounce.current);
-  }, [query, tripDestination]);
-
-  return { results, searching, clear: () => setResults([]) };
-}
+const MODE_META = {
+  car:     { label: 'Car',          icon: '🚗' },
+  foot:    { label: 'Foot',         icon: '🥾' },
+  cycling: { label: 'Bus / Cycle',  icon: '🚌' },
+  flight:  { label: 'Flight',       icon: '✈' },
+  train:   { label: 'Train',        icon: '🚆' },
+  boat:    { label: 'Boat',         icon: '⛵' },
+};
 
 function SuggestionList({ results, onPick }) {
   if (!results.length) return null;
@@ -64,7 +44,6 @@ function EntryPicker({ legs, onSelect, onClose }) {
     { label: l.from, sub: `From — ${l.to}` },
     { label: l.to,   sub: `To — ${l.from}` },
   ]);
-  // deduplicate by label
   const seen = new Set();
   const unique = allPoints.filter(p => {
     if (seen.has(p.label)) return false;
@@ -104,47 +83,84 @@ function EntryPicker({ legs, onSelect, onClose }) {
   );
 }
 
+function ModeRow({ route, selected, onSelect }) {
+  const meta = MODE_META[route.mode] ?? { label: route.mode, icon: '•' };
+  const hasData = route.durationH != null && route.distanceKm != null;
+  const durationLabel = hasData
+    ? `${Math.floor(route.durationH)}h ${Math.round((route.durationH % 1) * 60)}m`
+    : '—';
+  const distanceLabel = hasData ? `${route.distanceKm} km` : '—';
+
+  return (
+    <button
+      type="button"
+      onClick={() => onSelect(route)}
+      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors"
+      style={{
+        background: selected ? 'var(--cta)' : 'var(--surface-raised)',
+        color: selected ? '#fff' : 'var(--text-primary)',
+        border: `1px solid ${selected ? 'var(--cta)' : 'var(--border)'}`,
+      }}
+    >
+      <span className="text-base">{meta.icon}</span>
+      <span className="flex-1 text-left font-medium">{meta.label}</span>
+      {hasData && (
+        <span className="text-xs font-mono" style={{ color: selected ? 'rgba(255,255,255,0.8)' : 'var(--text-muted)' }}>
+          {durationLabel} · {distanceLabel}
+        </span>
+      )}
+      {!hasData && (
+        <span className="text-xs" style={{ color: selected ? 'rgba(255,255,255,0.6)' : 'var(--text-muted)' }}>manual</span>
+      )}
+    </button>
+  );
+}
+
+function SkeletonModeRow() {
+  return (
+    <div className="w-full h-10 rounded-lg animate-pulse" style={{ background: 'var(--surface-raised)' }} />
+  );
+}
+
 export default function StopEditor({ leg = null, defaultFrom = '', onClose }) {
   const { trip, legs, addLeg, updateLeg, removeLeg } = useTripStore();
   const isEdit = !!leg;
 
   const [from, setFrom] = useState(leg?.from ?? defaultFrom);
   const [to, setTo]     = useState(leg?.to ?? '');
-  const [mode, setMode] = useState(leg?.mode ?? 'flight');
-  const [durationH, setDurationH]     = useState(leg?.durationH ?? '');
-  const [distanceKm, setDistanceKm]   = useState(leg?.distanceKm ?? '');
-  const [coords, setCoords]           = useState(leg?.coords ?? null);
-
-  // Separate query strings for autocomplete (decoupled from the committed value)
-  const [fromQuery, setFromQuery] = useState('');
-  const [toQuery, setToQuery]     = useState('');
+  const [mode, setMode] = useState(leg?.mode ?? 'car');
+  const [durationH, setDurationH]   = useState(leg?.durationH ?? '');
+  const [distanceKm, setDistanceKm] = useState(leg?.distanceKm ?? '');
   const [showEntryPicker, setShowEntryPicker] = useState(false);
 
-  const fromAC = useLocationAutocomplete(fromQuery, trip.destination);
-  const toAC   = useLocationAutocomplete(toQuery,   trip.destination);
+  const smart = useSmartStop(trip);
 
-  function pickFrom(r) {
-    setFrom(r.name);
-    if (r.coords) setCoords(r.coords);
-    setFromQuery('');
-    fromAC.clear();
+  function handlePickFrom(place) {
+    setFrom(place.name);
+    smart.setFromQuery('');
+    smart.pickFrom(place);
   }
 
-  function pickTo(r) {
-    setTo(r.name);
-    if (r.coords) setCoords(r.coords);
-    setToQuery('');
-    toAC.clear();
+  function handlePickTo(place) {
+    setTo(place.name);
+    smart.setToQuery('');
+    smart.pickTo(place);
   }
 
   function handleFromChange(val) {
     setFrom(val);
-    setFromQuery(val);
+    smart.setFromQuery(val);
   }
 
   function handleToChange(val) {
     setTo(val);
-    setToQuery(val);
+    smart.setToQuery(val);
+  }
+
+  function handleModeRowSelect(route) {
+    setMode(route.mode);
+    if (route.durationH != null) setDurationH(String(route.durationH));
+    if (route.distanceKm != null) setDistanceKm(String(route.distanceKm));
   }
 
   function handleSubmit(e) {
@@ -155,7 +171,6 @@ export default function StopEditor({ leg = null, defaultFrom = '', onClose }) {
       mode,
       durationH:  parseFloat(durationH) || 0,
       distanceKm: parseFloat(distanceKm) || 0,
-      coords,
     };
     if (isEdit) {
       updateLeg({ ...data, id: leg.id, status: leg.status });
@@ -169,6 +184,9 @@ export default function StopEditor({ leg = null, defaultFrom = '', onClose }) {
     if (isEdit) removeLeg(leg.id);
     onClose();
   }
+
+  const showTable = smart.routes.length > 0;
+  const showSkeleton = smart.loadingRoutes;
 
   return (
     <motion.div
@@ -206,31 +224,34 @@ export default function StopEditor({ leg = null, defaultFrom = '', onClose }) {
               type="text"
               value={from}
               onChange={e => handleFromChange(e.target.value)}
-              onFocus={() => from && setFromQuery(from)}
+              onFocus={() => from && smart.setFromQuery(from)}
               required
               className="w-full px-3 py-2 rounded-lg text-sm outline-none"
               style={{ background: 'var(--surface-raised)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
             />
-            {fromAC.searching && <div className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>searching…</div>}
+            {smart.fromSearching && (
+              <div className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>searching…</div>
+            )}
             <AnimatePresence>
               {showEntryPicker && (
                 <EntryPicker
                   legs={legs}
-                  onSelect={name => { setFrom(name); setFromQuery(''); fromAC.clear(); setShowEntryPicker(false); }}
+                  onSelect={name => { setFrom(name); smart.setFromQuery(''); setShowEntryPicker(false); }}
                   onClose={() => setShowEntryPicker(false)}
                 />
               )}
             </AnimatePresence>
-            {!showEntryPicker && <SuggestionList results={fromAC.results} onPick={pickFrom} />}
+            {!showEntryPicker && (
+              <SuggestionList results={smart.fromResults} onPick={handlePickFrom} />
+            )}
           </div>
 
-          {/* Nearby search — anchor defaults to FROM location */}
+          {/* Nearby search */}
           <NearbyDrawer
             anchor={from}
             onSelectPlace={name => {
               setTo(name);
-              setToQuery('');
-              toAC.clear();
+              smart.setToQuery('');
             }}
           />
 
@@ -241,70 +262,95 @@ export default function StopEditor({ leg = null, defaultFrom = '', onClose }) {
               type="text"
               value={to}
               onChange={e => handleToChange(e.target.value)}
-              onFocus={() => to && setToQuery(to)}
+              onFocus={() => to && smart.setToQuery(to)}
               required
               className="w-full px-3 py-2 rounded-lg text-sm outline-none"
               style={{ background: 'var(--surface-raised)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
             />
-            {toAC.searching && <div className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>searching…</div>}
-            <SuggestionList results={toAC.results} onPick={pickTo} />
+            {smart.toSearching && (
+              <div className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>searching…</div>
+            )}
+            <SuggestionList results={smart.toResults} onPick={handlePickTo} />
           </div>
 
-          {/* Travel mode */}
+          {/* Travel mode — comparison table or skeletons or plain label */}
           <div>
             <label className="label-tag block mb-1.5">Travel mode</label>
-            <div className="flex flex-wrap gap-2">
-              {MODES.map(m => (
-                <button
-                  key={m.value}
-                  type="button"
-                  onClick={() => setMode(m.value)}
-                  className="px-2.5 py-1 rounded-full text-xs font-medium transition-colors"
-                  style={{
-                    background: mode === m.value ? 'var(--cta)' : 'var(--surface-raised)',
-                    color: mode === m.value ? '#fff' : 'var(--text-secondary)',
-                    border: `1px solid ${mode === m.value ? 'var(--cta)' : 'var(--border)'}`,
-                  }}
-                >
-                  {m.label}
-                </button>
-              ))}
-            </div>
+            {showSkeleton && (
+              <div className="space-y-2">
+                {[1, 2, 3].map(i => <SkeletonModeRow key={i} />)}
+              </div>
+            )}
+            {!showSkeleton && showTable && (
+              <div className="space-y-1.5">
+                {smart.routes.map(route => (
+                  <ModeRow
+                    key={route.mode}
+                    route={route}
+                    selected={mode === route.mode}
+                    onSelect={handleModeRowSelect}
+                  />
+                ))}
+              </div>
+            )}
+            {!showSkeleton && !showTable && (
+              <div className="flex flex-wrap gap-2">
+                {Object.entries(MODE_META).map(([value, meta]) => (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => setMode(value)}
+                    className="px-2.5 py-1 rounded-full text-xs font-medium transition-colors"
+                    style={{
+                      background: mode === value ? 'var(--cta)' : 'var(--surface-raised)',
+                      color: mode === value ? '#fff' : 'var(--text-secondary)',
+                      border: `1px solid ${mode === value ? 'var(--cta)' : 'var(--border)'}`,
+                    }}
+                  >
+                    {meta.icon} {meta.label}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Duration + Distance */}
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="label-tag block mb-1.5">Duration (h)</label>
-              <input type="number" min="0" step="0.5" value={durationH} onChange={e => setDurationH(e.target.value)}
+              <input
+                type="number" min="0" step="0.5"
+                value={durationH}
+                onChange={e => setDurationH(e.target.value)}
+                placeholder={smart.visitDurationSuggestion ?? ''}
                 className="w-full px-3 py-2 rounded-lg text-sm outline-none"
                 style={{ background: 'var(--surface-raised)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
               />
             </div>
             <div>
               <label className="label-tag block mb-1.5">Distance (km)</label>
-              <input type="number" min="0" value={distanceKm} onChange={e => setDistanceKm(e.target.value)}
+              <input
+                type="number" min="0"
+                value={distanceKm}
+                onChange={e => setDistanceKm(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg text-sm outline-none"
                 style={{ background: 'var(--surface-raised)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
               />
             </div>
           </div>
 
-          {coords && (
-            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-              📍 {coords.lat.toFixed(4)}, {coords.lng.toFixed(4)}
-            </p>
-          )}
-
           <div className="pt-2 space-y-2">
-            <button type="submit"
+            <button
+              type="submit"
               className="w-full py-2.5 rounded-lg text-sm font-semibold text-white"
               style={{ background: 'var(--cta)' }}
             >
               {isEdit ? 'Save changes' : 'Add stop'}
             </button>
             {isEdit && (
-              <button type="button" onClick={handleDelete}
+              <button
+                type="button"
+                onClick={handleDelete}
                 className="w-full py-2 rounded-lg text-sm transition-colors"
                 style={{ background: 'transparent', color: 'var(--status-alert)', border: '1px solid var(--status-alert)' }}
               >
