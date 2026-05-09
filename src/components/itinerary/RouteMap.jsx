@@ -5,6 +5,7 @@ import L from 'leaflet';
 import { useTripStore } from '../../store/useTripStore';
 import StopEditor from '../trip/StopEditor';
 import { geocodeLocation } from '../../utils/geocodeEngine';
+import NearbyMapOverlay from '../nearby/NearbyMapOverlay';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -105,6 +106,7 @@ export default function RouteMap({ className = '' }) {
   const [selectedLegId, setSelectedLegId] = useState(null);
   const [editorOpen, setEditorOpen] = useState(false);
   const [editingLeg, setEditingLeg] = useState(null); // null = add mode
+  const [nearbyAnchorLeg, setNearbyAnchorLeg] = useState(null);
 
   function openAdd() { setEditingLeg(null); setEditorOpen(true); }
   function openEdit(leg) { setEditingLeg(leg); setEditorOpen(true); }
@@ -280,6 +282,23 @@ export default function RouteMap({ className = '' }) {
                     }}>
                       {l.status.toUpperCase()}
                     </div>
+                    <button
+                      onClick={e => { e.stopPropagation(); setNearbyAnchorLeg(l); }}
+                      style={{
+                        marginTop: 8,
+                        background: 'transparent',
+                        border: '1px solid #E67E22',
+                        color: '#E67E22',
+                        borderRadius: 4,
+                        padding: '2px 8px',
+                        fontSize: 11,
+                        cursor: 'pointer',
+                        fontFamily: 'monospace',
+                        width: '100%',
+                      }}
+                    >
+                      🧭 Find nearby
+                    </button>
                   </div>
                 </Popup>
               </Marker>
@@ -292,6 +311,12 @@ export default function RouteMap({ className = '' }) {
               center={selectedCoords}
               radius={35000}
               pathOptions={{ color: '#E67E22', fillColor: '#E67E22', fillOpacity: 0.08, weight: 1, opacity: 0.5 }}
+            />
+          )}
+          {nearbyAnchorLeg && (
+            <NearbyMapOverlay
+              anchor={nearbyAnchorLeg.from}
+              onClose={() => setNearbyAnchorLeg(null)}
             />
           )}
         </MapContainer>
