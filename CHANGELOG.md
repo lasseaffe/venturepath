@@ -1,5 +1,15 @@
 # VenturePath — CHANGELOG
 
+## [0.9.0] — 2026-05-10 — Proximity Re-ranking for Stop Search
+
+### Added
+- **`rankByProximity(results, refCoords)`** — New exported function in `stopSearchEngine.js`. Sorts search results by distance from a reference coordinate (typically the trip destination). Results without coords sort to end (Infinity distance). Null refCoords returns original array unchanged.
+- **`src/utils/stopSearchEngine.test.js`** — Comprehensive test suite (3 tests): verifies closest-first sorting, null-coords passthrough, and null-refCoords identity behavior.
+
+### Changed
+- **`searchStops(query, nearCity, destCoords = null)`** — New third parameter `destCoords` (backward compatible). Both Foursquare and Nominatim fallback results are now proximity-ranked if destCoords provided.
+- **`stopSearchEngine.js`** — Now imports `haversineKm` from `routeEngine` for distance calculations.
+
 ## [0.8.0] — 2026-05-10 — LLM Issue Fixer Pipeline
 
 ### Added
