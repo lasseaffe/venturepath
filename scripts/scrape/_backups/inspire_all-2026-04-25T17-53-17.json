@@ -1,0 +1,542 @@
+{
+  "version": 1,
+  "generated": "2026-04-25",
+  "cities": [
+    {
+      "id": "kyoto",
+      "name": "Kyoto",
+      "country": "Japan",
+      "continent": "Asia",
+      "tags": [
+        "cultural",
+        "temples",
+        "food",
+        "traditional",
+        "gardens"
+      ],
+      "description": "Japan's ancient imperial capital — 17 UNESCO World Heritage sites, 1,600 Buddhist temples, and some of the world's best kaiseki cuisine packed into a single city.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Kinkaku-ji_Temple%2C_Kyoto%2C_Japan.jpg/1200px-Kinkaku-ji_Temple%2C_Kyoto%2C_Japan.jpg",
+      "pois": [
+        {
+          "id": "kyoto-fushimi",
+          "name": "Fushimi Inari Shrine",
+          "category": "landmark",
+          "icon": "⛩",
+          "description": "10,000 vermilion torii gates winding 4 km up Mount Inari. Free entry, open 24 hrs.",
+          "duration_min": 120,
+          "time_suggestion": "06:00",
+          "notes": "Go at dawn — summit is deserted, lower gates are packed by 09:00"
+        },
+        {
+          "id": "kyoto-nishiki",
+          "name": "Nishiki Market",
+          "category": "food",
+          "icon": "🥢",
+          "description": "'Kyoto's kitchen' — 400-year-old covered arcade with pickles, tofu, skewered delicacies.",
+          "duration_min": 60,
+          "time_suggestion": "11:00",
+          "notes": "Most stalls close by 18:00. Try the yuba (tofu skin) on skewers."
+        },
+        {
+          "id": "kyoto-arashiyama",
+          "name": "Arashiyama Bamboo Grove",
+          "category": "activity",
+          "icon": "🎋",
+          "description": "Dense bamboo corridor flanked by monkey park and Tenryū-ji Zen garden.",
+          "duration_min": 90,
+          "time_suggestion": "07:30",
+          "notes": "Take the Sagano Scenic Railway back — views of Hozu Gorge"
+        },
+        {
+          "id": "kyoto-pontocho",
+          "name": "Pontocho Alley",
+          "category": "hidden_gem",
+          "icon": "🏮",
+          "description": "Narrow lantern-lit alley with riverside kaiseki restaurants — geisha sightings at dusk.",
+          "duration_min": 120,
+          "time_suggestion": "19:30",
+          "notes": "Reserve a window seat at a kawa-yuka terrace restaurant in summer"
+        },
+        {
+          "id": "kyoto-station",
+          "name": "Kyoto Station",
+          "category": "transport_hub",
+          "icon": "🚄",
+          "description": "Futuristic 15-storey station hub. Shinkansen to Tokyo (2h15) and Osaka (15 min).",
+          "duration_min": 30,
+          "time_suggestion": "08:00",
+          "notes": "Ramen Koji on B1 floor — 9 ramen shops, great for a quick departure meal"
+        }
+      ]
+    },
+    {
+      "id": "marrakech",
+      "name": "Marrakech",
+      "country": "Morocco",
+      "continent": "Africa",
+      "tags": [
+        "medina",
+        "souks",
+        "food",
+        "desert",
+        "culture"
+      ],
+      "description": "The Red City — a labyrinth of medieval souks, riads, and spice markets at the edge of the Sahara. Every alley leads somewhere unexpected.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Jemaa_el-Fna_at_dusk.jpg/1200px-Jemaa_el-Fna_at_dusk.jpg",
+      "pois": [
+        {
+          "id": "marrakech-jemaa",
+          "name": "Jemaa el-Fna Square",
+          "category": "landmark",
+          "icon": "🎪",
+          "description": "UNESCO-listed living culture space — snake charmers by day, food stalls and storytellers by night.",
+          "duration_min": 90,
+          "time_suggestion": "20:00",
+          "notes": "The square transforms completely after sunset. Climb a café rooftop for the panorama."
+        },
+        {
+          "id": "marrakech-djemaa-food",
+          "name": "Souk Ahel Fes (Spice Square)",
+          "category": "food",
+          "icon": "🌶",
+          "description": "Ras el hanout, saffron, argan oil — buy direct from the merchants who blend their own mixes.",
+          "duration_min": 45,
+          "time_suggestion": "10:00",
+          "notes": "Negotiate everything. First price is 3–5× the final price."
+        },
+        {
+          "id": "marrakech-majorelle",
+          "name": "Jardin Majorelle",
+          "category": "activity",
+          "icon": "🌿",
+          "description": "Yves Saint Laurent's electric-blue villa surrounded by cacti and exotic plants.",
+          "duration_min": 90,
+          "time_suggestion": "09:00",
+          "notes": "Buy tickets online — long queues otherwise. Berber Museum inside is worth it."
+        },
+        {
+          "id": "marrakech-foundouk",
+          "name": "Foundouk Restaurant",
+          "category": "hidden_gem",
+          "icon": "🏰",
+          "description": "17th-century caravanserai converted into a multi-floor restaurant with live Gnawa music.",
+          "duration_min": 120,
+          "time_suggestion": "20:30",
+          "notes": "Ask for a table on the top floor. Pastilla (pigeon pie) is the signature dish."
+        },
+        {
+          "id": "marrakech-ctm",
+          "name": "CTM Bus Terminal",
+          "category": "transport_hub",
+          "icon": "🚌",
+          "description": "Main hub for intercity buses — Agadir (4h), Fes (8h), desert tours to Merzouga (9h).",
+          "duration_min": 20,
+          "time_suggestion": "07:00",
+          "notes": "Book CTM seats online — much safer than grand taxis for long hauls"
+        }
+      ]
+    },
+    {
+      "id": "lisbon",
+      "name": "Lisbon",
+      "country": "Portugal",
+      "continent": "Europe",
+      "tags": [
+        "coastal",
+        "tram",
+        "food",
+        "fado",
+        "architecture"
+      ],
+      "description": "Europe's westernmost capital — seven hills draped in azulejo tiles, melancholic fado drifting from open windows, and the Atlantic just beyond the bridge.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Lisboa_-_Castelo_de_S%C3%A3o_Jorge_%286866591099%29.jpg/1200px-Lisboa_-_Castelo_de_S%C3%A3o_Jorge_%286866591099%29.jpg",
+      "pois": [
+        {
+          "id": "lisbon-alfama",
+          "name": "Alfama District",
+          "category": "landmark",
+          "icon": "🏘",
+          "description": "Lisbon's oldest neighbourhood — Moorish alleys, miradouros (viewpoints), and São Jorge Castle.",
+          "duration_min": 180,
+          "time_suggestion": "10:00",
+          "notes": "Wear flat shoes. The cobblestones are brutal. Best viewpoint: Portas do Sol."
+        },
+        {
+          "id": "lisbon-lx-factory",
+          "name": "LX Factory Market",
+          "category": "food",
+          "icon": "🏭",
+          "description": "Sunday market in a converted 19th-century industrial complex — craft food, vinyl, vintage.",
+          "duration_min": 120,
+          "time_suggestion": "12:00",
+          "notes": "Sunday only. The Heim Café croissants are worth queuing for."
+        },
+        {
+          "id": "lisbon-tram28",
+          "name": "Tram 28 Ride",
+          "category": "activity",
+          "icon": "🚋",
+          "description": "Vintage yellow tram grinding through the steepest streets of Graça, Alfama, and Baixa.",
+          "duration_min": 45,
+          "time_suggestion": "08:30",
+          "notes": "Board at Martim Moniz to avoid the worst crowds. Watch your pockets."
+        },
+        {
+          "id": "lisbon-tasca-do-chico",
+          "name": "Tasca do Chico",
+          "category": "hidden_gem",
+          "icon": "🎸",
+          "description": "30-seat fado house in Bairro Alto — intimate performances, no tourist-trap atmosphere.",
+          "duration_min": 150,
+          "time_suggestion": "21:00",
+          "notes": "Reservations essential, book weeks ahead. Petiscos (small plates) only."
+        },
+        {
+          "id": "lisbon-oriente",
+          "name": "Lisboa Oriente Station",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "Calatrava-designed station — Alfa Pendular trains to Porto (3h) and Algarve (3.5h).",
+          "duration_min": 20,
+          "time_suggestion": "07:30",
+          "notes": "Comboios de Portugal app for tickets. Buy at least a day ahead for Alfa Pendular."
+        }
+      ]
+    },
+    {
+      "id": "oaxaca",
+      "name": "Oaxaca",
+      "country": "Mexico",
+      "continent": "Americas",
+      "tags": [
+        "food",
+        "mezcal",
+        "markets",
+        "indigenous",
+        "ruins"
+      ],
+      "description": "Mexico's culinary and cultural heartland — mole negro, mezcal distilleries, Zapotec ruins at Monte Albán, and the world's most vivid Día de los Muertos celebration.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Monte_Alban_in_Oaxaca%2C_Mexico.jpg/1200px-Monte_Alban_in_Oaxaca%2C_Mexico.jpg",
+      "pois": [
+        {
+          "id": "oaxaca-monte-alban",
+          "name": "Monte Albán",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Zapotec mountain-top city from 500 BCE — grand plazas, ball court, and sweeping valley views.",
+          "duration_min": 180,
+          "time_suggestion": "08:00",
+          "notes": "Take a colectivo from Calle Trujano. Morning light is best for photos."
+        },
+        {
+          "id": "oaxaca-merced",
+          "name": "Mercado de la Merced",
+          "category": "food",
+          "icon": "🫙",
+          "description": "Local market for tlayudas, memelas, and the 7 classic Oaxacan moles. No tourists.",
+          "duration_min": 90,
+          "time_suggestion": "09:00",
+          "notes": "Comida corrida (set lunch) stalls open from 13:00. Cheapest mole negro in the city."
+        },
+        {
+          "id": "oaxaca-mezcal",
+          "name": "Mezcal Distillery Tour (Papalometl)",
+          "category": "activity",
+          "icon": "🥃",
+          "description": "Third-generation palenque using clay pot distillation — see agave roasting pits and taste 5 expressions.",
+          "duration_min": 120,
+          "time_suggestion": "15:00",
+          "notes": "Hire a taxi for the day — the best palenques are 45 min outside the city in Matatlán."
+        },
+        {
+          "id": "oaxaca-laolla",
+          "name": "La Olla de Carmen",
+          "category": "hidden_gem",
+          "icon": "🍲",
+          "description": "Hole-in-the-wall run by one woman — only mole negro and black bean soup, tables in a courtyard.",
+          "duration_min": 60,
+          "time_suggestion": "14:00",
+          "notes": "Cash only. Sells out by 15:00. The best mole negro I've eaten — period."
+        },
+        {
+          "id": "oaxaca-adobus",
+          "name": "ADO Bus Terminal",
+          "category": "transport_hub",
+          "icon": "🚌",
+          "description": "First-class buses to Mexico City (6–7h overnight), Puerto Escondido (6h), and Puebla (5h).",
+          "duration_min": 20,
+          "time_suggestion": "20:00",
+          "notes": "Overnight bus to CDMX is the move — saves a night's accommodation."
+        }
+      ]
+    },
+    {
+      "id": "tbilisi",
+      "name": "Tbilisi",
+      "country": "Georgia",
+      "continent": "Europe",
+      "tags": [
+        "wine",
+        "architecture",
+        "baths",
+        "caucasus",
+        "food"
+      ],
+      "description": "The Caucasus crossroads — Persian bathhouses, Soviet brutalism, Art Nouveau balconies, and the birthplace of wine all within walking distance.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Metekhi_Church_in_Tbilisi.jpg/1200px-Metekhi_Church_in_Tbilisi.jpg",
+      "pois": [
+        {
+          "id": "tbilisi-narikala",
+          "name": "Narikala Fortress",
+          "category": "landmark",
+          "icon": "🏰",
+          "description": "4th-century fortress overlooking the old town — take the cable car up, walk down through sulfur bath district.",
+          "duration_min": 90,
+          "time_suggestion": "17:00",
+          "notes": "Golden hour from the ramparts is spectacular. Free entry."
+        },
+        {
+          "id": "tbilisi-dezerter",
+          "name": "Dezerter Bazaar",
+          "category": "food",
+          "icon": "🧀",
+          "description": "Chaotic covered market for churchkhela, tkemali, sulguni cheese, and chacha (grape vodka).",
+          "duration_min": 60,
+          "time_suggestion": "10:00",
+          "notes": "Cheese vendors will give you samples of everything. Arrive hungry."
+        },
+        {
+          "id": "tbilisi-abanotubani",
+          "name": "Abanotubani Sulfur Baths",
+          "category": "activity",
+          "icon": "♨️",
+          "description": "Domed Persian bathhouses fed by 37°C natural sulfur springs — Gulo's or Royal Baths for private rooms.",
+          "duration_min": 90,
+          "time_suggestion": "08:00",
+          "notes": "Book a private room (lari 40–60/hr). Ask for a kisi (scrub) treatment."
+        },
+        {
+          "id": "tbilisi-vino-underground",
+          "name": "Vino Underground",
+          "category": "hidden_gem",
+          "icon": "🍷",
+          "description": "Wine bar specialising in natural qvevri wines — Georgia invented wine 8,000 years ago; this is the best intro.",
+          "duration_min": 120,
+          "time_suggestion": "19:00",
+          "notes": "Ask for Rkatsiteli from Kakheti — the amber wine that changed my life."
+        },
+        {
+          "id": "tbilisi-station",
+          "name": "Tbilisi Central Station",
+          "category": "transport_hub",
+          "icon": "🚆",
+          "description": "Night train to Baku (12h) and Yerevan (5h). Marshrutkas to Kazbegi (3h) from Didube.",
+          "duration_min": 20,
+          "time_suggestion": "19:00",
+          "notes": "For Kazbegi, take a marshrutka from Didube Metro — not the tourist minibus from Freedom Square."
+        }
+      ]
+    },
+    {
+      "id": "chiang-mai",
+      "name": "Chiang Mai",
+      "country": "Thailand",
+      "continent": "Asia",
+      "tags": [
+        "temples",
+        "food",
+        "trekking",
+        "elephants",
+        "night-market"
+      ],
+      "description": "Northern Thailand's rose of the north — 300 ancient Lanna temples, the world's best street food city (per Lonely Planet), and mountain trekking into Doi Inthanon.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Wat_Chedi_Luang_-_Chiang_Mai.jpg/1200px-Wat_Chedi_Luang_-_Chiang_Mai.jpg",
+      "pois": [
+        {
+          "id": "chiangmai-doi-suthep",
+          "name": "Doi Suthep Temple",
+          "category": "landmark",
+          "icon": "🛕",
+          "description": "Golden chedi crowning a 1,676m mountain with panoramic views over the city.",
+          "duration_min": 120,
+          "time_suggestion": "07:00",
+          "notes": "Climb the 309-step Naga staircase rather than taking the tram. Views are better."
+        },
+        {
+          "id": "chiangmai-sunday-market",
+          "name": "Sunday Walking Street",
+          "category": "food",
+          "icon": "🌃",
+          "description": "Wualai Road transforms into 1 km of street food — khao soi, sai ua sausage, mango sticky rice.",
+          "duration_min": 120,
+          "time_suggestion": "17:00",
+          "notes": "Sunday only, 17:00–23:00. Bring cash. The mango sticky rice near the gate is legendary."
+        },
+        {
+          "id": "chiangmai-doi-inthanon",
+          "name": "Doi Inthanon Trekking",
+          "category": "activity",
+          "icon": "⛰",
+          "description": "Thailand's highest peak at 2,565m — cloud forests, twin royal chedis, Karen hill tribe villages.",
+          "duration_min": 480,
+          "time_suggestion": "06:00",
+          "notes": "Hire a songthaew for the day (~฿1,500). The Ang Ka Nature Trail boardwalk is unmissable."
+        },
+        {
+          "id": "chiangmai-free-bird",
+          "name": "Free Bird Café",
+          "category": "hidden_gem",
+          "icon": "☕",
+          "description": "NGO café supporting Shan refugees — best real coffee in Chiang Mai, strong wi-fi, good vibes.",
+          "duration_min": 90,
+          "time_suggestion": "09:00",
+          "notes": "Try the shan noodles. All profits fund education for stateless children."
+        },
+        {
+          "id": "chiangmai-arcade",
+          "name": "Arcade Bus Terminal",
+          "category": "transport_hub",
+          "icon": "🚌",
+          "description": "Long-distance hub — overnight buses to Bangkok (10h), Pai (3h), Chiang Rai (3h).",
+          "duration_min": 20,
+          "time_suggestion": "20:00",
+          "notes": "Nakhon Chai Air buses to Bangkok are the most reliable. Book at the terminal."
+        }
+      ]
+    },
+    {
+      "id": "sarajevo",
+      "name": "Sarajevo",
+      "country": "Bosnia and Herzegovina",
+      "continent": "Europe",
+      "tags": [
+        "history",
+        "coffee",
+        "balkans",
+        "war",
+        "architecture"
+      ],
+      "description": "Where East meets West — Ottoman bazaars run into Austro-Hungarian boulevards. A city that survived a 4-year siege and emerged with unforgettable hospitality.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Sarajevo_Old_Town_%28Bascarsija%29.jpg/1200px-Sarajevo_Old_Town_%28Bascarsija%29.jpg",
+      "pois": [
+        {
+          "id": "sarajevo-bascarsija",
+          "name": "Baščaršija Bazaar",
+          "category": "landmark",
+          "icon": "🕌",
+          "description": "15th-century Ottoman bazaar — coppersmiths, jewellers, and the famous Sebilj fountain at its heart.",
+          "duration_min": 120,
+          "time_suggestion": "10:00",
+          "notes": "The Gazi Husrev-beg Mosque next door is open to visitors. Remove shoes."
+        },
+        {
+          "id": "sarajevo-cevapi",
+          "name": "Ćevabdžinica Željo",
+          "category": "food",
+          "icon": "🥙",
+          "description": "Sarajevo's best ćevapi — hand-minced lamb and beef sausages in a somun flatbread with kajmak.",
+          "duration_min": 45,
+          "time_suggestion": "13:00",
+          "notes": "Order 10 pieces minimum. The queue moves fast. Cash only."
+        },
+        {
+          "id": "sarajevo-yellow-fortress",
+          "name": "Yellow Fortress (Žuta Tabija)",
+          "category": "activity",
+          "icon": "🌇",
+          "description": "Ottoman lookout tower with the best sunset view over the red-roofed old town.",
+          "duration_min": 60,
+          "time_suggestion": "18:30",
+          "notes": "Walk up through the Jewish cemetery — sobering and beautiful. Free."
+        },
+        {
+          "id": "sarajevo-tunnel",
+          "name": "War Tunnel Museum",
+          "category": "hidden_gem",
+          "icon": "🚇",
+          "description": "800m tunnel dug under the airport runway during the 1992–95 siege — the city's lifeline.",
+          "duration_min": 90,
+          "time_suggestion": "10:00",
+          "notes": "Take a taxi (~15 KM). The owner's family still lives in the house above the tunnel entrance."
+        },
+        {
+          "id": "sarajevo-bus-station",
+          "name": "Sarajevo Bus Station",
+          "category": "transport_hub",
+          "icon": "🚌",
+          "description": "Buses to Mostar (2.5h), Dubrovnik (5h), Belgrade (6h), and Zagreb (8h).",
+          "duration_min": 20,
+          "time_suggestion": "08:00",
+          "notes": "Mostar day trip is unmissable — last bus back around 19:30."
+        }
+      ]
+    },
+    {
+      "id": "cartagena",
+      "name": "Cartagena",
+      "country": "Colombia",
+      "continent": "Americas",
+      "tags": [
+        "colonial",
+        "beaches",
+        "food",
+        "walled city",
+        "caribbean"
+      ],
+      "description": "Colombia's Caribbean jewel — pastel colonial mansions behind 13km of city walls, reggaeton drifting from every door, and the clearest water in South America a short boat ride away.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Cartagena_de_Indias%2C_Colombia.jpg/1200px-Cartagena_de_Indias%2C_Colombia.jpg",
+      "pois": [
+        {
+          "id": "cartagena-walls",
+          "name": "Las Murallas (City Walls)",
+          "category": "landmark",
+          "icon": "🧱",
+          "description": "13 km of Spanish colonial walls built from 1586 — walk the entire circuit at golden hour.",
+          "duration_min": 90,
+          "time_suggestion": "17:30",
+          "notes": "Best sunset spot: Baluarte de San Francisco Javier. Vendedores sell cold coconut water."
+        },
+        {
+          "id": "cartagena-la-cevicheria",
+          "name": "La Cevichería",
+          "category": "food",
+          "icon": "🐟",
+          "description": "Anthony Bourdain's favourite — Colombian-style ceviche with coconut milk and ají amarillo.",
+          "duration_min": 90,
+          "time_suggestion": "13:00",
+          "notes": "Arrive when it opens. Queue forms fast after the Bourdain episode aired."
+        },
+        {
+          "id": "cartagena-rosario",
+          "name": "Islas del Rosario",
+          "category": "activity",
+          "icon": "🏝",
+          "description": "National park archipelago — snorkelling over coral reefs in 30m-visibility Caribbean water.",
+          "duration_min": 360,
+          "time_suggestion": "08:00",
+          "notes": "Collective boat from Muelle Turístico (~COP 85,000 return). Book the day before."
+        },
+        {
+          "id": "cartagena-cafe-del-mar",
+          "name": "Café del Mar (sunset perch)",
+          "category": "hidden_gem",
+          "icon": "🌅",
+          "description": "Bar on top of the city walls — overpriced drinks, completely worth it for the Caribbean sunset.",
+          "duration_min": 90,
+          "time_suggestion": "17:00",
+          "notes": "The secret: buy a beer from a street vendor below and just stand on the wall. Same view, free."
+        },
+        {
+          "id": "cartagena-terminal",
+          "name": "Terminal de Transportes",
+          "category": "transport_hub",
+          "icon": "🚌",
+          "description": "Buses to Barranquilla (2h), Santa Marta (4h, for Tayrona park), and Medellin (13h overnight).",
+          "duration_min": 20,
+          "time_suggestion": "06:00",
+          "notes": "For Tayrona, take a bus to Santa Marta then a colectivo to the park entrance."
+        }
+      ]
+    }
+  ]
+}

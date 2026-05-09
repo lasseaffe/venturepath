@@ -16,13 +16,16 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useExpedition } from '../../../context/ExpeditionContext';
-import { searchPlaces, getInspireQuery } from '../../../utils/foursquareEngine';
+import { searchPlaces } from '../../../utils/foursquareEngine';
 import { useTripStore } from '../../../store/useTripStore';
+import InspirePanel from '../../inspire/InspirePanel';
 
 // ── Current user (in real app this comes from auth) ───────────────────────────
 const CURRENT_MEMBER = 'lead';
 
 // ── Draggable card ────────────────────────────────────────────────────────────
+
+const LEDGER_DND_KEY = 'application/vp-ledger-item';
 
 function LedgerCard({ item, zone, onVote }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: item.id });
@@ -74,10 +77,20 @@ function LedgerCard({ item, zone, onVote }) {
     ? 'border-[#F2C94C]/50'
     : 'border-white/10';
 
+  function handleNativeDragStart(e) {
+    if (zone !== 'path') return;
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData(LEDGER_DND_KEY, JSON.stringify({
+      id: item.id, name: item.name, type: item.type, thumb: item.thumb ?? null,
+    }));
+  }
+
   return (
     <div
       ref={setNodeRef}
       style={style}
+      draggable={zone === 'path'}
+      onDragStart={zone === 'path' ? handleNativeDragStart : undefined}
       className={`relative glass-panel p-3 mb-2 border ${borderColor} transition-colors ${shaking ? 'animate-shake' : ''}`}
     >
       {showTooltip && (
@@ -102,7 +115,7 @@ function LedgerCard({ item, zone, onVote }) {
           <div className="text-xs text-slate-400 font-mono mt-0.5">{item.type}</div>
           {zone === 'pool' && (
             <div className="text-[10px] text-slate-500 font-mono mt-1">
-              {ups}/{total} votes
+              {ups} vote{ups !== 1 ? 's' : ''}
             </div>
           )}
         </div>
@@ -197,15 +210,14 @@ async function fetchPlacesWithPhotos(query, nearCity, limit = 6) {
   }
 }
 
-function AddToPoolForm({ onAdd, destination }) {
-  const [open, setOpen]           = useState(false);
-  const [name, setName]           = useState('');
-  const [type, setType]           = useState('Activity');
-  const [suggestions, setSugs]    = useState([]);
-  const [loading, setLoading]     = useState(false);
-  const [inspiring, setInspiring] = useState(false);
-  const [selected, setSelected]   = useState(null); // picked place object
-  const debounceRef               = useRef(null);
+function AddToPoolForm({ onAdd, destination, onOpenInspire }) {
+  const [open, setOpen]       = useState(false);
+  const [name, setName]       = useState('');
+  const [type, setType]       = useState('Activity');
+  const [suggestions, setSugs] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [selected, setSelected] = useState(null);
+  const debounceRef           = useRef(null);
 
   const fetchSuggestions = useCallback(async (query) => {
     if (!query.trim() || query.length < 2) { setSugs([]); return; }
@@ -221,21 +233,6 @@ function AddToPoolForm({ onAdd, destination }) {
     setSelected(null);
     clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => fetchSuggestions(val), 350);
-  }
-
-  async function handleInspire() {
-    setInspiring(true);
-    const q = getInspireQuery('discovery');
-    const near = destination || 'Paris';
-    const results = await fetchPlacesWithPhotos(q, near, 1);
-    if (results[0]) {
-      const pick = results[0];
-      setSelected(pick);
-      setName(pick.name);
-      setType(SPOT_TYPES.includes(pick.type) ? pick.type : 'Activity');
-      setSugs([]);
-    }
-    setInspiring(false);
   }
 
   function pickSuggestion(place) {
@@ -272,15 +269,14 @@ function AddToPoolForm({ onAdd, destination }) {
 
   return (
     <form onSubmit={submit} className="space-y-2 mt-2 p-3 rounded-lg border border-white/10 bg-white/5">
-      {/* Inspire Me */}
+      {/* Inspire Me — opens the full InspirePanel drawer */}
       <button
         type="button"
-        onClick={handleInspire}
-        disabled={inspiring}
+        onClick={onOpenInspire}
         className="w-full py-1.5 text-[10px] font-mono rounded border transition-colors"
-        style={{ color: 'var(--accent)', borderColor: 'var(--accent)', background: 'transparent', opacity: inspiring ? 0.6 : 1 }}
+        style={{ color: 'var(--accent)', borderColor: 'var(--accent)', background: 'transparent' }}
       >
-        {inspiring ? '✦ FINDING INSPIRATION…' : '✦ INSPIRE ME'}
+        ✦ INSPIRE ME
       </button>
 
       {/* Name input + autocomplete */}
@@ -360,6 +356,17 @@ export default function LedgerWorkbench() {
   const { trip } = useTripStore();
   const [activeId, setActiveId] = useState(null);
   const [overId, setOverId] = useState(null);
+  const [inspireOpen, setInspireOpen] = useState(false);
+
+  function handleInspireAdd(block) {
+    nominate({
+      id:    `i-${Date.now()}`,
+      name:  block.title,
+      type:  block.category === 'food' ? 'Food' : block.category === 'transport' ? 'Accommodation' : 'Activity',
+      thumb: null,
+    });
+    setInspireOpen(false);
+  }
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }));
 
@@ -418,7 +425,7 @@ export default function LedgerWorkbench() {
               onVote={vote}
               isOver={overId === 'pool-zone'}
             />
-            <AddToPoolForm onAdd={nominate} destination={trip?.destination ?? ''} />
+            <AddToPoolForm onAdd={nominate} destination={trip?.destination ?? ''} onOpenInspire={() => setInspireOpen(true)} />
           </div>
 
           {/* Active Path */}
@@ -441,6 +448,13 @@ export default function LedgerWorkbench() {
           )}
         </DragOverlay>
       </DndContext>
+
+      <InspirePanel
+        open={inspireOpen}
+        dayLabel={trip?.destination ?? ''}
+        onClose={() => setInspireOpen(false)}
+        onAddBlock={handleInspireAdd}
+      />
     </div>
   );
 }

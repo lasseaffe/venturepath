@@ -34,10 +34,8 @@ export function useInspireData() {
 export function matchCity(cities, dayLabel) {
   if (!cities.length) return null;
   const needle = dayLabel.toLowerCase();
-  const match = cities.find(c =>
+  return cities.find(c =>
     needle.includes(c.name.toLowerCase()) ||
     needle.includes(c.id.toLowerCase().replace(/-/g, ' '))
-  );
-  if (match) return match;
-  return cities[Math.floor(Math.random() * cities.length)];
+  ) ?? null;
 }

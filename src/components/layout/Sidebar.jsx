@@ -6,12 +6,22 @@ import { useLabels } from '../../hooks/useLabels';
 const NAV_ITEMS = [
   { id: 'OVERVIEW',  icon: '🗺',  label: 'Overview' },
   { id: 'ITINERARY', icon: '📅',  label: 'Itinerary' },
+  { id: 'FLIGHTS',   icon: '✈',   label: 'Flights' },
+  { id: 'STAYS',     icon: '🏨',  label: 'Stays' },
   { id: 'LOGISTICS', icon: '🎒',  label: 'Logistics' },
   { id: 'DISCOVERY', icon: '🔍',  label: 'Discover' },
   { id: 'VAULT',     icon: '📂',  label: 'Saved trips' },
 ];
 
-export default function Sidebar({ activeTab, onTabChange, onOpenProfile, onBackToDashboard }) {
+export default function Sidebar({
+  activeTab,
+  onTabChange,
+  onOpenProfile,
+  onBackToDashboard,
+  onOpenChat,
+  onOpenInspire,
+  onOpenTactical,
+}) {
   const [collapsed, setCollapsed] = useState(false);
   const { theme, setTheme } = useTheme();
   const labels = useLabels();
@@ -90,10 +100,28 @@ export default function Sidebar({ activeTab, onTabChange, onOpenProfile, onBackT
             </button>
           );
         })}
+
       </nav>
 
       {/* Bottom actions */}
       <div className="border-t py-2" style={{ borderColor: 'rgba(255,255,255,0.15)' }}>
+        {/* Squad Chat */}
+        {onOpenChat && (
+          <button
+            onClick={onOpenChat}
+            className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-white/10 transition-colors text-left"
+            style={{ color: 'rgba(255,255,255,0.65)' }}
+          >
+            <span className="w-8 h-8 flex items-center justify-center shrink-0 text-base">💬</span>
+            {!collapsed && (
+              <span className={`text-sm truncate ${isTactical ? 'font-mono text-xs tracking-wider uppercase' : 'font-medium'}`}>
+                Squad Chat
+              </span>
+            )}
+          </button>
+        )}
+
+        {/* Profile */}
         <button
           onClick={onOpenProfile}
           className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-white/10 transition-colors text-left"
@@ -107,6 +135,7 @@ export default function Sidebar({ activeTab, onTabChange, onOpenProfile, onBackT
           )}
         </button>
 
+        {/* Theme toggle */}
         <button
           onClick={() => setTheme(t => t === 'tactical' ? 'default' : 'tactical')}
           className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-white/10 transition-colors text-left"
@@ -120,6 +149,23 @@ export default function Sidebar({ activeTab, onTabChange, onOpenProfile, onBackT
             </span>
           )}
         </button>
+
+        {/* Tactical HUD */}
+        {onOpenTactical && (
+          <button
+            onClick={onOpenTactical}
+            className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-white/10 transition-colors text-left"
+            style={{ color: 'rgba(255,255,255,0.4)' }}
+            title="Open Tactical HUD"
+          >
+            <span className="w-8 h-8 flex items-center justify-center shrink-0 text-base">⊕</span>
+            {!collapsed && (
+              <span className={`text-xs truncate ${isTactical ? 'font-mono tracking-wider uppercase' : ''}`}>
+                Tactical HUD
+              </span>
+            )}
+          </button>
+        )}
       </div>
     </motion.aside>
   );

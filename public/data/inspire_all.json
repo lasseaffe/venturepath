@@ -1,0 +1,3169 @@
+{
+  "version": 1,
+  "generated": "2026-05-09",
+  "cities": [
+    {
+      "id": "kyoto",
+      "name": "Kyoto",
+      "country": "Japan",
+      "continent": "Asia",
+      "tags": [
+        "cultural",
+        "temples",
+        "food",
+        "traditional",
+        "gardens"
+      ],
+      "description": "Kyoto, officially Kyoto City , is the capital city of Kyoto Prefecture in the Kansai region of Japan's largest and most populous island of Honshu. As of 2020, the city had a population of 1.46 million, making it the ninth-most populous city in Japan. More than half (56.8%) of Kyoto Prefecture's population resides in the city.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Kiyomizu.jpg",
+      "pois": [
+        {
+          "id": "landmark-東山安井",
+          "name": "東山安井",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Kyoto.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-もみじのトンネル",
+          "name": "もみじのトンネル",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Kyoto.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-新福菜館本店",
+          "name": "新福菜館本店",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cuisine: ramen",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-珈琲店　再願",
+          "name": "珈琲店　再願",
+          "category": "food",
+          "icon": "🍽",
+          "description": "A notable food in Kyoto.",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-向日市文化資料館",
+          "name": "向日市文化資料館",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Kyoto.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-織成館(orinasu-kan)",
+          "name": "織成館(Orinasu-kan)",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Kyoto.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-薩摩九烈士の碑",
+          "name": "薩摩九烈士の碑",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Kyoto.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-史蹟　御土居",
+          "name": "史蹟　御土居",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Kyoto.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-保津峡",
+          "name": "保津峡",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "[OSM data — Kyoto]",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "id": "chiang-mai",
+      "name": "Chiang Mai",
+      "country": "Thailand",
+      "continent": "Asia",
+      "tags": [
+        "temples",
+        "food",
+        "trekking",
+        "elephants",
+        "night-market"
+      ],
+      "description": "Chiang Mai is the largest city in northern Thailand, the capital of Chiang Mai province and the second-largest city in Thailand by urban population. It is 700 km (435 mi) north of Bangkok in a mountainous region called the Thai highlands, and has a population of approximately 127,000 within the city municipality and an urban population of about 1.2 million as of 2023.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/0020-%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%AA%E0%B8%B4%E0%B8%87%E0%B8%AB%E0%B9%8C%E0%B8%A7%E0%B8%A3%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%A7%E0%B8%B4%E0%B8%AB%E0%B8%B2%E0%B8%A3.jpg/3840px-0020-%E0%B8%A7%E0%B8%B1%E0%B8%94%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%AA%E0%B8%B4%E0%B8%87%E0%B8%AB%E0%B9%8C%E0%B8%A7%E0%B8%A3%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%A7%E0%B8%B4%E0%B8%AB%E0%B8%B2%E0%B8%A3.jpg",
+      "pois": [
+        {
+          "id": "landmark-ประตูท่าแพ",
+          "name": "ประตูท่าแพ",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Chiang Mai.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-อนุสาวรีย์ครูบาศรีวิชัย",
+          "name": "อนุสาวรีย์ครูบาศรีวิชัย",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Chiang Mai.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-starbucks",
+          "name": "Starbucks",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cuisine: coffee_shop",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "https://www.starbucks.com/"
+        },
+        {
+          "id": "food-franco-thai",
+          "name": "Franco Thai",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cuisine: french",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "id": "hanoi",
+      "name": "Hanoi",
+      "country": "Vietnam",
+      "continent": "Asia",
+      "tags": [
+        "street-food",
+        "old-quarter",
+        "lakes",
+        "colonial",
+        "coffee"
+      ],
+      "description": "Hanoi is the capital and second-most populous municipality of Vietnam. It encompasses an area of 3,358.6 km2 (1,296.8 mi2), and as of 2025 has a population of 8,807,523. Hanoi had the second-highest gross regional domestic product of all Vietnamese provinces and municipalities at US$48 billion in 2023, behind Ho Chi Minh City.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/8e/Hanoi_skyline_with_Ba_Vi_Mountain.jpg",
+      "pois": [
+        {
+          "id": "landmark-tượng-đài-lý-thái-tổ",
+          "name": "Tượng đài Lý Thái Tổ",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Hanoi.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-nhà-48-phố-hàng-ngang",
+          "name": "Nhà 48 phố Hàng Ngang",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "[OSM data — Hanoi]",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-cà-phê-cây-bàng-đổ",
+          "name": "Cà Phê Cây Bàng Đổ",
+          "category": "food",
+          "icon": "🍽",
+          "description": "A notable food in Hanoi.",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-cà-phê-kafa",
+          "name": "Cà Phê Kafa",
+          "category": "food",
+          "icon": "🍽",
+          "description": "A notable food in Hanoi.",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "Mo-Su 07:00-23:00"
+        },
+        {
+          "id": "activity-bảo-tàng-binh-chủng-thông-tin-",
+          "name": "Bảo tàng Binh chủng Thông tin liên lạc",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Hanoi.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-bảo-tàng-địa-chất-việt-nam",
+          "name": "Bảo tàng Địa chất Việt Nam",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Hanoi.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "Mo-Fr 08:00-12:00, 13:00-17:00"
+        },
+        {
+          "id": "hidden_gem-di-tích-lịch-sử-chùa-láng",
+          "name": "Di Tích Lịch Sử Chùa Láng",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Hanoi.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-ô-thuỵ-chương",
+          "name": "Ô Thuỵ Chương",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Hanoi.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-gia-lâm",
+          "name": "Gia Lâm",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "[OSM data — Hanoi]",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-hà-nội",
+          "name": "Hà Nội",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "[OSM data — Hanoi]",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "id": "bali-ubud",
+      "name": "Ubud",
+      "country": "Indonesia",
+      "continent": "Asia",
+      "tags": [
+        "rice-terraces",
+        "temples",
+        "wellness",
+        "art",
+        "jungle"
+      ],
+      "description": "Ubud is a town in the Gianyar Regency of Bali, Indonesia. Ubud has no status; that is part of the eponymous Ubud District of Gianyar. Promoted as an arts and culture centre, Ubud has developed a large tourism industry.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Ubud_%2849818456887%29.jpg/3840px-Ubud_%2849818456887%29.jpg",
+      "pois": [
+        {
+          "id": "landmark-tegenungan-blangsinga",
+          "name": "Tegenungan Blangsinga",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Ubud.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-yeh-pulu",
+          "name": "Yeh Pulu",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Ubud.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-cafe-wayan-&-bakery",
+          "name": "Cafe Wayan & Bakery",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cuisine: indonesian;pizza;seafood",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-naughty-nuri-warung-n-grill",
+          "name": "Naughty Nuri warung n Grill",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cuisine: grill",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "Mo-Su 10:00-22:00"
+        },
+        {
+          "id": "activity-museum-purbakala",
+          "name": "Museum Purbakala",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Ubud.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "Mo-Th 08:00-15:00; Fr 08:00-12:00"
+        },
+        {
+          "id": "activity-don-antonio-blanco-museum",
+          "name": "Don Antonio Blanco Museum",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "[OSM data — Ubud]",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "Mo-Su 09:00-17:00"
+        },
+        {
+          "id": "hidden_gem-arjuna-statue",
+          "name": "Arjuna Statue",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Ubud.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-moon-of-pejeng",
+          "name": "Moon of Pejeng",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "[OSM data — Ubud]",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-perama",
+          "name": "Perama",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "A notable transport hub in Ubud.",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "id": "tbilisi",
+      "name": "Tbilisi",
+      "country": "Georgia",
+      "continent": "Asia",
+      "tags": [
+        "wine",
+        "architecture",
+        "baths",
+        "caucasus",
+        "food"
+      ],
+      "description": "Tbilisi is the capital and largest city of Georgia, located on the banks of the Kura River. With more than 1.3 million inhabitants, it contains almost one third of the country's population. Tbilisi was founded in the fifth century AD by Vakhtang I of Iberia and has since served as the capital of various Georgian kingdoms and republics.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/View_of_Tbilisi_from_Tabori_Church_2023-10-08-2.jpg/3840px-View_of_Tbilisi_from_Tabori_Church_2023-10-08-2.jpg",
+      "pois": [
+        {
+          "id": "landmark-უკრაინის-სახალხო-რესპუბლიკის-მ",
+          "name": "უკრაინის სახალხო რესპუბლიკის მისია",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Tbilisi.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-დავით-ჯავრიშვილი",
+          "name": "დავით ჯავრიშვილი",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Tbilisi.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-მწვანე-ველი",
+          "name": "მწვანე ველი",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cuisine: regional",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-ბეღელი",
+          "name": "ბეღელი",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cuisine: georgian",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "http://www.begeli.com"
+        },
+        {
+          "id": "activity-საქართველოს-ეროვნული-მუზეუმი",
+          "name": "საქართველოს ეროვნული მუზეუმი",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "[OSM data — Tbilisi]",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "Tu-Su 10:00-18:00"
+        },
+        {
+          "id": "activity-შალვა-ამირანაშვილის-სახელობის-",
+          "name": "შალვა ამირანაშვილის სახელობის საქართველოს ხელოვნების სახელმწიფო მუზეუმი",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "[OSM data — Tbilisi]",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-მრგვალი-ბაღი",
+          "name": "მრგვალი ბაღი",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Tbilisi.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-თამადის-ძეგლი",
+          "name": "თამადის ძეგლი",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Tbilisi.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-300-არაგველი",
+          "name": "300 არაგველი",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "[OSM data — Tbilisi]",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": "Mo-Su 06:00-24:00"
+        },
+        {
+          "id": "transport_hub-ისანი",
+          "name": "ისანი",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "[OSM data — Tbilisi]",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": "Mo-Su 06:00-24:00"
+        }
+      ]
+    },
+    {
+      "id": "kathmandu",
+      "name": "Kathmandu",
+      "country": "Nepal",
+      "continent": "Asia",
+      "tags": [
+        "temples",
+        "himalaya",
+        "trekking",
+        "culture",
+        "markets"
+      ],
+      "description": "Kathmandu is the capital and largest city of Nepal, situated in the central part of the country within the Kathmandu Valley. As per the 2021 Nepal census, it has a population of 845,767 residing in 105,649 households, with approximately 4 million people in the surrounding metropolitan area. The city stands at an elevation of 1,324 metres (4,344 ft) above sea level.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/3/35/Kathmandu-Durbar_Square-06-Mahavishnu-Kuh-Vishnu-Pratapamalla-Jagannath-2007-gje.jpg",
+      "pois": [
+        {
+          "id": "landmark-stupa-with-the-remains-of-chag",
+          "name": "Stupa with the remains of Chagdud Tulku Rinpoche",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Kathmandu.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-sukedhara-tap",
+          "name": "Sukedhara Tap",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Kathmandu.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-mustang-thakali-kitchen",
+          "name": "Mustang Thakali Kitchen",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cuisine: regional",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-hermann-helmers-bakery",
+          "name": "Hermann Helmers Bakery",
+          "category": "food",
+          "icon": "🍽",
+          "description": "A notable food in Kathmandu.",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-jyapu-samaj",
+          "name": "Jyapu samaj",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Kathmandu.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-royal-mahendra-museum",
+          "name": "Royal Mahendra Museum",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Kathmandu.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-chapache-sana-guthi,chabahal",
+          "name": "chapache sana guthi,chabahal",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Kathmandu.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-fabulous-handicraft-pvt-ltd",
+          "name": "Fabulous Handicraft Pvt Ltd",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Kathmandu.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-macha-pokhari-bus-station",
+          "name": "Macha Pokhari Bus Station",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "A notable transport hub in Kathmandu.",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": "Mo-Su 05:00-18:00"
+        },
+        {
+          "id": "transport_hub-dhokashi",
+          "name": "Dhokashi",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "A notable transport hub in Kathmandu.",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "id": "istanbul",
+      "name": "Istanbul",
+      "country": "Turkey",
+      "continent": "Asia",
+      "tags": [
+        "mosques",
+        "bazaars",
+        "bosphorus",
+        "food",
+        "history"
+      ],
+      "description": "Istanbul is the largest city in Turkey, constituting the country's economic, cultural, and historical center. With a population of over 15 million, it is home to 18% of the population of Turkey. Istanbul is among the largest cities in Europe and in the world by population.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/c/cb/Historical_peninsula_and_modern_skyline_of_Istanbul.jpg",
+      "pois": [
+        {
+          "id": "landmark-barbaros-hayrettin-türbesi",
+          "name": "Barbaros Hayrettin Türbesi",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "[OSM data — Istanbul]",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-kanburun-bahçesi",
+          "name": "Kanburun Bahçesi",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Istanbul.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-pierre-loti-kahvehanesi",
+          "name": "Pierre Loti Kahvehanesi",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cuisine: coffee_shop",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-java-studio-istanbul",
+          "name": "Java Studio Istanbul",
+          "category": "food",
+          "icon": "🍽",
+          "description": "A notable food in Istanbul.",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-askerî-müze",
+          "name": "Askerî Müze",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "[OSM data — Istanbul]",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "We-Su 9:00-17:00"
+        },
+        {
+          "id": "activity-miniatürk-açıkhava-müzesi",
+          "name": "Miniatürk Açıkhava Müzesi",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "[OSM data — Istanbul]",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "Mo-Su 09:00-19:00"
+        },
+        {
+          "id": "hidden_gem-barbaros-hayrettin-heykeli",
+          "name": "Barbaros Hayrettin Heykeli",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "[OSM data — Istanbul]",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-galata-fotoğraf-akademisi",
+          "name": "Galata Fotoğraf Akademisi",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Istanbul.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-ayvansaray",
+          "name": "Ayvansaray",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "[OSM data — Istanbul]",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-sütlüce",
+          "name": "Sütlüce",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "A notable transport hub in Istanbul.",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "id": "lisbon",
+      "name": "Lisbon",
+      "country": "Portugal",
+      "continent": "Europe",
+      "tags": [
+        "coastal",
+        "tram",
+        "food",
+        "fado",
+        "architecture"
+      ],
+      "description": "Lisbon is the capital and most populous city of Portugal, with an estimated population of 575,739 as of 2024, within its administrative limits and 3,028,000 within the metropolis, as of 2025. Lisbon is mainland Europe's westernmost capital city, and the only one along the Atlantic coast, the others being on islands. The city lies in the western portion of the Iberian Peninsula, on the northern shore of the River Tagus.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/f/f2/Lisboa_-_Portugal_%2852597836992%29.jpg",
+      "pois": [
+        {
+          "id": "landmark-comboio-do-zoo",
+          "name": "Comboio do Zoo",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Lisbon.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-pelourinho-de-lisboa",
+          "name": "Pelourinho de Lisboa",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Erguido após o terramoto de 1755, em substituição do anterior, de acordo com o plano urbanístico de Eugénio dos Santos, foi objecto de alterações ao longo do tempo, que lhe conferiram o aspecto actual. [OSM data — Lisbon]",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-leitaria-académica",
+          "name": "Leitaria Académica",
+          "category": "food",
+          "icon": "🍽",
+          "description": "A notable food in Lisbon.",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-hard-rock-cafe",
+          "name": "Hard Rock Cafe",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cuisine: american [OSM data — Lisbon]",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "Mo-Su 11:30-02:00"
+        },
+        {
+          "id": "activity-miradouro-de-são-pedro-de-alcâ",
+          "name": "Miradouro de São Pedro de Alcântara",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "Do miradouro de São Pedro de Alcântara, localizado no jardim do mesmo nome, somos privilegiados com uma das mais completas e belas panorâmicas da cidade de Lisboa, comparável à que oferece o miradouro fronteiro do Castelo de São Jorge. A partir des [OSM data — Lisbon]",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-torre-de-são-lourenço",
+          "name": "Torre de São Lourenço",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Lisbon.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-antiga-fabrica-de-polvora",
+          "name": "Antiga Fabrica de Polvora",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Lisbon.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-estátua-com-cavalo",
+          "name": "Estátua com Cavalo",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "Estátua em pedra colocada dentro de um lago, representando uma figura feminina em pé sobre um cavalo, numa linguagem claramente moderna, mas evidenciando ainda um certo academismo e formalismo.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": "http://www.cm-lisboa.pt/equipamentos/equipamento/info/estatua-com-cavalo"
+        },
+        {
+          "id": "transport_hub-praça-de-espanha",
+          "name": "Praça de Espanha",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "[OSM data — Lisbon]",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": "https://www.metrolisboa.pt/viajar/praca-de-espanha/"
+        },
+        {
+          "id": "transport_hub-jardim-zoológico",
+          "name": "Jardim Zoológico",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "[OSM data — Lisbon]",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": "https://www.metrolisboa.pt/viajar/jardim-zoologico/"
+        }
+      ]
+    },
+    {
+      "id": "sarajevo",
+      "name": "Sarajevo",
+      "country": "Bosnia and Herzegovina",
+      "continent": "Europe",
+      "tags": [
+        "history",
+        "coffee",
+        "balkans",
+        "war",
+        "architecture"
+      ],
+      "description": "Sarajevo is the capital and largest city of Bosnia and Herzegovina, with a population of 275,524 in its administrative limits. The Sarajevo Canton, containing the city of Sarajevo and nearby municipalities, is home to 413,593 inhabitants. Located within the greater Sarajevo valley of Bosnia, it is surrounded by the Dinaric Alps and situated along the Miljacka River in the heart of the Balkans, a region of Southeastern Europe.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/e/e3/Sarajevo_City_Panorama.JPG",
+      "pois": [
+        {
+          "id": "landmark-konak",
+          "name": "Konak",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Sarajevo.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-pofalićka-bitka",
+          "name": "Pofalićka bitka",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Sarajevo.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-art",
+          "name": "Art",
+          "category": "food",
+          "icon": "🍽",
+          "description": "A notable food in Sarajevo.",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-brajlović",
+          "name": "Brajlović",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cuisine: bosnian",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-zmajevac",
+          "name": "Zmajevac",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Sarajevo.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-muzej-alije-izetbegovića",
+          "name": "Muzej Alije Izetbegovića",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Sarajevo.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://muzejalijaizetbegovic.ba/"
+        },
+        {
+          "id": "hidden_gem-markni-|-communication-agency",
+          "name": "MarkNI | communication agency",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Sarajevo.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-josip-broz-tito",
+          "name": "Josip Broz Tito",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Sarajevo.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-reljevo",
+          "name": "Reljevo",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "A notable transport hub in Sarajevo.",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-sarajevo",
+          "name": "Sarajevo",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "[OSM data — Sarajevo]",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "id": "dubrovnik",
+      "name": "Dubrovnik",
+      "country": "Croatia",
+      "continent": "Europe",
+      "tags": [
+        "walled-city",
+        "adriatic",
+        "islands",
+        "coastal",
+        "medieval"
+      ],
+      "description": "Dubrovnik, historically also known as Ragusa, is a city in southern Dalmatia, Croatia, by the Adriatic Sea. It is one of the most prominent tourist destinations in the Mediterranean, a seaport and the centre of the Dubrovnik-Neretva County. In 2021, its total population was 41,562.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/6/67/The_walls_of_the_fortress_and_View_of_the_old_city._panorama.jpg",
+      "pois": [
+        {
+          "id": "landmark-križ-na-srđu",
+          "name": "Križ na Srđu",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "[OSM data — Dubrovnik]",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-monastery",
+          "name": "Monastery",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Dubrovnik.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-club-23-srebreno",
+          "name": "Club 23 Srebreno",
+          "category": "food",
+          "icon": "🍽",
+          "description": "A notable food in Dubrovnik.",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-konoba-dubrava",
+          "name": "Konoba Dubrava",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cuisine: regional",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "Mo-Su 11:00-24:00"
+        },
+        {
+          "id": "activity-sunset-view",
+          "name": "sunset view",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Dubrovnik.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-war-photo-limited",
+          "name": "War Photo Limited",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Dubrovnik.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-monastery",
+          "name": "Monastery",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Dubrovnik.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-marin-držić",
+          "name": "Marin Držić",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Dubrovnik.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-dubrovnik",
+          "name": "Dubrovnik",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "A notable transport hub in Dubrovnik.",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-koločep",
+          "name": "Koločep",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "A notable transport hub in Dubrovnik.",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "id": "edinburgh",
+      "name": "Edinburgh",
+      "country": "Scotland",
+      "continent": "Europe",
+      "tags": [
+        "castle",
+        "whisky",
+        "festivals",
+        "architecture",
+        "highlands"
+      ],
+      "description": "Edinburgh is the capital city of Scotland and one of its 32 council areas. It is located in southeast Scotland and is bounded to the north by the Firth of Forth and to the south by the Pentland Hills. Edinburgh had a population of\n506,520 in 2020, making it the second-most-populous city in Scotland and the seventh-most-populous in the United Kingdom.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Skyline_of_Edinburgh.jpg/3840px-Skyline_of_Edinburgh.jpg",
+      "pois": [
+        {
+          "id": "landmark-robert-viscount-melville",
+          "name": "Robert Viscount Melville",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Edinburgh.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-robert-fergusson",
+          "name": "Robert Fergusson",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Edinburgh.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-happy-hot-pot",
+          "name": "Happy Hot Pot",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cuisine: chinese",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-singh-street-cha",
+          "name": "Singh Street Cha",
+          "category": "food",
+          "icon": "🍽",
+          "description": "A notable food in Edinburgh.",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-south-viewpoint",
+          "name": "South Viewpoint",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Edinburgh.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-rest-and-be-thankful",
+          "name": "Rest and Be Thankful",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Edinburgh.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-colinton-tunnel",
+          "name": "Colinton Tunnel",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "Mural",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": "https://www.colintontunnel.org.uk/"
+        },
+        {
+          "id": "hidden_gem-robert-fergusson",
+          "name": "Robert Fergusson",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Edinburgh.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-south-gyle",
+          "name": "South Gyle",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "[OSM data — Edinburgh]",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-1-waverley",
+          "name": "1 Waverley",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "A notable transport hub in Edinburgh.",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": "Mo-Sa 04:00-00:45; Su 06:00-00:45"
+        }
+      ]
+    },
+    {
+      "id": "porto",
+      "name": "Porto",
+      "country": "Portugal",
+      "continent": "Europe",
+      "tags": [
+        "wine",
+        "azulejos",
+        "river",
+        "food",
+        "architecture"
+      ],
+      "description": "Porto, officially the Ancient, Very Noble, Ever Loyal and Undefeated City of Porto, also known in English as Oporto, is the second largest city in Portugal, after Lisbon. It is the capital of the Porto District and one of the Iberian Peninsula's major urban areas. Porto city proper, which is the entire municipality of Porto, is small compared to its metropolitan area, with an estimated population of 252,687 people in a municipal area of 41.42 km2 (16 sq mi).",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Puente_Don_Luis_I%2C_Oporto%2C_Portugal%2C_2012-05-09%2C_DD_13.JPG/3840px-Puente_Don_Luis_I%2C_Oporto%2C_Portugal%2C_2012-05-09%2C_DD_13.JPG",
+      "pois": [
+        {
+          "id": "landmark-almeida-garrett",
+          "name": "Almeida Garrett",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "[OSM data — Porto]",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-farolim-de-felgueiras",
+          "name": "Farolim de Felgueiras",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "[OSM data — Porto]",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-confeitaria-doce-alto",
+          "name": "Confeitaria Doce Alto",
+          "category": "food",
+          "icon": "🍽",
+          "description": "A notable food in Porto.",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "Mo-Fr 07:00-21:00; Sa,Su 08:00-20:00"
+        },
+        {
+          "id": "food-cepa",
+          "name": "Cepa",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cuisine: international",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-casa-museu-marta-ortigão-sampa",
+          "name": "Casa-Museu Marta Ortigão Sampaio",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "[OSM data — Porto]",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "Tu-Su 10:00-17:30; PH off"
+        },
+        {
+          "id": "activity-miradouro-do-largo-de-aviz",
+          "name": "Miradouro do Largo de Aviz",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Porto.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "24/7"
+        },
+        {
+          "id": "hidden_gem-tragédia-no-mar",
+          "name": "Tragédia no Mar",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Porto.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-os-corcéis",
+          "name": "Os Corcéis",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Porto.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-coimbrões",
+          "name": "Coimbrões",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "[OSM data — Porto]",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-madalena",
+          "name": "Madalena",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "[OSM data — Porto]",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "id": "kotor",
+      "name": "Kotor",
+      "country": "Montenegro",
+      "continent": "Europe",
+      "tags": [
+        "bay",
+        "medieval",
+        "walls",
+        "cats",
+        "adriatic"
+      ],
+      "description": "Kotor, historically known as Cattaro, is a town in Coastal region of Montenegro. It is located in a secluded part of the Bay of Kotor. The city has a population of 13,347 and is the administrative center of Kotor Municipality.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/20090719_Crkva_Gospa_od_Zdravlja_Kotor_Bay_Montenegro.jpg/3840px-20090719_Crkva_Gospa_od_Zdravlja_Kotor_Bay_Montenegro.jpg",
+      "pois": [
+        {
+          "id": "landmark-laništa-barracks",
+          "name": "Laništa barracks",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Kotor.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-ancient-bridge",
+          "name": "Ancient bridge",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Kotor.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-pisatera",
+          "name": "Pisatera",
+          "category": "food",
+          "icon": "🍽",
+          "description": "A notable food in Kotor.",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-kantun",
+          "name": "Kantun",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cuisine: seafood;italian",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-pestingrad",
+          "name": "Pestingrad",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Kotor.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-trojica",
+          "name": "Trojica",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Kotor.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-laništa-barracks",
+          "name": "Laništa barracks",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Kotor.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-round-shape-ruins,-possibly-au",
+          "name": "Round shape ruins, possibly Austrian gun position (have to be fact-checked)",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Kotor.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-ostrvo-cvijeća",
+          "name": "Ostrvo Cvijeća",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "A notable transport hub in Kotor.",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "id": "marrakech",
+      "name": "Marrakech",
+      "country": "Morocco",
+      "continent": "Africa",
+      "tags": [
+        "medina",
+        "souks",
+        "food",
+        "desert",
+        "culture"
+      ],
+      "description": "Marrakesh or Marrakech is the fourth-largest city in Morocco. It is one of the four imperial cities of Morocco and is the capital of the Marrakesh-Safi region. The city lies west of the foothills of the Atlas Mountains.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/9/9c/Pavillon_Menarag%C3%A4rten.jpg",
+      "pois": [
+        {
+          "id": "landmark-bab-agnaou",
+          "name": "Bab Agnaou",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Marrakech.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-bab-ghemat",
+          "name": "Bab Ghemat",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Marrakech.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-al-fassia",
+          "name": "Al Fassia",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cuisine: regional",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "We-Mo"
+        },
+        {
+          "id": "food-café-bousafsaf",
+          "name": "Café Bousafsaf",
+          "category": "food",
+          "icon": "🍽",
+          "description": "A notable food in Marrakech.",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-musée-tiskiwin",
+          "name": "Musée Tiskiwin",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Marrakech.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "9:00-12:30;14:30-18:00"
+        },
+        {
+          "id": "activity-musée-du-parfum",
+          "name": "Musée du Parfum",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Marrakech.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://www.benchaabane.com/lemuseeduparfum/"
+        },
+        {
+          "id": "hidden_gem-l'art-du-henné-bio",
+          "name": "L'Art du Henné Bio",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Marrakech.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-pascal",
+          "name": "Pascal",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Marrakech.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-grand-taxis",
+          "name": "Grand Taxis",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "A notable transport hub in Marrakech.",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-gare-supratours-محطة-سوبراتور",
+          "name": "Gare Supratours محطة سوبراتور",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "A notable transport hub in Marrakech.",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": "https://www.supratours.ma/"
+        }
+      ]
+    },
+    {
+      "id": "fes",
+      "name": "Fes",
+      "country": "Morocco",
+      "continent": "Africa",
+      "tags": [
+        "medina",
+        "tanneries",
+        "medieval",
+        "souks",
+        "islamic"
+      ],
+      "description": "Fez or Fes is a city in northern inland Morocco and the capital of the Fez-Meknes administrative region. It is one of the largest cities in Morocco, with a population of 1.256 million, according to the 2024 census. Located to the northwest of the Atlas Mountains, it is surrounded by hills and the old city is centered around the Fez River flowing from west to east.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/University_karaouiyine_of_fes.jpg/3840px-University_karaouiyine_of_fes.jpg",
+      "pois": [
+        {
+          "id": "landmark-bab-sidi-bou-jida",
+          "name": "bab sidi bou jida",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Fes.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-bab-el-khoukha",
+          "name": "bab el khoukha",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Fes.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-chez-rachid",
+          "name": "Chez Rachid",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cuisine: regional;moroccan",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-café-ahl-fès",
+          "name": "Café Ahl Fès",
+          "category": "food",
+          "icon": "🍽",
+          "description": "A notable food in Fes.",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-musée-batha",
+          "name": "Musée Batha",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "[OSM data — Fes]",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "Mo, We-Su 10:00-18:00"
+        },
+        {
+          "id": "activity-tanneries-view",
+          "name": "Tanneries view",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Fes.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-fès-médina",
+          "name": "Fès-Médina",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "A notable transport hub in Fes.",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-transport-laghzaoui",
+          "name": "Transport laghzaoui",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "A notable transport hub in Fes.",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "id": "cape-town",
+      "name": "Cape Town",
+      "country": "South Africa",
+      "continent": "Africa",
+      "tags": [
+        "mountains",
+        "wine",
+        "beaches",
+        "penguins",
+        "coastal"
+      ],
+      "description": "Cape Town is the legislative capital of South Africa. It is the country's oldest city and the seat of the Parliament of South Africa. Cape Town is the country's second-largest city by population, after Johannesburg, and the largest city in the Western Cape.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Cape_Town_%28ZA%29%2C_Table_Mountain%2C_Blick_auf_City_Bowl_--_2024_--_2855.jpg/3840px-Cape_Town_%28ZA%29%2C_Table_Mountain%2C_Blick_auf_City_Bowl_--_2024_--_2855.jpg",
+      "pois": [
+        {
+          "id": "landmark-rhodes-memorial",
+          "name": "Rhodes Memorial",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "[OSM data — Cape Town]",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-nitida-winery",
+          "name": "Nitida Winery",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Cape Town.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-cincinnati-spur",
+          "name": "Cincinnati Spur",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cuisine: steak_house",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "Mo-Th 08:00-21:00; Fr-Sa 08:00-22:00; Su 08:00-20:00"
+        },
+        {
+          "id": "food-magica-roma",
+          "name": "Magica Roma",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cuisine: italian",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "Mo-Fr 12:00+, Mo-Sa 18:00-22:00+"
+        },
+        {
+          "id": "activity-spilhaus-ridge",
+          "name": "Spilhaus Ridge",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Cape Town.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-india-venster",
+          "name": "India Venster",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Cape Town.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-louis-botha",
+          "name": "Louis Botha",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Cape Town.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-non-violence",
+          "name": "Non-Violence",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "[OSM data — Cape Town]",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": "https://nonviolence.com/about/the-knotted-gun/"
+        },
+        {
+          "id": "transport_hub-hazendal",
+          "name": "Hazendal",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "A notable transport hub in Cape Town.",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-athlone",
+          "name": "Athlone",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "A notable transport hub in Cape Town.",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "id": "oaxaca",
+      "name": "Oaxaca",
+      "country": "Mexico",
+      "continent": "Americas",
+      "tags": [
+        "food",
+        "mezcal",
+        "markets",
+        "indigenous",
+        "ruins"
+      ],
+      "description": "Oaxaca de Juárez, or simply Oaxaca, is the capital and largest city of the eponymous Mexican state of Oaxaca. It is the municipal seat for the surrounding municipality of Oaxaca, the most populous municipality in Oaxaca, and the fourth most densely populated municipality in Oaxaca, only being less densely populated than San Jacinto Amilpas, Santa Lucía del Camino, and Santa Cruz Amilpas. It is in the Centro District in the Central Valleys region of the state, in the foothills of the Sierra Madre at the base of the Cerro del Fortín, extending to the banks of the Atoyac River.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/e/ea/MonteAlbanWest.jpg",
+      "pois": [
+        {
+          "id": "landmark-árbol-del-tule",
+          "name": "Árbol del Tule",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Nombre común: Ahuehuete ó Sabino. Edad más de 2000 años. Volumen: 816829 m3 . Peso: 636107 t. Área de copa: 1.403 m2 , Perímetro de copa: 142.5 m",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-casa-cué",
+          "name": "Casa Cué",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Oaxaca.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-bendavua",
+          "name": "Bendavua",
+          "category": "food",
+          "icon": "🍽",
+          "description": "A notable food in Oaxaca.",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-café-la-organización",
+          "name": "Café La Organización",
+          "category": "food",
+          "icon": "🍽",
+          "description": "A notable food in Oaxaca.",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-planetario-nundehui",
+          "name": "Planetario Nundehui",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Oaxaca.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "Mo-Fr 09:00-15:00"
+        },
+        {
+          "id": "activity-casa-de-juárez",
+          "name": "Casa de Juárez",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Oaxaca.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "Tu-Su 10:00-19:00"
+        },
+        {
+          "id": "hidden_gem-centro-fotográfico-manuel-álva",
+          "name": "Centro Fotográfico Manuel Álvarez Bravo",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Oaxaca.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-angel",
+          "name": "Angel",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Oaxaca.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-autobuses-turisticos-a-monte-a",
+          "name": "Autobuses turisticos a Monte Alban",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "A notable transport hub in Oaxaca.",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-au-terminal-de-santa-rosa",
+          "name": "AU Terminal de Santa Rosa",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "A notable transport hub in Oaxaca.",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "id": "cartagena",
+      "name": "Cartagena",
+      "country": "Colombia",
+      "continent": "Americas",
+      "tags": [
+        "colonial",
+        "beaches",
+        "food",
+        "walled city",
+        "caribbean"
+      ],
+      "description": "Cartagena, known since the colonial era as Cartagena de Indias, is a city and one of the major ports on the northern coast of Colombia in the Caribbean Coast Region, along the Caribbean Sea. Cartagena's past role as a link in the route to the West Indies provides it with important historical value for world exploration and preservation of heritage from the great commercial maritime routes. As a former Spanish colony, it was a key port for the export of Bolivian silver to Spain and for the import of enslaved Africans under the asiento system.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/3/30/Museo_Naval_del_Caribe.JPG",
+      "pois": [
+        {
+          "id": "landmark-india-catalina",
+          "name": "India Catalina",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Cartagena.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-estatua-de-pedro-de-heredia",
+          "name": "Estatua de Pedro de Heredia",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Cartagena.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-juan-valdez-café",
+          "name": "Juan Valdez Café",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cuisine: coffee_shop",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "https://juanvaldez.com/"
+        },
+        {
+          "id": "food-crepes-&-waffles",
+          "name": "Crepes & Waffles",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cuisine: crepe;ice_cream",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-museo-del-oro",
+          "name": "Museo del Oro",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Cartagena.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "Tu-Sa 09:00-17:00; Su 10:00-15:00"
+        },
+        {
+          "id": "activity-casa-museo-rafael-núñez",
+          "name": "Casa Museo Rafael Núñez",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Cartagena.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "Tu-Fr 09:00-17:00; Sa, Su 10:00-16:00"
+        },
+        {
+          "id": "hidden_gem-la-gorda-gertrudis",
+          "name": "La Gorda Gertrudis",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Cartagena.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-pope-statue",
+          "name": "Pope statue",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Cartagena.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-marsol-transportes",
+          "name": "MarSol Transportes",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "A notable transport hub in Cartagena.",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-bus-stop-para-llegar-a-aeropue",
+          "name": "Bus Stop Para Llegar a Aeropuerto",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "A notable transport hub in Cartagena.",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "id": "medellin",
+      "name": "Medellín",
+      "country": "Colombia",
+      "continent": "Americas",
+      "tags": [
+        "transformation",
+        "cable-car",
+        "flowers",
+        "coffee",
+        "nightlife"
+      ],
+      "description": "Medellín, officially the Special District of Science, Technology and Innovation of Medellín, is the second-largest city in Colombia after Bogotá, and the capital of the department of Antioquia. It is located in the Aburrá Valley, a central region of the Andes Mountains, in northwestern South America. The city's population was 2,427,129 at the 2018 census.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/e/e4/El_Poblado_Medell%C3%ADn.jpg",
+      "pois": [
+        {
+          "id": "landmark-paraninfo-de-la-udea",
+          "name": "Paraninfo de la UdeA",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Medellín.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-monumento-a-guillermo-gaviria-",
+          "name": "Monumento a Guillermo Gaviria y Gilberto Echeverri",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Medellín.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-crepes-&-waffles",
+          "name": "Crepes & Waffles",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cuisine: crepe;ice_cream",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-claudio-express-pollos",
+          "name": "Claudio Express Pollos",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cuisine: Pollo asado",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "Mo-Su 07:00-20:00"
+        },
+        {
+          "id": "activity-parque-de-cristo-rey",
+          "name": "Parque de Cristo Rey",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Medellín.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-centro-cultural-facultad-de-ar",
+          "name": "Centro Cultural Facultad de Artes U de A",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Medellín.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-el-hombre-ante-los-grandes-des",
+          "name": "El hombre ante los grandes descubrimientos de la ciencia y la naturaleza",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "Ubicada en el costado norte del bloque 8 (Biblioteca) de la Universidad de Antioquia. Material: Pintura mural al fresco Dimensiones: 38.00 x 4.5 m. Emplazamiento: 1969",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": "https://www.udea.edu.co/wps/portal/udea/web/inicio/cultura/museo-abierto/pedro-nel-gomez/hombre-ante-grandes-descubrimientos"
+        },
+        {
+          "id": "hidden_gem-pájaro-de-la-paz",
+          "name": "Pájaro de la Paz",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Medellín.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-la-sierra-103",
+          "name": "La Sierra 103",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "A notable transport hub in Medellín.",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-josé-maría-córdova-(mde)-airpo",
+          "name": "José María Córdova (MDE) Airport Bus",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "A notable transport hub in Medellín.",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "id": "cusco",
+      "name": "Cusco",
+      "country": "Peru",
+      "continent": "Americas",
+      "tags": [
+        "inca",
+        "altitude",
+        "history",
+        "markets",
+        "gateway"
+      ],
+      "description": "Cusco or Cuzco is a city in southeastern Peru, near the Sacred Valley of the Andes mountain range, and the Huatanay and Urubamba rivers. It is the capital and largest city of the eponymous Cusco Province and Cusco Department. It has historically been one of the largest cultural, economic and political centers of Peru.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Vista_Calle_Suecia.jpg/3840px-Vista_Calle_Suecia.jpg",
+      "pois": [
+        {
+          "id": "landmark-qurikancha",
+          "name": "Qurikancha",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "[OSM data — Cusco]",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-teteccaca",
+          "name": "Teteccaca",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Cusco.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-sueno-azul",
+          "name": "Sueno Azul",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cuisine: regional",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "Mo-Sa 10:30-21:00"
+        },
+        {
+          "id": "food-cafe-punchay",
+          "name": "Cafe Punchay",
+          "category": "food",
+          "icon": "🍽",
+          "description": "A notable food in Cusco.",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-qurikancha",
+          "name": "Qurikancha",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "[OSM data — Cusco]",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-mirador-taray",
+          "name": "Mirador Taray",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Cusco.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-qurikancha",
+          "name": "Qurikancha",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "[OSM data — Cusco]",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-teteccaca",
+          "name": "Teteccaca",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Cusco.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-colectivo-to-chinchero",
+          "name": "Colectivo to Chinchero",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "A notable transport hub in Cusco.",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-terminal-bus-to-pisac-+-calca",
+          "name": "Terminal bus to Pisac + Calca",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "A notable transport hub in Cusco.",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "id": "buenos-aires",
+      "name": "Buenos Aires",
+      "country": "Argentina",
+      "continent": "Americas",
+      "tags": [
+        "tango",
+        "steak",
+        "architecture",
+        "nightlife",
+        "culture"
+      ],
+      "description": "Buenos Aires, officially the Autonomous City of Buenos Aires, is the capital and largest city of Argentina. It is located on the southwest of the Río de la Plata. Buenos Aires is classified as an Alpha− global city, according to the GaWC 2024 ranking.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/1/1e/Puerto_Madero%2C_Buenos_Aires_%2840689219792%29_%28cropped%29.jpg",
+      "pois": [
+        {
+          "id": "landmark-el-ateneo-grand-splendid",
+          "name": "El Ateneo Grand Splendid",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "[OSM data — Buenos Aires]",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": "Mo-Sa 09:00-21:00; Su 12:00-21:00"
+        },
+        {
+          "id": "landmark-monumento-guardacostas",
+          "name": "Monumento Guardacostas",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Buenos Aires.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-café-tortoni",
+          "name": "Café Tortoni",
+          "category": "food",
+          "icon": "🍽",
+          "description": "[OSM data — Buenos Aires]",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "Mo-Su 08:00-18:00"
+        },
+        {
+          "id": "food-armenia",
+          "name": "Armenia",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cuisine: armenian",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-museo-evita---instituto-nacion",
+          "name": "Museo Evita - Instituto Nacional Eva Perón De Investigaciones Históricas",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Buenos Aires.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "Tu-Su 11:00-19:00"
+        },
+        {
+          "id": "activity-museo-nacional-ferroviario",
+          "name": "Museo Nacional Ferroviario",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "Material vinculado con el sistema ferroviario nacional: vehículos, telefonía, faroles, uniformes, mobiliario, maquetas, etc. Correspondientes a la segunda mitad del siglo XIX al siglo XX.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "Mo-Fr 10:00-18:00"
+        },
+        {
+          "id": "hidden_gem-matias",
+          "name": "Matias",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Buenos Aires.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-monumento-al-escape",
+          "name": "Monumento al Escape",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Buenos Aires.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-avenida-la-plata",
+          "name": "Avenida La Plata",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "[OSM data — Buenos Aires]",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-boedo",
+          "name": "Boedo",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "[OSM data — Buenos Aires]",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "id": "san-cristobal",
+      "name": "San Cristóbal de las Casas",
+      "country": "Mexico",
+      "continent": "Americas",
+      "tags": [
+        "indigenous",
+        "colonial",
+        "highlands",
+        "markets",
+        "coffee"
+      ],
+      "description": "San Cristóbal de las Casas, also known by its native Tzotzil name, Jovel, is a town and municipality located in the Central Highlands region of the Mexican state of Chiapas. It was the capital of the state until 1892, and is still considered the cultural capital of Chiapas.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/a/a1/Montaje_de_San_Crist%C3%B3bal_de_Las_Casas.jpg",
+      "pois": [
+        {
+          "id": "landmark-maría-adelina-flores-morales",
+          "name": "María Adelina Flores Morales",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in San Cristóbal de las Casas.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-ángel-robles-ramirez",
+          "name": "Ángel Robles Ramirez",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in San Cristóbal de las Casas.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-restaurant-adriana",
+          "name": "Restaurant Adriana",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cuisine: mexican",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-italian-coffee",
+          "name": "Italian Coffee",
+          "category": "food",
+          "icon": "🍽",
+          "description": "A notable food in San Cristóbal de las Casas.",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-museo-del-ambar-de-chiapas",
+          "name": "Museo del Ambar de Chiapas",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in San Cristóbal de las Casas.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-museo-de-culturas-populares",
+          "name": "Museo de Culturas Populares",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in San Cristóbal de las Casas.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "Tu-Fr 09:00-17:00; Sa 10:00-13:00"
+        },
+        {
+          "id": "hidden_gem-street-art",
+          "name": "Street art",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in San Cristóbal de las Casas.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-three-monkeys",
+          "name": "Three Monkeys",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "Three monkeys, paste-up",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-terminal-autotransportes-zinac",
+          "name": "Terminal Autotransportes Zinacantán",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "A notable transport hub in San Cristóbal de las Casas.",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-occ-/ado-venta-de-boletos",
+          "name": "OCC /ADO Venta de boletos",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "A notable transport hub in San Cristóbal de las Casas.",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "id": "luang-prabang",
+      "name": "Luang Prabang",
+      "country": "Laos",
+      "continent": "Asia",
+      "tags": [
+        "monks",
+        "waterfalls",
+        "mekong",
+        "temples",
+        "slow-travel"
+      ],
+      "description": "Luang Prabang, historically known as Xieng Thong, and alternatively spelled Luang Phabang or Louangphabang, is the capital of Luang Prabang Province in north-central Laos. Its name, meaning “Royal Buddha Image,” derives from the Phra Bang, a statue symbolizing Lao sovereignty. Designated a UNESCO World Heritage Site in 1995, the city is recognized for blending Lao architecture, European colonial buildings, and over 30 Buddhist temples.",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/f/f7/Phou_si_Luang_Prabang_Laos_%E3%83%97%E3%83%BC%E3%82%B7%E3%83%BC%E3%81%AE%E4%B8%98_%E3%83%A9%E3%82%AA%E3%82%B9%E3%83%BB%E3%83%AB%E3%82%A2%E3%83%B3%E3%83%97%E3%83%A9%E3%83%90%E3%83%BC%E3%83%B3_DSCF6777.jpg",
+      "pois": [
+        {
+          "id": "landmark-monument-du-president-souphano",
+          "name": "Monument du President Souphanouvong",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Luang Prabang.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-unesco-plaque",
+          "name": "Unesco Plaque",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "A notable landmark in Luang Prabang.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-lao-lao-beer-garden",
+          "name": "Lao Lao Beer Garden",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cuisine: lao",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "food-utopia-bar-&-restaurant",
+          "name": "Utopia Bar & Restaurant",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cuisine: international;breakfast;tea;local;asian;coffee_shop;lao Morning & Afternoon Yoga Bar Restaurant",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "Mo-Su 07:00-23:30"
+        },
+        {
+          "id": "activity-uxo-visitor's-center",
+          "name": "UXO Visitor's Center",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "A notable activity in Luang Prabang.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "Mo-Su 08:00-16:00"
+        },
+        {
+          "id": "activity-จุดชมวิว-พระธาตุภูสี",
+          "name": "จุดชมวิว พระธาตุภูสี",
+          "category": "activity",
+          "icon": "🏔",
+          "description": "[OSM data — Luang Prabang]",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "hidden_gem-ock-pop-tok",
+          "name": "Ock Pop Tok",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Luang Prabang.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": "https://www.ockpoptok.com/"
+        },
+        {
+          "id": "hidden_gem-ma-té-sai",
+          "name": "Ma Té Sai",
+          "category": "hidden_gem",
+          "icon": "💎",
+          "description": "A notable hidden gem in Luang Prabang.",
+          "duration_min": 60,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-southern-bus-terminal-ລົດເມ",
+          "name": "Southern Bus Terminal ລົດເມ",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "A notable transport hub in Luang Prabang.",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "transport_hub-ລົດປັ່",
+          "name": "ລົດປັ່",
+          "category": "transport_hub",
+          "icon": "🚉",
+          "description": "A notable transport hub in Luang Prabang.",
+          "duration_min": 20,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "id": "hamburg",
+      "name": "Hamburg",
+      "country": "Germany",
+      "continent": "Europe",
+      "tags": [
+        "port city",
+        "travel"
+      ],
+      "description": "Hamburg, officially the Free and Hanseatic City of Hamburg, is the second-largest city in Germany after Berlin and seventh-largest city in the European Union, with a population of over 1.9 million. The Hamburg Metropolitan Region has a population of over 5.1 million and is the tenth-largest metropolitan region by GDP in the European Union. At the southern tip of the Jutland Peninsula, Hamburg stands on the branching River Elbe at the head of a 110 km (68 mi) estuary to the North Sea, at the confluence of the Alster and Bille. Hamburg is one of Germany's three city-states alongside Berlin and B",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Hamburg%2C_Landungsbr%C3%BCcken_--_2016_--_3131-7.jpg/3840px-Hamburg%2C_Landungsbr%C3%BCcken_--_2016_--_3131-7.jpg",
+      "pois": [
+        {
+          "id": "activity-gesellschaftsspiegel",
+          "name": "Gesellschaftsspiegel",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Gesellschaftsspiegel sind zwei begehbare Skulpturen von Ólafur Elíasson, die seit September 2020 als Dauerleihgaben eines Investors im Alten Wall in Hamburg stehen. Neben dem Hamburger Rathaus und der",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-hygieia-brunnen",
+          "name": "Hygieia-Brunnen",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Der Hygieia-Brunnen befindet sich im Innenhof des Hamburger Rathauses. Er wurde 1895/96 erbaut, gestaltet vom Bildhauer Joseph von Kramer (1841–1908) aus München, einem Bruder des Architekten Theodor ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-bucerius-kunst-forum",
+          "name": "Bucerius Kunst Forum",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Bucerius Kunst Forum is an international exhibition centre in Hamburg, Germany, founded in 2002 through the ZEIT-Stiftung Ebelin und Gerd Bucerius foundation. It is named after Gerd Bucerius and h",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.buceriuskunstforum.de/;https://www.buceriuskunstforum.de/"
+        },
+        {
+          "id": "activity-alsterarkaden",
+          "name": "Alsterarkaden",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Die Alsterarkaden in Hamburg, benannt nach dem architektonischen Begriff Arkade (lateinisch arcus: Bogen), gehen auf Entwürfe von Alexis de Chateauneuf für den neu zu schaffenden Hamburger Rathausmark",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-hamburger-ehrenmal-f-r-die-gefallenen-beider-weltkriege",
+          "name": "Hamburger Ehrenmal für die Gefallenen beider Weltkriege",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Das Hamburger Ehrenmal, offiziell: Denkmal für die Gefallenen beider Weltkriege, ist eine Stele mit dem Relief Trauernde Mutter mit Kind. Das Relief wurde 1931 von Ernst Barlach zur Erinnerung an die ",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-dietrich-bonhoeffer-denkmal",
+          "name": "Dietrich-Bonhoeffer-Denkmal",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Die Sankt-Petri-Kirche ist die älteste Pfarrkirche Hamburgs. Sie ist nach dem Apostel Petrus benannt und gehört zu den fünf Hamburger Hauptkirchen.Mit ihrer Lage an der Mönckebergstraße im Norden, an ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-hammaburg",
+          "name": "Hammaburg",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Die Hammaburg ist eine in der frühen Karolingerzeit errichtete Niederungsburg, von der sich der Name Hamburgs ableitet. Traditionell wird die Errichtung in den Kontext der karolingischen Politik im no",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-bischofsturm",
+          "name": "Bischofsturm",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Bishop's Tower (German: Bischofsturm), or Bishop's Castle (Bischofsburg), is an archaeological site in the historic city center of Hamburg, Germany, containing the oldest known remains of a stone ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-st-nikolai-museum",
+          "name": "St. Nikolai Museum",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Church of St. Nicholas (German: St.-Nikolai-Kirche) was a Gothic Revival cathedral that was formerly one of the five Lutheran Hauptkirchen (main churches) in the city of Hamburg, Germany. The orig",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.mahnmal-st-nikolai.de/"
+        },
+        {
+          "id": "activity-geschichtsort-stadthaus",
+          "name": "Geschichtsort Stadthaus",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Das Stadthaus entstand 1814 als Sitz der Stadtverwaltung und der Polizei in Hamburg, zwischen dem Neuen Wall und dem Bleichenfleet durch Umbau und Erweiterung des 1710 errichteten Görtz-Palais, das be",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-german-customs-museum",
+          "name": "German Customs Museum",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Das Deutsche Zollmuseum ist das nationale Zollmuseum über die Vergangenheit und Gegenwart des Zolls. Es befindet sich auf dem Geländes des ehemaligen Hamburger Zolls.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.museum.zoll.de;http://www.museum.zoll.de/"
+        },
+        {
+          "id": "activity-dialog-im-dunkeln",
+          "name": "Dialog im Dunkeln",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Dialogue in the Dark (\"Dialog in the Dark\" in American promotional materials) is an awareness raising exhibition and franchise, as well as a social business. In Dialogue in the Dark, blind guides lead",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.dialog-im-dunkeln.de;https://dialog-in-hamburg.de;http://www.dialogue-in-the-dark.com"
+        },
+        {
+          "id": "food-picasso-hamburgo",
+          "name": "Picasso Hamburgo",
+          "category": "food",
+          "icon": "🍽",
+          "description": "The Great fire of Hamburg began early on May 5, 1842, in Deichstraße and burned until the morning of May 8, destroying about one third of the buildings in the Altstadt. It killed 51 people and destroy",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "http://www.picasso-hamburgo.de/"
+        },
+        {
+          "id": "food-hamburger-deel",
+          "name": "Hamburger Deel",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Hamburg City Hall (German: Hamburger Rathaus, pronounced [ˈhambʊʁɡɐ ˈʁaːthaʊs]) is the seat of local government of the Free and Hanseatic City of Hamburg, Germany. It is the seat of the government of ",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "http://www.hamburg.de/rathaus/"
+        },
+        {
+          "id": "food-broscheks",
+          "name": "Broscheks",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Das Broschek-Haus in Hamburg ist ein 1925–26 nach den Plänen des Architekten Fritz Höger erbautes Kontorhaus, das 1980–81 durch die Architekten von Gerkan, Marg und Partner umgebaut und ergänzt wurde ",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "https://www.broscheks.de/"
+        },
+        {
+          "id": "food-jahreszeiten-grill",
+          "name": "Jahreszeiten Grill",
+          "category": "food",
+          "icon": "🍽",
+          "description": "The Fairmont Hotel Vier Jahreszeiten is a luxury hotel located on the Neuer Jungfernstieg in Hamburg, Germany. It is recognized as one of the top hotels in the world. The hotel has received numerous n",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "http://www.fairmont.com/vier-jahreszeiten-hamburg/;http://www.fairmont-hvj.de/de/jahreszeiten_grill.php"
+        },
+        {
+          "id": "food-weinkeller-cremon",
+          "name": "Weinkeller Cremon",
+          "category": "food",
+          "icon": "🍽",
+          "description": "Cremon ist der Name einer Straße in der Hamburger Altstadt und bezeichnete ursprünglich eine Marschinsel im Mündungsgebiet der Alster in die Elbe. Die Herkunft des Namens ist unklar, möglicherweise ge",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "https://www.cremon.de/"
+        },
+        {
+          "id": "food-im-sprinkenhof",
+          "name": "Im Sprinkenhof",
+          "category": "food",
+          "icon": "🍽",
+          "description": "The Sprinkenhof is a nine-storey office building built between 1927 and 1943 in Hamburg's Kontorhaus District. The complex borders the streets Altstädter Straße, Burchardstraße and Johanniswall, and t",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "https://restaurant-sprinkenhof.de/"
+        }
+      ]
+    },
+    {
+      "id": "barcelona",
+      "name": "Barcelona",
+      "country": "Spain",
+      "continent": "Europe",
+      "tags": [
+        "beaches",
+        "mountains",
+        "travel"
+      ],
+      "description": "Barcelona is a city on the northeastern coast of Spain. It is the capital and largest city of the autonomous community of Catalonia, as well as the second-most populous municipality of Spain. With a population of 1.7 million within city limits, its urban area extends to numerous neighbouring municipalities within the province of Barcelona and is home to around 5.7 million people, making it the fifth most populous urban area of the European Union after Paris, the Ruhr area, Madrid and Milan. It is one of the largest metropolises on the Mediterranean Sea, located on the coast between the mouths ",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Aerial_view_of_Barcelona%2C_Spain_%2851227309370%29_edited.jpg/3840px-Aerial_view_of_Barcelona%2C_Spain_%2851227309370%29_edited.jpg",
+      "pois": [
+        {
+          "id": "activity-a-goya",
+          "name": "A Goya",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "A Goya es un monumento escultórico situado en la Avenida de Roma de Barcelona, en el distrito del Ensanche. Fue creado en 1984 por José Gonzalvo Vives, y está dedicado al pintor aragonés Francisco de ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-museu-del-modernisme-catal",
+          "name": "Museu del Modernisme Català",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "El Museo del Modernismo Catalán (MMCAT) es un museo inaugurado en 2010 y dedicado íntegramente al modernismo catalán.[2] Ocupa mil metros cuadrados divididos en dos plantas de un edificio modernista d",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.mmbcn.cat"
+        },
+        {
+          "id": "activity-aribau-multicines",
+          "name": "Aribau Multicines",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "El Cine Aribau va obrir el 7 de desembre de 1962 al Carrer d'Aribau, 5 de Barcelona. Amb una capacitat de 1.175 localitats. Situat just davant del Cinema Central. Al capdavant d'aquest nou cinema s'hi",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.grupbalana.com"
+        },
+        {
+          "id": "activity-guasch-teatre",
+          "name": "Guasch Teatre",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "L'Eixample Teatre és un espai teatral ubicat al carrer d'Aragó núm. 140 de Barcelona, amb capacitat per a 300 espectadors. Inaugurat el 1995 com a Teatre de l'Eixample, el 2000 va rebre el nom de Guas",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-la-villarroel",
+          "name": "La Villarroel",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "La Villarroel és el nom actual d'un espai teatral obert l'any 1972 que fou conegut des de sempre per la Sala Villarroel. És al carrer Villarroel -núm. 87- de Barcelona. Àngel Alonso, Adolf Bras, Alfon",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://www.lavillarroel.cat"
+        },
+        {
+          "id": "activity-cine-alexandra",
+          "name": "Cine Alexandra",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Modest Castañé Lloret, empresari barceloní i decorador, va obrir el Cine Alexandra a Rambla Catalunya, 90 de Barcelona el 26 de març de 1949. D'aquesta manera es va cobrir una zona que fins aleshores ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-alexandra-teatre",
+          "name": "Alexandra Teatre",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "El Alexandra Teatro o Teatro Alexandra es una sala escénica ubicada en los Cines Alexandra de Barcelona, creada en 2010 por parte de los directores de este espacio (Ramon Colom) y del Teatreneu (Josep",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-museo-de-historia-de-la-peluquer-a",
+          "name": "Museo de Historia de la Peluquería",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "El Museo de Historia de la Peluquería es un museo ubicado en Barcelona, (España).Desde el año 2000, el Museo de Historia de la Peluquería, ubicado en Barcelona, ha orientado la parte principal de su a",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-sector-de-conservaci-de-l-eixample",
+          "name": "Sector de conservació de l'Eixample",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "El Sector de conservació de l'Eixample és una obra de Barcelona protegida com a Bé Cultural d'Interès Local vinculada al Pla Cerdà.",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-university-of-barcelona-historical-building",
+          "name": "University of Barcelona historical building",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "El edificio histórico de la Universidad de Barcelona, y conocido popularmente como “La Central”, llamado inicialmente edificio de la Universidad Literaria, fue construido entre 1863 y 1889, e inició l",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-mitj",
+          "name": "Mitjó",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Mitjó és una escultura de l'artista català Antoni Tàpies. Mesura 2,75 metres d'alçada i es troba exposat a la terrassa interior de la Fundació Antoni Tàpies de Barcelona.L'obra, que en un principi ana",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-casa-garriga-nogu-s",
+          "name": "Casa Garriga Nogués",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "La Casa Garriga Nogués es un edificio de estilo ecléctico, con elementos de inspiración modernista, catalogado como Bien de Interés Cultural desde 1980. Obra de Enric Sagnier, ubicado en la calle Dipu",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-house-of-amatller",
+          "name": "House of Amatller",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Casa Amatller (Catalan pronunciation: [ˈkazə əməˈʎːe]) is a building in the Modernisme style in Barcelona, designed by Josep Puig i Cadafalch. Along with Casa Batlló and Casa Lleó-Morera, it makes up ",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": "http://www.amatller.org/"
+        },
+        {
+          "id": "landmark-casa-batll",
+          "name": "Casa Batlló",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Casa Batlló (Catalan pronunciation: [ˈkazə βəˈʎːo]) is a building in the center of Barcelona. It was designed by Antoni Gaudí, and is considered one of his masterpieces. A remodel of a previously buil",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": "https://www.casabatllo.es/"
+        },
+        {
+          "id": "landmark-la-pedrera",
+          "name": "La Pedrera",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Casa Milà (Catalan pronunciation: [ˈkazə miˈla], Spanish pronunciation: [ˈkasa miˈla]), popularly known as La Pedrera (pronounced [ɫə pəˈðɾeɾə]) or \"The stone quarry\", a reference to its unconventiona",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": "https://www.lapedrera.com"
+        },
+        {
+          "id": "activity-fundaci-antoni-t-pies",
+          "name": "Fundació Antoni Tàpies",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Fundació Antoni Tàpies (Catalan pronunciation: [fundəsiˈo ənˈtɔni ˈtapiəs], 'Antoni Tàpies Foundation') is a cultural center and museum, located in Carrer d'Aragó, in Barcelona, Catalonia. It is d",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.fundaciotapies.org"
+        },
+        {
+          "id": "activity-museu-del-perfum",
+          "name": "Museu del Perfum",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Perfume Museum of Barcelona, officially known in Catalan as Museu del Perfum, was founded in 1961 in order to exhibit an evolution of perfume vessels throughout the ages.The museum presents a wide",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://museudelperfum.com/index.php;http://www.museudelperfum.com/"
+        },
+        {
+          "id": "activity-galer-as-layetanas",
+          "name": "Galerías Layetanas",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Las Galerías Layetanas, en la Gran Vía de las Cortes Catalanas, 613, de Barcelona, fueron fundadas por el marchante y promotor artístico Santiago Segura y Burgués en 1915. Fueron un trampolín de inici",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "id": "berlin",
+      "name": "Berlin",
+      "country": "Germany",
+      "continent": "Europe",
+      "tags": [
+        "travel"
+      ],
+      "description": "Berlin is the capital of Germany, as well as its largest city by both area and population. With 3.7 million inhabitants, it has the highest population within its city limits of any city in the European Union. The city is also one of the states of Germany, being the third-smallest state in the country by area. Berlin is surrounded by the state of Brandenburg, bordering Brandenburg's capital Potsdam to the southwest. The urban area of Berlin has a population of over 4.6 million, making it the most populous in Germany. The Berlin-Brandenburg capital region has around 6.2 million inhabitants and i",
+      "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Museumsinsel_Berlin_Juli_2021_1_%28cropped%29_b.jpg/3840px-Museumsinsel_Berlin_Juli_2021_1_%28cropped%29_b.jpg",
+      "pois": [
+        {
+          "id": "activity-victoria-theater",
+          "name": "Victoria-Theater",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Das 1859 eröffnete Victoria-Theater an der Münzstraße 20 in Berlin-Mitte war ein einzigartiges architektonisches Experiment, indem es ein Sommer- und ein Wintertheater (d. h. einen auf die Seiten hin ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-kino-babylon",
+          "name": "Kino Babylon",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Kino Babylon is a cinema in the Mitte neighbourhood of Berlin and part of a listed building complex at Rosa-Luxemburg-Platz opposite the Volksbühne theatre. The building was erected 1928–29. It wa",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.babylonberlin.de"
+        },
+        {
+          "id": "activity-r-uberrad",
+          "name": "Räuberrad",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Das Räuberrad ist eine Metallskulptur, die 1990 vom Bühnenbildner Bert Neumann für die Volksbühne Berlin entworfen und 1994 vom Schweizer Bildhauer Rainer Haußmann angefertigt worden ist. Das Metallra",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-1-berliner-ddr-motorrad-museum",
+          "name": "1. Berliner DDR Motorrad-Museum",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Das DDR Museum: Motorrad (bis 31. August 2021 „1. Berliner DDR-Motorradmuseum“) ist ein Museum für Zweiräder aus der Deutschen Demokratischen Republik in Berlin. Es liegt unter den S-Bahnbögen zwische",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.erstesberliner-ddr-motorradmuseum.de;http://www.erstesberliner-ddr-motorradmuseum.de/"
+        },
+        {
+          "id": "activity-fountain-of-the-peoples-friendship",
+          "name": "Fountain of the Peoples' Friendship",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Der Brunnen der Völkerfreundschaft ist ein Springbrunnen auf dem Alexanderplatz im Berliner Ortsteil Mitte. Den Brunnen entwarf Walter Womacka 1969/1970 im Rahmen der Neugestaltung des Alexanderplatze",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-volksb-hne",
+          "name": "Volksbühne",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Volksbühne (\"People's Theatre\") is a theater in Berlin. Located in Berlin's city center Mitte on Rosa-Luxemburg-Platz (Rosa Luxemburg Square) in what was the GDR's capital. It has been called Berl",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.volksbuehne-berlin.de/;http://www.volksbuehne-berlin.de"
+        },
+        {
+          "id": "food-volksb-hne",
+          "name": "Volksbühne",
+          "category": "food",
+          "icon": "🍽",
+          "description": "The Volksbühne (\"People's Theatre\") is a theater in Berlin. Located in Berlin's city center Mitte on Rosa-Luxemburg-Platz (Rosa Luxemburg Square) in what was the GDR's capital. It has been called Berl",
+          "duration_min": 75,
+          "time_suggestion": null,
+          "notes": "http://www.volksbuehne-berlin.de"
+        },
+        {
+          "id": "activity-alex-35",
+          "name": "Alex 35",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Alea 101 ist der Name eines Geschäfts- und Wohnhauses im Berliner Ortsteil Mitte des gleichnamigen Bezirks.Das Gebäude ist freistehend und liegt südlich zwischen Bahnhof Alexanderplatz und Fernsehturm",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-block-der-frauen",
+          "name": "Block der Frauen",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "אנדרטת הנשים האריות הוא שמו של פסל בגינה קטנה ברוזנשטראסה (Rosenstrasse - רחוב הוורדים) במרכז ברלין. הפסל נקרא גם בלוק הנשים (Block der Frauen), ונחנך ב-1995 כגלעד להפגנת הנשים שנודעה בכינוי מחאת רוזנ",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-lutherdenkmal",
+          "name": "Lutherdenkmal",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Das Lutherdenkmal war ein mehrteiliges Monument, das den Reformator Martin Luther ehrte, die Bildhauer Paul Otto und Robert Toberentz hatten es gestaltet. Der Komplex wurde 1895 auf dem Neuen Markt im",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-spandauer-tor-berlin",
+          "name": "Spandauer Tor (Berlin)",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Das Spandauer Tor war ein Tor der mittelalterlichen Berliner Stadtmauer sowie der Befestigungsanlage Berlins im 17. Jahrhundert. Entsprechend seiner Funktion im Berliner Festungswerk besaß das Tor ein",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-neptunbrunnen",
+          "name": "Neptunbrunnen",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Neptune Fountain in Berlin was built in 1891 and was designed by Reinhold Begas. The Roman god Neptune is in the center. The four women around him represent the four main rivers of Prussia at the ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-loxx",
+          "name": "Loxx",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Die Loxx Miniatur Welten Berlin war eine Modelleisenbahn-Dauerausstellung in Berlin, die 2003 eröffnet wurde. Mit mehr als 800 m² war sie, laut Aussage der Betreiber, die drittgrößte Modellbahn der We",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "landmark-st-nicolai-und-st-marien-friedhof-i",
+          "name": "St. Nicolai- und St. Marien-Friedhof I",
+          "category": "landmark",
+          "icon": "🏛",
+          "description": "Der St. Marien- und St. Nikolai-Friedhof I (auch Alter Friedhof der St.-Nikolai- und St.-Marien-Gemeinde) ist ein Friedhof an der Prenzlauer Allee Nr. 1 im Ortsteil Prenzlauer Berg des Berliner Bezirk",
+          "duration_min": 90,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-institut-f-r-marxismus-leninismus-beim-zk-der-sed",
+          "name": "Institut für Marxismus-Leninismus beim ZK der SED",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Instytut Marksizmu-Leninizmu przy KC SED (Institut für Marxismus-Leninismus beim ZK der SED) – jedna z instytucji naukowo-badawczych KC SED.",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        },
+        {
+          "id": "activity-berlin-dungeon",
+          "name": "Berlin Dungeon",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "Berlin Dungeon is a tourist attraction from a chain including the London Dungeon and Hamburg Dungeon. It provides a journey through Berlin’s dark history in an actor led, interactive experience. There",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "http://www.thedungeons.com/berlin/en/;http://www.thedungeons.com/berlin/de"
+        },
+        {
+          "id": "activity-anne-frank-zentrum",
+          "name": "Anne Frank Zentrum",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The Anne Frank Zentrum (Anne Frank Centre) is a facility located in Berlin, which is committed to promoting a varied and lively society and to working against anti-Semitism, prejudice and any kind of ",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": "https://www.annefrank.de/;http://www.annefrank.de"
+        },
+        {
+          "id": "activity-aquadom",
+          "name": "AquaDom",
+          "category": "activity",
+          "icon": "🎭",
+          "description": "The AquaDom in Berlin, Germany, is a 25 m (82 ft) tall cylindrical acrylic glass aquarium with built-in transparent elevator. It is located inside the Radisson Blu Hotel in the DomAquarée complex at K",
+          "duration_min": 120,
+          "time_suggestion": null,
+          "notes": null
+        }
+      ]
+    }
+  ]
+}

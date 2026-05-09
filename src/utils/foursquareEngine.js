@@ -1,15 +1,16 @@
-// Foursquare Places API v3
-// Set VITE_FSQ_API_KEY in .env
-const FSQ_API_KEY = import.meta.env.VITE_FSQ_API_KEY ?? '';
+// OpenTripMap Places API (replaces Foursquare)
+// Docs: https://dev.opentripmap.org/docs
+const OTM_KEY = import.meta.env.VITE_OTM_API_KEY ?? '';
+const BASE = 'https://api.opentripmap.com/0.1/en/places';
 
-// Category IDs for filtered searches
+// OTM kind groups mapped to our semantic categories
 export const FSQ_CATEGORIES = {
-  hotels:      '19014',
-  restaurants: '13065',
-  bars:        '13003',
-  attractions: '16000',
-  cafes:       '13032',
-  shopping:    '17000',
+  hotels:      'accomodations',
+  restaurants: 'foods',
+  bars:        'foods',
+  attractions: 'interesting_places',
+  cafes:       'foods',
+  shopping:    'shops',
 };
 
 const ACTIVITY_QUERIES = [
@@ -36,7 +37,6 @@ const DISCOVERY_QUERIES = [
   'underground scene', 'cultural landmark', 'rooftop view', 'secret garden',
 ];
 
-// Legacy alias
 export const INSPIRE_QUERIES = ACTIVITY_QUERIES;
 
 export function getInspireQuery(context = 'activity') {
@@ -49,73 +49,84 @@ export function getInspireQuery(context = 'activity') {
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
-function mapPlace(p) {
+// Simple in-memory geocode cache keyed by city name
+const geocodeCache = {};
+
+async function geocodeCity(city) {
+  if (!city) return null;
+  const key = city.toLowerCase();
+  if (geocodeCache[key]) return geocodeCache[key];
+  try {
+    const res = await fetch(`${BASE}/geoname?name=${encodeURIComponent(city)}&apikey=${OTM_KEY}`);
+    const data = await res.json();
+    if (data.status === 'OK') {
+      const coords = { lat: data.lat, lon: data.lon };
+      geocodeCache[key] = coords;
+      return coords;
+    }
+  } catch { /* ignore */ }
+  return null;
+}
+
+function kindLabel(kinds = '') {
+  const first = kinds.split(',')[0] ?? 'place';
+  return first.replace(/_/g, ' ')
+    .split(' ')
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+}
+
+function mapOtmPlace(p) {
   return {
-    id:      p.fsq_id,
-    name:    p.name,
-    address: p.location?.formatted_address ?? p.location?.locality ?? '',
-    type:    p.categories?.[0]?.name ?? 'Place',
-    rating:  p.rating ? (p.rating / 2).toFixed(1) : null,
-    price:   p.price ?? null,
-    coords:  p.geocodes?.main
-      ? { lat: p.geocodes.main.latitude, lng: p.geocodes.main.longitude }
-      : null,
-    tags:    p.categories?.slice(0, 2).map(c => c.name) ?? [],
+    id:      p.xid,
+    name:    p.name || 'Unknown Place',
+    address: '',
+    type:    kindLabel(p.kinds),
+    rating:  p.rate ? Math.min(5, p.rate + 2).toFixed(1) : null,
+    price:   null,
+    coords:  p.point ? { lat: p.point.lat, lng: p.point.lon } : null,
+    tags:    p.kinds?.split(',').slice(0, 2).map(k => kindLabel(k)) ?? [],
   };
 }
 
-export async function searchPlaces(query, nearCity = '', limit = 8) {
-  if (!FSQ_API_KEY) return [];
+async function radiusSearch(kinds, city, limit = 8) {
+  if (!OTM_KEY) return [];
+  const coords = await geocodeCity(city);
+  if (!coords) return [];
   try {
-    const near = nearCity ? `&near=${encodeURIComponent(nearCity)}` : '';
-    const resp = await fetch(
-      `https://api.foursquare.com/v3/places/search?query=${encodeURIComponent(query)}${near}&limit=${limit}&sort=RATING`,
-      { headers: { accept: 'application/json', Authorization: FSQ_API_KEY } }
+    const res = await fetch(
+      `${BASE}/radius?radius=10000&lon=${coords.lon}&lat=${coords.lat}&kinds=${kinds}&limit=${limit}&rate=1&format=json&apikey=${OTM_KEY}`
     );
-    const data = await resp.json();
-    return (data.results ?? []).map(mapPlace);
+    const data = await res.json();
+    if (!Array.isArray(data)) return [];
+    return data.filter(p => p.name).map(mapOtmPlace);
   } catch {
     return [];
   }
+}
+
+// Keyword-to-kinds heuristic for free-text "inspire" queries
+function queryToKinds(query) {
+  const q = query.toLowerCase();
+  if (/hotel|hostel|stay|lodge|bed|breakfast|apartment|camp|glamp/.test(q)) return 'accomodations';
+  if (/food|eat|restaurant|brunch|ramen|taco|street food|market food/.test(q)) return 'foods';
+  if (/bar|cocktail|wine|jazz|drink/.test(q)) return 'foods';
+  if (/coffee|café|cafe/.test(q)) return 'foods';
+  if (/shop|market|vintage/.test(q)) return 'shops';
+  if (/museum|gallery|art|culture|cultural|landmark|historic/.test(q)) return 'cultural,historic,museums';
+  if (/view|panorama|rooftop|sunset|scenic/.test(q)) return 'natural,interesting_places';
+  return 'interesting_places';
+}
+
+export async function searchPlaces(query, nearCity = '', limit = 8) {
+  return radiusSearch(queryToKinds(query), nearCity || 'Paris', limit);
 }
 
 export async function searchByCategory(categoryId, nearCity = '', limit = 8) {
-  if (!FSQ_API_KEY) return [];
-  try {
-    const near = nearCity ? `&near=${encodeURIComponent(nearCity)}` : '';
-    const resp = await fetch(
-      `https://api.foursquare.com/v3/places/search?categories=${categoryId}${near}&limit=${limit}&sort=RATING`,
-      { headers: { accept: 'application/json', Authorization: FSQ_API_KEY } }
-    );
-    const data = await resp.json();
-    return (data.results ?? []).map(mapPlace);
-  } catch {
-    return [];
-  }
+  // categoryId here is an OTM kinds string (from FSQ_CATEGORIES map above)
+  return radiusSearch(categoryId, nearCity || 'Paris', limit);
 }
 
-export async function fetchLocalFlavor(location = 'Berlin', budgetTier = 2) {
-  if (!FSQ_API_KEY) {
-    console.warn('[foursquareEngine] No VITE_FSQ_API_KEY set — returning empty results');
-    return [];
-  }
-  try {
-    const resp = await fetch(
-      `https://api.foursquare.com/v3/places/search?near=${encodeURIComponent(location)}&categories=13000&min_price=1&max_price=${budgetTier}&limit=6&sort=RATING`,
-      { headers: { accept: 'application/json', Authorization: FSQ_API_KEY } }
-    );
-    const data = await resp.json();
-    return (data.results ?? []).map(p => ({
-      id:      p.fsq_id,
-      name:    p.name,
-      type:    p.categories?.[0]?.name ?? 'Local Eatery',
-      rating:  p.rating ? (p.rating / 2).toFixed(1) : '4.0',
-      price:   p.price ?? 1,
-      address: p.location?.formatted_address ?? '',
-      tags:    p.categories?.slice(0, 2).map(c => c.name) ?? [],
-    }));
-  } catch (err) {
-    console.error('[foursquareEngine] fetch failed:', err);
-    return [];
-  }
+export async function fetchLocalFlavor(location = 'Berlin', _budgetTier = 2) {
+  return radiusSearch('foods', location, 6);
 }

@@ -1,6 +1,9 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import CulinaryAnchorBlock from './CulinaryAnchorBlock';
 import InspirePanel from '../inspire/InspirePanel';
+import { useExpedition } from '../../context/ExpeditionContext';
+
+const LEDGER_DND_KEY = 'application/vp-ledger-item';
 
 // ── Constants ──────────────────────────────────────────────────────────────────
 
@@ -92,6 +95,7 @@ function dayStats(blocks) {
 // ── Main component ─────────────────────────────────────────────────────────────
 
 export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Operation Patagonia' }) {
+  const { removeFromPath } = useExpedition();
   const [days,         setDays]         = useState(initialDays);
   const [viewMode,     setViewMode]     = useState('kanban'); // 'kanban' | 'timeline'
   const [ghostId,      setGhostId]      = useState(null);
@@ -210,7 +214,6 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
   function handleDragOver(e, dayId) {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
-    if (!dragState.current) return;
     setDropIndicator({ dayId, index: getDropIndex(e, dayId) });
   }
 
@@ -220,6 +223,35 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
 
   function handleDrop(e, targetDayId) {
     e.preventDefault();
+
+    // ── Ledger Active Path drop ───────────────────────────────────────────────
+    const ledgerRaw = e.dataTransfer.getData(LEDGER_DND_KEY);
+    if (ledgerRaw) {
+      try {
+        const item = JSON.parse(ledgerRaw);
+        const insertIdx = getDropIndex(e, targetDayId);
+        const block = {
+          id:       `ledger-${item.id}-${Date.now()}`,
+          title:    item.name,
+          category: 'activity',
+          icon:     '📍',
+          time:     '',
+          duration: undefined,
+          notes:    item.type ?? '',
+        };
+        setDays(prev => prev.map(d => {
+          if (d.id !== targetDayId) return d;
+          const nb = [...d.blocks];
+          nb.splice(Math.min(insertIdx, nb.length), 0, block);
+          return { ...d, blocks: nb };
+        }));
+        removeFromPath(item.id);
+      } catch { /* malformed */ }
+      setDropIndicator(null);
+      return;
+    }
+
+    // ── Internal kanban drag ──────────────────────────────────────────────────
     const ds = dragState.current;
     if (!ds) return;
     const insertIdx = getDropIndex(e, targetDayId);

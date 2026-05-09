@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import NewTripModal from '../components/trip/NewTripModal';
 import { useTripStore } from '../store/useTripStore';
 import { useTheme } from '../context/ThemeContext';
 import { useLabels } from '../hooks/useLabels';
 import AppShell from '../components/layout/AppShell';
 import TransitMap from '../components/itinerary/TransitMap';
+import TimelinePath from '../components/itinerary/TimelinePath';
 import RouteMap from '../components/itinerary/RouteMap';
 import LegGuide from '../components/itinerary/LegGuide';
 import KanbanBoard from '../components/itinerary/KanbanBoard';
@@ -13,6 +15,7 @@ import PackingManifest from '../components/logistics/PackingManifest';
 import FlightScout from '../components/logistics/FlightScout';
 import VehicleSearch from '../components/logistics/VehicleSearch';
 import PackingEngine from '../components/logistics/PackingEngine';
+import AccommodationSearch from '../components/logistics/AccommodationSearch';
 import MustSee from '../components/discovery/MustSee';
 import LocalFlavor from '../components/discovery/LocalFlavor';
 import BasecampScout from '../components/discovery/BasecampScout';
@@ -26,6 +29,7 @@ import BentoPacker from '../components/logistics/BentoPacker';
 import VibeCheck from '../components/discovery/VibeCheck';
 import SafetyPulse from '../components/logistics/SafetyPulse';
 import ARGhostTours from '../components/ar/ARGhostTours';
+import InspirePanel from '../components/inspire/InspirePanel';
 
 export default function TripPlanner({ onBackToDashboard }) {
   const { trip, legs, manifestSettings, cloning } = useTripStore();
@@ -36,6 +40,8 @@ export default function TripPlanner({ onBackToDashboard }) {
   const [tacticalMode, setTacticalMode] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [editTripOpen, setEditTripOpen] = useState(false);
+  const [inspireOpen, setInspireOpen] = useState(false);
 
   if (tacticalMode) {
     return <TacticalMode onExit={() => setTacticalMode(false)} />;
@@ -55,6 +61,9 @@ export default function TripPlanner({ onBackToDashboard }) {
           onTabChange={setTab}
           onOpenProfile={() => setProfileOpen(true)}
           onBackToDashboard={onBackToDashboard}
+          onOpenChat={() => setChatOpen(true)}
+          onOpenInspire={() => setInspireOpen(true)}
+          onOpenTactical={() => setTacticalMode(true)}
         >
           {/* Trip header bar */}
           <header
@@ -63,7 +72,14 @@ export default function TripPlanner({ onBackToDashboard }) {
           >
             <div>
               <div className="label-tag mb-0.5">{labels.activeMission}</div>
-              <h1 className="font-editorial text-xl" style={{ color: 'var(--text-primary)' }}>{trip.name}</h1>
+              <button
+                onClick={() => setEditTripOpen(true)}
+                className="font-editorial text-xl text-left hover:underline decoration-dotted"
+                style={{ color: 'var(--text-primary)' }}
+                title="Click to edit trip"
+              >
+                {trip.name}
+              </button>
             </div>
             <div className="flex items-center gap-3 text-xs">
               <span style={{ color: 'var(--text-secondary)' }}>{trip.destination}</span>
@@ -75,6 +91,15 @@ export default function TripPlanner({ onBackToDashboard }) {
               </span>
             </div>
           </header>
+
+          <AnimatePresence>
+            {editTripOpen && (
+              <NewTripModal
+                initialData={trip}
+                onClose={() => setEditTripOpen(false)}
+              />
+            )}
+          </AnimatePresence>
 
           {/* Trip stats bar */}
           <div
@@ -93,6 +118,7 @@ export default function TripPlanner({ onBackToDashboard }) {
               <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
                 <div className="lg:col-span-3 space-y-4">
                   <RouteMap />
+                  <TimelinePath />
                   <SafetyPulse destinationId="patagonia" center={[-51.6, -72.7]} zoom={8} />
                 </div>
                 <div className="space-y-4">
@@ -113,6 +139,18 @@ export default function TripPlanner({ onBackToDashboard }) {
               </div>
             )}
 
+            {tab === 'FLIGHTS' && (
+              <div className="max-w-2xl space-y-4">
+                <FlightScout destination={trip.destination} />
+              </div>
+            )}
+
+            {tab === 'STAYS' && (
+              <div className="max-w-2xl space-y-4">
+                <AccommodationSearch />
+              </div>
+            )}
+
             {tab === 'LOGISTICS' && (
               <div className="space-y-4 max-w-5xl">
                 <BentoPacker climate={manifestSettings.climate} days={manifestSettings.days} />
@@ -122,10 +160,7 @@ export default function TripPlanner({ onBackToDashboard }) {
                   </div>
                   <PackingEngine />
                 </div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                  <FlightScout destination={trip.destination} />
-                  <VehicleSearch distanceKm={legs.reduce((s, l) => s + l.distanceKm, 0)} />
-                </div>
+                <VehicleSearch distanceKm={legs.reduce((s, l) => s + l.distanceKm, 0)} />
               </div>
             )}
 
@@ -145,6 +180,14 @@ export default function TripPlanner({ onBackToDashboard }) {
           </div>
         </AppShell>
       </div>
+
+      {/* Global InspirePanel overlay */}
+      <InspirePanel
+        open={inspireOpen}
+        dayLabel={trip.destination}
+        onClose={() => setInspireOpen(false)}
+        onAddBlock={() => setInspireOpen(false)}
+      />
 
       {/* PioneerChat overlay */}
       <AnimatePresence>
