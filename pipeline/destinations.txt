@@ -1,0 +1,28 @@
+# VenturePath — Destination Queue
+# One "City, Country" per line. Lines starting with # are ignored.
+# Already-fetched cities are skipped unless --force flag is used.
+
+# Europe
+Amsterdam, Netherlands
+Barcelona, Spain
+Berlin, Germany
+Copenhagen, Denmark
+Prague, Czech Republic
+Rome, Italy
+Vienna, Austria
+
+# Asia
+Bangkok, Thailand
+Bali, Indonesia
+Seoul, South Korea
+Singapore, Singapore
+Tokyo, Japan
+
+# Americas
+Buenos Aires, Argentina
+Mexico City, Mexico
+New York, United States
+
+# Africa & Middle East
+Cape Town, South Africa
+Dubai, United Arab Emirates
