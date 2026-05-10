@@ -14,7 +14,7 @@ function SkeletonChips() {
 
 function InspireChip({ label, onClick }) {
   return (
-    <button onClick={onClick}
+    <button onClick={e => { e.stopPropagation(); onClick(); }}
             className="px-3 py-1 rounded-full text-xs font-mono font-semibold transition-opacity hover:opacity-80"
             style={{ background: 'rgba(230,126,34,0.15)', color: '#E67E22', border: '1px solid rgba(230,126,34,0.4)' }}>
       {label}
@@ -24,7 +24,7 @@ function InspireChip({ label, onClick }) {
 
 function ResultRow({ poi, onClick }) {
   return (
-    <button onClick={onClick}
+    <button onClick={e => { e.stopPropagation(); onClick(); }}
             className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-left hover:opacity-80 transition-opacity"
             style={{ background: '#0E1012' }}>
       <span className="font-mono text-sm text-white truncate">{poi.name}</span>
@@ -46,7 +46,7 @@ export function AdaptiveSearchBar() {
   } = useAdaptiveSearch(strategy, destination, userRole, climate);
 
   const showDropdown = results.length > 0;
-  const fallbackChips = strategy.filterMask.map(f => f.split('=')[1]).filter(Boolean);
+  const fallbackChips = strategy.filterMask.map(f => f.split('=')[1]).filter(v => v && v !== '*');
 
   return (
     <div className="relative w-full mb-4">
