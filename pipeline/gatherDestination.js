@@ -18,8 +18,10 @@ async function wikidataSearch(name) {
   url.searchParams.set('limit', '1');
   url.searchParams.set('format', 'json');
   url.searchParams.set('origin', '*');
-  const res = await fetch(url.toString(), { signal: AbortSignal.timeout(5000) });
-  const data = await res.json();
+  const res = await fetch(url.toString(), { signal: AbortSignal.timeout(8000) });
+  const text = await res.text();
+  if (!text.trim().startsWith('{')) return null;
+  const data = JSON.parse(text);
   return data.search?.[0]?.id ?? null;
 }
 
@@ -31,8 +33,10 @@ async function wikidataProps(qid) {
   url.searchParams.set('languages', 'en');
   url.searchParams.set('format', 'json');
   url.searchParams.set('origin', '*');
-  const res = await fetch(url.toString(), { signal: AbortSignal.timeout(5000) });
-  const data = await res.json();
+  const res = await fetch(url.toString(), { signal: AbortSignal.timeout(8000) });
+  const text = await res.text();
+  if (!text.trim().startsWith('{')) return null;
+  const data = JSON.parse(text);
   return data.entities?.[qid] ?? null;
 }
 
@@ -95,7 +99,7 @@ export async function gatherDestination(cityLine, cacheDir) {
   }
 
   console.log(`  [gather] ${city}`);
-  await new Promise(r => setTimeout(r, 200));
+  await new Promise(r => setTimeout(r, 800));
 
   const qid = await wikidataSearch(city);
   const entity = qid ? await wikidataProps(qid) : null;
