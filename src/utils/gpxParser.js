@@ -56,7 +56,7 @@ export function matchGpxToPhotos(trackPoints, photos, maxGapMs = 5 * 60 * 1000) 
     }
 
     if (best && bestGap <= maxGapMs) {
-      return { ...photo, altitude: best.alt, heart_rate: best.hr };
+      return { ...photo, altitude: best.alt, heart_rate: best.hr, _gpxMatched: true };
     }
     return photo;
   });

@@ -20,7 +20,7 @@ export default function GpxImporter() {
 
       const photos = journeyData?.photos ?? [];
       const enrichedPhotos = matchGpxToPhotos(trackPoints, photos);
-      const matchCount = enrichedPhotos.filter(p => p.altitude !== undefined).length;
+      const matchCount = enrichedPhotos.filter(p => p._gpxMatched).length;
 
       const breadcrumbs = trackPoints.map(pt => ({ lat: pt.lat, lng: pt.lng, alt: pt.alt, timestamp: pt.timestamp }));
 
@@ -38,7 +38,7 @@ export default function GpxImporter() {
       <input type="file" accept=".gpx" onChange={handleFile} className="text-[#D9C5B2] text-sm font-mono" />
       {matchReport && (
         <p className="text-xs font-mono text-[#D9C5B2] mt-2">
-          Matched {matchReport.matched} of {matchReport.total} photos to {matchReport.trackPoints} track points.
+          Matched {matchReport.matched} of {matchReport.total} photos to GPX track.
         </p>
       )}
       {journeyData?.gpxImported && !matchReport && (
