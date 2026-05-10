@@ -3,6 +3,12 @@
 ## [Unreleased] — 2026-05-10 — Sentinel Triggers, Architect AI, After-Action
 
 ### Added
+
+### VaultHub + VaultIngest + MedicAccessBadge
+- Document library grouped by type with empty-state expedition copy
+- Paste Text tab and Upload File tab (PDF via pdfjs-dist, images via tesseract.js OCR)
+- Extraction preview with low-confidence warning
+- MedicAccessBadge: MEDIC/LEADER emergency access toggle persisted to localStorage tactical_vault key
 - **`src/utils/sentinelBus.js`** — Lightweight pub/sub event bus (Map+Set, synchronous emit, unsubscribe fn)
 - **`src/utils/weatherHazardMapper.js`** — Maps OpenWeatherMap API response to normalized Hazard objects (HIGH_WINDS, HEAVY_RAIN, EXTREME_HEAT) with affectedGearTags + affectedStopTypes
 - **`src/utils/architectEngine.js`** — Rule-based insight engine; generates InsightCard data from bus events; Anthropic Haiku for pre-departure briefs (sessionStorage-cached)
