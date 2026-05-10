@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { id: 'DISCOVERY', icon: '🔍',  label: 'Discover' },
   { id: 'JOURNEY',   icon: '📸',  label: 'Journey' },
   { id: 'VAULT',     icon: '📂',  label: 'Saved trips' },
+  { id: 'BOOKING',   icon: '🎫',  label: 'Booking' },
 ];
 
 export default function Sidebar({

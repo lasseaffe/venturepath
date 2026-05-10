@@ -34,6 +34,8 @@ import SafetyPulse from '../components/logistics/SafetyPulse';
 import ARGhostTours from '../components/ar/ARGhostTours';
 import InspirePanel from '../components/inspire/InspirePanel';
 import JourneyTab from '../components/journey/JourneyTab';
+import VaultHub from '../components/vault/VaultHub';
+import BookingMatrix from '../components/booking/BookingMatrix';
 
 export default function TripPlanner({ onBackToDashboard }) {
   const { trip, legs, manifestSettings, cloning, completeExpedition, architect } = useTripStore();
@@ -209,9 +211,9 @@ export default function TripPlanner({ onBackToDashboard }) {
               </div>
             )}
 
-            {tab === 'VAULT' && (
-              <VentureVault onCloneComplete={() => setTab('OVERVIEW')} />
-            )}
+            {tab === 'VAULT' && <VaultHub />}
+
+            {tab === 'BOOKING' && <BookingMatrix />}
           </div>}
         </AppShell>
       </div>
