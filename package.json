@@ -17,6 +17,7 @@
     "express": "^5.2.1",
     "framer-motion": "^12.38.0",
     "leaflet": "^1.9.4",
+    "mapbox-gl": "^3.23.1",
     "pdfjs-dist": "^5.7.284",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
