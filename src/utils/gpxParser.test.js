@@ -1,16 +1,9 @@
 // @vitest-environment jsdom
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { parseGpx, matchGpxToPhotos } from './gpxParser';
 
-// Ensure DOMParser is available (jsdom provides this)
-beforeAll(() => {
-  if (typeof DOMParser === 'undefined') {
-    throw new Error('DOMParser not available in test environment');
-  }
-});
-
 const SAMPLE_GPX = `<?xml version="1.0"?>
-<gpx version="1.1">
+<gpx version="1.1" xmlns="http://www.topografix.com/GPX/1/1" xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v1">
   <trk><trkseg>
     <trkpt lat="38.7" lon="-9.1">
       <ele>120</ele>
@@ -28,11 +21,6 @@ const SAMPLE_GPX = `<?xml version="1.0"?>
 
 describe('parseGpx', () => {
   it('returns array of track points', () => {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(SAMPLE_GPX, 'application/xml');
-    console.log('DEBUG: docElement.tagName:', doc.documentElement.tagName);
-    console.log('DEBUG: trkpt count via getElementsByTagName:', doc.getElementsByTagName('trkpt').length);
-
     const points = parseGpx(SAMPLE_GPX);
     expect(points).toHaveLength(2);
   });

@@ -3,8 +3,24 @@
  * Returns array of { lat, lng, alt, timestamp, hr }
  * Designed for matching with photo metadata via timestamp
  */
+
+// Use xmldom for robust XML parsing - it works in both Node and browsers
+// eslint-disable-next-line import/no-unresolved
+import { DOMParser as XMLDOMParser } from '@xmldom/xmldom';
+
+// Fallback to global DOMParser if xmldom is not available
+const getParser = () => {
+  try {
+    return XMLDOMParser;
+  } catch {
+    return DOMParser;
+  }
+};
+
+const Parser = getParser();
+
 export function parseGpx(gpxString) {
-  const parser = new DOMParser();
+  const parser = new Parser();
   const doc = parser.parseFromString(gpxString, 'application/xml');
   const points = [...doc.getElementsByTagName('trkpt')];
 
@@ -13,7 +29,13 @@ export function parseGpx(gpxString) {
     const lng = parseFloat(pt.getAttribute('lon'));
     const eleEls = pt.getElementsByTagName('ele');
     const timeEls = pt.getElementsByTagName('time');
-    const hrEls = pt.getElementsByTagName('hr');
+
+    // Heart rate can be in namespaced element (gpxtpx:hr)
+    // Try both plain 'hr' and 'gpxtpx:hr'
+    let hrEls = pt.getElementsByTagName('hr');
+    if (hrEls.length === 0) {
+      hrEls = pt.getElementsByTagName('gpxtpx:hr');
+    }
 
     return {
       lat,
