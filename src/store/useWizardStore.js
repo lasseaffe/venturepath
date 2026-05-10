@@ -38,7 +38,8 @@ export const useWizardStore = create(
       setDates: (startDate, endDate) => {
         const start = new Date(startDate)
         const end = new Date(endDate)
-        const days = Math.max(1, Math.round((end - start) / 86400000))
+        const ms = end - start
+        const days = isNaN(ms) || ms <= 0 ? 0 : Math.max(1, Math.round(ms / 86400000))
         set({ startDate, endDate, days })
       },
       setClimate: (climate) => set({ climate }),
@@ -57,6 +58,8 @@ export const useWizardStore = create(
         set((s) => ({
           accommodation: s.accommodation.map((a) => (a.id === id ? { ...a, ...patch } : a)),
         })),
+      addAccommodation: (item) => set((s) => ({ accommodation: [...s.accommodation, item] })),
+      removeAccommodation: (id) => set((s) => ({ accommodation: s.accommodation.filter((a) => a.id !== id) })),
 
       setStops: (stops) => set({ stops }),
       addStop: (stop) => set((s) => ({ stops: [...s.stops, stop] })),
@@ -74,6 +77,13 @@ export const useWizardStore = create(
           itineraryGrid: {
             ...s.itineraryGrid,
             [dayIndex]: { ...(s.itineraryGrid[dayIndex] || {}), [slot]: stopId },
+          },
+        })),
+      clearSlot: (dayIndex, slot) =>
+        set((s) => ({
+          itineraryGrid: {
+            ...s.itineraryGrid,
+            [dayIndex]: { ...(s.itineraryGrid[dayIndex] || {}), [slot]: null },
           },
         })),
       setAiSuggestion: (aiSuggestion) => set({ aiSuggestion }),
@@ -100,9 +110,16 @@ export const useWizardStore = create(
 
       setReadinessScore: (readinessScore) => set({ readinessScore }),
 
-      resetWizard: () => set({ ...DEFAULT_STATE }),
+      resetWizard: () => set(JSON.parse(JSON.stringify(DEFAULT_STATE))),
     }),
-    { name: 'vp-wizard-store', version: 1 }
+    {
+      name: 'vp-wizard-store',
+      version: 1,
+      migrate: (persisted, fromVersion) => {
+        // v1 → v2 migrations go here
+        return persisted
+      },
+    }
   )
 )
 
@@ -111,7 +128,7 @@ function clearStopFromGrid(grid, stopId) {
   for (const [day, slots] of Object.entries(grid)) {
     result[day] = {}
     for (const [slot, id] of Object.entries(slots)) {
-      if (id !== stopId) result[day][slot] = id
+      if (id !== stopId && id != null) result[day][slot] = id
     }
   }
   return result
