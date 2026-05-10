@@ -41,4 +41,9 @@ describe('simulateDelay', () => {
     expect(results[0].leg_id).toBe(2);
     expect(results[1].leg_id).toBe(3);
   });
+
+  it('returns empty array when triggerLegId is not found', () => {
+    const results = simulateDelay(BASE_LEGS, 999, 5);
+    expect(results).toEqual([]);
+  });
 });
