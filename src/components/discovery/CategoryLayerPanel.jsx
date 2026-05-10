@@ -85,7 +85,7 @@ export default function CategoryLayerPanel() {
           <button
             onClick={handleSave}
             className="px-3 py-1 rounded text-xs"
-            style={{ background: '#E67E22', color: '#0E1012' }}
+            style={{ background: '#E67E22', color: '#fff' }}
           >Save</button>
         </div>
       ) : (
