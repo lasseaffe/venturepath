@@ -3,6 +3,16 @@
 const OTM_KEY = import.meta.env.VITE_OTM_API_KEY ?? '';
 const BASE = 'https://api.opentripmap.com/0.1/en/places';
 
+// Block memorials and burial markers (Stolpersteine, grave markers) from stop suggestions
+const BLOCKED_OTM_KINDS = new Set(['monuments_and_memorials', 'other_burial_places']);
+
+export function filterOtmResults(results) {
+  return results.filter(r => {
+    const kinds = (r.kinds ?? '').split(',');
+    return !kinds.some(k => BLOCKED_OTM_KINDS.has(k.trim()));
+  });
+}
+
 // OTM kind groups mapped to our semantic categories
 export const FSQ_CATEGORIES = {
   hotels:      'accomodations',
@@ -99,7 +109,7 @@ async function radiusSearch(kinds, city, limit = 8) {
     );
     const data = await res.json();
     if (!Array.isArray(data)) return [];
-    return data.filter(p => p.name).map(mapOtmPlace);
+    return filterOtmResults(data.filter(p => p.name)).map(mapOtmPlace);
   } catch {
     return [];
   }
