@@ -412,6 +412,8 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
             onAddBlock={addBlock}
             onRemoveBlock={removeBlock}
             onInspire={day => setInspireDay(day)}
+            activeStopId={activeStopId}
+            onCardClick={id => setActiveStopId(prev => prev === id ? null : id)}
           />
         )
         : (
@@ -439,7 +441,7 @@ function KanbanView({
   onAddDay, onRemoveDay, onAutoSort,
   onStartEdit, onCommitEdit, onCancelEdit, onEditDraftChange,
   onSetAddingTo, onCancelAdd, onNewDraftChange, onAddBlock, onRemoveBlock,
-  onInspire,
+  onInspire, activeStopId, onCardClick,
 }) {
   return (
     <div className="flex gap-4 overflow-x-auto pb-3" style={{ minHeight: '480px' }}>
@@ -562,10 +564,12 @@ function KanbanView({
                     <ActivityBlock
                       block={block}
                       isGhost={ghostId === block.id}
+                      isActive={activeStopId === block.id}
                       onDragStart={e => onDragStart(e, day.id, block.id)}
                       onDragEnd={onDragEnd}
                       onEdit={() => onStartEdit(block)}
                       onRemove={() => onRemoveBlock(block.id)}
+                      onCardClick={() => onCardClick(block.id)}
                     />
                   )}
                 </div>
@@ -892,7 +896,7 @@ function DropLine() {
 
 // ── Activity block (kanban card) ──────────────────────────────────────────────
 
-function ActivityBlock({ block, isGhost, onDragStart, onDragEnd, onEdit, onRemove }) {
+function ActivityBlock({ block, isGhost, isActive, onDragStart, onDragEnd, onEdit, onRemove, onCardClick }) {
   const [hovered, setHovered] = useState(false);
   const colors = CATEGORY_COLORS[block.category] ?? CATEGORY_COLORS.default;
 
@@ -902,6 +906,7 @@ function ActivityBlock({ block, isGhost, onDragStart, onDragEnd, onEdit, onRemov
       draggable
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
+      onClick={onCardClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className="rounded-lg cursor-grab active:cursor-grabbing transition-all select-none overflow-hidden"
@@ -910,7 +915,10 @@ function ActivityBlock({ block, isGhost, onDragStart, onDragEnd, onEdit, onRemov
         border: `1px solid ${hovered && !isGhost ? '#2a2f36' : '#1e2328'}`,
         opacity: isGhost ? 0.3 : 1,
         transform: hovered && !isGhost ? 'translateY(-1px)' : 'none',
-        boxShadow: hovered && !isGhost ? '0 4px 12px rgba(0,0,0,0.4)' : 'none',
+        boxShadow: isActive
+          ? '0 0 0 2px #E67E22, 0 0 12px rgba(230,126,34,0.4)'
+          : hovered && !isGhost ? '0 4px 12px rgba(0,0,0,0.4)' : 'none',
+        cursor: 'pointer',
         transition: 'opacity 0.15s ease, border-color 0.12s, transform 0.12s, box-shadow 0.12s',
       }}
     >
