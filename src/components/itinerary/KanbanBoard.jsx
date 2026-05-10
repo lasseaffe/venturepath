@@ -6,6 +6,7 @@ import { useExpedition } from '../../context/ExpeditionContext';
 import CategoryIcon from './CategoryIcon';
 import { geocodeLocation } from '../../utils/geocodeEngine';
 import { wikidataFetch } from '../../utils/wikidataEngine';
+import BlockHub from './BlockHub';
 
 const LEDGER_DND_KEY = 'application/vp-ledger-item';
 
@@ -105,8 +106,8 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
   const [viewMode,     setViewMode]     = useState('kanban'); // 'kanban' | 'timeline'
   const [ghostId,      setGhostId]      = useState(null);
   const [dropIndicator,setDropIndicator]= useState(null); // { dayId, index }
-  const [editingId,    setEditingId]    = useState(null);
-  const [editDraft,    setEditDraft]    = useState({});
+  const [expandedId,   setExpandedId]   = useState(null);
+  const [expandedTab,  setExpandedTab]  = useState('DETAILS');
   const [addingTo,     setAddingTo]     = useState(null);
   const [newDraft,     setNewDraft]     = useState({ title: '', time: '', category: 'activity', icon: '📍', duration: '', notes: '' });
   const [culinaryAnchor, setCulinaryAnchor] = useState(null); // injected recipe from What's Cooking
@@ -114,6 +115,13 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
   const [activeStopId,  setActiveStopId]  = useState(null);
   const [coordsVersion, setCoordsVersion] = useState(0);
   const coordsRef = useRef(new Map()); // blockId → [lat, lng] | false (failed)
+
+  function patchBlock(blockId, patch) {
+    setDays(prev => prev.map(d => ({
+      ...d,
+      blocks: d.blocks.map(b => b.id === blockId ? { ...b, ...patch } : b),
+    })));
+  }
 
   // Read ?culinary= payload on mount and strip it from the URL
   useEffect(() => {
@@ -308,19 +316,6 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
     dragState.current = null;
   }
 
-  // ── Inline edit ───────────────────────────────────────────────────────────────
-
-  function startEdit(block) {
-    setEditingId(block.id);
-    setEditDraft({ ...block });
-  }
-
-  function commitEdit() {
-    if (!editDraft.title?.trim()) return;
-    updateBlock(editingId, editDraft);
-    setEditingId(null);
-  }
-
   // ── Render ────────────────────────────────────────────────────────────────────
 
   // Build plain object from ref for prop comparison (coordsVersion forces re-read)
@@ -390,8 +385,6 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
             days={days}
             ghostId={ghostId}
             dropIndicator={dropIndicator}
-            editingId={editingId}
-            editDraft={editDraft}
             addingTo={addingTo}
             newDraft={newDraft}
             columnRefs={columnRefs}
@@ -403,10 +396,6 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
             onAddDay={addDay}
             onRemoveDay={removeDay}
             onAutoSort={autoSortDay}
-            onStartEdit={startEdit}
-            onCommitEdit={commitEdit}
-            onCancelEdit={() => setEditingId(null)}
-            onEditDraftChange={setEditDraft}
             onSetAddingTo={(id) => {
               setAddingTo(id);
               setNewDraft({ title: '', time: '', category: 'activity', icon: '📍', duration: '', notes: '' });
@@ -417,18 +406,19 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
             onRemoveBlock={removeBlock}
             onInspire={day => setInspireDay(day)}
             activeStopId={activeStopId}
-            onCardClick={id => setActiveStopId(prev => prev === id ? null : id)}
+            expandedId={expandedId}
+            expandedTab={expandedTab}
+            onToggleExpand={id => {
+              setExpandedId(prev => prev === id ? null : id);
+              setExpandedTab('DETAILS');
+            }}
+            onPatch={patchBlock}
+            onTabChange={setExpandedTab}
           />
         )
         : (
           <TimelineView
             days={days}
-            editingId={editingId}
-            editDraft={editDraft}
-            onStartEdit={startEdit}
-            onCommitEdit={commitEdit}
-            onCancelEdit={() => setEditingId(null)}
-            onEditDraftChange={setEditDraft}
             onRemoveBlock={removeBlock}
           />
         )
@@ -447,12 +437,11 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
 // ── Kanban view ───────────────────────────────────────────────────────────────
 
 function KanbanView({
-  days, ghostId, dropIndicator, editingId, editDraft, addingTo, newDraft,
+  days, ghostId, dropIndicator, addingTo, newDraft,
   columnRefs, onDragStart, onDragEnd, onDragOver, onDragLeave, onDrop,
   onAddDay, onRemoveDay, onAutoSort,
-  onStartEdit, onCommitEdit, onCancelEdit, onEditDraftChange,
   onSetAddingTo, onCancelAdd, onNewDraftChange, onAddBlock, onRemoveBlock,
-  onInspire, activeStopId, onCardClick,
+  onInspire, activeStopId, expandedId, expandedTab, onToggleExpand, onPatch, onTabChange,
 }) {
   return (
     <div className="flex gap-4 overflow-x-auto pb-3" style={{ minHeight: '480px' }}>
@@ -564,25 +553,19 @@ function KanbanView({
               {day.blocks.map((block, idx) => (
                 <div key={block.id}>
                   {isTarget && dropIndicator.index === idx && <DropLine />}
-                  {editingId === block.id ? (
-                    <EditCard
-                      draft={editDraft}
-                      onChange={onEditDraftChange}
-                      onCommit={onCommitEdit}
-                      onCancel={onCancelEdit}
-                    />
-                  ) : (
-                    <ActivityBlock
-                      block={block}
-                      isGhost={ghostId === block.id}
-                      isActive={activeStopId === block.id}
-                      onDragStart={e => onDragStart(e, day.id, block.id)}
-                      onDragEnd={onDragEnd}
-                      onEdit={() => onStartEdit(block)}
-                      onRemove={() => onRemoveBlock(block.id)}
-                      onCardClick={() => onCardClick(block.id)}
-                    />
-                  )}
+                  <ActivityBlock
+                    block={block}
+                    isGhost={ghostId === block.id}
+                    isActive={activeStopId === block.id}
+                    onDragStart={e => onDragStart(e, day.id, block.id)}
+                    onDragEnd={onDragEnd}
+                    onRemove={() => onRemoveBlock(block.id)}
+                    isExpanded={expandedId === block.id}
+                    onToggleExpand={onToggleExpand}
+                    onPatch={onPatch}
+                    expandedTab={expandedTab}
+                    onTabChange={onTabChange}
+                  />
                 </div>
               ))}
 
@@ -629,7 +612,7 @@ function KanbanView({
 
 // ── Timeline view ─────────────────────────────────────────────────────────────
 
-function TimelineView({ days, editingId, editDraft, onStartEdit, onCommitEdit, onCancelEdit, onEditDraftChange, onRemoveBlock }) {
+function TimelineView({ days, onRemoveBlock }) {
   // Build ruler hours
   const hours = [];
   for (let h = DAY_START_H; h <= DAY_END_H; h++) hours.push(h);
@@ -748,12 +731,6 @@ function TimelineView({ days, editingId, editDraft, onStartEdit, onCommitEdit, o
                         top={top}
                         height={height}
                         colors={colors}
-                        isEditing={editingId === block.id}
-                        editDraft={editDraft}
-                        onStartEdit={() => onStartEdit(block)}
-                        onCommitEdit={onCommitEdit}
-                        onCancelEdit={onCancelEdit}
-                        onEditDraftChange={onEditDraftChange}
                         onRemove={() => onRemoveBlock(block.id)}
                       />
                     );
@@ -777,12 +754,6 @@ function TimelineView({ days, editingId, editDraft, onStartEdit, onCommitEdit, o
                         >
                           <CategoryIcon category={block.category} color={colors.text} size={11} />
                           <span className="text-[10px] font-mono text-white truncate flex-1">{block.title}</span>
-                          <button
-                            onClick={() => onStartEdit(block)}
-                            className="text-[8px] font-mono text-slate-500 hover:text-slate-300 transition-colors tracking-widest shrink-0"
-                          >
-                            EDIT
-                          </button>
                         </div>
                       );
                     })}
@@ -817,24 +788,8 @@ function NowLine() {
 
 // ── Timeline block ────────────────────────────────────────────────────────────
 
-function TimelineBlock({ block, top, height, colors, isEditing, editDraft, onStartEdit, onCommitEdit, onCancelEdit, onEditDraftChange, onRemove }) {
+function TimelineBlock({ block, top, height, colors, onRemove }) {
   const [hovered, setHovered] = useState(false);
-
-  if (isEditing) {
-    return (
-      <div
-        className="absolute left-1 right-1 z-20 rounded"
-        style={{ top: `${top}px` }}
-      >
-        <EditCard
-          draft={editDraft}
-          onChange={onEditDraftChange}
-          onCommit={onCommitEdit}
-          onCancel={onCancelEdit}
-        />
-      </div>
-    );
-  }
 
   return (
     <div
@@ -849,7 +804,6 @@ function TimelineBlock({ block, top, height, colors, isEditing, editDraft, onSta
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onClick={onStartEdit}
     >
       <div className="flex items-start gap-1 px-1.5 pt-1 h-full">
         {/* Left accent bar */}
@@ -907,7 +861,7 @@ function DropLine() {
 
 // ── Activity block (kanban card) ──────────────────────────────────────────────
 
-function ActivityBlock({ block, isGhost, isActive, onDragStart, onDragEnd, onEdit, onRemove, onCardClick }) {
+function ActivityBlock({ block, isGhost, isActive, onDragStart, onDragEnd, onRemove, isExpanded, onToggleExpand, onPatch, onTabChange, expandedTab }) {
   const [hovered, setHovered] = useState(false);
   const colors = CATEGORY_COLORS[block.category] ?? CATEGORY_COLORS.default;
 
@@ -917,7 +871,7 @@ function ActivityBlock({ block, isGhost, isActive, onDragStart, onDragEnd, onEdi
       draggable
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
-      onClick={onCardClick}
+      onClick={e => { e.stopPropagation(); onToggleExpand(block.id); }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className="rounded-lg cursor-grab active:cursor-grabbing transition-all select-none overflow-hidden"
@@ -962,14 +916,8 @@ function ActivityBlock({ block, isGhost, isActive, onDragStart, onDragEnd, onEdi
         )}
       </div>
 
-      {hovered && !isGhost && (
+      {hovered && !isGhost && !isExpanded && (
         <div className="flex items-center gap-1 px-2 pb-2" style={{ borderTop: '1px solid #1e2328' }}>
-          <button
-            onClick={e => { e.stopPropagation(); onEdit(); }}
-            className="text-[9px] font-mono px-2 py-0.5 rounded border border-[#2a2f36] text-slate-400 hover:text-white hover:border-[#3a3f46] transition-colors tracking-widest"
-          >
-            EDIT
-          </button>
           <button
             onClick={e => { e.stopPropagation(); onRemove(); }}
             className="text-[9px] font-mono px-2 py-0.5 rounded border border-transparent text-slate-600 hover:text-red-400 hover:border-red-800/40 transition-colors tracking-widest ml-auto"
@@ -978,79 +926,14 @@ function ActivityBlock({ block, isGhost, isActive, onDragStart, onDragEnd, onEdi
           </button>
         </div>
       )}
-    </div>
-  );
-}
-
-// ── Edit card ─────────────────────────────────────────────────────────────────
-
-function EditCard({ draft, onChange, onCommit, onCancel }) {
-  return (
-    <div
-      className="rounded-lg p-3 flex flex-col gap-2"
-      style={{ background: '#1a1e24', border: '1px solid #E67E22', boxShadow: '0 0 0 1px rgba(230,126,34,0.2)' }}
-    >
-      <div className="grid grid-cols-2 gap-1.5">
-        <input
-          value={draft.time ?? ''}
-          onChange={e => onChange(p => ({ ...p, time: e.target.value }))}
-          type="time"
-          className="bg-[#0E1012] border border-[#2a2f36] rounded px-2 py-1 text-[11px] font-mono text-white focus:outline-none focus:border-[#E67E22]"
+      {isExpanded && (
+        <BlockHub
+          block={block}
+          onPatch={patch => onPatch(block.id, patch)}
+          activeTab={expandedTab}
+          onTabChange={onTabChange}
         />
-        <select
-          value={draft.category ?? 'activity'}
-          onChange={e => onChange(p => ({ ...p, category: e.target.value }))}
-          className="bg-[#0E1012] border border-[#2a2f36] rounded px-2 py-1 text-[11px] font-mono text-slate-300 focus:outline-none focus:border-[#E67E22]"
-        >
-          {Object.keys(CATEGORY_COLORS).filter(k => k !== 'default').map(c => (
-            <option key={c} value={c}>{c}</option>
-          ))}
-        </select>
-      </div>
-      <input
-        value={draft.title ?? ''}
-        onChange={e => onChange(p => ({ ...p, title: e.target.value }))}
-        placeholder="Activity name…"
-        className="bg-[#0E1012] border border-[#2a2f36] rounded px-2 py-1.5 text-xs text-white font-mono focus:outline-none focus:border-[#E67E22] w-full"
-        autoFocus
-      />
-      <div className="grid grid-cols-2 gap-1.5">
-        <input
-          value={draft.icon ?? ''}
-          onChange={e => onChange(p => ({ ...p, icon: e.target.value }))}
-          placeholder="Icon 📍"
-          className="bg-[#0E1012] border border-[#2a2f36] rounded px-2 py-1 text-xs text-white font-mono focus:outline-none focus:border-[#E67E22]"
-        />
-        <input
-          value={draft.duration ?? ''}
-          onChange={e => onChange(p => ({ ...p, duration: e.target.value }))}
-          placeholder="Duration (min)"
-          type="number"
-          className="bg-[#0E1012] border border-[#2a2f36] rounded px-2 py-1 text-xs text-white font-mono focus:outline-none focus:border-[#E67E22]"
-        />
-      </div>
-      <input
-        value={draft.notes ?? ''}
-        onChange={e => onChange(p => ({ ...p, notes: e.target.value }))}
-        placeholder="Field notes…"
-        className="bg-[#0E1012] border border-[#2a2f36] rounded px-2 py-1 text-[11px] text-slate-400 font-mono focus:outline-none focus:border-[#E67E22] w-full"
-      />
-      <div className="flex gap-2">
-        <button
-          onClick={onCommit}
-          disabled={!draft.title?.trim()}
-          className="flex-1 py-1 text-[10px] font-mono font-bold tracking-widest rounded transition-colors disabled:opacity-40"
-          style={{ background: '#E67E22', color: '#0E1012' }}
-        >
-          CONFIRM
-        </button>
-        <button
-          onClick={onCancel}
-          className="px-3 py-1 text-[10px] font-mono tracking-widest rounded border border-[#2a2f36] text-slate-500 hover:text-slate-300 transition-colors"
-        >
-          ✕
-        </button>
-      </div>
+      )}
     </div>
   );
 }
