@@ -20,13 +20,14 @@ export default function MedicAccessBadge({ doc, userRole }) {
         ? stored.filter(d => d.id !== doc.id)
         : [...stored, doc];
       localStorage.setItem(TACTICAL_VAULT_KEY, JSON.stringify(next));
-    } catch { /* localStorage unavailable */ }
-    setEnabled(e => !e);
+      setEnabled(e => !e);
+    } catch { /* localStorage unavailable — do not flip UI state */ }
   };
 
   return (
     <button
       onClick={toggle}
+      aria-pressed={enabled}
       className={`text-xs px-2 py-1 rounded border font-mono transition-colors ${
         enabled
           ? 'bg-amber-400 text-black border-amber-400'

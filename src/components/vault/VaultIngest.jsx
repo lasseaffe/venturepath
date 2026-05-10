@@ -15,6 +15,7 @@ export default function VaultIngest({ onClose }) {
   const [extracted, setExtracted] = useState(null);
   const [docType, setDocType] = useState('flight');
   const [loading, setLoading] = useState(false);
+  const [fileError, setFileError] = useState(null);
 
   const handleExtract = () => {
     const result = extractVaultDocument(raw);
@@ -31,10 +32,11 @@ export default function VaultIngest({ onClose }) {
     };
     dispatch({ type: 'ADD_VAULT_DOCUMENT', payload: doc });
     const startStr = extracted?.dates?.start;
-    const suggestedLegIndex = startStr
+    const rawIndex = startStr
       ? legs.findIndex(l => l.startISO && l.startISO.slice(0, 10) === startStr.slice(0, 10))
-      : legs.length > 0 ? 0 : null;
-    sentinelBus.emit(VAULT_DOCUMENT_ADDED, { doc, suggestedLegIndex: suggestedLegIndex === -1 ? null : suggestedLegIndex });
+      : -1;
+    const suggestedLegIndex = rawIndex === -1 ? null : rawIndex;
+    sentinelBus.emit(VAULT_DOCUMENT_ADDED, { doc, suggestedLegIndex });
     onClose();
   };
 
@@ -42,28 +44,34 @@ export default function VaultIngest({ onClose }) {
     const file = e.target.files?.[0];
     if (!file) return;
     setLoading(true);
-    if (file.type === 'application/pdf') {
-      const pdfjsLib = await import('pdfjs-dist');
-      pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.js`;
-      const arrayBuffer = await file.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-      let text = '';
-      for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
-        const content = await page.getTextContent();
-        text += content.items.map(item => item.str).join(' ') + '\n';
+    setFileError(null);
+    try {
+      if (file.type === 'application/pdf') {
+        const pdfjsLib = await import('pdfjs-dist');
+        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.js`;
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        let text = '';
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const content = await page.getTextContent();
+          text += content.items.map(item => item.str).join(' ') + '\n';
+        }
+        setRaw(text);
+        setExtracted(extractVaultDocument(text));
+      } else {
+        const { createWorker } = await import('tesseract.js');
+        const worker = await createWorker('eng');
+        const { data: { text } } = await worker.recognize(file);
+        await worker.terminate();
+        setRaw(text);
+        setExtracted(extractVaultDocument(text));
       }
-      setRaw(text);
-      setExtracted(extractVaultDocument(text));
-    } else {
-      const { createWorker } = await import('tesseract.js');
-      const worker = await createWorker('eng');
-      const { data: { text } } = await worker.recognize(file);
-      await worker.terminate();
-      setRaw(text);
-      setExtracted(extractVaultDocument(text));
+    } catch {
+      setFileError('Could not read file. Try a different PDF or image.');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -106,6 +114,7 @@ export default function VaultIngest({ onClose }) {
           <div className="mb-3">
             <input type="file" accept=".pdf,image/*" onChange={handleFile} className="text-[#D9C5B2] text-sm" />
             {loading && <p className="text-[#E67E22] text-xs mt-2 font-mono">Extracting...</p>}
+            {fileError && <p className="text-red-400 text-xs mt-2 font-mono">{fileError}</p>}
           </div>
         )}
 
