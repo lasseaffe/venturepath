@@ -38,8 +38,10 @@ export function useTrendSignal(cities) {
   const [trendMap, setTrendMap] = useState(() => new Map());
   const [loading, setLoading] = useState(true);
 
+  const cityKey = cities.map(c => c.id).join(',');
+
   useEffect(() => {
-    if (!cities.length) {
+    if (!cityKey) {
       setLoading(false);
       return;
     }
@@ -61,7 +63,7 @@ export function useTrendSignal(cities) {
 
     load();
     return () => { alive = false; };
-  }, [cities]);
+  }, [cityKey]);
 
   return { trendMap, loading };
 }
