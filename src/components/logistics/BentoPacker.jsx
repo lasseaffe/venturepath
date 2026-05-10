@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { generatePackingList, groupByCategory, CATEGORIES } from '../../utils/packingLogic';
+import { generatePackingList, groupByCategory } from '../../utils/packingLogic';
 import { fetchForecast, classifyClimate } from '../../utils/weatherEngine';
 
 // POI tags the user can toggle to add gear
@@ -16,16 +16,11 @@ const CATEGORY_ICONS = {
   'Tech & Power': '🔋',
 };
 
-const ALL_CATEGORIES = Object.values(CATEGORIES);
-
 export default function BentoPacker({ coords, climate: climateProp, days = 7, hasChildren = false }) {
   const [activeTags, setActiveTags] = useState(['Hiking']);
   const [checked, setChecked] = useState({});
   const [forecast, setForecast] = useState(null);
   const [loadingWeather, setLoadingWeather] = useState(false);
-  const [customItems, setCustomItems] = useState([]);
-  const [addingTo, setAddingTo] = useState(null); // category key
-  const [draftLabel, setDraftLabel] = useState('');
 
   // Fetch real weather when coords available
   useEffect(() => {
@@ -47,14 +42,7 @@ export default function BentoPacker({ coords, climate: climateProp, days = 7, ha
     [resolvedClimate, days, hasChildren, activeTags]
   );
 
-  const grouped = useMemo(() => {
-    const base = groupByCategory(items);
-    for (const ci of customItems) {
-      if (!base[ci.category]) base[ci.category] = [];
-      if (!base[ci.category].find(i => i.id === ci.id)) base[ci.category].push(ci);
-    }
-    return base;
-  }, [items, customItems]);
+  const grouped = useMemo(() => groupByCategory(items), [items]);
 
   function toggleTag(tag) {
     setActiveTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]);
@@ -64,21 +52,7 @@ export default function BentoPacker({ coords, climate: climateProp, days = 7, ha
     setChecked(prev => ({ ...prev, [id]: !prev[id] }));
   }
 
-  function deleteItem(id) {
-    setCustomItems(prev => prev.filter(i => i.id !== id));
-    setChecked(prev => { const next = { ...prev }; delete next[id]; return next; });
-  }
-
-  function commitAdd(category) {
-    const label = draftLabel.trim();
-    if (!label) { setAddingTo(null); return; }
-    const id = `custom_${Date.now()}`;
-    setCustomItems(prev => [...prev, { id, label, category, weight: 0, custom: true }]);
-    setDraftLabel('');
-    setAddingTo(null);
-  }
-
-  const totalItems = items.length + customItems.length;
+  const totalItems = items.length;
   const checkedCount = Object.values(checked).filter(Boolean).length;
   const pct = totalItems ? Math.round((checkedCount / totalItems) * 100) : 0;
 
@@ -162,14 +136,14 @@ export default function BentoPacker({ coords, climate: climateProp, days = 7, ha
               </div>
               <div className="space-y-1.5">
                 {catItems.map(item => (
-                  <div key={item.id} className="flex items-start gap-2 group">
+                  <label key={item.id} className="flex items-start gap-2 cursor-pointer group">
                     <input
                       type="checkbox"
                       checked={!!checked[item.id]}
                       onChange={() => toggleItem(item.id)}
                       className="mt-0.5 accent-[#E2725B] shrink-0"
                     />
-                    <span className={`text-[10px] font-mono leading-tight flex-1 transition-colors ${
+                    <span className={`text-[10px] font-mono leading-tight transition-colors ${
                       checked[item.id] ? 'text-slate-600 line-through' : item.critical ? 'text-white' : 'text-slate-400'
                     }`}>
                       {item.label}
@@ -177,36 +151,10 @@ export default function BentoPacker({ coords, climate: climateProp, days = 7, ha
                         <span className="ml-1 text-red-400 text-[8px]">●</span>
                       )}
                     </span>
-                    {item.custom && (
-                      <button
-                        onClick={() => deleteItem(item.id)}
-                        className="opacity-0 group-hover:opacity-100 text-slate-600 hover:text-red-400 text-[10px] font-mono leading-none transition-opacity shrink-0"
-                        title="Remove"
-                      >×</button>
-                    )}
-                  </div>
+                  </label>
                 ))}
               </div>
-              {addingTo === category ? (
-                <div className="mt-2 flex gap-1">
-                  <input
-                    autoFocus
-                    value={draftLabel}
-                    onChange={e => setDraftLabel(e.target.value)}
-                    onKeyDown={e => { if (e.key === 'Enter') commitAdd(category); if (e.key === 'Escape') { setAddingTo(null); setDraftLabel(''); } }}
-                    placeholder="Item name…"
-                    className="flex-1 bg-[#0E1012] border border-[#E2725B]/40 rounded px-2 py-0.5 text-[10px] font-mono text-white placeholder-slate-600 focus:outline-none focus:border-[#E2725B]"
-                  />
-                  <button onClick={() => commitAdd(category)} className="text-[10px] font-mono text-[#E2725B] hover:text-white transition-colors px-1">✓</button>
-                  <button onClick={() => { setAddingTo(null); setDraftLabel(''); }} className="text-[10px] font-mono text-slate-600 hover:text-white transition-colors px-1">✕</button>
-                </div>
-              ) : (
-                <button
-                  onClick={() => setAddingTo(category)}
-                  className="mt-2 text-[9px] font-mono text-slate-600 hover:text-[#E2725B] transition-colors"
-                >+ add item</button>
-              )}
-              <div className="mt-1 text-[9px] font-mono text-slate-600">
+              <div className="mt-2 text-[9px] font-mono text-slate-600">
                 {catItems.filter(i => checked[i.id]).length}/{catItems.length}
               </div>
             </motion.div>
