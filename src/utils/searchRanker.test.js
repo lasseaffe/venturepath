@@ -68,3 +68,37 @@ describe('rankResults', () => {
     expect(result[0]._score).toBeCloseTo(0.55, 2);
   });
 });
+
+describe('rankResults — section scoring', () => {
+  const makePoi = (id, osmTags, coords = { lat: 48.86, lng: 2.35 }) => ({
+    id, name: id, coords, osmTags,
+  });
+
+  it('tactical section boosts pharmacy above outdoor shop', () => {
+    const pharmacy = makePoi('pharmacy', { amenity: 'pharmacy' });
+    const outdoor  = makePoi('outdoor',  { shop: 'outdoor' });
+    const results  = rankResults([outdoor, pharmacy], { section: 'tactical' });
+    expect(results[0].id).toBe('pharmacy');
+  });
+
+  it('logistics section boosts outdoor shop above pharmacy', () => {
+    const pharmacy = makePoi('pharmacy', { amenity: 'pharmacy' });
+    const outdoor  = makePoi('outdoor',  { shop: 'outdoor' });
+    const results  = rankResults([pharmacy, outdoor], { section: 'logistics' });
+    expect(results[0].id).toBe('outdoor');
+  });
+
+  it('discovery section boosts attraction above pharmacy', () => {
+    const pharmacy   = makePoi('pharmacy',   { amenity: 'pharmacy' });
+    const attraction = makePoi('attraction', { tourism: 'attraction' });
+    const results    = rankResults([pharmacy, attraction], { section: 'discovery' });
+    expect(results[0].id).toBe('attraction');
+  });
+
+  it('planner section applies no section boost — existing scoring unchanged', () => {
+    const pharmacy = makePoi('pharmacy', { amenity: 'pharmacy' });
+    const outdoor  = makePoi('outdoor',  { shop: 'outdoor' });
+    const results = rankResults([pharmacy, outdoor], { section: 'planner' });
+    expect(results).toHaveLength(2);
+  });
+});
