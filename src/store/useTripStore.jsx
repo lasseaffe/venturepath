@@ -40,6 +40,10 @@ const initialState = {
   userRole: 'LEADER', // 'LEADER' | 'MEMBER'
   cloning: false,
   journey: null,
+  architect: {
+    insights: [],
+    lastGeneratedAt: null,
+  },
 };
 
 let nextLegId = 100; // start above seeded leg IDs so there's no collision
@@ -150,6 +154,31 @@ function reducer(state, action) {
     }
     case 'SET_JOURNEY_META':
       return { ...state, journey: { ...(state.journey ?? {}), ...action.payload } };
+    case 'COMPLETE_EXPEDITION': {
+      return {
+        ...state,
+        trip: { ...state.trip, status: 'AFTER-ACTION' },
+      };
+    }
+    case 'ADD_INSIGHT': {
+      const insight = action.payload;
+      const existing = state.architect.insights.filter(i => i.id !== insight.id);
+      const next = [insight, ...existing].slice(0, 10);
+      return {
+        ...state,
+        architect: { insights: next, lastGeneratedAt: Date.now() },
+      };
+    }
+    case 'DISMISS_INSIGHT': {
+      const { id } = action.payload;
+      return {
+        ...state,
+        architect: {
+          ...state.architect,
+          insights: state.architect.insights.filter(i => i.id !== id),
+        },
+      };
+    }
     default:
       return state;
   }
@@ -209,9 +238,12 @@ export function TripStoreProvider({ children }) {
   const updatePhoto = (legId, photoId, changes) => dispatch({ type: 'UPDATE_PHOTO', payload: { legId, photoId, changes } });
   const reorderPhotos = (legId, orderedIds) => dispatch({ type: 'REORDER_PHOTOS', payload: { legId, orderedIds } });
   const setJourneyMeta = (meta) => dispatch({ type: 'SET_JOURNEY_META', payload: meta });
+  const completeExpedition = () => dispatch({ type: 'COMPLETE_EXPEDITION' });
+  const addInsight = (insight) => dispatch({ type: 'ADD_INSIGHT', payload: insight });
+  const dismissInsight = (id) => dispatch({ type: 'DISMISS_INSIGHT', payload: { id } });
 
   return (
-    <TripStoreContext.Provider value={{ ...state, clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, resetTrip, setRole, updateLegStatus, loadExpedition, addPhoto, removePhoto, updatePhoto, reorderPhotos, setJourneyMeta }}>
+    <TripStoreContext.Provider value={{ ...state, clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, resetTrip, setRole, updateLegStatus, loadExpedition, addPhoto, removePhoto, updatePhoto, reorderPhotos, setJourneyMeta, completeExpedition, addInsight, dismissInsight }}>
       {children}
     </TripStoreContext.Provider>
   );
