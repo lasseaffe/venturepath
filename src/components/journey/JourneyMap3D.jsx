@@ -7,14 +7,31 @@ import { PHOTO_ACTIVE, BREADCRUMB_UPDATED } from '../../utils/sentinelBusEvents'
 
 const TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 
+function buildTrailFeatures(breadcrumbs) {
+  const alts = breadcrumbs.map(b => b.alt ?? 0);
+  const minAlt = Math.min(...alts);
+  const maxAlt = Math.max(...alts) || minAlt + 1;
+  return breadcrumbs.slice(0, -1).map((b, i) => ({
+    type: 'Feature',
+    properties: { altNorm: ((b.alt ?? 0) - minAlt) / (maxAlt - minAlt) },
+    geometry: {
+      type: 'LineString',
+      coordinates: [[b.lng, b.lat], [breadcrumbs[i + 1].lng, breadcrumbs[i + 1].lat]],
+    },
+  }));
+}
+
 export default function JourneyMap3D({ breadcrumbs = [], photos = [] }) {
   const containerRef = useRef(null);
   const mapRef = useRef(null);
   const markersRef = useRef([]);
+  const activeMarkerRef = useRef(null);
 
   useEffect(() => {
     if (!TOKEN || !containerRef.current) return;
     mapboxgl.accessToken = TOKEN;
+
+    let destroyed = false;
 
     const center = breadcrumbs[0]
       ? [breadcrumbs[0].lng, breadcrumbs[0].lat]
@@ -30,6 +47,8 @@ export default function JourneyMap3D({ breadcrumbs = [], photos = [] }) {
     mapRef.current = map;
 
     map.on('load', () => {
+      if (destroyed) return;
+
       // 3D terrain
       map.addSource('mapbox-dem', {
         type: 'raster-dem',
@@ -40,23 +59,9 @@ export default function JourneyMap3D({ breadcrumbs = [], photos = [] }) {
 
       // Breadcrumb trail with altitude gradient
       if (breadcrumbs.length > 1) {
-        const alts = breadcrumbs.map(b => b.alt ?? 0);
-        const minAlt = Math.min(...alts);
-        const maxAlt = Math.max(...alts) || minAlt + 1;
-
         map.addSource('trail', {
           type: 'geojson',
-          data: {
-            type: 'FeatureCollection',
-            features: breadcrumbs.slice(0, -1).map((b, i) => ({
-              type: 'Feature',
-              properties: { alt: b.alt ?? 0, altNorm: ((b.alt ?? 0) - minAlt) / (maxAlt - minAlt) },
-              geometry: {
-                type: 'LineString',
-                coordinates: [[b.lng, b.lat], [breadcrumbs[i + 1].lng, breadcrumbs[i + 1].lat]],
-              },
-            })),
-          },
+          data: { type: 'FeatureCollection', features: buildTrailFeatures(breadcrumbs) },
         });
 
         map.addLayer({
@@ -79,17 +84,17 @@ export default function JourneyMap3D({ breadcrumbs = [], photos = [] }) {
       photos.forEach((photo, i) => {
         if (!photo.coords) return;
         const el = document.createElement('div');
-        el.style.cssText = 'width:12px;height:12px;border-radius:50%;border:2px solid #E67E22;background:#0E1012;cursor:pointer;';
+        el.style.cssText = 'width:12px;height:12px;border-radius:50%;border:2px solid #E67E22;background:#0E1012;cursor:pointer;transition:transform 0.2s;';
         el.title = photo.timestamp ?? `Photo ${i + 1}`;
         const marker = new mapboxgl.Marker({ element: el })
           .setLngLat([photo.coords[1], photo.coords[0]])
           .addTo(map);
         el.addEventListener('click', () => sentinelBus.emit(PHOTO_ACTIVE, { photo }));
-        markersRef.current.push(marker);
+        markersRef.current.push({ marker, el, photo });
       });
     });
 
-    // Sync map fly-to when slideshow changes photo
+    // Sync map fly-to + active pin pulse when slideshow changes photo
     const unsubPhoto = sentinelBus.on(PHOTO_ACTIVE, ({ photo }) => {
       if (photo.coords && mapRef.current) {
         mapRef.current.flyTo({
@@ -99,33 +104,41 @@ export default function JourneyMap3D({ breadcrumbs = [], photos = [] }) {
           duration: 1000,
         });
       }
+      // Clear previous active pin pulse
+      if (activeMarkerRef.current) {
+        activeMarkerRef.current.style.animation = '';
+        activeMarkerRef.current.style.boxShadow = '';
+      }
+      // Find and pulse the active pin
+      const entry = markersRef.current.find(
+        m => m.photo.url === photo.url || m.photo.timestamp === photo.timestamp
+      );
+      if (entry) {
+        entry.el.style.animation = 'pin-pulse 1s ease-in-out infinite';
+        entry.el.style.boxShadow = '0 0 0 0 rgba(230,126,34,0.7)';
+        activeMarkerRef.current = entry.el;
+      }
     });
 
-    // Redraw trail when GPX is imported
+    // Redraw trail with correct altitude gradient when GPX is imported
     const unsubBreadcrumb = sentinelBus.on(BREADCRUMB_UPDATED, ({ breadcrumbs: next }) => {
       const source = mapRef.current?.getSource('trail');
-      if (!source) return;
+      if (!source || next.length < 2) return;
       source.setData({
         type: 'FeatureCollection',
-        features: next.slice(0, -1).map((b, i) => ({
-          type: 'Feature',
-          properties: { altNorm: 0 },
-          geometry: {
-            type: 'LineString',
-            coordinates: [[b.lng, b.lat], [next[i + 1].lng, next[i + 1].lat]],
-          },
-        })),
+        features: buildTrailFeatures(next),
       });
     });
 
     return () => {
+      destroyed = true;
       unsubPhoto();
       unsubBreadcrumb();
-      markersRef.current.forEach(m => m.remove());
+      markersRef.current.forEach(({ marker }) => marker.remove());
       markersRef.current = [];
       map.remove();
     };
-  }, []);  // intentionally runs once; breadcrumbs/photos are loaded via sentinelBus events
+  }, []); // runs once; live updates come via sentinelBus
 
   if (!TOKEN) {
     return (
@@ -138,5 +151,10 @@ export default function JourneyMap3D({ breadcrumbs = [], photos = [] }) {
     );
   }
 
-  return <div ref={containerRef} className="w-full h-96 rounded overflow-hidden" />;
+  return (
+    <>
+      <style>{`@keyframes pin-pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.6)} }`}</style>
+      <div ref={containerRef} className="w-full h-96 rounded overflow-hidden" />
+    </>
+  );
 }
