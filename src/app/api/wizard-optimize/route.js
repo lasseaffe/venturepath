@@ -11,7 +11,7 @@ export async function POST(request) {
   }
 
   const stopList = stops.map((s, i) =>
-    `${i + 1}. ${s.name} — intensity: ${s.intensity}, duration: ${s.duration}, type: ${s.type}`
+    `${i + 1}. [ID:${s.id}] ${s.name} — intensity: ${s.intensity}, duration: ${s.duration}, type: ${s.type}`
   ).join('\n')
 
   const systemPrompt = `You are an expedition pacing expert for VenturePath, a tactical travel planning platform. You help Architects distribute their planned stops across expedition days to avoid fatigue, travel conflicts, and wasted time.
@@ -33,7 +33,7 @@ ALWAYS end your response with a JSON block in this exact format:
 }
 \`\`\`
 
-Use stop names (not indices) in the proposedGrid. Day indices are 0-based. Use null for empty slots.`
+Use the stop ID (the value in [ID:...] brackets) as the key in proposedGrid values. Day indices are 0-based. Use null for empty slots.`
 
   const userMessage = `Expedition details:
 - Duration: ${days} days starting ${startDate}

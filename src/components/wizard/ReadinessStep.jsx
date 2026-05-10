@@ -82,22 +82,27 @@ export default function ReadinessStep() {
   const getColor = (score) => score >= 80 ? '#4CAF50' : score >= 60 ? '#FF9800' : '#F44336'
   const overallColor = getColor(scores.overall)
 
-  const launchExpedition = () => {
+  const launchExpedition = async () => {
     if (launching) return
     setLaunching(true)
 
-    // Bridge wizard → TripStore: CREATE_TRIP replaces the active expedition
-    // and persists to localStorage (vp-trip-store), which TripPlanner reads on mount.
-    createTrip({
-      name: `${wizardStore.destination?.name || 'Expedition'} ${new Date().getFullYear()}`,
-      destination: wizardStore.destination?.name || '',
-      startDate: wizardStore.startDate,
-      endDate: wizardStore.endDate,
-      climate: wizardStore.climate || 'temperate',
-    })
+    try {
+      // Bridge wizard → TripStore: CREATE_TRIP replaces the active expedition
+      // and persists to localStorage (vp-trip-store), which TripPlanner reads on mount.
+      createTrip({
+        name: `${wizardStore.destination?.name || 'Expedition'} ${new Date().getFullYear()}`,
+        destination: wizardStore.destination?.name || '',
+        startDate: wizardStore.startDate,
+        endDate: wizardStore.endDate,
+        climate: wizardStore.climate || 'temperate',
+      })
 
-    resetWizard()
-    router.push('/')
+      resetWizard()
+      router.push('/')
+    } catch (e) {
+      console.error('Launch failed:', e)
+      setLaunching(false)
+    }
   }
 
   return (
