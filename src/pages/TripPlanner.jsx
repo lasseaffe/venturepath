@@ -30,6 +30,7 @@ import VibeCheck from '../components/discovery/VibeCheck';
 import SafetyPulse from '../components/logistics/SafetyPulse';
 import ARGhostTours from '../components/ar/ARGhostTours';
 import InspirePanel from '../components/inspire/InspirePanel';
+import JourneyTab from '../components/journey/JourneyTab';
 
 export default function TripPlanner({ onBackToDashboard }) {
   const { trip, legs, manifestSettings, cloning } = useTripStore();
@@ -112,8 +113,15 @@ export default function TripPlanner({ onBackToDashboard }) {
             <Stat label="Climate"   value={trip.climate} />
           </div>
 
+          {/* JOURNEY tab — full-height, no p-6 padding */}
+          {tab === 'JOURNEY' && (
+            <div className="flex-1 overflow-hidden flex flex-col">
+              <JourneyTab />
+            </div>
+          )}
+
           {/* Tab content */}
-          <div className="p-6">
+          {tab !== 'JOURNEY' && <div className="p-6">
             {tab === 'OVERVIEW' && (
               <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
                 <div className="lg:col-span-3 space-y-4">
@@ -166,7 +174,7 @@ export default function TripPlanner({ onBackToDashboard }) {
 
             {tab === 'DISCOVERY' && (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                <VibeCheck destinationId="patagonia" tripName={trip.name} />
+                <VibeCheck destinationId={trip.destination} tripName={trip.name} />
                 <ARGhostTours destinationId="patagonia" center={[-50.97, -73.0]} />
                 <MustSee destination={trip.destination} />
                 <LocalFlavor destination={trip.destination} />
