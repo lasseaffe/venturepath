@@ -37,3 +37,13 @@ export function deriveBearing(photo, breadcrumbs) {
 
   return 0;
 }
+
+const EARTH_R = 6371; // km
+
+export function haversineKm(from, to) {
+  const dLat = (to.lat - from.lat) * DEG;
+  const dLng = (to.lng - from.lng) * DEG;
+  const a = Math.sin(dLat / 2) ** 2 +
+    Math.cos(from.lat * DEG) * Math.cos(to.lat * DEG) * Math.sin(dLng / 2) ** 2;
+  return EARTH_R * 2 * Math.asin(Math.sqrt(a));
+}
