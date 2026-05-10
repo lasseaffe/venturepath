@@ -35,13 +35,14 @@ function DraggableItem({ item, packed, onToggle }) {
         transition: 'border-color 0.15s, opacity 0.15s',
       }}
     >
-      {/* Drag handle — desktop: uses dnd-kit listeners */}
+      {/* Drag handle — desktop only (hidden on mobile) */}
       <span
         {...listeners} {...attributes}
         style={{
           color: '#444', fontSize: 12, cursor: 'grab', userSelect: 'none',
           touchAction: 'none', lineHeight: 1, padding: '2px 3px',
         }}
+        className="hidden sm:inline"
         onClick={e => e.stopPropagation()}
       >⠿</span>
 
