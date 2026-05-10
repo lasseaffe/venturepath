@@ -185,7 +185,7 @@ export default function TripPlanner({ onBackToDashboard }) {
             {tab === 'VAULT' && (
               <VentureVault onCloneComplete={() => setTab('OVERVIEW')} />
             )}
-          </div>
+          </div>}
         </AppShell>
       </div>
 
