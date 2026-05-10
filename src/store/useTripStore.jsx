@@ -156,6 +156,18 @@ function reducer(state, action) {
       });
       return { ...state, legs };
     }
+    case 'APPEND_OBJECTIVE_ITEM': {
+      // action.payload = { legId: number, item: string }
+      const exists = state.objectives.find(o => o.legId === action.payload.legId);
+      const objectives = exists
+        ? state.objectives.map(o =>
+            o.legId === action.payload.legId
+              ? { ...o, items: [...o.items, action.payload.item] }
+              : o
+          )
+        : [...state.objectives, { legId: action.payload.legId, items: [action.payload.item] }];
+      return { ...state, objectives };
+    }
     case 'SET_JOURNEY_META':
       return { ...state, journey: { ...(state.journey ?? {}), ...action.payload } };
     case 'COMPLETE_EXPEDITION': {
@@ -280,9 +292,10 @@ export function TripStoreProvider({ children }) {
   const updateVaultDocument = (id, changes) => dispatch({ type: 'UPDATE_VAULT_DOCUMENT', payload: { id, changes } });
   const addScenario = (scenario) => dispatch({ type: 'ADD_SCENARIO', payload: scenario });
   const setJourneyData = (data) => dispatch({ type: 'SET_JOURNEY_DATA', payload: data });
+  const appendObjectiveItem = (legId, item) => dispatch({ type: 'APPEND_OBJECTIVE_ITEM', payload: { legId, item } });
 
   return (
-    <TripStoreContext.Provider value={{ ...state, clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, resetTrip, setRole, updateLegStatus, loadExpedition, addPhoto, removePhoto, updatePhoto, reorderPhotos, setJourneyMeta, completeExpedition, addInsight, dismissInsight, addVaultDocument, updateVaultDocument, addScenario, setJourneyData }}>
+    <TripStoreContext.Provider value={{ ...state, clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, resetTrip, setRole, updateLegStatus, loadExpedition, addPhoto, removePhoto, updatePhoto, reorderPhotos, appendObjectiveItem, setJourneyMeta, completeExpedition, addInsight, dismissInsight, addVaultDocument, updateVaultDocument, addScenario, setJourneyData }}>
       {children}
     </TripStoreContext.Provider>
   );
