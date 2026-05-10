@@ -1,7 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 
 const OLLAMA_URL = 'http://localhost:11434';
-const MODELS = ['llama3', 'mistral'];
+const MODELS = ['qwen3:8b', 'llama3.1:8b', 'gemma4:latest'];
 
 async function ollamaAvailable() {
   try {
@@ -16,12 +16,14 @@ async function ollamaGenerate(prompt) {
       const res = await fetch(`${OLLAMA_URL}/api/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model, prompt, stream: false }),
+        body: JSON.stringify({ model, prompt, stream: false, format: 'json' }),
         signal: AbortSignal.timeout(60000),
       });
       if (!res.ok) continue;
       const data = await res.json();
-      return data.response ?? '';
+      const raw = data.response ?? '';
+      // strip qwen3 chain-of-thought tags before returning
+      return raw.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
     } catch { continue; }
   }
   throw new Error('All Ollama models failed');
