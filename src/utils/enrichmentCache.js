@@ -1,6 +1,6 @@
 import { createClient } from '../lib/supabase/client';
+import { openVpDB } from './vpIntelligenceDB';
 
-const DB_NAME    = 'vp_intelligence';
 const STORE_NAME = 'poi_enrichment';
 const FRESHNESS_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 
@@ -20,23 +20,9 @@ export function _buildRecord(poi_id, enrichment) {
   };
 }
 
-let _db = null;
-
-function openDb() {
-  if (_db) return Promise.resolve(_db);
-  return new Promise((resolve, reject) => {
-    const req = indexedDB.open(DB_NAME, 1);
-    req.onupgradeneeded = (e) => {
-      e.target.result.createObjectStore(STORE_NAME, { keyPath: 'poi_id' });
-    };
-    req.onsuccess = (e) => { _db = e.target.result; resolve(_db); };
-    req.onerror   = () => reject(req.error);
-  });
-}
-
 async function idbGet(poi_id) {
   try {
-    const db = await openDb();
+    const db = await openVpDB();
     return new Promise((resolve, reject) => {
       const tx  = db.transaction(STORE_NAME, 'readonly');
       const req = tx.objectStore(STORE_NAME).get(poi_id);
@@ -50,7 +36,7 @@ async function idbGet(poi_id) {
 
 async function idbSet(record) {
   try {
-    const db = await openDb();
+    const db = await openVpDB();
     return new Promise((resolve, reject) => {
       const tx  = db.transaction(STORE_NAME, 'readwrite');
       const req = tx.objectStore(STORE_NAME).put(record);
