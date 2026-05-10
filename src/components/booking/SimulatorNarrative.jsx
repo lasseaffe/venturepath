@@ -1,9 +1,15 @@
 // src/components/booking/SimulatorNarrative.jsx
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export default function SimulatorNarrative({ impacts, triggerLeg }) {
   const [advice, setAdvice] = useState('');
   const [loading, setLoading] = useState(false);
+  const mountedRef = useRef(true);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => { mountedRef.current = false; };
+  }, []);
 
   const fetchAdvice = async () => {
     setLoading(true);
@@ -14,23 +20,29 @@ Downstream impact:
 ${impacts.map(i => `- Leg ${i.leg_id}: ${i.status} (buffer: ${i.buffer_hours}h)`).join('\n')}
 Give 3 concrete, actionable recovery options. Be direct. Use expedition vocabulary.`;
 
+    const controller = new AbortController();
+    let reader;
     try {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: prompt }),
+        signal: controller.signal,
       });
-      const reader = res.body.getReader();
+      reader = res.body.getReader();
       const decoder = new TextDecoder();
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
+        if (!mountedRef.current) { reader.cancel(); break; }
         setAdvice(prev => prev + decoder.decode(value));
       }
-    } catch {
-      setAdvice('Recovery advisor unavailable. Check your network connection.');
+    } catch (err) {
+      if (mountedRef.current && err.name !== 'AbortError') {
+        setAdvice('Recovery advisor unavailable. Check your network connection.');
+      }
     }
-    setLoading(false);
+    if (mountedRef.current) setLoading(false);
   };
 
   return (

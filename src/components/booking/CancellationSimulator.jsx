@@ -1,5 +1,5 @@
 // src/components/booking/CancellationSimulator.jsx
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { simulateDelay } from '../../utils/simulatorEngine';
 import sentinelBus from '../../utils/sentinelBus';
 import { CANCELLATION_SIMULATED } from '../../utils/sentinelBusEvents';
@@ -17,10 +17,16 @@ export default function CancellationSimulator({ leg, legs, onClose }) {
       startISO: l.startISO ?? `2026-11-${12 + i}T08:00:00Z`,
       endISO: l.endISO ?? `2026-11-${12 + i}T10:00:00Z`,
     }));
-    const results = simulateDelay(legsWithTimes, leg.id, delayHours);
-    sentinelBus.emit(CANCELLATION_SIMULATED, { scenario: { trigger_leg: leg.id, delay_hours: delayHours, cascading_impacts: results } });
-    return results;
+    return simulateDelay(legsWithTimes, leg.id, delayHours);
   }, [delayHours, leg.id, legs]);
+
+  // Side effect separated from memo — emits only after committed render
+  useEffect(() => {
+    if (delayHours === 0) return;
+    sentinelBus.emit(CANCELLATION_SIMULATED, {
+      scenario: { trigger_leg: leg.id, delay_hours: delayHours, cascading_impacts: impacts },
+    });
+  }, [impacts, delayHours, leg.id]);
 
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">

@@ -70,11 +70,11 @@ export default function BookingMatrix() {
           </div>
           <div>
             <p className="text-[#E67E22] mb-1">🚌 Transit</p>
-            <p className="text-[#D9C5B2]">{result.transit}</p>
+            <p className="text-[#D9C5B2]">{result.transit ?? '—'}</p>
           </div>
           <div>
             <p className="text-[#E67E22] mb-1">📋 Permits Required</p>
-            {result.permits.length > 0 ? (
+            {(result.permits?.length ?? 0) > 0 ? (
               <ul className="text-amber-400 space-y-1">
                 {result.permits.map(p => <li key={p}>• {p}</li>)}
               </ul>
