@@ -30,8 +30,11 @@ export default function VaultIngest({ onClose }) {
       medic_emergency_access: false,
     };
     dispatch({ type: 'ADD_VAULT_DOCUMENT', payload: doc });
-    const suggestedLegIndex = legs.length > 0 ? 0 : null;
-    sentinelBus.emit(VAULT_DOCUMENT_ADDED, { doc, suggestedLegIndex });
+    const startStr = extracted?.dates?.start;
+    const suggestedLegIndex = startStr
+      ? legs.findIndex(l => l.startISO && l.startISO.slice(0, 10) === startStr.slice(0, 10))
+      : legs.length > 0 ? 0 : null;
+    sentinelBus.emit(VAULT_DOCUMENT_ADDED, { doc, suggestedLegIndex: suggestedLegIndex === -1 ? null : suggestedLegIndex });
     onClose();
   };
 
@@ -115,7 +118,7 @@ export default function VaultIngest({ onClose }) {
         {extracted && (
           <div className="border border-[#E67E22]/30 rounded p-3 mb-3 text-sm font-mono text-[#D9C5B2] space-y-1">
             {extracted.confidence === 'low' && (
-              <p className="text-amber-400 text-xs mb-2">Low confidence — please review the fields below</p>
+              <p className="text-amber-400 text-xs mb-2">We couldn't read all the details — please review the fields below.</p>
             )}
             {Object.entries(extracted).filter(([k]) => k !== 'confidence').map(([k, v]) => (
               <div key={k} className="flex gap-2">

@@ -6,8 +6,46 @@ import MedicAccessBadge from './MedicAccessBadge';
 
 const TYPE_ICONS = { flight: '✈', hotel: '🏨', permit: '📋', insurance: '🛡', medical: '🩺' };
 
+function DocCard({ doc, userRole, legs }) {
+  const [showRaw, setShowRaw] = useState(false);
+  const leg = legs?.find(l => l.id === doc.leg_id);
+
+  return (
+    <div className="bg-black/30 border border-white/10 rounded p-3">
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex-1 min-w-0">
+          <p className="font-mono text-sm text-white">
+            {doc.extracted?.carrier ?? doc.extracted?.confirmation ?? doc.type}
+          </p>
+          <p className="text-xs text-[#D9C5B2] font-mono mt-1">
+            {doc.extracted?.dates?.start ?? '—'} → {doc.extracted?.dates?.end ?? '—'}
+            {doc.extracted?.price ? ` · €${doc.extracted.price}` : ''}
+          </p>
+          <div className="flex gap-2 mt-2 flex-wrap">
+            <span className="text-xs font-mono px-2 py-0.5 rounded border border-white/10 text-[#D9C5B2]">
+              {leg ? `Leg: ${leg.from ?? leg.id}` : 'Unlinked'}
+            </span>
+            <button
+              onClick={() => setShowRaw(r => !r)}
+              className="text-xs font-mono px-2 py-0.5 rounded border border-[#E67E22]/30 text-[#E67E22] hover:bg-[#E67E22]/10"
+            >
+              {showRaw ? 'Hide Raw' : 'View Raw'}
+            </button>
+          </div>
+          {showRaw && (
+            <pre className="mt-2 text-xs text-[#D9C5B2] font-mono bg-black/50 rounded p-2 overflow-auto max-h-32 whitespace-pre-wrap">
+              {doc.raw}
+            </pre>
+          )}
+        </div>
+        <MedicAccessBadge doc={doc} userRole={userRole} />
+      </div>
+    </div>
+  );
+}
+
 export default function VaultHub() {
-  const { vault, userRole } = useTripStore();
+  const { vault, userRole, legs } = useTripStore();
   const [showIngest, setShowIngest] = useState(false);
 
   const grouped = (vault?.documents ?? []).reduce((acc, doc) => {
@@ -43,20 +81,7 @@ export default function VaultHub() {
           </h3>
           <div className="space-y-2">
             {docs.map(doc => (
-              <div key={doc.id} className="bg-black/30 border border-white/10 rounded p-3">
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <p className="font-mono text-sm text-white">
-                      {doc.extracted?.carrier ?? doc.extracted?.confirmation ?? doc.type}
-                    </p>
-                    <p className="text-xs text-[#D9C5B2] font-mono mt-1">
-                      {doc.extracted?.dates?.start ?? '—'} → {doc.extracted?.dates?.end ?? '—'}
-                      {doc.extracted?.price ? ` · €${doc.extracted.price}` : ''}
-                    </p>
-                  </div>
-                  <MedicAccessBadge doc={doc} userRole={userRole} />
-                </div>
-              </div>
+              <DocCard key={doc.id} doc={doc} userRole={userRole} legs={legs} />
             ))}
           </div>
         </div>
