@@ -2,23 +2,27 @@
 import permitRegistry from '../data/permitRegistry.json';
 
 const DURATION_RE = /(\d+)\s*days?/i;
-const BUDGET_RE = /[€$£]?([\d,]+)/;
+const BUDGET_RE = /(?:budget|under|max)[^\d€$£]*[€$£]?([\d,]+)/i;
 
 export function parseGoal(goalText) {
   const durationMatch = goalText.match(DURATION_RE);
   const budgetMatch = goalText.match(BUDGET_RE);
 
-  const withoutNumbers = goalText.replace(DURATION_RE, '').replace(BUDGET_RE, '');
-  const destination = withoutNumbers
-    .replace(/\b(in|to|for|at|budget|days?|euros?|dollars?)\b/gi, '')
+  let stripped = goalText;
+  if (durationMatch) stripped = stripped.replace(durationMatch[0], '');
+  if (budgetMatch) stripped = stripped.replace(budgetMatch[0], '');
+
+  const destination = stripped
+    .replace(/\b(in|to|for|at|budget|under|max|days?|euros?|dollars?)\b/gi, '')
     .replace(/[€$£,]/g, '')
     .trim()
-    .replace(/\s+/g, ' ');
+    .replace(/\s+/g, ' ')
+    .split(' ')[0] || null;
 
   return {
     destination: destination || null,
     days: durationMatch ? parseInt(durationMatch[1], 10) : null,
-    budgetEur: budgetMatch ? parseFloat(budgetMatch[1].replace(',', '')) : null,
+    budget: budgetMatch ? parseFloat(budgetMatch[1].replace(',', '')) : null,
   };
 }
 
@@ -31,7 +35,8 @@ export function getPermits(destination) {
 }
 
 export async function searchMission(goalText) {
-  const { destination, days, budgetEur } = parseGoal(goalText);
+  const { destination, days, budget } = parseGoal(goalText);
+  const budgetEur = budget;
   const permits = getPermits(destination);
 
   let coords = null;
@@ -58,7 +63,7 @@ export async function searchMission(goalText) {
     stay: { name: `Search hotels in ${destination}`, pricePerNight: null },
     transit: 'Check local transit at Rome2Rio',
     permits,
-    totalCost: null,
+    totalCost: budget,
   };
 }
 
