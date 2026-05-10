@@ -98,8 +98,8 @@ export default function PackingChecklist({
   const [flashing, setFlashing] = useState([]);
   const collapsedRef = useRef(collapsed);
   collapsedRef.current = collapsed;
-  // tracks which cats were auto-expanded by hover so we can restore them on hover-out
-  const hoverExpandedRef = useRef([]);
+  // snapshot of { [cat]: previousCollapsedValue } for cats we auto-expanded on hover
+  const hoverExpandedRef = useRef({});
 
   useEffect(() => {
     if (!highlightedZone) return;
@@ -117,24 +117,23 @@ export default function PackingChecklist({
 
   useEffect(() => {
     if (!hoveredZone) {
-      // restore only the cats we auto-expanded
-      if (hoverExpandedRef.current.length) {
-        const toCollapse = hoverExpandedRef.current;
-        hoverExpandedRef.current = [];
-        setCollapsed(prev => {
-          const next = { ...prev };
-          toCollapse.forEach(c => { next[c] = true; });
-          return next;
-        });
+      // restore each cat to its exact pre-hover collapsed state
+      const snapshot = hoverExpandedRef.current;
+      if (Object.keys(snapshot).length) {
+        hoverExpandedRef.current = {};
+        setCollapsed(prev => ({ ...prev, ...snapshot }));
       }
       return;
     }
     const cats = ZONE_TO_CATS[hoveredZone] ?? [];
     if (!cats.length) return;
-    // only auto-expand cats that are currently collapsed
+    // only auto-expand cats that are currently collapsed (not already open)
     const toExpand = cats.filter(c => collapsedRef.current[c] !== false);
-    hoverExpandedRef.current = toExpand;
     if (!toExpand.length) return;
+    // snapshot their current state so we can restore exactly on hover-out
+    const snapshot = {};
+    toExpand.forEach(c => { snapshot[c] = collapsedRef.current[c]; });
+    hoverExpandedRef.current = snapshot;
     setCollapsed(prev => {
       const next = { ...prev };
       toExpand.forEach(c => { next[c] = false; });
@@ -144,7 +143,7 @@ export default function PackingChecklist({
 
   const grouped = groupByCategory(items);
 
-  const packedCount = Object.values(packed).filter(Boolean).length;
+  const packedCount = items.filter(i => packed[i.id]).length;
   const pct = items.length ? Math.round((packedCount / items.length) * 100) : 0;
 
   function toggleCollapse(cat) {
