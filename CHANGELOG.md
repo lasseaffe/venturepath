@@ -2,6 +2,15 @@
 
 ## [Unreleased] — 2026-05-10 — Sentinel Triggers, Architect AI, After-Action
 
+### SwipeDeck Card Types & Components (Tasks 2–5)
+- `src/components/swipe/cards/types.ts`: ExpeditionCardData, SpotCardData, FilteredCardData interfaces
+- ExpeditionCard: Pro-Path hero card (image + overlay + metadata + difficulty/days/distance + rating + tags)
+- SpotCard: Discovery spot card (category + distance + rating + tags); fallback Midnight→Ember gradient
+- FilteredResultCard: SpotCard overlay with match-reason chips (Ember bg, Midnight text, JetBrains Mono)
+- All cards use VenturePath brand tokens: Midnight #0E1012, Ember #E67E22, Sandstone #D9C5B2
+- Typography: Playfair Display headings, JetBrains Mono metadata, Inter body
+- Image onError handlers gracefully fallback to gradient background
+
 ### Journey slideshow components
 - GpxImporter: .gpx file input → parseGpx → matchGpxToPhotos → dispatch SET_JOURNEY_DATA + emit BREADCRUMB_UPDATED; shows match count report
 - StatOverlay: ALT/HR/TEMP/TIME HUD over each photo; fetches altitude via elevationService when GPX alt is absent
