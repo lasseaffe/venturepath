@@ -1,4 +1,5 @@
 import { createContext, useContext, useReducer, useEffect } from 'react';
+import sentinelBus from '../utils/sentinelBus.js';
 
 const STORAGE_KEY = 'vp-trip-store';
 
@@ -240,6 +241,17 @@ export function TripStoreProvider({ children }) {
       }));
     } catch { /* storage full or unavailable */ }
   }, [state]);
+
+  useEffect(() => {
+    if (!state.trip.startDate) return;
+    const departureMs = new Date(state.trip.startDate).getTime();
+    const nowMs = Date.now();
+    const hoursUntil = (departureMs - nowMs) / 3_600_000;
+    if (hoursUntil > 0 && hoursUntil <= 24) {
+      const nextLeg = state.legs.find(l => l.status !== 'confirmed') ?? state.legs[0];
+      sentinelBus.emit('DEPARTURE_IMMINENT', { hoursUntil, leg: nextLeg });
+    }
+  }, [state.trip.startDate, state.legs]);
 
   const clonePath = (templateData) => {
     dispatch({ type: 'CLONE_PATH', payload: templateData });
