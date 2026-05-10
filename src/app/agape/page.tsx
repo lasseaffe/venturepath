@@ -172,7 +172,7 @@ type AgapePost = {
   reported_at?: number;       // 1.3-SENSITIVE
 };
 
-type Screen = "home" | "share-setup" | "community-pick" | "answering" | "waiting" | "revealed";
+type Screen = "home" | "share-setup" | "community-pick" | "category-pick" | "answering" | "waiting" | "revealed";
 type Mode = "share" | "community" | "random";
 
 // ── Page ──────────────────────────────────────────────────────────
@@ -188,9 +188,17 @@ export default function AgapePage() {
   const [myEcho, setMyEcho] = useState<EchoId | null>(null);
   const [partnerEcho, setPartnerEcho] = useState<EchoId | null>(null);
   const [reported, setReported] = useState(false);
+  // Confessions state
+  const [activeCategory, setActiveCategory] = useState<'gospel' | 'confessions'>('gospel');
+  const [confessionsCategory, setConfessionsCategory] = useState<ConfessionsCategory | null>(null);
+  const [myConfessionsEcho, setMyConfessionsEcho] = useState<ConfessionsEchoId | null>(null);
 
   const partnerName = sessionId ? getPartnerName(sessionId) : "";
-  const prompt = sessionId ? getPrompt(sessionId) : "";
+  const prompt = sessionId
+    ? (activeCategory === 'confessions' && confessionsCategory
+        ? getConfessionsPrompt(sessionId, confessionsCategory)
+        : getPrompt(sessionId))
+    : "";
   const partnerAnswer = sessionId ? getPartnerAnswer(sessionId) : "";
 
   // Check for incoming session via URL
@@ -212,9 +220,20 @@ export default function AgapePage() {
     if (typeof window !== "undefined") {
       setShareUrl(`${window.location.origin}/agape?s=${id}`);
     }
-    if (m === "share") setScreen("share-setup");
-    else if (m === "community") setScreen("community-pick");
-    else { setScreen("answering"); }
+    if (activeCategory === 'confessions') {
+      setScreen("category-pick");
+    } else {
+      if (m === "share") setScreen("share-setup");
+      else if (m === "community") setScreen("community-pick");
+      else setScreen("answering");
+    }
+  }
+
+  function pickConfessionsCategory(cat: ConfessionsCategory) {
+    setConfessionsCategory(cat);
+    if (mode === "share") setScreen("share-setup");
+    else if (mode === "community") setScreen("community-pick");
+    else setScreen("answering");
   }
 
   async function copyLink() {
@@ -260,6 +279,9 @@ export default function AgapePage() {
     setMyEcho(null);
     setPartnerEcho(null);
     setReported(false);
+    // Confessions state
+    setConfessionsCategory(null);
+    setMyConfessionsEcho(null);
     if (typeof window !== "undefined") {
       window.history.replaceState({}, "", "/agape");
     }
