@@ -39,6 +39,7 @@ const initialState = {
   manifestSettings: DEFAULT_MANIFEST_SETTINGS,
   userRole: 'LEADER', // 'LEADER' | 'MEMBER'
   cloning: false,
+  journey: null,
 };
 
 let nextLegId = 100; // start above seeded leg IDs so there's no collision
@@ -107,6 +108,46 @@ function reducer(state, action) {
       );
       return { ...state, legs };
     }
+    case 'ADD_PHOTO': {
+      const legs = state.legs.map(l =>
+        l.id === action.payload.legId
+          ? { ...l, photos: [...(l.photos ?? []), action.payload.photo] }
+          : l
+      );
+      return { ...state, legs };
+    }
+    case 'REMOVE_PHOTO': {
+      const legs = state.legs.map(l =>
+        l.id === action.payload.legId
+          ? { ...l, photos: (l.photos ?? []).filter(p => p.id !== action.payload.photoId) }
+          : l
+      );
+      return { ...state, legs };
+    }
+    case 'UPDATE_PHOTO': {
+      const legs = state.legs.map(l =>
+        l.id === action.payload.legId
+          ? {
+              ...l,
+              photos: (l.photos ?? []).map(p =>
+                p.id === action.payload.photoId ? { ...p, ...action.payload.changes } : p
+              ),
+            }
+          : l
+      );
+      return { ...state, legs };
+    }
+    case 'REORDER_PHOTOS': {
+      const legs = state.legs.map(l => {
+        if (l.id !== action.payload.legId) return l;
+        const byId = Object.fromEntries((l.photos ?? []).map(p => [p.id, p]));
+        const photos = action.payload.orderedIds.map((id, i) => ({ ...byId[id], order: i }));
+        return { ...l, photos };
+      });
+      return { ...state, legs };
+    }
+    case 'SET_JOURNEY_META':
+      return { ...state, journey: { ...(state.journey ?? {}), ...action.payload } };
     default:
       return state;
   }
@@ -141,6 +182,7 @@ export function TripStoreProvider({ children }) {
         objectives: state.objectives,
         manifestSettings: state.manifestSettings,
         userRole: state.userRole,
+        journey: state.journey,
       }));
     } catch { /* storage full or unavailable */ }
   }, [state]);
@@ -160,9 +202,14 @@ export function TripStoreProvider({ children }) {
   const setRole = (role) => dispatch({ type: 'SET_ROLE', payload: role });
   const updateLegStatus = (id, status) =>
     dispatch({ type: 'UPDATE_LEG_STATUS', payload: { id, status } });
+  const addPhoto = (legId, photo) => dispatch({ type: 'ADD_PHOTO', payload: { legId, photo } });
+  const removePhoto = (legId, photoId) => dispatch({ type: 'REMOVE_PHOTO', payload: { legId, photoId } });
+  const updatePhoto = (legId, photoId, changes) => dispatch({ type: 'UPDATE_PHOTO', payload: { legId, photoId, changes } });
+  const reorderPhotos = (legId, orderedIds) => dispatch({ type: 'REORDER_PHOTOS', payload: { legId, orderedIds } });
+  const setJourneyMeta = (meta) => dispatch({ type: 'SET_JOURNEY_META', payload: meta });
 
   return (
-    <TripStoreContext.Provider value={{ ...state, clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, resetTrip, setRole, updateLegStatus, loadExpedition }}>
+    <TripStoreContext.Provider value={{ ...state, clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, resetTrip, setRole, updateLegStatus, loadExpedition, addPhoto, removePhoto, updatePhoto, reorderPhotos, setJourneyMeta }}>
       {children}
     </TripStoreContext.Provider>
   );
