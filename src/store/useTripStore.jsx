@@ -141,7 +141,9 @@ function reducer(state, action) {
       const legs = state.legs.map(l => {
         if (l.id !== action.payload.legId) return l;
         const byId = Object.fromEntries((l.photos ?? []).map(p => [p.id, p]));
-        const photos = action.payload.orderedIds.map((id, i) => ({ ...byId[id], order: i }));
+        const photos = action.payload.orderedIds
+          .filter(id => byId[id])
+          .map((id, i) => ({ ...byId[id], order: i }));
         return { ...l, photos };
       });
       return { ...state, legs };
