@@ -30,6 +30,7 @@ import VibeCheck from '../components/discovery/VibeCheck';
 import SafetyPulse from '../components/logistics/SafetyPulse';
 import ARGhostTours from '../components/ar/ARGhostTours';
 import InspirePanel from '../components/inspire/InspirePanel';
+import SettingsPanel from '../components/settings/SettingsPanel';
 
 export default function TripPlanner({ onBackToDashboard }) {
   const { trip, legs, manifestSettings, cloning } = useTripStore();
@@ -41,7 +42,8 @@ export default function TripPlanner({ onBackToDashboard }) {
   const [chatOpen, setChatOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [editTripOpen, setEditTripOpen] = useState(false);
-  const [inspireOpen, setInspireOpen] = useState(false);
+  const [inspireOpen, setInspireOpen]   = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   if (tacticalMode) {
     return <TacticalMode onExit={() => setTacticalMode(false)} />;
@@ -64,6 +66,7 @@ export default function TripPlanner({ onBackToDashboard }) {
           onOpenChat={() => setChatOpen(true)}
           onOpenInspire={() => setInspireOpen(true)}
           onOpenTactical={() => setTacticalMode(true)}
+          onOpenSettings={() => setSettingsOpen(true)}
         >
           {/* Trip header bar */}
           <header
@@ -202,6 +205,8 @@ export default function TripPlanner({ onBackToDashboard }) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <SettingsPanel open={settingsOpen} onClose={() => setSettingsOpen(false)} />
     </>
   );
 }
