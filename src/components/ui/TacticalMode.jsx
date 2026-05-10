@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTripStore } from '../../store/useTripStore';
 import { useTheme } from '../../context/ThemeContext';
+import CompassRing from '../tactical/CompassRing';
 
 const CACHED_MESSAGES = [
   'Scout: River crossing waist-deep as of 07:30',
@@ -108,6 +109,12 @@ export default function TacticalMode({ onExit }) {
         >
           ⚠ SOS EMERGENCY BEACON
         </button>
+        {/* TACTICAL-CRITICAL: CompassRing uses navigator.geolocation — works offline */}
+        <div className="flex justify-center mt-6">
+          <CompassRing
+            stops={legs.map(l => ({ label: `${l.from ?? ''} → ${l.to ?? ''}`, lat: null, lng: null }))}
+          />
+        </div>
         <button
           onClick={onExit}
           className="w-full py-2 border border-amber-400/30 text-amber-600 text-xs tracking-widest rounded hover:border-amber-400/60 transition-colors"

@@ -4,6 +4,17 @@
 
 ### Added
 
+### CompassRing HUD
+- Floating compass dial in TacticalMode pointing toward next confirmed Stop
+- Shows bearing degrees, cardinal label (16-point), haversine distance to stop
+- Tap to cycle to next Stop; graceful GPS-unavailable fallback
+- Uses Tactical Amber #F2A900 (Tactical Mode exclusive token)
+
+### BookingMatrix + CancellationSimulator + SimulatorNarrative
+- BookingMatrix: single goal-text input dispatches searchMission, renders BookingPackage card (destination, duration, budget, flight, stay, transit, permits)
+- CancellationSimulator: delay slider 0–48h, MISSED/TIGHT/SAFE badges per downstream leg, emits CANCELLATION_SIMULATED on sentinelBus
+- SimulatorNarrative: "What should I do?" streams Claude recovery advice via /api/chat
+
 ### VaultHub + VaultIngest + MedicAccessBadge
 - Document library grouped by type with empty-state expedition copy
 - Paste Text tab and Upload File tab (PDF via pdfjs-dist, images via tesseract.js OCR)
