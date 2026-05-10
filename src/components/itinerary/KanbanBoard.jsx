@@ -2,6 +2,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import CulinaryAnchorBlock from './CulinaryAnchorBlock';
 import InspirePanel from '../inspire/InspirePanel';
 import ItineraryMap from './ItineraryMap';
+import PassportVault from '../vault/PassportVault';
 import { useExpedition } from '../../context/ExpeditionContext';
 import { geocodeLocation } from '../../utils/geocodeEngine';
 
@@ -338,17 +339,21 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
             className="flex items-center rounded border overflow-hidden"
             style={{ borderColor: '#1e2328' }}
           >
-            {['kanban', 'timeline'].map(mode => (
+            {[
+              { key: 'kanban',    label: 'KANBAN' },
+              { key: 'timeline',  label: 'TIMELINE' },
+              { key: 'documents', label: 'DOCUMENTS' },
+            ].map(({ key, label }) => (
               <button
-                key={mode}
-                onClick={() => setViewMode(mode)}
+                key={key}
+                onClick={() => setViewMode(key)}
                 className="px-3 py-1 text-[10px] font-mono tracking-widest transition-colors"
                 style={{
-                  background: viewMode === mode ? '#E67E22' : 'transparent',
-                  color:      viewMode === mode ? '#0E1012' : '#4b5563',
+                  background: viewMode === key ? '#E67E22' : 'transparent',
+                  color:      viewMode === key ? '#0E1012' : '#4b5563',
                 }}
               >
-                {mode === 'kanban' ? 'KANBAN' : 'TIMELINE'}
+                {label}
               </button>
             ))}
           </div>
@@ -380,8 +385,13 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
         }}
       />
 
+      {/* ── Documents (PassportVault) ── */}
+      {viewMode === 'documents' && (
+        <PassportVault expeditionFilter={null} />
+      )}
+
       {/* ── Board ── */}
-      {viewMode === 'kanban'
+      {viewMode !== 'documents' && (viewMode === 'kanban'
         ? (
           <KanbanView
             days={days}
@@ -429,14 +439,16 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
             onRemoveBlock={removeBlock}
           />
         )
-      }
+      )}
 
-      <ItineraryMap
-        days={days}
-        coords={coords}
-        activeStopId={activeStopId}
-        onPinClick={id => setActiveStopId(prev => prev === id ? null : id)}
-      />
+      {viewMode !== 'documents' && (
+        <ItineraryMap
+          days={days}
+          coords={coords}
+          activeStopId={activeStopId}
+          onPinClick={id => setActiveStopId(prev => prev === id ? null : id)}
+        />
+      )}
     </div>
   );
 }
