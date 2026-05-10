@@ -33,7 +33,8 @@ export default function TourView({ onExit }) {
 
   const advance = useCallback(() => {
     setPhotoIndex(pi => {
-      const maxPhoto = (activeStop?.photos.length ?? 1) - 1;
+      const currentStop = playableStops[activeStopIndex];
+      const maxPhoto = (currentStop?.photos.length ?? 1) - 1;
       if (pi < maxPhoto) return pi + 1;
       setActiveStopIndex(si => {
         if (si < playableStops.length - 1) {
@@ -46,13 +47,13 @@ export default function TourView({ onExit }) {
       });
       return pi;
     });
-  }, [activeStop, playableStops.length]);
+  }, [playableStops, activeStopIndex]);
 
   useEffect(() => {
     if (!playing || complete) return;
     timerRef.current = setTimeout(advance, 4000);
     return () => clearTimeout(timerRef.current);
-  }, [playing, complete, advance, activeStopIndex, photoIndex]);
+  }, [playing, complete, advance, activeStopIndex]);
 
   function handleJumpTo(stopIndex) {
     setActiveStopIndex(stopIndex);
