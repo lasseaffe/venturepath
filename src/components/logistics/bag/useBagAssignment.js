@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react';
 // itemAssignments shape: { [itemId]: { bagId, zoneId, packed } }
 // items with no entry are "unassigned"
 
-export default function useBagAssignment(items, bags) {
+export default function useBagAssignment(items, bags, bagTypes) {
   const [itemAssignments, setItemAssignments] = useState({});
 
   const assignItem = useCallback((itemId, bagId, zoneId) => {
@@ -55,13 +55,13 @@ export default function useBagAssignment(items, bags) {
       .reduce((sum, item) => sum + (item.weight ?? 0), 0);
   }, [items, itemAssignments]);
 
-  const isOverweight = useCallback((bagId, bagTypes) => {
+  const isOverweight = useCallback((bagId) => {
     const bag = bags.find(b => b.id === bagId);
     if (!bag) return false;
     const limit = bagTypes[bag.typeId]?.weightLimitKg;
     if (!limit) return false;
     return getBagWeight(bagId) > limit * 0.9;
-  }, [bags, getBagWeight]);
+  }, [bags, bagTypes, getBagWeight]);
 
   return {
     itemAssignments,
