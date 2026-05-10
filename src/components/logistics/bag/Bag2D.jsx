@@ -348,6 +348,21 @@ const BAG_ILLUSTRATIONS = {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Shared <defs> rendered unconditionally — filters used by all bag types.
+// ─────────────────────────────────────────────────────────────────────────────
+function SharedDefs() {
+  return (
+    <defs>
+      {/* ── Glow for hover zones — applied by ZoneOverlays for ALL bag types ── */}
+      <filter id="zone-glow" x="-8%" y="-8%" width="116%" height="116%">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // <defs> block for the backpack's gradient/texture filters.
 // Only injected when rendering a backpack.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -410,12 +425,6 @@ function BackpackDefs({ activeSkin, ipal }) {
       {/* ── Drop shadow for raised elements ── */}
       <filter id="raise-shadow" x="-10%" y="-10%" width="120%" height="130%">
         <feDropShadow dx="0" dy="3" stdDeviation="3" floodColor="rgba(0,0,0,0.55)"/>
-      </filter>
-
-      {/* ── Glow for hover zones ── */}
-      <filter id="zone-glow" x="-8%" y="-8%" width="116%" height="116%">
-        <feGaussianBlur stdDeviation="3" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
       </filter>
 
       {/* Clip the whole bag */}
@@ -540,6 +549,7 @@ export default function Bag2D({
       className="w-full h-full"
       style={{ maxHeight: 380, filter: 'drop-shadow(0 12px 28px rgba(0,0,0,0.7))' }}
     >
+      <SharedDefs />
       {isBackpack && <BackpackDefs activeSkin={activeSkin} ipal={ipal} />}
 
       <Illustration {...illusProps} />
