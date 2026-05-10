@@ -7,7 +7,7 @@ import GpxImporter from './GpxImporter';
 import { useTripStore } from '../../store/useTripStore';
 
 export default function JourneyTab() {
-  const [mode, setMode] = useState('STUDIO');
+  const [mode, setMode] = useState('MAP');
   const { journeyData } = useTripStore();
   const photos = journeyData?.photos ?? [];
   const breadcrumbs = journeyData?.breadcrumbs ?? [];
