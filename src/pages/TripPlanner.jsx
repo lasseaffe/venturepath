@@ -36,6 +36,8 @@ import InspirePanel from '../components/inspire/InspirePanel';
 import JourneyTab from '../components/journey/JourneyTab';
 import VaultHub from '../components/vault/VaultHub';
 import BookingMatrix from '../components/booking/BookingMatrix';
+import { SearchProvider } from '../context/SearchContext';
+import { AdaptiveSearchBar } from '../components/search/AdaptiveSearchBar';
 
 export default function TripPlanner({ onBackToDashboard }) {
   const { trip, legs, manifestSettings, cloning, completeExpedition, architect } = useTripStore();
@@ -144,7 +146,7 @@ export default function TripPlanner({ onBackToDashboard }) {
           )}
 
           {/* Tab content */}
-          {tab !== 'JOURNEY' && <div className="p-6">
+          {tab !== 'JOURNEY' && <SearchProvider activeTab={tab}><div className="p-6">
             {tab === 'OVERVIEW' && (
               <>
                 {architect.insights
@@ -166,6 +168,7 @@ export default function TripPlanner({ onBackToDashboard }) {
 
             {tab === 'ITINERARY' && (
               <div className="space-y-6">
+                <AdaptiveSearchBar />
                 <LedgerWorkbench />
                 <KanbanBoard tripName={trip.name} />
                 <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
@@ -190,6 +193,7 @@ export default function TripPlanner({ onBackToDashboard }) {
 
             {tab === 'LOGISTICS' && (
               <div className="space-y-4 max-w-5xl">
+                <AdaptiveSearchBar />
                 <BentoPacker climate={manifestSettings.climate} days={manifestSettings.days} />
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                   <div className="lg:col-span-2">
@@ -203,6 +207,7 @@ export default function TripPlanner({ onBackToDashboard }) {
 
             {tab === 'DISCOVERY' && (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                <AdaptiveSearchBar />
                 <VibeCheck destinationId={trip.destination} tripName={trip.name} />
                 <ARGhostTours destinationId="patagonia" center={[-50.97, -73.0]} />
                 <MustSee destination={trip.destination} />
@@ -214,7 +219,7 @@ export default function TripPlanner({ onBackToDashboard }) {
             {tab === 'VAULT' && <VaultHub />}
 
             {tab === 'BOOKING' && <BookingMatrix />}
-          </div>}
+          </div></SearchProvider>}
         </AppShell>
       </div>
 
