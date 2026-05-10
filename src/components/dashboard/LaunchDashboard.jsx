@@ -5,6 +5,7 @@ import { useSquadGear } from '../../context/SquadGearContext';
 import { useSquadSync } from '../../hooks/useSquadSync';
 import { useTheme } from '../../context/ThemeContext';
 import { useLabels } from '../../hooks/useLabels';
+import DepartingSoonStrip from '../vault/DepartingSoonStrip';
 
 const HERO_IMAGES = {
   'Torres del Paine, Chile': 'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1600&q=80',
@@ -229,6 +230,9 @@ export default function LaunchDashboard({ onEnterTrip, onOpenVault, onOpenChat, 
               </div>
             ))}
           </div>
+
+          {/* Departing soon tickets */}
+          <DepartingSoonStrip onOpenVault={onOpenVault} />
 
           {/* Featured trips */}
           <div>
