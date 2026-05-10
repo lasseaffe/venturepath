@@ -387,6 +387,8 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
 
       {/* ── Documents (PassportVault) ── */}
       {viewMode === 'documents' && (
+        // expeditionFilter is null because useExpedition() only exposes removeFromPath (no id)
+        // Wire expedition?.id here once ExpeditionContext provides an id field
         <PassportVault expeditionFilter={null} />
       )}
 

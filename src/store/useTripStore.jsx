@@ -253,7 +253,7 @@ function reducer(state, action) {
         ...state,
         tickets: state.tickets.map(t =>
           t.id === action.payload.ticketId
-            ? { ...t, sharedWith: [...new Set([...(t.sharedWith ?? []), ...action.payload.pioneerIds])] }
+            ? { ...t, sharedWith: [...new Set([...(t.sharedWith ?? []), ...action.payload.pioneerIds])], isShared: true }
             : t
         ),
       };
@@ -346,7 +346,7 @@ export function TripStoreProvider({ children }) {
   const shareTicket = (ticketId, pioneerIds) => dispatch({ type: 'SHARE_TICKET', payload: { ticketId, pioneerIds } });
 
   return (
-    <TripStoreContext.Provider value={{ ...state, clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, resetTrip, setRole, updateLegStatus, loadExpedition, addPhoto, removePhoto, updatePhoto, reorderPhotos, appendObjectiveItem, setJourneyMeta, completeExpedition, addInsight, dismissInsight, addVaultDocument, updateVaultDocument, addScenario, setJourneyData, addTicket, updateTicket, deleteTicket, shareTicket }}>
+    <TripStoreContext.Provider value={{ ...state, dispatch, clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, resetTrip, setRole, updateLegStatus, loadExpedition, addPhoto, removePhoto, updatePhoto, reorderPhotos, appendObjectiveItem, setJourneyMeta, completeExpedition, addInsight, dismissInsight, addVaultDocument, updateVaultDocument, addScenario, setJourneyData, addTicket, updateTicket, deleteTicket, shareTicket }}>
       {children}
     </TripStoreContext.Provider>
   );
