@@ -62,10 +62,10 @@ export default function PackingChecklist({ items, packed, onToggle }) {
                   {catItems.map(item => (
                     <label
                       key={item.id}
+                      onClick={(e) => handleToggle(item, e)}
                       className="flex items-center gap-3 cursor-pointer group py-1"
                     >
                       <div
-                        onClick={(e) => handleToggle(item, e)}
                         className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-colors ${
                           packed[item.id]
                             ? 'bg-[#E67E22] border-[#E67E22]'

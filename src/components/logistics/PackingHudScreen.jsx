@@ -17,6 +17,8 @@ export default function PackingHudScreen({
   const [flyTokens, setFlyTokens] = useState([]);
 
   const bagRef = useRef(null);
+  const packedRef = useRef(packed);
+  packedRef.current = packed;
 
   const { items } = useMemo(
     () => generatePackingList({ climate, days, hasChildren, poiTags }),
@@ -24,28 +26,25 @@ export default function PackingHudScreen({
   );
 
   const handleToggle = useCallback((itemId, sourceRect) => {
-    setPacked(prev => {
-      const isNowPacked = !prev[itemId];
+    const isCurrentlyPacked = packedRef.current[itemId] ?? false;
+    setPacked(prev => ({ ...prev, [itemId]: !prev[itemId] }));
 
-      if (isNowPacked) {
-        const bagRect = bagRef.current?.getBoundingClientRect();
-        if (bagRect) {
-          const token = {
-            id: `${itemId}-${Date.now()}`,
-            startX: sourceRect.left - bagRect.left + sourceRect.width / 2,
-            startY: sourceRect.top  - bagRect.top  + sourceRect.height / 2,
-            endX: bagRect.width / 2,
-            endY: bagRect.height / 2,
-          };
-          setFlyTokens(prev => [...prev, token]);
-          setTimeout(() => {
-            setFlyTokens(prev => prev.filter(t => t.id !== token.id));
-          }, 600);
-        }
+    if (!isCurrentlyPacked) {
+      const bagRect = bagRef.current?.getBoundingClientRect();
+      if (bagRect) {
+        const token = {
+          id: `${itemId}-${Date.now()}`,
+          startX: sourceRect.left + sourceRect.width / 2,
+          startY: sourceRect.top  + sourceRect.height / 2,
+          endX:   bagRect.left + bagRect.width / 2,
+          endY:   bagRect.top  + bagRect.height / 2,
+        };
+        setFlyTokens(prev => [...prev, token]);
+        setTimeout(() => {
+          setFlyTokens(prev => prev.filter(t => t.id !== token.id));
+        }, 600);
       }
-
-      return { ...prev, [itemId]: isNowPacked };
-    });
+    }
   }, []);
 
   return (
@@ -67,19 +66,6 @@ export default function PackingHudScreen({
             onViewMode={setViewMode}
             onZoneMode={setZoneMode}
           />
-
-          <AnimatePresence>
-            {flyTokens.map(token => (
-              <motion.div
-                key={token.id}
-                className="absolute w-3 h-3 rounded-full bg-[#E67E22] pointer-events-none z-50"
-                initial={{ x: token.startX, y: token.startY, opacity: 1, scale: 1 }}
-                animate={{ x: token.endX, y: token.endY, opacity: 0, scale: 0.3 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5, ease: 'easeInOut' }}
-              />
-            ))}
-          </AnimatePresence>
         </div>
 
         <div className="flex-1 min-w-0 overflow-hidden">
@@ -90,6 +76,20 @@ export default function PackingHudScreen({
           />
         </div>
       </div>
+
+      {/* Fly-in tokens — fixed overlay so coords are viewport-absolute */}
+      <AnimatePresence>
+        {flyTokens.map(token => (
+          <motion.div
+            key={token.id}
+            className="fixed w-3 h-3 rounded-full bg-[#E67E22] pointer-events-none z-[999]"
+            initial={{ x: token.startX, y: token.startY, opacity: 1, scale: 1 }}
+            animate={{ x: token.endX, y: token.endY, opacity: 0, scale: 0.3 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5, ease: 'easeInOut' }}
+          />
+        ))}
+      </AnimatePresence>
     </div>
   );
 }

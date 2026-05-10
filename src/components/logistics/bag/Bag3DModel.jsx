@@ -30,7 +30,7 @@ export default function Bag3DModel({ zoneMap, packed, zoneMode }) {
           {packedCount}/{totalItems} items stowed
         </p>
         <p className="text-[8px] font-mono text-slate-600">
-          Drag-to-pack interaction coming soon
+          Full 3D packing available in next build
         </p>
       </div>
 
