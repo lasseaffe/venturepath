@@ -26,12 +26,11 @@ export function deriveBearing(photo, breadcrumbs) {
   if (photo.bearing != null) return photo.bearing;
 
   if (breadcrumbs.length >= 2 && photo.timestamp) {
-    const sorted = [...breadcrumbs].sort((a, b) => a.timestamp.localeCompare(b.timestamp));
-    const i = findBracket(sorted, photo.timestamp);
+    const i = findBracket(breadcrumbs, photo.timestamp);
     if (i >= 0) {
       return computeBearing(
-        { lat: sorted[i].lat,     lng: sorted[i].lng },
-        { lat: sorted[i + 1].lat, lng: sorted[i + 1].lng },
+        { lat: breadcrumbs[i].lat,     lng: breadcrumbs[i].lng },
+        { lat: breadcrumbs[i + 1].lat, lng: breadcrumbs[i + 1].lng },
       );
     }
   }

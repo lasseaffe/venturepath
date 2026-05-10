@@ -47,4 +47,26 @@ describe('deriveBearing', () => {
     const photo = { timestamp: '2026-01-01T10:00:00Z', coords: [0, 0] };
     expect(deriveBearing(photo, [])).toBe(0);
   });
+
+  it('returns 0 when timestamp is outside all breadcrumb brackets', () => {
+    const photo = { timestamp: '2026-01-01T07:00:00Z', coords: [0, 0] }; // before all breadcrumbs
+    const breadcrumbs = [
+      { timestamp: '2026-01-01T10:00:00Z', lat: 0, lng: 0 },
+      { timestamp: '2026-01-01T11:00:00Z', lat: 1, lng: 0 },
+    ];
+    expect(deriveBearing(photo, breadcrumbs)).toBe(0);
+  });
+
+  it('uses binary search correctly with multiple breadcrumb points', () => {
+    const photo = { timestamp: '2026-01-01T12:30:00Z', coords: [0, 0] };
+    const breadcrumbs = [
+      { timestamp: '2026-01-01T10:00:00Z', lat: 0,   lng: 0 },
+      { timestamp: '2026-01-01T11:00:00Z', lat: 0.5, lng: 0 },
+      { timestamp: '2026-01-01T12:00:00Z', lat: 0,   lng: 0 },
+      { timestamp: '2026-01-01T13:00:00Z', lat: 1,   lng: 0 }, // bracket: index 2→3, heading north
+      { timestamp: '2026-01-01T14:00:00Z', lat: 2,   lng: 0 },
+    ];
+    const bearing = deriveBearing(photo, breadcrumbs);
+    expect(bearing).toBeCloseTo(0, 0); // heading north between index 2 and 3
+  });
 });
