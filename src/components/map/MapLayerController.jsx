@@ -29,7 +29,7 @@ export default function MapLayerController({ pois = [], activeLayers }) {
       }).addTo(map);
 
       marker.bindPopup(`
-        <div style="font-family:monospace;font-size:12px;color:#0E1012">
+        <div style="font-family:'JetBrains Mono', monospace;font-size:12px;color:#0E1012">
           <strong>${poi.name ?? 'Unknown'}</strong><br/>
           <span style="color:${cat.color}">${cat.icon} ${cat.label}</span>
         </div>

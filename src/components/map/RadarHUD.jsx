@@ -17,27 +17,32 @@ const KM_TO_PX   = 85 / 5;
 function ringRadius(km) { return km * KM_TO_PX; }
 
 export default function RadarHUD({ pois = [], center, activeLayers }) {
+  // Normalize center to {lat, lng} object (receives [lat, lng] array from ItineraryMap)
+  const centerObj = Array.isArray(center)
+    ? { lat: center[0], lng: center[1] }
+    : (center ?? { lat: 20, lng: 0 });
+
   // Build per-ring, per-category hit counts
   const ringData = useMemo(() => {
-    if (!center) return [];
+    if (!centerObj) return [];
     return RINGS.map(ring => {
       const hits = {};
       for (const cat of POI_CATEGORIES) {
-        if (!activeLayers?.has(cat.id)) continue;
+        if (!activeLayers.has(cat.id)) continue;
         hits[cat.id] = 0;
       }
       for (const poi of pois) {
         if (!poi.coords) continue;
         const catId = classifyPoi(poi);
-        if (!catId || !activeLayers?.has(catId)) continue;
-        const dist = haversineKm(center, { lat: poi.coords.lat, lng: poi.coords.lng });
+        if (!catId || !activeLayers.has(catId)) continue;
+        const dist = haversineKm(centerObj, { lat: poi.coords.lat, lng: poi.coords.lng });
         if (dist <= ring.km) hits[catId] = (hits[catId] ?? 0) + 1;
       }
       return { ...ring, hits };
     });
-  }, [pois, center, activeLayers]);
+  }, [pois, centerObj, activeLayers]);
 
-  const activeCats = POI_CATEGORIES.filter(c => activeLayers?.has(c.id));
+  const activeCats = POI_CATEGORIES.filter(c => activeLayers.has(c.id));
 
   return (
     <div
@@ -53,7 +58,7 @@ export default function RadarHUD({ pois = [], center, activeLayers }) {
             y={SVG_CENTER - 2}
             fontSize={8}
             fill="#2a2e35"
-            fontFamily="monospace"
+            fontFamily="'JetBrains Mono', monospace"
           >{ring.label}</text>
         ))}
 
@@ -103,13 +108,13 @@ export default function RadarHUD({ pois = [], center, activeLayers }) {
         <line x1={SVG_CENTER - 85} y1={SVG_CENTER} x2={SVG_CENTER + 85} y2={SVG_CENTER} stroke="#1e2328" strokeWidth={0.5} />
 
         {/* "RADAR" label */}
-        <text x={4} y={12} fontSize={7} fill="#2a2e35" fontFamily="monospace" letterSpacing={2}>RADAR</text>
+        <text x={4} y={12} fontSize={7} fill="#2a2e35" fontFamily="'JetBrains Mono', monospace" letterSpacing={2}>RADAR</text>
       </svg>
 
       {/* Category legend */}
       <div className="absolute bottom-1 left-1 right-1 flex flex-wrap gap-1 justify-center">
         {activeCats.map(cat => (
-          <span key={cat.id} className="flex items-center gap-0.5" style={{ fontSize: 8, color: cat.color, fontFamily: 'monospace' }}>
+          <span key={cat.id} className="flex items-center gap-0.5" style={{ fontSize: 8, color: cat.color, fontFamily: "'JetBrains Mono', monospace" }}>
             <span style={{ width: 5, height: 5, borderRadius: '50%', background: cat.color, display: 'inline-block' }} />
             {cat.label.slice(0, 3)}
           </span>

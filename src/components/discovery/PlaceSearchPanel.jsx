@@ -110,7 +110,6 @@ export default function PlaceSearchPanel({ open, nearCity = '', onClose, onAddTo
         <div className="px-4 py-2 flex gap-1.5 flex-wrap shrink-0" style={{ borderBottom: '1px solid #1e2328' }}>
           {/* All pill */}
           <button
-            key="all"
             onClick={() => handleCategory(null)}
             className="text-[8px] font-mono px-2 py-1 rounded border transition-colors tracking-widest"
             style={{
