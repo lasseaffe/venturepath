@@ -2,6 +2,15 @@
 const BASE = 'https://nominatim.openstreetmap.org';
 const HEADERS = { 'Accept-Language': 'en', 'User-Agent': 'VenturePath/1.0' };
 
+const ALLOWED_CLASSES = new Set([
+  'place', 'highway', 'railway', 'amenity',
+  'tourism', 'natural', 'shop', 'leisure', 'aeroway',
+]);
+
+export function filterByAllowedClass(results) {
+  return results.filter(r => !r.class || ALLOWED_CLASSES.has(r.class));
+}
+
 export async function geocodeLocation(text) {
   if (!text?.trim()) return null;
   try {
@@ -25,13 +34,15 @@ export async function searchLocations(text, limit = 5) {
       { headers: HEADERS }
     );
     const data = await res.json();
-    return data.map(r => ({
+    const mapped = data.map(r => ({
       id: r.place_id,
       name: r.display_name.split(',')[0],
       address: r.display_name,
       coords: { lat: parseFloat(r.lat), lng: parseFloat(r.lon) },
       type: r.type,
+      class: r.class,
     }));
+    return filterByAllowedClass(mapped);
   } catch {
     return [];
   }
