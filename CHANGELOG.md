@@ -1,5 +1,37 @@
 # VenturePath — CHANGELOG
 
+## [Unreleased] — 2026-05-10 — Sentinel Triggers, Architect AI, After-Action
+
+### Added
+- **`src/utils/sentinelBus.js`** — Lightweight pub/sub event bus (Map+Set, synchronous emit, unsubscribe fn)
+- **`src/utils/weatherHazardMapper.js`** — Maps OpenWeatherMap API response to normalized Hazard objects (HIGH_WINDS, HEAVY_RAIN, EXTREME_HEAT) with affectedGearTags + affectedStopTypes
+- **`src/utils/architectEngine.js`** — Rule-based insight engine; generates InsightCard data from bus events; Anthropic Haiku for pre-departure briefs (sessionStorage-cached)
+- **`src/components/ui/InsightCard.jsx`** — Dismissible inline card with ⬡ ARCHITECT branding; tactical theme aware
+- **`src/components/afteraction/AfterActionScreen.jsx`** — Two-phase post-expedition UI: Phase 1 expense settlement table + CSV export; Phase 2 VaultTemplate publish to localStorage
+
+### Modified
+- **`src/utils/safetyEngine.js`** — Hazards now include affectedGearTags + affectedStopTypes; emits HAZARD_UPDATED via sentinelBus
+- **`src/utils/packingLogic.js`** — Added GEAR_TAGS library + getItemsByTag(tag) helper
+- **`src/utils/weatherEngine.js`** — Added loadAndEmitWeatherHazards(coords) — OWM API call + sentinelBus emit
+- **`src/store/useTripStore.jsx`** — Added AFTER-ACTION status, architect state slice, COMPLETE_EXPEDITION/ADD_INSIGHT/DISMISS_INSIGHT actions, DEPARTURE_IMMINENT emitter useEffect
+- **`src/components/logistics/PackingManifest.jsx`** — Bus subscription → critical item elevation (red badge) + LOGISTICS InsightCards
+- **`src/components/itinerary/ledger/LedgerWorkbench.jsx`** — Bus subscription → HIGH RISK stop badges + ITINERARY InsightCards
+- **`src/components/itinerary/BudgetLoom.jsx`** — Bus subscription → insurance alert callout + LOGISTICS InsightCards
+- **`src/components/social/PioneerChat.jsx`** — Architect bus messages mirrored to LOGS stream as type:'architect'
+- **`src/components/trip/StopEditor.jsx`** — Stop Type selector (6 options); STOP_ADDED emit + buildInsights on save
+- **`src/context/SquadGearContext.jsx`** — Emits SQUAD_WEIGHT_CHANGED via sentinelBus for over-encumbered members
+- **`src/pages/TripPlanner.jsx`** — Weather hazards on mount; Complete Expedition button; AFTER-ACTION gate; OVERVIEW InsightCards
+
+## [Unreleased] — 2026-05-10 — Dead Code Removal
+
+### Changed
+- **`src/utils/gpxParser.js`** — Refactored to remove dead code:
+  - Removed `getParser()` function that tried to fallback to native `DOMParser` in a catch block
+  - The try-catch was unreachable since `@xmldom/xmldom` is always imported successfully
+  - Simplified to direct import and usage: `import { DOMParser } from '@xmldom/xmldom'`
+  - All 8 existing tests pass; public API (`parseGpx`, `matchGpxToPhotos`) unchanged
+  - **Commit:** `de92895 refactor(journey): simplify gpxParser — remove dead DOMParser fallback branch`
+
 ## [1.0.0] — 2026-05-10 — Smart Stop Editor: Routing, Proximity Autocomplete, Inspire Me Fix
 
 ### Added
