@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import CulinaryAnchorBlock from './CulinaryAnchorBlock';
 import InspirePanel from '../inspire/InspirePanel';
+import ItineraryMap from './ItineraryMap';
 import { useExpedition } from '../../context/ExpeditionContext';
 import { geocodeLocation } from '../../utils/geocodeEngine';
 
@@ -429,6 +430,13 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
           />
         )
       }
+
+      <ItineraryMap
+        days={days}
+        coords={coords}
+        activeStopId={activeStopId}
+        onPinClick={id => setActiveStopId(prev => prev === id ? null : id)}
+      />
     </div>
   );
 }
