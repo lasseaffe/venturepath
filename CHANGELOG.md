@@ -48,6 +48,16 @@
 - Paste Text tab and Upload File tab (PDF via pdfjs-dist, images via tesseract.js OCR)
 - Extraction preview with low-confidence warning
 - MedicAccessBadge: MEDIC/LEADER emergency access toggle persisted to localStorage tactical_vault key
+
+### TicketDetailDrawer (Task 7)
+- Bottom-sheet drawer for PassportVault ticket detail view
+- Displays barcode (TicketBarcodeRenderer), reference code, validity dates, source
+- Share with Squad: multi-select MOCK_SQUAD, confirm dispatch SHARE_TICKET action + emit TICKET_SHARED sentinel
+- Manage sharing: per-Pioneer remove, Revoke All button
+- Delete ticket: confirm dispatch DELETE_TICKET action, close drawer
+- Midnight #0E1012 background, Ember #E67E22 primary interactive, Sandstone #D9C5B2 secondary text
+- JetBrains Mono for metadata, Playfair Display for title
+- framer-motion AnimatePresence for backdrop/drawer spring animation
 - **`src/utils/sentinelBus.js`** — Lightweight pub/sub event bus (Map+Set, synchronous emit, unsubscribe fn)
 - **`src/utils/weatherHazardMapper.js`** — Maps OpenWeatherMap API response to normalized Hazard objects (HIGH_WINDS, HEAVY_RAIN, EXTREME_HEAT) with affectedGearTags + affectedStopTypes
 - **`src/utils/architectEngine.js`** — Rule-based insight engine; generates InsightCard data from bus events; Anthropic Haiku for pre-departure briefs (sessionStorage-cached)
