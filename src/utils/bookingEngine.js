@@ -16,13 +16,12 @@ export function parseGoal(goalText) {
     .replace(/\b(in|to|for|at|budget|under|max|days?|euros?|dollars?)\b/gi, '')
     .replace(/[€$£,]/g, '')
     .trim()
-    .replace(/\s+/g, ' ')
-    .split(' ')[0] || null;
+    .replace(/\s+/g, ' ') || null;
 
   return {
-    destination: destination || null,
+    destination,
     days: durationMatch ? parseInt(durationMatch[1], 10) : null,
-    budget: budgetMatch ? parseFloat(budgetMatch[1].replace(',', '')) : null,
+    budget: budgetMatch ? parseFloat(budgetMatch[1].replace(/,/g, '')) : null,
   };
 }
 
@@ -36,7 +35,6 @@ export function getPermits(destination) {
 
 export async function searchMission(goalText) {
   const { destination, days, budget } = parseGoal(goalText);
-  const budgetEur = budget;
   const permits = getPermits(destination);
 
   let coords = null;
@@ -58,7 +56,7 @@ export async function searchMission(goalText) {
     destination,
     coords,
     days,
-    budgetEur,
+    budget,
     flight,
     stay: { name: `Search hotels in ${destination}`, pricePerNight: null },
     transit: 'Check local transit at Rome2Rio',
@@ -67,6 +65,7 @@ export async function searchMission(goalText) {
   };
 }
 
+// TODO: implement Amadeus flight search when VITE_AMADEUS_KEY is available
 async function fetchAmadeusFlight(destination, apiKey) {
   return { carrier: 'Amadeus search pending', price: null, durationH: null };
 }
