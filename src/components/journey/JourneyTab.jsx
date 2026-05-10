@@ -1,9 +1,16 @@
 import { useState } from 'react';
 import StudioView from './studio/StudioView';
 import TourView from './tour/TourView';
+import JourneyMap3D from './JourneyMap3D';
+import JourneySlideshow from './JourneySlideshow';
+import GpxImporter from './GpxImporter';
+import { useTripStore } from '../../store/useTripStore';
 
 export default function JourneyTab() {
   const [mode, setMode] = useState('STUDIO');
+  const { journeyData } = useTripStore();
+  const photos = journeyData?.photos ?? [];
+  const breadcrumbs = journeyData?.breadcrumbs ?? [];
 
   return (
     <div className="flex flex-col h-full" style={{ background: 'var(--bg)' }}>
@@ -11,7 +18,7 @@ export default function JourneyTab() {
         className="flex items-center gap-1 px-6 py-3 border-b shrink-0"
         style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}
       >
-        {['STUDIO', 'TOUR'].map(m => (
+        {['STUDIO', 'TOUR', 'MAP'].map(m => (
           <button
             key={m}
             onClick={() => setMode(m)}
@@ -27,11 +34,15 @@ export default function JourneyTab() {
         ))}
       </div>
 
-      <div className="flex-1 overflow-hidden">
-        {mode === 'STUDIO' ? (
-          <StudioView />
-        ) : (
-          <TourView onExit={() => setMode('STUDIO')} />
+      <div className="flex-1 overflow-auto">
+        {mode === 'STUDIO' && <StudioView />}
+        {mode === 'TOUR' && <TourView onExit={() => setMode('STUDIO')} />}
+        {mode === 'MAP' && (
+          <div className="space-y-4 p-4">
+            <GpxImporter />
+            <JourneySlideshow photos={photos} />
+            <JourneyMap3D breadcrumbs={breadcrumbs} photos={photos} />
+          </div>
         )}
       </div>
     </div>
