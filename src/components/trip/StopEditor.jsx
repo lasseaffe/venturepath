@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTripStore } from '../../store/useTripStore';
 import { useSmartStop } from '../../hooks/useSmartStop';
 import NearbyDrawer from '../nearby/NearbyDrawer';
+import sentinelBus from '../../utils/sentinelBus.js';
+import { buildInsights } from '../../utils/architectEngine.js';
 
 const MODE_META = {
   car:     { label: 'Car',          icon: '🚗' },
@@ -123,7 +125,7 @@ function SkeletonModeRow() {
 }
 
 export default function StopEditor({ leg = null, defaultFrom = '', onClose }) {
-  const { trip, legs, addLeg, updateLeg, removeLeg } = useTripStore();
+  const { trip, legs, addLeg, updateLeg, removeLeg, addInsight } = useTripStore();
   const isEdit = !!leg;
 
   const [from, setFrom] = useState(leg?.from ?? defaultFrom);
@@ -131,6 +133,7 @@ export default function StopEditor({ leg = null, defaultFrom = '', onClose }) {
   const [mode, setMode] = useState(leg?.mode ?? 'car');
   const [durationH, setDurationH]   = useState(leg?.durationH ?? '');
   const [distanceKm, setDistanceKm] = useState(leg?.distanceKm ?? '');
+  const [stopType, setStopType] = useState(leg?.type ?? 'urban');
   const [showEntryPicker, setShowEntryPicker] = useState(false);
 
   const smart = useSmartStop(trip);
@@ -171,11 +174,16 @@ export default function StopEditor({ leg = null, defaultFrom = '', onClose }) {
       mode,
       durationH:  parseFloat(durationH) || 0,
       distanceKm: parseFloat(distanceKm) || 0,
+      type: stopType,
+      altStopId: null,
     };
     if (isEdit) {
       updateLeg({ ...data, id: leg.id, status: leg.status });
     } else {
       addLeg(data);
+      const legIndex = legs.length;
+      sentinelBus.emit('STOP_ADDED', { stop: data, legIndex });
+      buildInsights('STOP_ADDED', { stop: data, legIndex }, {}).forEach(i => addInsight(i));
     }
     onClose();
   }
@@ -337,6 +345,23 @@ export default function StopEditor({ leg = null, defaultFrom = '', onClose }) {
                 style={{ background: 'var(--surface-raised)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
               />
             </div>
+          </div>
+
+          {/* Stop Type */}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-[#9E8A78] uppercase tracking-wide">Stop Type</label>
+            <select
+              value={stopType}
+              onChange={e => setStopType(e.target.value)}
+              className="rounded-lg border border-[#D9C5B2] bg-white px-3 py-2 text-sm text-[#3D2B1F] focus:outline-none focus:ring-2 focus:ring-[#E67E22]/40"
+            >
+              <option value="urban">Urban / City</option>
+              <option value="transit">Transit Hub</option>
+              <option value="camp">Camp / Basecamp</option>
+              <option value="viewpoint">Viewpoint</option>
+              <option value="summit">Summit / Alpine</option>
+              <option value="coastal">Coastal</option>
+            </select>
           </div>
 
           <div className="pt-2 space-y-2">

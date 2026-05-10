@@ -1,6 +1,12 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { computeBalances, computeSettlements, computeTotals } from '../../utils/budgetEngine';
+import sentinelBus from '../../utils/sentinelBus.js';
+import { buildInsights } from '../../utils/architectEngine.js';
+import InsightCard from '../ui/InsightCard.jsx';
+import { useTripStore } from '../../store/useTripStore.jsx';
+
+const DEFAULT_BUDGET_LIMIT = 500; // per-squad default; Architect can override in future settings
 
 const MEMBERS = [
   { id: 'lead',  name: 'Lead',  avatar: '🧗' },
@@ -21,13 +27,33 @@ function memberName(id) {
 }
 
 export default function BudgetLoom() {
+  const { addInsight, architect } = useTripStore();
   const [expenses, setExpenses] = useState(SEED_EXPENSES);
   const [form, setForm] = useState({ description: '', amount: '', paidBy: 'lead', splitType: 'equal' });
   const [showAdd, setShowAdd] = useState(false);
+  const [showInsuranceAlert, setShowInsuranceAlert] = useState(false);
+  const [budgetLimit] = useState(DEFAULT_BUDGET_LIMIT);
 
   const balances = useMemo(() => computeBalances(expenses, MEMBER_IDS), [expenses]);
   const settlements = useMemo(() => computeSettlements(balances), [balances]);
   const { total, paid } = useMemo(() => computeTotals(expenses, MEMBER_IDS), [expenses]);
+
+  useEffect(() => {
+    const unsub = sentinelBus.on('HAZARD_UPDATED', ({ hazards }) => {
+      const hasRedAlert = hazards.some(h => h.severity === 'red');
+      setShowInsuranceAlert(hasRedAlert);
+      buildInsights('HAZARD_UPDATED', { hazards }, {}).forEach(i => addInsight(i));
+    });
+    return unsub;
+  }, [addInsight]);
+
+  useEffect(() => {
+    if (budgetLimit > 0 && total / budgetLimit >= 0.9) {
+      sentinelBus.emit('BUDGET_THRESHOLD', { category: 'Total', spent: total, limit: budgetLimit });
+      buildInsights('BUDGET_THRESHOLD', { category: 'Total', spent: total, limit: budgetLimit }, {})
+        .forEach(i => addInsight(i));
+    }
+  }, [total, budgetLimit, addInsight]);
 
   function addExpense() {
     const amount = parseFloat(form.amount);
@@ -49,27 +75,41 @@ export default function BudgetLoom() {
 
   return (
     <div className="tactical-panel p-5 space-y-5">
+      {/* Insurance alert from Sentinel */}
+      {showInsuranceAlert && (
+        <div className="mb-3 p-3 rounded-lg border border-red-500/40 bg-red-500/10 text-sm text-red-700 [.tactical_&]:text-[#F2A900] [.tactical_&]:border-[#F2A900]/40 [.tactical_&]:bg-[#F2A900]/10">
+          <span className="font-bold">Active weather alert</span> — check your cancellation coverage before this leg.
+        </div>
+      )}
+      {architect.insights
+        .filter(i => i.targetTab === 'LOGISTICS')
+        .slice(0, 2)
+        .map(insight => <InsightCard key={insight.id} insight={insight} />)
+      }
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <div className="label-tag">Budget Loom</div>
-          <div className="text-[10px] text-slate-500 font-mono mt-0.5">Squad expense splitter</div>
+          <div className="text-xs text-slate-500 font-mono mt-0.5">Squad expense splitter</div>
         </div>
         <div className="text-right">
-          <div className="text-[10px] font-mono text-slate-500">TOTAL SPEND</div>
+          <div className="text-xs font-mono text-slate-500">TOTAL SPEND</div>
           <div className="text-[#E67E22] font-mono text-xl font-bold">${total.toFixed(2)}</div>
         </div>
       </div>
 
       {/* Per-member paid totals */}
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
         {MEMBERS.map(m => (
-          <div key={m.id} className="bg-[#0E1012] rounded-lg p-3 border border-[#1e2328] text-center">
-            <div className="text-lg mb-1">{m.avatar}</div>
-            <div className="text-[9px] font-mono text-slate-500 tracking-widest">{m.name.toUpperCase()}</div>
-            <div className="text-white font-mono text-sm font-semibold mt-1">${(paid[m.id] ?? 0).toFixed(2)}</div>
-            <div className={`text-[9px] font-mono mt-0.5 ${balances[m.id] >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-              {balances[m.id] >= 0 ? '+' : ''}{balances[m.id].toFixed(2)} net
+          <div key={m.id} className="bg-[#0E1012] rounded-lg p-3 border border-[#1e2328] flex sm:flex-col sm:text-center items-center sm:items-center gap-3 sm:gap-0">
+            <div className="text-2xl sm:text-lg sm:mb-1">{m.avatar}</div>
+            <div className="flex-1 sm:flex-none">
+              <div className="text-[11px] font-mono text-slate-500 tracking-widest">{m.name.toUpperCase()}</div>
+              <div className="text-white font-mono text-sm font-semibold sm:mt-1">${(paid[m.id] ?? 0).toFixed(2)}</div>
+              <div className={`text-[11px] font-mono sm:mt-0.5 ${balances[m.id] >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                {balances[m.id] >= 0 ? '+' : ''}{balances[m.id].toFixed(2)} net
+              </div>
             </div>
           </div>
         ))}
@@ -78,7 +118,7 @@ export default function BudgetLoom() {
       {/* Settlement panel */}
       {settlements.length > 0 && (
         <div className="bg-[#0E1012] rounded-lg p-4 border border-[#E67E22]/20 space-y-2">
-          <div className="text-[9px] font-mono text-[#E67E22] tracking-widest mb-3">SETTLEMENT PLAN</div>
+          <div className="text-[11px] font-mono text-[#E67E22] tracking-widest mb-3">SETTLEMENT PLAN</div>
           {settlements.map((s, i) => (
             <div key={i} className="flex items-center justify-between text-xs font-mono">
               <span className="text-slate-300">

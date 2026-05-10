@@ -452,7 +452,7 @@ function KanbanView({
   onInspire, activeStopId, onCardClick,
 }) {
   return (
-    <div className="flex gap-4 overflow-x-auto pb-3" style={{ minHeight: '480px' }}>
+    <div className="flex gap-4 overflow-x-auto pb-3 touch-pan-x" style={{ minHeight: '480px', WebkitOverflowScrolling: 'touch' }}>
       {days.map(day => {
         const isTarget = dropIndicator?.dayId === day.id;
         const stats = dayStats(day.blocks);
@@ -632,7 +632,7 @@ function TimelineView({ days, editingId, editDraft, onStartEdit, onCommitEdit, o
   for (let h = DAY_START_H; h <= DAY_END_H; h++) hours.push(h);
 
   return (
-    <div className="overflow-x-auto pb-4">
+    <div className="overflow-x-auto pb-4 touch-pan-x" style={{ WebkitOverflowScrolling: 'touch' }}>
       <div className="flex" style={{ minWidth: `${days.length * 240 + 52}px` }}>
 
         {/* ── Time ruler ── */}
@@ -664,7 +664,7 @@ function TimelineView({ days, editingId, editDraft, onStartEdit, onCommitEdit, o
             const untimed = day.blocks.filter(b => !b.time);
 
             return (
-              <div key={day.id} className="shrink-0 flex flex-col" style={{ width: '224px' }}>
+              <div key={day.id} className="shrink-0 flex flex-col" style={{ width: '260px' }}>
                 {/* Column header */}
                 <div
                   className="rounded-t-lg px-3 py-2 mb-0 shrink-0"

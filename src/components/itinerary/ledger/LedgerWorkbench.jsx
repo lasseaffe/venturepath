@@ -18,6 +18,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useExpedition } from '../../../context/ExpeditionContext';
 import { searchPlaces } from '../../../utils/foursquareEngine';
 import { useTripStore } from '../../../store/useTripStore';
+import sentinelBus from '../../../utils/sentinelBus.js';
+import { buildInsights } from '../../../utils/architectEngine.js';
+import InsightCard from '../../ui/InsightCard.jsx';
 import InspirePanel from '../../inspire/InspirePanel';
 
 // ── Current user (in real app this comes from auth) ───────────────────────────
@@ -27,7 +30,7 @@ const CURRENT_MEMBER = 'lead';
 
 const LEDGER_DND_KEY = 'application/vp-ledger-item';
 
-function LedgerCard({ item, zone, onVote }) {
+function LedgerCard({ item, zone, onVote, hazardStopTypes = [] }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: item.id });
   const [shaking, setShaking] = useState(false);
   const [cooldown, setCooldown] = useState(false);
@@ -111,7 +114,14 @@ function LedgerCard({ item, zone, onVote }) {
           <img src={item.thumb} alt="" className="w-9 h-9 rounded object-cover shrink-0" />
         )}
         <div className="flex-1 min-w-0">
-          <div className="text-white text-sm font-semibold truncate">{item.name}</div>
+          <div className="text-white text-sm font-semibold truncate flex items-center flex-wrap gap-1">
+            {item.name}
+            {zone === 'path' && item.type && hazardStopTypes.includes(item.type) && (
+              <span className="ml-2 px-1.5 py-0.5 rounded text-xs font-bold bg-red-500/15 text-red-500 border border-red-500/30">
+                HIGH RISK · +4h delay recommended
+              </span>
+            )}
+          </div>
           <div className="text-xs text-slate-400 font-mono mt-0.5">{item.type}</div>
           {zone === 'pool' && (
             <div className="text-[10px] text-slate-500 font-mono mt-1">
@@ -154,7 +164,7 @@ function LedgerCard({ item, zone, onVote }) {
 
 // ── Droppable zone ─────────────────────────────────────────────────────────────
 
-function DropZone({ id, title, items, zone, onVote, isOver }) {
+function DropZone({ id, title, items, zone, onVote, isOver, hazardStopTypes = [] }) {
   return (
     <div className={`flex-1 min-h-[300px] rounded-xl p-4 border-2 transition-colors ${
       isOver ? 'border-[#F2C94C]/60 bg-[#F2C94C]/5' : 'border-white/10'
@@ -170,7 +180,7 @@ function DropZone({ id, title, items, zone, onVote, isOver }) {
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.2 }}
             >
-              <LedgerCard item={item} zone={zone} onVote={onVote} />
+              <LedgerCard item={item} zone={zone} onVote={onVote} hazardStopTypes={hazardStopTypes} />
             </motion.div>
           ))}
         </AnimatePresence>
@@ -353,8 +363,9 @@ function AddToPoolForm({ onAdd, destination, onOpenInspire }) {
 
 export default function LedgerWorkbench() {
   const { pool, activePath, vote, nominate, removeRejected, moveToPath } = useExpedition();
-  const { trip } = useTripStore();
+  const { trip, addInsight, architect } = useTripStore();
   const [activeId, setActiveId] = useState(null);
+  const [hazardStopTypes, setHazardStopTypes] = useState([]);
   const [overId, setOverId] = useState(null);
   const [inspireOpen, setInspireOpen] = useState(false);
 
@@ -369,6 +380,21 @@ export default function LedgerWorkbench() {
   }
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }));
+
+  useEffect(() => {
+    const unsub = sentinelBus.on('HAZARD_UPDATED', ({ hazards }) => {
+      const types = hazards.flatMap(h => h.affectedStopTypes ?? []);
+      setHazardStopTypes(types);
+      buildInsights('HAZARD_UPDATED', { hazards }, {}).forEach(i => addInsight(i));
+    });
+    return unsub;
+  }, [addInsight]);
+
+  function getRiskLevel(stop, stopTypes) {
+    if (!stop.type) return 'LOW';
+    if (stopTypes.includes(stop.type)) return 'HIGH';
+    return 'LOW';
+  }
 
   // Auto-remove rejected items after animation
   useEffect(() => {
@@ -407,6 +433,12 @@ export default function LedgerWorkbench() {
         <span className="text-[#F2C94C] font-mono">The Active Path</span>. Drag confirmed items across to lock them in.
       </p>
 
+      {architect.insights
+        .filter(i => i.targetTab === 'ITINERARY')
+        .slice(0, 3)
+        .map(insight => <InsightCard key={insight.id} insight={insight} />)
+      }
+
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
@@ -436,6 +468,7 @@ export default function LedgerWorkbench() {
             zone="path"
             onVote={vote}
             isOver={overId === 'active-path-zone'}
+            hazardStopTypes={hazardStopTypes}
           />
         </div>
 

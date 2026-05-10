@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { loadAndEmitWeatherHazards } from '../utils/weatherEngine';
 import NewTripModal from '../components/trip/NewTripModal';
 import { useTripStore } from '../store/useTripStore';
 import { useTheme } from '../context/ThemeContext';
@@ -22,6 +23,8 @@ import BasecampScout from '../components/discovery/BasecampScout';
 import VentureVault from '../components/discovery/VentureVault';
 import LaunchSequence from '../components/ui/LaunchSequence';
 import TacticalMode from '../components/ui/TacticalMode';
+import AfterActionScreen from '../components/afteraction/AfterActionScreen';
+import InsightCard from '../components/ui/InsightCard';
 import PioneerChat from '../components/social/PioneerChat';
 import ArchitectProfile from '../components/social/ArchitectProfile';
 import BudgetLoom from '../components/itinerary/BudgetLoom';
@@ -33,10 +36,14 @@ import InspirePanel from '../components/inspire/InspirePanel';
 import JourneyTab from '../components/journey/JourneyTab';
 
 export default function TripPlanner({ onBackToDashboard }) {
-  const { trip, legs, manifestSettings, cloning } = useTripStore();
+  const { trip, legs, manifestSettings, cloning, completeExpedition, architect } = useTripStore();
   const { theme } = useTheme();
   const labels = useLabels();
   const [launched, setLaunched] = useState(false);
+
+  useEffect(() => {
+    loadAndEmitWeatherHazards({ lat: -51.6, lon: -72.7 });
+  }, []);
   const [tab, setTab] = useState('OVERVIEW');
   const [tacticalMode, setTacticalMode] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
@@ -50,6 +57,10 @@ export default function TripPlanner({ onBackToDashboard }) {
 
   if (profileOpen) {
     return <ArchitectProfile onClose={() => setProfileOpen(false)} />;
+  }
+
+  if (trip.status === 'AFTER-ACTION') {
+    return <AfterActionScreen />;
   }
 
   return (
@@ -84,11 +95,21 @@ export default function TripPlanner({ onBackToDashboard }) {
             </div>
             <div className="flex items-center gap-3 text-xs">
               <span style={{ color: 'var(--text-secondary)' }}>{trip.destination}</span>
+              {legs.length > 0 && legs.every(l => l.status === 'confirmed') && trip.status !== 'AFTER-ACTION' && (
+                <button
+                  onClick={completeExpedition}
+                  className="px-3 py-1 rounded text-xs font-medium bg-[#E67E22] text-white hover:bg-[#d06a1a] transition-colors"
+                >
+                  Complete Expedition
+                </button>
+              )}
               <span
-                className="px-2.5 py-0.5 rounded-full text-xs font-medium"
-                style={{ background: 'var(--accent)', color: '#fff' }}
+                className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                  trip.status === 'AFTER-ACTION' ? 'bg-[#F2C94C] text-[#0E1012]' : ''
+                }`}
+                style={trip.status !== 'AFTER-ACTION' ? { background: 'var(--accent)', color: '#fff' } : {}}
               >
-                {trip.status}
+                {trip.status === 'AFTER-ACTION' ? 'Debrief' : trip.status}
               </span>
             </div>
           </header>
@@ -123,16 +144,22 @@ export default function TripPlanner({ onBackToDashboard }) {
           {/* Tab content */}
           {tab !== 'JOURNEY' && <div className="p-6">
             {tab === 'OVERVIEW' && (
-              <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-                <div className="lg:col-span-3 space-y-4">
-                  <RouteMap />
-                  <TimelinePath />
-                  <SafetyPulse destinationId="patagonia" center={[-51.6, -72.7]} zoom={8} />
+              <>
+                {architect.insights
+                  .filter(i => i.targetTab === 'OVERVIEW')
+                  .slice(0, 3)
+                  .map(i => <InsightCard key={i.id} insight={i} />)}
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+                  <div className="lg:col-span-3 space-y-4">
+                    <RouteMap />
+                    <TimelinePath />
+                    <SafetyPulse destinationId="patagonia" center={[-51.6, -72.7]} zoom={8} />
+                  </div>
+                  <div className="space-y-4">
+                    <PackingManifest climate={manifestSettings.climate} days={manifestSettings.days} />
+                  </div>
                 </div>
-                <div className="space-y-4">
-                  <PackingManifest climate={manifestSettings.climate} days={manifestSettings.days} />
-                </div>
-              </div>
+              </>
             )}
 
             {tab === 'ITINERARY' && (

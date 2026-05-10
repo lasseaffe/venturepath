@@ -9,7 +9,7 @@ const SOURCE_COLORS = {
   Google:    'text-blue-400',
 };
 
-export default function VibeCheck({ destinationId = 'patagonia', tripName = 'your trip' }) {
+export default function VibeCheck({ destinationId = '', tripName = 'your trip' }) {
   const [vibes, setVibes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [generated, setGenerated] = useState(null);
@@ -18,6 +18,7 @@ export default function VibeCheck({ destinationId = 'patagonia', tripName = 'you
 
   useEffect(() => {
     setLoading(true);
+    setGenerated(null);
     fetchVibes(destinationId)
       .then(v => {
         setVibes(v);

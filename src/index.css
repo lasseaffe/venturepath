@@ -131,14 +131,48 @@ body {
   font-family: Inter, ui-sans-serif, system-ui;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Prevent horizontal overflow on narrow screens */
+  overflow-x: hidden;
 }
 
 #root {
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
-  min-height: 100svh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+}
+
+/* ─── Touch & hover safety ─── */
+
+/* Only fire hover transforms on devices that can hover (not touch) */
+@media (hover: hover) {
+  .btn-primary-glow:hover { transform: translateY(-2px) scale(1.02); }
+  .btn-outline-lift:hover  { transform: translateY(-2px); }
+}
+
+/* Active state for touch feedback */
+.btn-primary-glow:active,
+.btn-outline-lift:active { transform: scale(0.97); }
+
+/* Smooth momentum scrolling on iOS */
+.overflow-auto,
+.overflow-y-auto,
+.overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent text size inflation on iOS rotation */
+* { -webkit-text-size-adjust: 100%; }
+
+/* Respect user's reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .animate-shake,
+  .animate-pulse-gold,
+  .animate-ken-burns,
+  .animate-bounce,
+  .animate-ping,
+  .animate-spin { animation: none !important; }
 }
