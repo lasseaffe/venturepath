@@ -3,6 +3,7 @@ import CulinaryAnchorBlock from './CulinaryAnchorBlock';
 import InspirePanel from '../inspire/InspirePanel';
 import ItineraryMap from './ItineraryMap';
 import { useExpedition } from '../../context/ExpeditionContext';
+import CategoryIcon from './CategoryIcon';
 import { geocodeLocation } from '../../utils/geocodeEngine';
 import { wikidataFetch } from '../../utils/wikidataEngine';
 
@@ -774,7 +775,7 @@ function TimelineView({ days, editingId, editDraft, onStartEdit, onCommitEdit, o
                           className="flex items-center gap-2 px-2 py-1 rounded"
                           style={{ background: colors.bg, border: `1px solid ${colors.border}` }}
                         >
-                          <span className="text-sm">{block.icon}</span>
+                          <CategoryIcon category={block.category} color={colors.text} size={11} />
                           <span className="text-[10px] font-mono text-white truncate flex-1">{block.title}</span>
                           <button
                             onClick={() => onStartEdit(block)}
@@ -934,7 +935,7 @@ function ActivityBlock({ block, isGhost, isActive, onDragStart, onDragEnd, onEdi
     >
       <div className="flex items-center justify-between px-2.5 pt-2 pb-1">
         <div className="flex items-center gap-1.5">
-          <span className="text-sm leading-none">{block.icon}</span>
+          <CategoryIcon category={block.category} color={colors.text} size={14} />
           {block.time && (
             <span className="text-[10px] font-mono" style={{ color: '#E67E22' }}>{block.time}</span>
           )}
