@@ -380,37 +380,56 @@ export default function Bag2D({ zoneMap, packed, activeSkin = 'tactical', onZone
             {/* ── ANIMATION C: Split-flap reveal — top_lid ── */}
             {zone === 'top_lid' && (
               <g clipPath="url(#clip-lid-zone)" style={{ pointerEvents: 'none' }}>
-                {/* Interior accent fill revealed beneath the flaps */}
-                <rect x={25} y={52} width={190} height={62} rx={12} fill={`${p.accent}18`}/>
-                {/* Top flap half — slides up */}
-                <rect
-                  x={25} y={52} width={190} height={31} rx={12}
-                  fill={`url(#lg-${activeSkin})`}
-                  style={{
-                    transform: `translateY(${isHov ? -32 : 0}px)`,
-                    transition: 'transform 0.42s cubic-bezier(0.4,0,0.2,1)',
-                  }}
-                />
-                {/* Bottom flap half — slides down */}
-                <rect
-                  x={25} y={83} width={190} height={31} rx={0}
-                  fill={`url(#lg-${activeSkin})`}
-                  style={{
-                    transform: `translateY(${isHov ? 32 : 0}px)`,
-                    transition: 'transform 0.42s cubic-bezier(0.4,0,0.2,1)',
-                  }}
-                />
-                {/* Center seam glow */}
+                {/* Interior accent fill — visible once flaps slide away */}
+                <rect x={25} y={52} width={190} height={62} rx={12} fill={`${p.accent}15`}/>
+                {/* Seam line — glows in as flaps part */}
                 <line
                   x1={30} y1={83} x2={210} y2={83}
-                  stroke={p.accent} strokeWidth={1.5}
-                  strokeOpacity={isHov ? 1 : 0}
-                  style={{ transition: 'stroke-opacity 0.2s 0.18s' }}
+                  stroke={p.accent} strokeWidth={1.2}
+                  strokeOpacity={isHov ? 0.9 : 0}
+                  style={{ transition: 'stroke-opacity 0.15s 0.25s' }}
                 />
-                {/* Zipper tooth dots along seam */}
-                {isHov && Array.from({ length: 14 }, (_, i) => (
-                  <circle key={i} cx={35 + i * 12} cy={83} r={2} fill={p.accent} opacity={0.6}/>
+                {/* Zipper tooth dots along seam — appear mid-animation */}
+                {Array.from({ length: 14 }, (_, i) => (
+                  <circle
+                    key={i} cx={35 + i * 12} cy={83} r={1.8}
+                    fill={p.accent}
+                    opacity={isHov ? 0.55 : 0}
+                    style={{ transition: `opacity 0.1s ${0.28 + i * 0.012}s` }}
+                  />
                 ))}
+                {/* Top flap — covers upper half, slides UP and OUT of clip on hover.
+                    Full 62px height so it covers whole zone at rest; clip cuts it at y=52. */}
+                <rect
+                  x={25} y={52} width={190} height={62}
+                  fill={`url(#lg-${activeSkin})`}
+                  style={{
+                    transformBox: 'fill-box',
+                    transformOrigin: 'top center',
+                    transform: `translateY(${isHov ? -62 : 0}px)`,
+                    transition: 'transform 0.4s cubic-bezier(0.4,0,0.2,1)',
+                  }}
+                />
+                {/* Bottom flap — covers lower half (y=83→114), slides DOWN on hover */}
+                <rect
+                  x={25} y={83} width={190} height={62}
+                  fill={`url(#lg-${activeSkin})`}
+                  style={{
+                    transformBox: 'fill-box',
+                    transformOrigin: 'bottom center',
+                    transform: `translateY(${isHov ? 62 : 0}px)`,
+                    transition: 'transform 0.4s cubic-bezier(0.4,0,0.2,1)',
+                  }}
+                />
+                {/* Stitching lines on each flap (travel with the flap) */}
+                <line
+                  x1={30} y1={60} x2={210} y2={60}
+                  stroke={p.stitch} strokeWidth={0.7} strokeDasharray="5,3" opacity={0.6}
+                  style={{
+                    transform: `translateY(${isHov ? -62 : 0}px)`,
+                    transition: 'transform 0.4s cubic-bezier(0.4,0,0.2,1)',
+                  }}
+                />
               </g>
             )}
 
