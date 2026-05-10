@@ -4,9 +4,10 @@ import sentinelBus from '../../utils/sentinelBus.js';
 import { buildInsights } from '../../utils/architectEngine.js';
 import InsightCard from '../ui/InsightCard.jsx';
 import { useTripStore } from '../../store/useTripStore.jsx';
+import RolePackingPrompts from './RolePackingPrompts';
 
 export default function PackingManifest({ climate = 'temperate', days = 7, hasChildren = false }) {
-  const { addInsight, architect } = useTripStore();
+  const { addInsight, architect, userRole } = useTripStore();
   const [criticalIds, setCriticalIds] = useState(new Set());
   const [packed, setPacked] = useState({});
   const [filter, setFilter] = useState('ALL');
@@ -97,6 +98,9 @@ export default function PackingManifest({ climate = 'temperate', days = 7, hasCh
           style={{ width: `${allItems.length ? (packedCount / allItems.length) * 100 : 0}%` }}
         />
       </div>
+
+      {/* Role-keyed advisory checklist */}
+      <RolePackingPrompts role={userRole ?? 'LEADER'} />
 
       {/* Category filter */}
       <div className="flex gap-2 overflow-x-auto pb-1">
