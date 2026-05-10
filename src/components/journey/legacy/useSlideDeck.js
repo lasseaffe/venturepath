@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTripStore } from '../../../store/useTripStore';
 import { buildSlideDeck } from '../../../utils/slideDeck';
 import sentinelBus from '../../../utils/sentinelBus';
@@ -11,7 +11,10 @@ export function useSlideDeck() {
   const photos      = journeyData?.photos      ?? [];
   const breadcrumbs = journeyData?.breadcrumbs ?? [];
 
-  const slides = buildSlideDeck(photos, breadcrumbs, legs);
+  const slides = useMemo(
+    () => buildSlideDeck(photos, breadcrumbs, legs),
+    [photos, breadcrumbs, legs],
+  );
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -47,7 +50,7 @@ export function useSlideDeck() {
   // Reset index when slide deck changes (new photos added)
   useEffect(() => {
     setCurrentIndex(0);
-  }, [slides.length]);
+  }, [slides]);
 
   const currentSlide = slides[currentIndex] ?? null;
 
