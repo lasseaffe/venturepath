@@ -24,7 +24,7 @@ const NAV_ITEMS = [
   { id: 'LOGISTICS', icon: '🎒',  label: 'Logistics' },
   { id: 'DISCOVERY', icon: '🔍',  label: 'Discover' },
   { id: 'JOURNEY',   icon: '📸',  label: 'Journey' },
-  { id: 'VAULT',     icon: '📂',  label: 'Saved trips' },
+  { id: 'VAULT',     icon: '🎫',  label: 'PassportVault' },
   { id: 'BOOKING',   icon: '🎫',  label: 'Booking' },
 ];
 

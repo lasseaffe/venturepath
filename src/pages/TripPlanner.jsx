@@ -34,7 +34,7 @@ import SafetyPulse from '../components/logistics/SafetyPulse';
 import ARGhostTours from '../components/ar/ARGhostTours';
 import InspirePanel from '../components/inspire/InspirePanel';
 import JourneyTab from '../components/journey/JourneyTab';
-import VaultHub from '../components/vault/VaultHub';
+import PassportVault from '../components/vault/PassportVault';
 import BookingMatrix from '../components/booking/BookingMatrix';
 import { SearchProvider } from '../context/SearchContext';
 import { AdaptiveSearchBar } from '../components/search/AdaptiveSearchBar';
@@ -216,7 +216,7 @@ export default function TripPlanner({ onBackToDashboard }) {
               </div>
             )}
 
-            {tab === 'VAULT' && <VaultHub />}
+            {tab === 'VAULT' && <PassportVault />}
 
             {tab === 'BOOKING' && <BookingMatrix />}
           </div></SearchProvider>}
