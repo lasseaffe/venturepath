@@ -1,4 +1,27 @@
 // Packing logic engine — derives gear list from trip profile
+
+export const GEAR_TAGS = {
+  hardshell:             ['hard_shell'],
+  tent_stakes:           ['shelter'],
+  guy_lines:             ['shelter'],
+  windbreaker:           ['windbreaker'],
+  rain_jacket:           ['rain_jacket'],
+  waterproof_bag:        ['dry_bag'],
+  waterproof_phone_case: ['sat_comm'],
+  down_jacket:           ['down_jacket'],
+  balaclava:             ['balaclava'],
+  sun_protection:        ['sun_protection'],
+  electrolytes:          ['electrolytes'],
+  extra_water:           ['extra_water'],
+  water_bottles:         ['water_filter'],
+  powerbank:             ['powerbank'],
+  first_aid:             ['first_aid'],
+};
+
+export function getItemsByTag(tag) {
+  return GEAR_TAGS[tag] ?? [];
+}
+
 export const CATEGORIES = {
   BASE: 'Base Camp',
   NAVIGATION: 'Navigation',
