@@ -23,6 +23,7 @@ export default function TicketDetailDrawer({ ticket, onClose }) {
   const [manageOpen, setManageOpen] = useState(false);
 
   function handleShare() {
+    if (!ticket) return;
     if (!selected.length) return;
     dispatch({ type: 'SHARE_TICKET', payload: { ticketId: ticket.id, pioneerIds: selected } });
     sentinelBus.emit(TICKET_SHARED, { ticketId: ticket.id, pioneerIds: selected });
@@ -31,16 +32,19 @@ export default function TicketDetailDrawer({ ticket, onClose }) {
   }
 
   function handleRevoke(pioneerId) {
+    if (!ticket) return;
     const next = (ticket.sharedWith ?? []).filter(id => id !== pioneerId);
     dispatch({ type: 'UPDATE_TICKET', payload: { id: ticket.id, sharedWith: next, isShared: next.length > 0 } });
   }
 
   function handleRevokeAll() {
+    if (!ticket) return;
     dispatch({ type: 'UPDATE_TICKET', payload: { id: ticket.id, sharedWith: [], isShared: false } });
     setManageOpen(false);
   }
 
   function handleDelete() {
+    if (!ticket) return;
     dispatch({ type: 'DELETE_TICKET', payload: ticket.id });
     onClose();
   }

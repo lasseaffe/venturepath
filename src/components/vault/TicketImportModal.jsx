@@ -1,5 +1,5 @@
 // src/components/vault/TicketImportModal.jsx
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTripStore } from '../../store/useTripStore';
 import sentinelBus from '../../utils/sentinelBus';
@@ -197,6 +197,13 @@ function ManualForm({ onSave }) {
 function ScanTab({ onSave }) {
   const videoRef    = useRef(null);
   const readerRef   = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      readerRef.current?.reset();
+    };
+  }, []);
+
   const [scanning, setScanning] = useState(false);
   const [parsed, setParsed]     = useState(null);
   const [error, setError]       = useState(null);
@@ -344,7 +351,9 @@ export default function TicketImportModal({ open, onClose, expeditionId }) {
   function handleSave(ticket) {
     const enriched = { ...ticket, expeditionId: ticket.expeditionId ?? expeditionId ?? null };
     dispatch({ type: 'ADD_TICKET', payload: enriched });
-    cacheSoonTickets([enriched]);
+    cacheSoonTickets([enriched]).catch(err =>
+      console.warn('[TicketImportModal] IndexedDB cache failed:', err)
+    );
     sentinelBus.emit(TICKET_ADDED, { ticket: enriched });
     onClose();
   }

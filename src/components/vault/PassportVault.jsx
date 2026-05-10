@@ -29,7 +29,9 @@ export default function PassportVault({ expeditionFilter }) {
 
   // Cache soon-departing tickets for offline access in Tactical Mode
   useEffect(() => {
-    cacheSoonTickets(tickets);
+    cacheSoonTickets(tickets).catch(err =>
+      console.warn('[PassportVault] IndexedDB cache failed:', err)
+    );
   }, [tickets]);
 
   // Restore cached tickets in Tactical Mode if offline

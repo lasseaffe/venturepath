@@ -35,7 +35,9 @@ export async function cacheSoonTickets(tickets) {
 /** Read all cached tickets from IndexedDB (used in Tactical Mode). */
 export async function getCachedTickets() {
   const db = await getDB();
-  return db.getAll(STORE);
+  const all = await db.getAll(STORE);
+  const now = Date.now();
+  return all.filter(t => !t.validFrom || new Date(t.validFrom).getTime() > now);
 }
 
 /** Remove a ticket from the cache (e.g. after it expires). */
