@@ -33,7 +33,7 @@ export default function NearbyDrawer({ anchor: defaultAnchor, onSelectPlace }) {
 
   const spotCards = (results ?? [])
     .map(r => ({
-      id: r.id ?? r.name,
+      id: r.id ?? `nearby-${r.name}-${r.address ?? Math.random()}`,
       name: r.name,
       category: r.type ?? r.kindLabel ?? category,
       rating: r.rating ?? null,

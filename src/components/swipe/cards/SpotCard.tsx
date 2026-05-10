@@ -1,4 +1,5 @@
 // src/components/swipe/cards/SpotCard.tsx
+import { useState } from 'react';
 import type { SpotCardData } from './types';
 
 const FALLBACK_GRADIENT = 'linear-gradient(160deg, #0E1012 0%, #E67E22 100%)';
@@ -6,25 +7,22 @@ const FALLBACK_GRADIENT = 'linear-gradient(160deg, #0E1012 0%, #E67E22 100%)';
 interface Props { data: SpotCardData }
 
 export function SpotCard({ data }: Props) {
+  const [imgFailed, setImgFailed] = useState(false);
+
   return (
     <div className="w-full h-full rounded-3xl overflow-hidden flex flex-col shadow-2xl relative">
       {/* Hero image */}
       <div className="flex-1 relative">
-        {data.imageUrl ? (
+        {data.imageUrl && !imgFailed ? (
           <img
             src={data.imageUrl}
             alt={data.name}
             className="w-full h-full object-cover"
-            onError={(e) => {
-              (e.currentTarget as HTMLImageElement).style.display = 'none';
-              (e.currentTarget.nextSibling as HTMLElement).style.display = 'block';
-            }}
+            onError={() => setImgFailed(true)}
           />
-        ) : null}
-        <div
-          className="absolute inset-0"
-          style={{ background: FALLBACK_GRADIENT, display: data.imageUrl ? 'none' : 'block' }}
-        />
+        ) : (
+          <div className="absolute inset-0" style={{ background: FALLBACK_GRADIENT }} />
+        )}
         <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(14,16,18,0.92) 0%, transparent 50%)' }} />
       </div>
 

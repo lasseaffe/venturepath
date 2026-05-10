@@ -1,7 +1,7 @@
 // src/components/swipe/SwipeDeck.tsx
 "use client";
 
-import { useRef, useState, useCallback, useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useExpedition } from '../../context/ExpeditionContext';
 import { useTripStore } from '../../store/useTripStore';
 import { useSwipePreferences } from '../../hooks/useSwipePreferences';
@@ -117,24 +117,24 @@ export function SwipeDeck({ mode, cards, onClose }: SwipeDeckProps) {
     } catch { /* storage full */ }
   }
 
-  const onPointerDown = useCallback((e: React.PointerEvent) => {
+  const onPointerDown = (e: React.PointerEvent) => {
     startX.current = e.clientX;
     deltaX.current = 0;
     (e.currentTarget as HTMLDivElement).setPointerCapture(e.pointerId);
-  }, []);
+  };
 
-  const onPointerCancel = useCallback(() => {
+  const onPointerCancel = () => {
     deltaX.current = 0;
     setDrag(0);
-  }, []);
+  };
 
-  const onPointerMove = useCallback((e: React.PointerEvent) => {
+  const onPointerMove = (e: React.PointerEvent) => {
     if (!(e.currentTarget as HTMLDivElement).hasPointerCapture(e.pointerId)) return;
     deltaX.current = e.clientX - startX.current;
     setDrag(deltaX.current);
-  }, []);
+  };
 
-  const onPointerUp = useCallback(() => {
+  const onPointerUp = () => {
     const dx = deltaX.current;
     deltaX.current = 0;
     if (Math.abs(dx) > SWIPE_THRESHOLD) {
@@ -167,8 +167,7 @@ export function SwipeDeck({ mode, cards, onClose }: SwipeDeckProps) {
     } else {
       setDrag(0);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode]);
+  };
 
   const rotate = Math.max(-15, Math.min(15, drag * 0.07));
   const swipeRightVisible = drag > 30 || flying === 'right';
@@ -234,8 +233,8 @@ export function SwipeDeck({ mode, cards, onClose }: SwipeDeckProps) {
                   </div>
                 )}
                 {isActive && swipeLeftVisible && (
-                  <div className="absolute inset-0 rounded-3xl z-20 flex items-start justify-end p-6 pointer-events-none" style={{ background: 'rgba(180,60,60,0.14)' }}>
-                    <span className="border-4 rounded-xl px-4 py-2 text-2xl font-black rotate-[20deg]" style={{ borderColor: '#B03A3A', color: '#B03A3A', fontFamily: 'Playfair Display, serif' }}>PASS</span>
+                  <div className="absolute inset-0 rounded-3xl z-20 flex items-start justify-end p-6 pointer-events-none" style={{ background: 'rgba(14,16,18,0.5)' }}>
+                    <span className="border-4 rounded-xl px-4 py-2 text-2xl font-black rotate-[20deg]" style={{ borderColor: '#D9C5B2', color: '#D9C5B2', fontFamily: 'Playfair Display, serif' }}>PASS</span>
                   </div>
                 )}
 
