@@ -59,7 +59,7 @@ export default function CancellationSimulator({ leg, legs, onClose }) {
           </div>
         )}
 
-        {impacts.length > 0 && <SimulatorNarrative impacts={impacts} triggerLeg={leg} />}
+        {delayHours > 0 && <SimulatorNarrative impacts={impacts} triggerLeg={leg} />}
       </div>
     </div>
   );
