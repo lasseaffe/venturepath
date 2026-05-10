@@ -30,6 +30,7 @@ export async function searchLocations(text, limit = 5) {
   if (!text?.trim()) return [];
   try {
     const res = await fetch(
+      // fetch limit results; class filter may return fewer if some are non-travel OSM types
       `${BASE}/search?q=${encodeURIComponent(text)}&format=json&limit=${limit}&addressdetails=1`,
       { headers: HEADERS }
     );
