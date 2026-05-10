@@ -18,7 +18,7 @@ export default function MapLayerController({ pois = [], activeLayers }) {
       if (!categoryId || !activeLayers.has(categoryId)) continue;
 
       const cat = categoryById(categoryId);
-      if (!poi.coords?.lat || !poi.coords?.lng) continue;
+      if (!cat || !poi.coords?.lat || !poi.coords?.lng) continue;
 
       const marker = L.circleMarker([poi.coords.lat, poi.coords.lng], {
         radius: 7,
