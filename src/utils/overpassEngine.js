@@ -8,7 +8,8 @@ export function _cacheKey(destination, filters) {
 function buildQuery(lat, lng, filters, radiusM) {
   const nodes = filters.map(f => {
     const [key, val] = f.split('=');
-    return `node[${key}=${val}](around:${radiusM},${lat},${lng});`;
+    const selector = val === '*' ? `[${key}]` : `[${key}=${val}]`;
+    return `node${selector}(around:${radiusM},${lat},${lng});`;
   }).join('\n  ');
   return `[out:json][timeout:5];\n(\n  ${nodes}\n);\nout body;`;
 }
