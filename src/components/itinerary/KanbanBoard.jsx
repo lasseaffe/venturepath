@@ -4,6 +4,7 @@ import InspirePanel from '../inspire/InspirePanel';
 import ItineraryMap from './ItineraryMap';
 import { useExpedition } from '../../context/ExpeditionContext';
 import { geocodeLocation } from '../../utils/geocodeEngine';
+import { wikidataFetch } from '../../utils/wikidataEngine';
 
 const LEDGER_DND_KEY = 'application/vp-ledger-item';
 
@@ -59,12 +60,13 @@ const SEED_DAYS = [
 ];
 
 const CATEGORY_COLORS = {
-  transport: { bg: 'rgba(59,130,246,0.14)',  border: 'rgba(59,130,246,0.4)',  text: '#60A5FA', dot: '#3B82F6' },
-  logistics: { bg: 'rgba(234,179,8,0.1)',    border: 'rgba(234,179,8,0.35)', text: '#FBBF24', dot: '#EAB308' },
-  food:      { bg: 'rgba(34,197,94,0.1)',    border: 'rgba(34,197,94,0.35)', text: '#4ADE80', dot: '#22C55E' },
-  activity:  { bg: 'rgba(230,126,34,0.12)', border: 'rgba(230,126,34,0.4)', text: '#E67E22', dot: '#E67E22' },
-  rest:      { bg: 'rgba(148,163,184,0.08)', border: 'rgba(148,163,184,0.2)', text: '#94A3B8', dot: '#64748B' },
-  default:   { bg: 'rgba(148,163,184,0.08)', border: 'rgba(148,163,184,0.2)', text: '#94A3B8', dot: '#64748B' },
+  transport:     { bg: 'rgba(59,130,246,0.14)',  border: 'rgba(59,130,246,0.4)',  text: '#60A5FA', dot: '#3B82F6' },
+  logistics:     { bg: 'rgba(234,179,8,0.1)',    border: 'rgba(234,179,8,0.35)', text: '#FBBF24', dot: '#EAB308' },
+  food:          { bg: 'rgba(34,197,94,0.1)',    border: 'rgba(34,197,94,0.35)', text: '#4ADE80', dot: '#22C55E' },
+  activity:      { bg: 'rgba(230,126,34,0.12)', border: 'rgba(230,126,34,0.4)', text: '#E67E22', dot: '#E67E22' },
+  rest:          { bg: 'rgba(148,163,184,0.08)', border: 'rgba(148,163,184,0.2)', text: '#94A3B8', dot: '#64748B' },
+  accommodation: { bg: 'rgba(167,139,250,0.1)', border: 'rgba(167,139,250,0.35)', text: '#A78BFA', dot: '#7C3AED' },
+  default:       { bg: 'rgba(148,163,184,0.08)', border: 'rgba(148,163,184,0.2)', text: '#94A3B8', dot: '#64748B' },
 };
 
 function makeId() {
@@ -1066,13 +1068,33 @@ const ACTIVITY_SUGGESTIONS = [
   'Temple visit', 'Monastery tour', 'Art gallery', 'Street art walk',
 ];
 
+const INSTANCE_OF_CATEGORY = [
+  [['restaurant', 'café', 'bar', 'brewery', 'winery', 'food'], 'food'],
+  [['train station', 'railway', 'airport', 'ferry', 'bus station', 'port', 'transit'], 'transport'],
+  [['hotel', 'hostel', 'guesthouse', 'inn', 'resort', 'accommodation'], 'rest'],
+  [['museum', 'gallery', 'church', 'cathedral', 'mosque', 'temple', 'monument', 'landmark', 'palace', 'castle', 'square', 'bridge', 'harbour', 'market', 'park', 'beach', 'mountain'], 'activity'],
+];
+
+function inferCategoryFromInstanceOf(instanceOf) {
+  if (!instanceOf) return null;
+  const lower = instanceOf.toLowerCase();
+  for (const [keywords, cat] of INSTANCE_OF_CATEGORY) {
+    if (keywords.some(k => lower.includes(k))) return cat;
+  }
+  return null;
+}
+
 function AddCard({ draft, onChange, onAdd, onCancel }) {
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [wdHint, setWdHint] = useState(null); // { description, instance_of }
+  const wdTimerRef = useRef(null);
 
   function handleTitleChange(e) {
     const val = e.target.value;
     onChange(p => ({ ...p, title: val }));
+
+    // Local static suggestions
     if (val.trim().length >= 1) {
       const filtered = ACTIVITY_SUGGESTIONS.filter(s =>
         s.toLowerCase().includes(val.toLowerCase())
@@ -1082,6 +1104,21 @@ function AddCard({ draft, onChange, onAdd, onCancel }) {
     } else {
       setSuggestions([]);
       setShowSuggestions(false);
+      setWdHint(null);
+    }
+
+    // Wikidata smart autofill — debounced 500ms, triggers at ≥3 chars
+    clearTimeout(wdTimerRef.current);
+    if (val.trim().length >= 3) {
+      wdTimerRef.current = setTimeout(async () => {
+        const result = await wikidataFetch(val.trim());
+        if (!result) { setWdHint(null); return; }
+        setWdHint(result);
+        const inferredCat = inferCategoryFromInstanceOf(result.instance_of);
+        if (inferredCat) onChange(p => ({ ...p, category: inferredCat }));
+      }, 500);
+    } else {
+      setWdHint(null);
     }
   }
 
@@ -1160,6 +1197,20 @@ function AddCard({ draft, onChange, onAdd, onCancel }) {
           </div>
         )}
       </div>
+      {wdHint?.description && (
+        <div
+          className="rounded px-2 py-1.5 text-[10px] font-mono leading-relaxed"
+          style={{ background: '#0c0e10', border: '1px solid #1e2328', color: '#6b7280' }}
+        >
+          <span style={{ color: '#E67E22' }}>✦ </span>
+          {wdHint.description}
+          {wdHint.instance_of && (
+            <span className="ml-2 text-[8px] tracking-widest uppercase" style={{ color: '#374151' }}>
+              [{wdHint.instance_of}]
+            </span>
+          )}
+        </div>
+      )}
       <div className="grid grid-cols-2 gap-1.5">
         <input
           value={draft.icon}
