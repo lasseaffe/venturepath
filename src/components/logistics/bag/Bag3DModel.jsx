@@ -481,8 +481,8 @@ function BackpackMesh({ palette, zoneMap, packed, onZoneClick }) {
 
       {/* ── Zone Html overlays ── */}
       {Object.entries(ZONE_ANCHORS).map(([zone, pos]) => {
-        const items = zoneMap[zone] ?? [];
-        const packedCount = items.filter(i => packed[i.id]).length;
+        const items = (zoneMap ?? {})[zone] ?? [];
+        const packedCount = items.filter(i => (packed ?? {})[i.id]).length;
         const accentColor = palette.buckleHex;
         return (
           <Html key={zone} position={pos} center>
