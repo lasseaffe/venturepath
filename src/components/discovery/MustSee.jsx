@@ -1,10 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import { searchByCategory, searchPlaces, getInspireQuery, FSQ_CATEGORIES } from '../../utils/foursquareEngine';
+import { SwipeDeck } from '../swipe/SwipeDeck';
+import { useSwipePreferences } from '../../hooks/useSwipePreferences';
 
 export default function MustSee({ destination = 'Patagonia' }) {
   const [spots, setSpots] = useState([]);
   const [loading, setLoading] = useState(true);
   const [inspireLabel, setInspireLabel] = useState(null);
+  const [swipeOpen, setSwipeOpen] = useState(false);
+  const { getAffinityScore } = useSwipePreferences();
 
   const load = useCallback(async (query = null) => {
     setLoading(true);
@@ -22,6 +26,17 @@ export default function MustSee({ destination = 'Patagonia' }) {
     setInspireLabel(q);
     load(q);
   }
+
+  const spotCards = spots
+    .map(s => ({
+      id: s.id,
+      name: s.name,
+      category: s.type ?? 'attraction',
+      rating: s.rating ?? null,
+      tags: [s.type, destination].filter(Boolean),
+      imageUrl: undefined,
+    }))
+    .sort((a, b) => getAffinityScore(b.tags) - getAffinityScore(a.tags));
 
   return (
     <div className="tactical-panel p-5 space-y-4">
@@ -77,6 +92,24 @@ export default function MustSee({ destination = 'Patagonia' }) {
             </div>
           ))}
         </div>
+      )}
+
+      {spots.length > 0 && (
+        <button
+          onClick={() => setSwipeOpen(true)}
+          className="w-full mt-2 py-2 rounded-lg text-xs font-mono"
+          style={{ background: 'transparent', color: 'var(--accent)', border: '1px dashed var(--accent)' }}
+        >
+          ⟷ Swipe Results
+        </button>
+      )}
+
+      {swipeOpen && (
+        <SwipeDeck
+          mode="spot"
+          cards={spotCards}
+          onClose={() => setSwipeOpen(false)}
+        />
       )}
     </div>
   );
