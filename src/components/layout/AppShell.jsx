@@ -11,7 +11,7 @@ export default function AppShell({
   children,
 }) {
   return (
-    <div className="flex min-h-screen" style={{ background: 'var(--bg)' }}>
+    <div className="flex h-screen" style={{ background: 'var(--bg)' }}>
       <Sidebar
         activeTab={activeTab}
         onTabChange={onTabChange}
@@ -21,7 +21,7 @@ export default function AppShell({
         onOpenInspire={onOpenInspire}
         onOpenTactical={onOpenTactical}
       />
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto flex flex-col">
         {children}
       </main>
     </div>
