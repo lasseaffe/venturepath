@@ -2,6 +2,19 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
 import { useLabels } from '../../hooks/useLabels';
+import { useExpedition } from '../../context/ExpeditionContext';
+
+const SECTION_MAP = {
+  OVERVIEW:   'planner',
+  ITINERARY:  'planner',
+  FLIGHTS:    'planner',
+  STAYS:      'planner',
+  LOGISTICS:  'logistics',
+  DISCOVERY:  'discovery',
+  JOURNEY:    'planner',
+  VAULT:      'planner',
+  BOOKING:    'planner',
+};
 
 const NAV_ITEMS = [
   { id: 'OVERVIEW',  icon: '🗺',  label: 'Overview' },
@@ -27,6 +40,7 @@ export default function Sidebar({
   const [collapsed, setCollapsed] = useState(false);
   const { theme, setTheme } = useTheme();
   const labels = useLabels();
+  const { setActiveSection } = useExpedition();
   const isTactical = theme === 'tactical';
 
   return (
@@ -78,7 +92,7 @@ export default function Sidebar({
           return (
             <button
               key={item.id}
-              onClick={() => onTabChange(item.id)}
+              onClick={() => { onTabChange(item.id); setActiveSection(SECTION_MAP[item.id] ?? 'planner'); }}
               className="w-full flex items-center gap-3 px-3 min-h-[44px] transition-colors relative text-left"
               style={{
                 background: isActive ? 'rgba(255,255,255,0.12)' : 'transparent',

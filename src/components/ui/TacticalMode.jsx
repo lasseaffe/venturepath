@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTripStore } from '../../store/useTripStore';
 import { useTheme } from '../../context/ThemeContext';
+import { useExpedition } from '../../context/ExpeditionContext';
 import CompassRing from '../tactical/CompassRing';
 
 const CACHED_MESSAGES = [
@@ -12,12 +13,18 @@ const CACHED_MESSAGES = [
 export default function TacticalMode({ onExit }) {
   const { trip, legs } = useTripStore();
   const { setTheme } = useTheme();
+  const { setActiveSection } = useExpedition();
   const [time, setTime] = useState(new Date());
 
   useEffect(() => {
     setTheme('tactical');
     return () => setTheme('default');
   }, [setTheme]);
+
+  useEffect(() => {
+    setActiveSection('tactical');
+    return () => setActiveSection('planner');
+  }, [setActiveSection]);
   const [coords] = useState({ lat: -50.9423, lng: -73.4068 });
   const [freshness] = useState('14 min ago');
   const [sosReady, setSosReady] = useState(false);
