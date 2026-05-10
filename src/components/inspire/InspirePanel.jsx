@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useInspireData, matchCity } from '../../hooks/useInspireData';
 import ReportButton from './ReportButton.jsx';
 
@@ -15,6 +15,10 @@ export default function InspirePanel({ open, dayLabel, onClose, onAddBlock }) {
   const [selectedCity, setSelectedCity] = useState(null);
 
   const city = selectedCity ?? (open && cities.length ? matchCity(cities, dayLabel) : null);
+
+  useEffect(() => {
+    if (open) setSelectedCity(null);
+  }, [open, dayLabel]);
 
   function handleAddPoi(poi) {
     onAddBlock({
