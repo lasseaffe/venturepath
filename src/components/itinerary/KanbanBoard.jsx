@@ -2,6 +2,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import CulinaryAnchorBlock from './CulinaryAnchorBlock';
 import InspirePanel from '../inspire/InspirePanel';
 import { useExpedition } from '../../context/ExpeditionContext';
+import { geocodeLocation } from '../../utils/geocodeEngine';
 
 const LEDGER_DND_KEY = 'application/vp-ledger-item';
 
@@ -106,6 +107,9 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
   const [newDraft,     setNewDraft]     = useState({ title: '', time: '', category: 'activity', icon: '📍', duration: '', notes: '' });
   const [culinaryAnchor, setCulinaryAnchor] = useState(null); // injected recipe from What's Cooking
   const [inspireDay,    setInspireDay]    = useState(null);  // day object whose Inspire panel is open
+  const [activeStopId,  setActiveStopId]  = useState(null);
+  const [coordsVersion, setCoordsVersion] = useState(0);
+  const coordsRef = useRef(new Map()); // blockId → [lat, lng] | false (failed)
 
   // Read ?culinary= payload on mount and strip it from the URL
   useEffect(() => {
@@ -123,6 +127,30 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
       // malformed payload — ignore
     }
   }, []);
+
+  // Geocode all blocks that don't have coordinates yet
+  useEffect(() => {
+    const allBlocks = days.flatMap(d => d.blocks);
+    const pending = allBlocks.filter(b => !coordsRef.current.has(b.id));
+    if (pending.length === 0) return;
+    let cancelled = false;
+    pending.forEach((block, i) => {
+      setTimeout(async () => {
+        if (cancelled) return;
+        const result = await geocodeLocation(block.title);
+        coordsRef.current.set(block.id, result ? [result.lat, result.lng] : false);
+        if (!cancelled) setCoordsVersion(v => v + 1);
+      }, i * 300);
+    });
+    return () => { cancelled = true; };
+  }, [days]);
+
+  // Scroll the active card into view when activeStopId changes
+  useEffect(() => {
+    if (!activeStopId) return;
+    const el = document.querySelector(`[data-block-id="${activeStopId}"]`);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, [activeStopId]);
 
   const dragState  = useRef(null);
   const columnRefs = useRef(new Map());
@@ -290,6 +318,12 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
   }
 
   // ── Render ────────────────────────────────────────────────────────────────────
+
+  // Build plain object from ref for prop comparison (coordsVersion forces re-read)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const coords = Object.fromEntries(
+    [...coordsRef.current.entries()].filter(([, v]) => Array.isArray(v))
+  );
 
   return (
     <div className="flex flex-col gap-3">
