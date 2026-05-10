@@ -211,6 +211,8 @@ export const BAG_TYPES = {
       [ZONE.FRONT_ZIP]: { label: 'Front Zip',     capacity: 4  },
       [ZONE.LAPTOP]:    { label: 'Laptop Sleeve', capacity: 2  },
     },
+    // front_zip and laptop_sleeve must remain after main in this object so they
+    // render on top in SVG z-order (Object.entries preserves insertion order).
     hitAreas: {
       [ZONE.MAIN]:      { x: 48,  y: 50,  w: 144, h: 160 },
       [ZONE.FRONT_ZIP]: { x: 92,  y: 50,  w: 56,  h: 160 },
@@ -226,7 +228,7 @@ export const BAG_TYPES = {
       lid:     null,
       pockets: [
         { w: 0.25, h: 1.00, d: 0.08, position: [0.18, 0.01, 0.21],  label: 'front_zip' },
-        { w: 0.52, h: 0.30, d: 0.04, position: [0, -0.54, 0.17],    label: 'laptop'    },
+        { w: 0.52, h: 0.30, d: 0.04, position: [0, -0.54, 0.17],    label: 'laptop_sleeve' },
       ],
       handles: [
         { type: 'telescoping', position: [0, 0.66, -0.17] },
