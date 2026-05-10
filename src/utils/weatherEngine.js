@@ -1,3 +1,6 @@
+import sentinelBus from './sentinelBus.js';
+import { fetchWeatherHazards } from './weatherHazardMapper.js';
+
 // WMO weather code → human-readable condition
 const WMO_MAP = {
   0: { label: 'Clear',    icon: '☀️' },
@@ -84,4 +87,16 @@ export function classifyClimate(forecast) {
   const rainyDays = forecast.filter(d => d.label === 'Rain' || d.label === 'Storm').length;
   if (rainyDays >= forecast.length / 2) return 'tropical';
   return 'temperate';
+}
+
+/**
+ * Load weather hazards and emit HAZARD_UPDATED via sentinelBus if hazards detected.
+ * @param {{ lat: number, lng: number }} coords
+ * @returns {Promise<void>}
+ */
+export async function loadAndEmitWeatherHazards(coords) {
+  const hazards = await fetchWeatherHazards(coords);
+  if (hazards.length > 0) {
+    sentinelBus.emit('HAZARD_UPDATED', { hazards });
+  }
 }
