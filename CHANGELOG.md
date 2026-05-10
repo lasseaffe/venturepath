@@ -1,5 +1,57 @@
 # VenturePath — CHANGELOG
 
+## [1.0.0] — 2026-05-10 — Smart Stop Editor: Routing, Proximity Autocomplete, Inspire Me Fix
+
+### Added
+- **`src/utils/routeCache.js`** — Session-lifetime in-memory Map cache for route queries. Key format: `"${fromLat},${fromLng}|${toLat},${toLng}"` (coords rounded to 4dp). Exports `makeCacheKey()`, `getCached()`, `setCached()`. Prevents duplicate ORS API calls for identical coordinate pairs.
+- **`src/utils/routeEngine.js`** — Core routing orchestration layer. Exports:
+  - `haversineKm(a, b)` — Great-circle distance calculation (6371km Earth radius)
+  - `filterModes(distanceKm)` — Intelligently filters travel modes by distance (excludes Flight <1km, excludes Foot/Cycling >500km)
+  - `parseOrsResponse(json, mode)` — Extracts duration (seconds→hours, 1dp) and distance (meters→km, 0dp) from OpenRouteService JSON
+  - `fetchRoutes(fromCoords, toCoords)` — Orchestrates cache check, mode filtering, parallel ORS calls via Promise.all, flight estimation (km/800 + 1.5h), and result caching
+  - Supports ORS profiles: `driving-car`, `foot-walking`, `cycling-regular`
+  - Graceful fallback: if VITE_ORS_API_KEY not set, returns flight estimate only
+- **`src/hooks/useSmartStop.js`** — Central intelligence hook for StopEditor. Manages:
+  - `getVisitDurationSuggestion(placeType)` — Regex-based place type→visit duration mapping (Museum→2.5h, Restaurant→1.5h, Bar→2h, Park/Hiking→3h, Landmark→1.5h, Hotel→null for manual entry)
+  - `useSmartStop(trip)` hook returns: fromQuery, toQuery, setFromQuery, setToQuery, fromResults, toResults, fromSearching, toSearching, pickFrom, pickTo, routes, loadingRoutes, visitDurationSuggestion
+  - Resolves trip destination coords once on mount via geocodeLocation
+  - Debounces autocomplete (400ms) with proximity ranking vs trip destination
+  - Triggers route fetch on pickTo, pre-fills mode suggestions and duration hint
+  - All callbacks wrapped in useCallback for stable references
+- **Test suites** — Full coverage with 21 passing tests:
+  - `src/utils/routeCache.test.js` (3 tests) — Cache get/set/key rounding behavior
+  - `src/utils/routeEngine.test.js` (8 tests) — Haversine, mode filtering, ORS parsing, flight estimation
+  - `src/utils/stopSearchEngine.test.js` (3 tests) — Proximity ranking closest-first, null-coord passthrough
+  - `src/hooks/useSmartStop.test.js` (7 tests) — Visit duration suggestion mapping for all place types
+
+### Changed
+- **`src/utils/stopSearchEngine.js`** — Complete refactor:
+  - Added `rankByProximity(results, refCoords)` — Haversine-based proximity sort vs reference coordinate
+  - Updated `searchStops(query, nearCity='', destCoords=null)` signature; both Foursquare and Nominatim results now ranked by proximity to trip destination if destCoords provided
+  - Results without coords sort to end (Infinity distance); null refCoords returns original array
+- **`src/hooks/useNearbySearch.js`** — Fixed stale closure bug and simplified Inspire me:
+  - Added `anchorRef` with useEffect sync to always read current anchor value
+  - Rewrote `search` useCallback to read from `anchorRef.current` instead of closure; reduced deps to `[category]`
+  - Removed entire AI override logic: `callInspireAI`, `ANTHROPIC_KEY`, `FALLBACK_KINDS`, `inspireLabel` state
+  - Simplified `inspire()` to `await search(category)` — now respects selected category on current anchor, no AI surprise override
+- **`src/components/nearby/NearbyDrawer.jsx`** — Removed `inspireLabel` reference; button text simplified to static `'✨ Inspire me'`
+- **`src/components/trip/StopEditor.jsx`** — Complete refactor to use useSmartStop:
+  - Added `MODE_META` object mapping modes to icon/label (car→🚗, flight→✈, train→🚆, boat→⛵, etc.)
+  - Added `ModeRow` component rendering mode comparison table rows with icon, label, duration, distance (or "manual" fallback)
+  - Added `SkeletonModeRow` for loading animation (3 skeleton rows while routes fetch)
+  - Conditional mode UI: skeleton rows while `loadingRoutes`, mode comparison table when `routes.length > 0`, pill buttons fallback
+  - `handleModeRowSelect(route)` pre-fills durationH and distanceKm when route has data
+  - Duration field now uses `placeholder={smart.visitDurationSuggestion}`
+  - All coordinate handling and autocomplete logic delegated to useSmartStop hook
+- **`.env.example`** — Added VITE_ORS_API_KEY documentation with signup link and fallback behavior description
+
+### Why This Fixes the Five UX Failures
+1. **Non-proximity autocomplete** → `rankByProximity()` sorts results by haversine distance to trip destination; closest results appear first
+2. **Inspire me ignoring category** → Removed stale closure bug; `inspire()` now reads anchor from ref and searches with currently selected category
+3. **Static travel mode pills** → Mode comparison table with real route data; filterModes intelligently excludes irrelevant modes (Flight for same-city, Foot/Cycling for long-distance)
+4. **Blank duration/distance** → getVisitDurationSuggestion provides placeholder for visit time; fetchRoutes pre-fills transit duration when user selects mode row
+5. **No route data** → Integrated OpenRouteService with parallel mode fetching, session caching, and graceful fallback to flight estimation
+
 ## [0.9.1] — 2026-05-10 — Environment Variable Documentation
 
 ### Added
