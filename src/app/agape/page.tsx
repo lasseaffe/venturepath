@@ -186,7 +186,7 @@ export default function AgapePage() {
   const [shareUrl, setShareUrl] = useState("");
   const [incomingSession, setIncomingSession] = useState(false);
   const [myEcho, setMyEcho] = useState<EchoId | null>(null);
-  const [partnerEcho, setPartnerEcho] = useState<EchoId | null>(null);
+  const [partnerEcho, setPartnerEcho] = useState<EchoId | ConfessionsEchoId | null>(null);
   const [reported, setReported] = useState(false);
   // Confessions state
   const [activeCategory, setActiveCategory] = useState<'gospel' | 'confessions'>('gospel');
@@ -264,7 +264,7 @@ export default function AgapePage() {
     setTimeout(() => {
       if (activeCategory === 'confessions') {
         const echoes: ConfessionsEchoId[] = ["seen", "same", "heard", "growing"];
-        setPartnerEcho(echoes[Math.floor(Math.random() * echoes.length)] as unknown as EchoId);
+        setPartnerEcho(echoes[Math.floor(Math.random() * echoes.length)]);
       } else {
         const echoes: EchoId[] = ["peace", "testimony", "prayer", "gratitude"];
         setPartnerEcho(echoes[Math.floor(Math.random() * echoes.length)]);
@@ -520,11 +520,21 @@ export default function AgapePage() {
   }
 
   // ── COMMUNITY PICK ─────────────────────────────────────────────
-  if (screen === "community-pick") return (
+  if (screen === "community-pick") {
+    const isConfessions = activeCategory === 'confessions';
+    const backColor = isConfessions ? '#7A6A4A' : '#B07A9A';
+    const cardBorder = isConfessions ? '#E0D5C0' : '#DDD5DD';
+    const badgeBg = isConfessions ? '#FFF5E8' : '#F0EDF8';
+    const badgeColor = isConfessions ? '#7A4A0A' : '#7A5A9A';
+    const iconBg = isConfessions ? '#F5F0E8' : '#F5EBF5';
+    const iconColor = isConfessions ? '#8A6A3A' : '#A05A8A';
+    const linkColor = isConfessions ? '#8A6A3A' : '#A05A8A';
+
+    return (
     <div className="min-h-screen px-4 py-16 flex items-center justify-center"
       style={{ background: "linear-gradient(160deg, #FDFAF5 0%, #FDF0F8 100%)" }}>
       <div className="max-w-lg w-full">
-        <button onClick={reset} className="flex items-center gap-1 text-sm mb-8" style={{ color: "#B07A9A" }}>
+        <button onClick={reset} className="flex items-center gap-1 text-sm mb-8" style={{ color: backColor }}>
           <ChevronLeft size={16} /> Back
         </button>
         <h2 className="text-2xl font-bold mb-2" style={{ color: "#2D1A2D" }}>Choose a community</h2>
@@ -534,32 +544,33 @@ export default function AgapePage() {
           {MOCK_COMMUNITIES.map((c) => (
             <button key={c.id} onClick={() => setScreen("answering")}
               className="flex items-center justify-between rounded-2xl border px-5 py-4 text-left transition-all hover:shadow-md"
-              style={{ background: "#FEFCFF", borderColor: "#DDD5DD" }}>
+              style={{ background: "#FEFCFF", borderColor: cardBorder }}>
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: "#F5EBF5" }}>
-                  <Users size={16} style={{ color: "#A05A8A" }} />
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: iconBg }}>
+                  <Users size={16} style={{ color: iconColor }} />
                 </div>
                 <div>
                   <p className="text-sm font-semibold" style={{ color: "#2D1A2D" }}>{c.name}</p>
                   <p className="text-xs" style={{ color: "#B09AB0" }}>{c.members} members</p>
                 </div>
               </div>
-              <span className="text-xs font-semibold px-3 py-1 rounded-full" style={{ background: "#F0EDF8", color: "#7A5A9A" }}>
+              <span className="text-xs font-semibold px-3 py-1 rounded-full" style={{ background: badgeBg, color: badgeColor }}>
                 Invite →
               </span>
             </button>
           ))}
         </div>
 
-        <div className="mt-6 rounded-xl border p-4 text-center" style={{ background: "#FDFAF5", borderColor: "#DDD5DD" }}>
+        <div className="mt-6 rounded-xl border p-4 text-center" style={{ background: "#FDFAF5", borderColor: cardBorder }}>
           <p className="text-sm" style={{ color: "#9A7A9A" }}>Not in any communities yet?</p>
-          <Link href="/communities" className="text-sm font-semibold mt-1 inline-block" style={{ color: "#A05A8A" }}>
+          <Link href="/communities" className="text-sm font-semibold mt-1 inline-block" style={{ color: linkColor }}>
             Browse communities →
           </Link>
         </div>
       </div>
     </div>
-  );
+    );
+  }
 
   // ── ANSWERING ──────────────────────────────────────────────────
   if (screen === "answering") {
