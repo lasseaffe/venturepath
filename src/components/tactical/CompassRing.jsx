@@ -13,7 +13,7 @@ export default function CompassRing({ stops }) {
     watchRef.current = navigator.geolocation.watchPosition(
       pos => setCurrentPos({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
       null,
-      { maximumAge: 5000 }
+      { maximumAge: 0, timeout: 5000 }
     );
     return () => navigator.geolocation.clearWatch(watchRef.current);
   }, []);
@@ -36,6 +36,15 @@ export default function CompassRing({ stops }) {
 
   const stop = stops[stopIndex % stops.length];
   const stopCoords = stop.coords ?? { lat: stop.lat, lng: stop.lng };
+
+  if (!stopCoords?.lat || !stopCoords?.lng) {
+    return (
+      <div className="flex items-center justify-center w-40 h-40 rounded-full border-2 border-[#F2A900]/30 text-[#F2A900] font-mono text-xs text-center">
+        Stop coords unavailable
+      </div>
+    );
+  }
+
   const deg = bearing(currentPos, stopCoords);
   const distKm = haversineKm(currentPos, stopCoords);
   const cardinal = cardinalLabel(deg);

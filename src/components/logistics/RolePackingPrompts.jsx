@@ -37,7 +37,12 @@ export default function RolePackingPrompts({ role }) {
               </>
             ) : (
               <>
-                <span className={`font-mono text-sm ${prompt.critical ? 'text-white' : 'text-[#D9C5B2]'}`}>{prompt.label}</span>
+                <span className={`font-mono text-sm flex items-center gap-1 ${prompt.critical ? 'text-white' : 'text-[#D9C5B2]'}`}>
+                  {prompt.critical && (
+                    <span className="inline-block w-2 h-2 rounded-full bg-[#E67E22] animate-pulse" />
+                  )}
+                  {prompt.label}
+                </span>
                 <input
                   type="date"
                   value={dates[prompt.label] ?? ''}
