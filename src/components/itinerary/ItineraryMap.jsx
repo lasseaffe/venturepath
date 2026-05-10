@@ -2,6 +2,9 @@
 import { useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
+import { useCategoryLayers } from '../../utils/useCategoryLayers';
+import MapLayerController from '../map/MapLayerController';
+import RadarHUD from '../map/RadarHUD';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -50,8 +53,9 @@ function MapController({ activeStopId, coords, markerRefs }) {
   return null;
 }
 
-export default function ItineraryMap({ days, coords, activeStopId, onPinClick }) {
+export default function ItineraryMap({ days, coords, activeStopId, onPinClick, pois = [] }) {
   const markerRefs = useRef(new Map());
+  const { activeLayers } = useCategoryLayers();
 
   // Flatten all blocks with a sequential global number
   const allBlocks = [];
@@ -67,6 +71,12 @@ export default function ItineraryMap({ days, coords, activeStopId, onPinClick })
   const mappable = allBlocks.filter(({ block }) => Array.isArray(coords[block.id]));
 
   const hasAny = mappable.length > 0;
+
+  // Determine current center: active stop's coords, or first mappable stop, or world center
+  const currentLegCoords =
+    (activeStopId && Array.isArray(coords[activeStopId]) ? coords[activeStopId] : null) ??
+    (mappable.length > 0 ? coords[mappable[0].block.id] : null) ??
+    [20, 0];
 
   return (
     <div style={{ marginTop: '16px' }}>
@@ -113,6 +123,7 @@ export default function ItineraryMap({ days, coords, activeStopId, onPinClick })
             coords={coords}
             markerRefs={markerRefs}
           />
+          <MapLayerController pois={pois} activeLayers={activeLayers} />
           {mappable.map(({ block, num: n }) => {
             const latLng = coords[block.id];
             const color = CATEGORY_COLORS[block.category] ?? CATEGORY_COLORS.default;
@@ -139,6 +150,7 @@ export default function ItineraryMap({ days, coords, activeStopId, onPinClick })
             );
           })}
         </MapContainer>
+        <RadarHUD pois={pois} center={currentLegCoords} activeLayers={activeLayers} />
       </div>
     </div>
   );

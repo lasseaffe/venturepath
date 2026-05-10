@@ -1,15 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
-import { searchPlaces, searchByCategory, getInspireQuery, FSQ_CATEGORIES } from '../../utils/foursquareEngine';
-
-const CATEGORY_PILLS = [
-  { label: 'All',         id: null,                   icon: '🔍' },
-  { label: 'Hotels',      id: FSQ_CATEGORIES.hotels,      icon: '🏨' },
-  { label: 'Restaurants', id: FSQ_CATEGORIES.restaurants, icon: '🍽' },
-  { label: 'Bars',        id: FSQ_CATEGORIES.bars,        icon: '🍸' },
-  { label: 'Attractions', id: FSQ_CATEGORIES.attractions, icon: '🏛' },
-  { label: 'Cafés',       id: FSQ_CATEGORIES.cafes,       icon: '☕' },
-  { label: 'Shopping',    id: FSQ_CATEGORIES.shopping,    icon: '🏪' },
-];
+import { searchPlaces, searchByCategory, getInspireQuery } from '../../utils/foursquareEngine';
+import { POI_CATEGORIES } from '../../utils/poiCategories';
 
 export default function PlaceSearchPanel({ open, nearCity = '', onClose, onAddToItinerary }) {
   const [query, setQuery] = useState('');
@@ -117,18 +108,31 @@ export default function PlaceSearchPanel({ open, nearCity = '', onClose, onAddTo
 
         {/* Category pills */}
         <div className="px-4 py-2 flex gap-1.5 flex-wrap shrink-0" style={{ borderBottom: '1px solid #1e2328' }}>
-          {CATEGORY_PILLS.map(c => (
+          {/* All pill */}
+          <button
+            key="all"
+            onClick={() => handleCategory(null)}
+            className="text-[8px] font-mono px-2 py-1 rounded border transition-colors tracking-widest"
+            style={{
+              background: category === null ? 'rgba(230,126,34,0.15)' : 'transparent',
+              borderColor: category === null ? 'rgba(230,126,34,0.5)' : '#1e2328',
+              color: category === null ? '#E67E22' : '#4b5563',
+            }}
+          >
+            🔍 ALL
+          </button>
+          {POI_CATEGORIES.map(cat => (
             <button
-              key={c.label}
-              onClick={() => handleCategory(c.id)}
+              key={cat.id}
+              onClick={() => handleCategory(cat.id)}
               className="text-[8px] font-mono px-2 py-1 rounded border transition-colors tracking-widest"
               style={{
-                background: category === c.id ? 'rgba(230,126,34,0.15)' : 'transparent',
-                borderColor: category === c.id ? 'rgba(230,126,34,0.5)' : '#1e2328',
-                color: category === c.id ? '#E67E22' : '#4b5563',
+                background: category === cat.id ? `${cat.color}26` : 'transparent',
+                borderColor: category === cat.id ? `${cat.color}80` : '#1e2328',
+                color: category === cat.id ? cat.color : '#4b5563',
               }}
             >
-              {c.icon} {c.label.toUpperCase()}
+              {cat.icon} {cat.label.toUpperCase()}
             </button>
           ))}
         </div>
