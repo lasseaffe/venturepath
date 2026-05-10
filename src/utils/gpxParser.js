@@ -6,21 +6,10 @@
 
 // Use xmldom for robust XML parsing - it works in both Node and browsers
 // eslint-disable-next-line import/no-unresolved
-import { DOMParser as XMLDOMParser } from '@xmldom/xmldom';
-
-// Fallback to global DOMParser if xmldom is not available
-const getParser = () => {
-  try {
-    return XMLDOMParser;
-  } catch {
-    return DOMParser;
-  }
-};
-
-const Parser = getParser();
+import { DOMParser } from '@xmldom/xmldom';
 
 export function parseGpx(gpxString) {
-  const parser = new Parser();
+  const parser = new DOMParser();
   const doc = parser.parseFromString(gpxString, 'application/xml');
   const points = [...doc.getElementsByTagName('trkpt')];
 
