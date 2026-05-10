@@ -43,6 +43,17 @@ export function SwipeDeck({ mode, cards, onClose }: SwipeDeckProps) {
 
   const activeCard = deck[0] ?? null;
 
+  // Refs to avoid stale closures in memoized callbacks
+  const activeCardRef = useRef<AnyCard | null>(null);
+  const tripRef = useRef(trip);
+  const legsRef = useRef(legs);
+  const poolRef = useRef(pool);
+
+  activeCardRef.current = activeCard;
+  tripRef.current = trip;
+  legsRef.current = legs;
+  poolRef.current = pool;
+
   // Recycle passed cards when deck empties
   useEffect(() => {
     if (deck.length === 0 && passed.length > 0) {
@@ -59,10 +70,10 @@ export function SwipeDeck({ mode, cards, onClose }: SwipeDeckProps) {
   function resolveRightAction(card: AnyCard): boolean {
     try {
       if (mode === 'expedition' && isExpedition(card)) {
-        const hasSquad = legs.length > 0;
-        const hasTrip = !!trip?.name;
+        const hasSquad = legsRef.current.length > 0;
+        const hasTrip = !!tripRef.current?.name;
         if (hasSquad) {
-          const alreadyVetoed = pool.find(p => p.id === card.id && p.status === 'rejected');
+          const alreadyVetoed = poolRef.current.find(p => p.id === card.id && p.status === 'rejected');
           if (alreadyVetoed) {
             showToast('This expedition was vetoed by your Squad.');
             return false;
@@ -80,9 +91,9 @@ export function SwipeDeck({ mode, cards, onClose }: SwipeDeckProps) {
       }
 
       if ((mode === 'spot' || mode === 'filtered') && !isExpedition(card)) {
-        const hasTrip = !!trip?.name;
-        if (hasTrip && legs.length > 0) {
-          const activeLegId = legs[legs.length - 1].id;
+        const hasTrip = !!tripRef.current?.name;
+        if (hasTrip && legsRef.current.length > 0) {
+          const activeLegId = legsRef.current[legsRef.current.length - 1].id;
           appendObjectiveItem(activeLegId, card.name);
           showToast(`"${card.name}" added to Leg objectives`);
         } else {
@@ -112,6 +123,11 @@ export function SwipeDeck({ mode, cards, onClose }: SwipeDeckProps) {
     (e.currentTarget as HTMLDivElement).setPointerCapture(e.pointerId);
   }, []);
 
+  const onPointerCancel = useCallback(() => {
+    deltaX.current = 0;
+    setDrag(0);
+  }, []);
+
   const onPointerMove = useCallback((e: React.PointerEvent) => {
     if (!(e.currentTarget as HTMLDivElement).hasPointerCapture(e.pointerId)) return;
     deltaX.current = e.clientX - startX.current;
@@ -120,35 +136,41 @@ export function SwipeDeck({ mode, cards, onClose }: SwipeDeckProps) {
 
   const onPointerUp = useCallback(() => {
     const dx = deltaX.current;
+    deltaX.current = 0;
     if (Math.abs(dx) > SWIPE_THRESHOLD) {
       const dir = dx > 0 ? 'right' : 'left';
-      setFlying(dir);
-      setTimeout(() => {
-        setDrag(0);
-        setFlying(null);
-        if (!activeCard) return;
-        if (dir === 'right') {
-          const ok = resolveRightAction(activeCard);
-          if (!ok) {
-            setDeck(d => d);
-            return;
-          }
-          record(activeCard.id, mode, 'right', activeCard.tags);
+      if (dir === 'right') {
+        const card = activeCardRef.current;
+        if (!card) { setDrag(0); return; }
+        const ok = resolveRightAction(card);
+        if (!ok) { setDrag(0); return; }
+        // action succeeded — now animate
+        record(card.id, mode, 'right', card.tags);
+        setFlying('right');
+        setTimeout(() => {
+          setDrag(0);
+          setFlying(null);
           setDeck(d => d.slice(1));
-        } else {
-          record(activeCard.id, mode, 'left', activeCard.tags);
-          setPassed(p => [...p, activeCard]);
+        }, 320);
+      } else {
+        const card = activeCardRef.current;
+        if (!card) { setDrag(0); return; }
+        record(card.id, mode, 'left', card.tags);
+        setPassed(p => [...p, card]);
+        setFlying('left');
+        setTimeout(() => {
+          setDrag(0);
+          setFlying(null);
           setDeck(d => d.slice(1));
-        }
-      }, 320);
+        }, 320);
+      }
     } else {
       setDrag(0);
     }
-    deltaX.current = 0;
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeCard, mode]);
+  }, [mode]);
 
-  const rotate = drag * 0.07;
+  const rotate = Math.max(-15, Math.min(15, drag * 0.07));
   const swipeRightVisible = drag > 30 || flying === 'right';
   const swipeLeftVisible = drag < -30 || flying === 'left';
 
@@ -202,6 +224,7 @@ export function SwipeDeck({ mode, cards, onClose }: SwipeDeckProps) {
                 onPointerDown={isActive ? onPointerDown : undefined}
                 onPointerMove={isActive ? onPointerMove : undefined}
                 onPointerUp={isActive ? onPointerUp : undefined}
+                onPointerCancel={isActive ? onPointerCancel : undefined}
               >
                 {isActive && swipeRightVisible && (
                   <div className="absolute inset-0 rounded-3xl z-20 flex items-start justify-start p-6 pointer-events-none" style={{ background: 'rgba(230,126,34,0.18)' }}>
@@ -237,7 +260,7 @@ export function SwipeDeck({ mode, cards, onClose }: SwipeDeckProps) {
 
       {deck.length > 0 && (
         <p className="text-center text-xs pb-4" style={{ color: '#D9C5B2', fontFamily: 'JetBrains Mono, monospace' }}>
-          ← pass · nominate →
+          {`← pass · ${mode === 'expedition' ? 'nominate' : 'add stop'} →`}
         </p>
       )}
     </div>
