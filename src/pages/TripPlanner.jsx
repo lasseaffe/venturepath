@@ -118,15 +118,10 @@ export default function TripPlanner({ onBackToDashboard }) {
           {/* Tab content */}
           <div className="p-6">
             {tab === 'OVERVIEW' && (
-              <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-                <div className="lg:col-span-3 space-y-4">
-                  <RouteMap />
-                  <TimelinePath />
-                  <SafetyPulse destinationId="patagonia" center={[-51.6, -72.7]} zoom={8} />
-                </div>
-                <div className="space-y-4">
-                  <PackingManifest climate={manifestSettings.climate} days={manifestSettings.days} />
-                </div>
+              <div className="space-y-4">
+                <RouteMap />
+                <TimelinePath />
+                <SafetyPulse destinationId="patagonia" center={[-51.6, -72.7]} zoom={8} />
               </div>
             )}
 
@@ -156,13 +151,9 @@ export default function TripPlanner({ onBackToDashboard }) {
 
             {tab === 'LOGISTICS' && (
               <div className="space-y-4 max-w-5xl">
+                <PackingManifest climate={manifestSettings.climate} days={manifestSettings.days} />
                 <BentoPacker climate={manifestSettings.climate} days={manifestSettings.days} />
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                  <div className="lg:col-span-2">
-                    <PackingManifest climate={manifestSettings.climate} days={manifestSettings.days} />
-                  </div>
-                  <PackingEngine />
-                </div>
+                <PackingEngine />
                 <VehicleSearch distanceKm={legs.reduce((s, l) => s + l.distanceKm, 0)} />
               </div>
             )}

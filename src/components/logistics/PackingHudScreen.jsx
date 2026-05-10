@@ -48,7 +48,7 @@ export default function PackingHudScreen({
   }, []);
 
   return (
-    <div className="tactical-panel p-5 h-full flex flex-col gap-4">
+    <div className="tactical-panel p-5 flex flex-col gap-4" style={{ minHeight: 520 }}>
       <div className="flex items-center justify-between">
         <h2 className="label-tag">Packing Manifest</h2>
         <span className="text-[10px] font-mono text-slate-500">
