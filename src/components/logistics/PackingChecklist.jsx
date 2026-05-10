@@ -1,18 +1,33 @@
 // src/components/logistics/PackingChecklist.jsx
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useDraggable } from '@dnd-kit/core';
 import { groupByCategory } from '../../utils/packingLogic';
 import { useDragCtx } from './bag/DragContext';
 
-// Literal zone → which categories live there (mirrors bagZones CATEGORY_TO_LITERAL)
-const ZONE_TO_CATS = {
+// All item categories that can appear in the checklist
+const ALL_CATEGORIES = ['Shelter & Sleep', 'Food & Water', 'Clothing', 'Medical', 'Navigation', 'Base Camp', 'Tech & Power'];
+
+// Build zone → categories inverse from a bagType's defaultZoneForCategory function.
+// Falls back to the backpack mapping when bagType is not yet available.
+const BACKPACK_ZONE_TO_CATS = {
   main:         ['Shelter & Sleep', 'Food & Water', 'Clothing'],
   top_lid:      ['Medical', 'Navigation'],
   front_pocket: ['Base Camp'],
   hip_belt:     ['Tech & Power'],
   side_pocket:  [],
 };
+
+function buildZoneToCats(bagType) {
+  if (!bagType?.defaultZoneForCategory) return BACKPACK_ZONE_TO_CATS;
+  const map = {};
+  ALL_CATEGORIES.forEach(cat => {
+    const zoneId = bagType.defaultZoneForCategory(cat);
+    if (!map[zoneId]) map[zoneId] = [];
+    map[zoneId].push(cat);
+  });
+  return map;
+}
 
 function DraggableItem({ item, packed, onToggle }) {
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({ id: item.id });
@@ -94,6 +109,8 @@ export default function PackingChecklist({
   activeBagType,
   activeBagLabel,
 }) {
+  const zoneToCats = useMemo(() => buildZoneToCats(activeBagType), [activeBagType]);
+
   const [collapsed, setCollapsed] = useState({});
   const [flashing, setFlashing] = useState([]);
   const collapsedRef = useRef(collapsed);
@@ -103,7 +120,7 @@ export default function PackingChecklist({
 
   useEffect(() => {
     if (!highlightedZone) return;
-    const cats = ZONE_TO_CATS[highlightedZone] ?? [];
+    const cats = zoneToCats[highlightedZone] ?? [];
     if (!cats.length) return;
     setCollapsed(prev => {
       const next = { ...prev };
@@ -113,7 +130,7 @@ export default function PackingChecklist({
     setFlashing(cats);
     const t = setTimeout(() => setFlashing([]), 1500);
     return () => clearTimeout(t);
-  }, [highlightedZone]);
+  }, [highlightedZone, zoneToCats]);
 
   useEffect(() => {
     if (!hoveredZone) {
@@ -125,7 +142,7 @@ export default function PackingChecklist({
       }
       return;
     }
-    const cats = ZONE_TO_CATS[hoveredZone] ?? [];
+    const cats = zoneToCats[hoveredZone] ?? [];
     if (!cats.length) return;
     // only auto-expand cats that are currently collapsed (not already open)
     const toExpand = cats.filter(c => collapsedRef.current[c] !== false);
@@ -139,7 +156,7 @@ export default function PackingChecklist({
       toExpand.forEach(c => { next[c] = false; });
       return next;
     });
-  }, [hoveredZone]);
+  }, [hoveredZone, zoneToCats]);
 
   const grouped = groupByCategory(items);
 
@@ -171,7 +188,7 @@ export default function PackingChecklist({
         {Object.entries(grouped).map(([cat, catItems]) => {
           const catPacked = catItems.filter(i => packed[i.id]).length;
           const isCollapsed = collapsed[cat];
-          const isHoverHighlighted = hoveredZone && (ZONE_TO_CATS[hoveredZone] ?? []).includes(cat);
+          const isHoverHighlighted = hoveredZone && (zoneToCats[hoveredZone] ?? []).includes(cat);
           const isClickFlashing = flashing.includes(cat);
           return (
             <div key={cat}>

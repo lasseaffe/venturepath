@@ -13,7 +13,7 @@ export default function BagHud({ bag, bagType, zoneMap, packed, onZoneClick, onZ
   const [viewMode, setViewMode] = useState(
     () => {
       const stored = localStorage.getItem(`bagHud_viewMode_${bag.id}`);
-      return (stored === '3d' || !stored) ? '2d' : stored;
+      return stored === '3dmodel' ? '3dmodel' : '2d';
     }
   );
   const [activeSkin, setActiveSkin] = useState(
@@ -96,7 +96,13 @@ export default function BagHud({ bag, bagType, zoneMap, packed, onZoneClick, onZ
           />
         )}
         {viewMode === '3dmodel' && (
-          <Bag3DModel bagType={bagType} activeSkin={activeSkin} />
+          <Bag3DModel
+            bagType={bagType}
+            activeSkin={activeSkin}
+            zoneMap={zoneMap}
+            packed={packed}
+            onZoneClick={onZoneClick}
+          />
         )}
       </div>
 
