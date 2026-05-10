@@ -3,8 +3,9 @@ const listeners = new Map();
 const sentinelBus = {
   on(eventType, handler) {
     if (!listeners.has(eventType)) listeners.set(eventType, new Set());
-    listeners.get(eventType).add(handler);
-    return () => listeners.get(eventType)?.delete(handler);
+    const set = listeners.get(eventType);
+    set.add(handler);
+    return () => set.delete(handler);
   },
 
   emit(eventType, payload) {
