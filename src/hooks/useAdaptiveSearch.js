@@ -46,10 +46,12 @@ export function useAdaptiveSearch(strategy, destination, userRole, climate) {
     }
   }, [query, strategy, destination, userRole, climate]);
 
-  // Synchronous clear — no setTimeout, ensures test assertions pass immediately
   const handleBlur = useCallback(() => {
-    setResults([]);
-    setInspireResults([]);
+    // Delay allows chip/row click events to fire before clearing state
+    setTimeout(() => {
+      setResults([]);
+      setInspireResults([]);
+    }, 200);
   }, []);
 
   const setQuery = useCallback((val) => {

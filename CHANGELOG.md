@@ -2,7 +2,26 @@
 
 ## [Unreleased] — 2026-05-10 — Sentinel Triggers, Architect AI, After-Action
 
+### Journey slideshow components
+- GpxImporter: .gpx file input → parseGpx → matchGpxToPhotos → dispatch SET_JOURNEY_DATA + emit BREADCRUMB_UPDATED; shows match count report
+- StatOverlay: ALT/HR/TEMP/TIME HUD over each photo; fetches altitude via elevationService when GPX alt is absent
+- JourneySlideshow: left/right arrow navigation; emits PHOTO_ACTIVE on sentinelBus on each photo change; renders StatOverlay
+
+### JourneyMap3D
+- Mapbox GL JS 3D terrain map (dark-v11, pitch 45°)
+- Breadcrumb trail with altitude gradient (Sandstone low → Ember high)
+- Photo pin markers; clicking a pin emits PHOTO_ACTIVE to sync slideshow
+- Listens to PHOTO_ACTIVE → flyTo photo coords; BREADCRUMB_UPDATED → redraws trail
+- Graceful placeholder when VITE_MAPBOX_TOKEN is absent
+
 ### Added
+
+### RolePackingPrompts
+- Role-keyed advisory checklist inserted above item list in PackingManifest
+- LEADER: permit status check, squad readiness summary
+- SCOUT: power bank, local SIM, offline maps checkboxes
+- MEDIC: first aid kit expiry date inputs, local emergency numbers
+- Critical items pulse in Ember #E67E22 until checked
 
 ### CompassRing HUD
 - Floating compass dial in TacticalMode pointing toward next confirmed Stop
@@ -239,3 +258,8 @@
 - `LaunchSequence.jsx` — 5-step terminal boot animation
 - `packingLogic.js`, `weatherEngine.js`, `destinationEngine.js` — Utility engines
 - Agent logs: head_chef, architect, artisan, aesthetic-lead, motion-designer
+
+### TripPlanner wiring (Tasks 15-16)
+- VAULT tab: VaultHub document library accessible from TripPlanner
+- BOOKING tab: BookingMatrix mission-goal search accessible from TripPlanner
+- Journey view: GpxImporter + JourneySlideshow + JourneyMap3D integrated into Journey tab

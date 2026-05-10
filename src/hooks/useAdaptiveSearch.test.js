@@ -67,6 +67,8 @@ describe('useAdaptiveSearch', () => {
     await act(async () => { result.current.handleFocus(); });
     expect(result.current.inspireResults.length).toBeGreaterThanOrEqual(0);
     act(() => { result.current.handleBlur(); });
+    // handleBlur clears state asynchronously via setTimeout, wait for it
+    await act(async () => { await new Promise(resolve => setTimeout(resolve, 250)); });
     expect(result.current.results).toEqual([]);
     expect(result.current.inspireResults).toEqual([]);
   });
