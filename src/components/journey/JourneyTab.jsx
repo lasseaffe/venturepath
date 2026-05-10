@@ -2,7 +2,7 @@ import { useState } from 'react';
 import StudioView from './studio/StudioView';
 import TourView from './tour/TourView';
 import JourneyMap3D from './JourneyMap3D';
-import JourneySlideshow from './JourneySlideshow';
+import LegacySlideshow from './legacy/LegacySlideshow';
 import GpxImporter from './GpxImporter';
 import { useTripStore } from '../../store/useTripStore';
 
@@ -40,7 +40,7 @@ export default function JourneyTab() {
         {mode === 'MAP' && (
           <div className="space-y-4 p-4">
             <GpxImporter />
-            <JourneySlideshow photos={photos} />
+            <LegacySlideshow />
             <JourneyMap3D breadcrumbs={breadcrumbs} photos={photos} />
           </div>
         )}
