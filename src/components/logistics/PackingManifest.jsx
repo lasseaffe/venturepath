@@ -5,6 +5,7 @@ import { buildInsights } from '../../utils/architectEngine.js';
 import InsightCard from '../ui/InsightCard.jsx';
 import { useTripStore } from '../../store/useTripStore.jsx';
 import RolePackingPrompts from './RolePackingPrompts';
+import DocumentManifest from '../vault/DocumentManifest';
 
 export default function PackingManifest({ climate = 'temperate', days = 7, hasChildren = false }) {
   const { addInsight, architect, userRole } = useTripStore();
@@ -199,6 +200,8 @@ export default function PackingManifest({ climate = 'temperate', days = 7, hasCh
           </div>
         ))}
       </div>
+
+      <DocumentManifest />
     </div>
   );
 }
