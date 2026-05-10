@@ -150,11 +150,8 @@ export default function TripPlanner({ onBackToDashboard }) {
             )}
 
             {tab === 'LOGISTICS' && (
-              <div className="space-y-4 max-w-5xl">
+              <div className="space-y-4">
                 <PackingManifest climate={manifestSettings.climate} days={manifestSettings.days} />
-                <BentoPacker climate={manifestSettings.climate} days={manifestSettings.days} />
-                <PackingEngine />
-                <VehicleSearch distanceKm={legs.reduce((s, l) => s + l.distanceKm, 0)} />
               </div>
             )}
 
@@ -197,7 +194,14 @@ export default function TripPlanner({ onBackToDashboard }) {
         )}
       </AnimatePresence>
 
-      <SettingsPanel open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+      <SettingsPanel
+        open={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+        onLaunchWizard={() => {
+          setSettingsOpen(false);
+          window.location.assign('/expedition/new/welcome');
+        }}
+      />
     </>
   );
 }
