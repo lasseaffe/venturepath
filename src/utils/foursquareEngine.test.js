@@ -33,4 +33,14 @@ describe('filterOtmResults', () => {
   it('returns empty array for empty input', () => {
     expect(filterOtmResults([])).toEqual([]);
   });
+
+  it('removes results whose kinds include only burial_places (parent kind without child kind)', () => {
+    const input = [
+      { id: 'a', name: 'Grave plot', kinds: 'burial_places,interesting_places' },
+      { id: 'b', name: 'Museum',     kinds: 'cultural,museums,interesting_places' },
+    ];
+    const out = filterOtmResults(input);
+    expect(out).toHaveLength(1);
+    expect(out[0].id).toBe('b');
+  });
 });

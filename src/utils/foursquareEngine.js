@@ -4,7 +4,7 @@ const OTM_KEY = import.meta.env.VITE_OTM_API_KEY ?? '';
 const BASE = 'https://api.opentripmap.com/0.1/en/places';
 
 // Block memorials and burial markers (Stolpersteine, grave markers) from stop suggestions
-const BLOCKED_OTM_KINDS = new Set(['monuments_and_memorials', 'other_burial_places']);
+const BLOCKED_OTM_KINDS = new Set(['monuments_and_memorials', 'burial_places', 'other_burial_places']);
 
 export function filterOtmResults(results) {
   return results.filter(r => {
