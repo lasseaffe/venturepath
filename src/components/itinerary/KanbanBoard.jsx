@@ -7,6 +7,8 @@ import CategoryIcon from './CategoryIcon';
 import { geocodeLocation } from '../../utils/geocodeEngine';
 import { wikidataFetch } from '../../utils/wikidataEngine';
 import BlockHub from './BlockHub';
+import useLocationSearch from '../../hooks/useLocationSearch';
+import { useInspireData, matchCity } from '../../hooks/useInspireData';
 
 const LEDGER_DND_KEY = 'application/vp-ledger-item';
 
@@ -28,30 +30,30 @@ const SEED_DAYS = [
     id: 1,
     label: 'Day 1 — Punta Arenas',
     blocks: [
-      { id: 'b1',  time: '08:00', title: 'Airport pickup',               category: 'transport', icon: '✈',  duration: 60,  notes: 'Driver: Carlos (+56 9 1234)' },
-      { id: 'b2',  time: '10:00', title: 'Permit collection — CONAF',    category: 'logistics', icon: '📋', duration: 45,  notes: 'Bring passport + booking ref' },
-      { id: 'b3',  time: '13:00', title: "Lunch — Sotito's",             category: 'food',      icon: '🍽', duration: 90,  notes: 'Try the king crab' },
-      { id: 'b4',  time: '15:30', title: 'Gear check & resupply',        category: 'logistics', icon: '🎒', duration: 120 },
-      { id: 'b5',  time: '19:00', title: 'Briefing at hostel',           category: 'activity',  icon: '📍', duration: 60 },
+      { id: 'b1',  time: '08:00', title: 'Airport pickup',               category: 'transport', duration: 60,  notes: 'Driver: Carlos (+56 9 1234)' },
+      { id: 'b2',  time: '10:00', title: 'Permit collection — CONAF',    category: 'logistics', duration: 45,  notes: 'Bring passport + booking ref' },
+      { id: 'b3',  time: '13:00', title: "Lunch — Sotito's",             category: 'food',      duration: 90,  notes: 'Try the king crab' },
+      { id: 'b4',  time: '15:30', title: 'Gear check & resupply',        category: 'logistics', duration: 120 },
+      { id: 'b5',  time: '19:00', title: 'Briefing at hostel',           category: 'activity',  duration: 60 },
     ],
   },
   {
     id: 2,
     label: 'Day 2 — Transfer & Trailhead',
     blocks: [
-      { id: 'b6',  time: '06:00', title: 'Bus to Puerto Natales',        category: 'transport', icon: '🚌', duration: 180 },
-      { id: 'b7',  time: '10:30', title: 'Catamaran to park entrance',   category: 'transport', icon: '⛵', duration: 90 },
-      { id: 'b8',  time: '14:00', title: 'Hike to Refugio Chileno',      category: 'activity',  icon: '⛰', duration: 270, notes: 'River crossing at km 8' },
-      { id: 'b9',  time: '20:00', title: 'Camp setup + dinner',          category: 'food',      icon: '🏕', duration: 60 },
+      { id: 'b6',  time: '06:00', title: 'Bus to Puerto Natales',        category: 'transport', duration: 180 },
+      { id: 'b7',  time: '10:30', title: 'Catamaran to park entrance',   category: 'transport', duration: 90 },
+      { id: 'b8',  time: '14:00', title: 'Hike to Refugio Chileno',      category: 'activity',  duration: 270, notes: 'River crossing at km 8' },
+      { id: 'b9',  time: '20:00', title: 'Camp setup + dinner',          category: 'food',      duration: 60 },
     ],
   },
   {
     id: 3,
     label: 'Day 3 — Scout Day',
     blocks: [
-      { id: 'b10', time: '05:30', title: 'Pre-dawn summit attempt',      category: 'activity',  icon: '🌄', duration: 180, notes: 'Turn-around: 09:00 absolute' },
-      { id: 'b11', time: '11:00', title: 'Photography — Mirador Torres', category: 'activity',  icon: '📷', duration: 120 },
-      { id: 'b12', time: '15:00', title: 'Rest + acclimatize',           category: 'rest',      icon: '💤', duration: 180 },
+      { id: 'b10', time: '05:30', title: 'Pre-dawn summit attempt',      category: 'activity',  duration: 180, notes: 'Turn-around: 09:00 absolute' },
+      { id: 'b11', time: '11:00', title: 'Photography — Mirador Torres', category: 'activity',  duration: 120 },
+      { id: 'b12', time: '15:00', title: 'Rest + acclimatize',           category: 'rest',      duration: 180 },
     ],
   },
   {
@@ -109,12 +111,18 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
   const [expandedId,   setExpandedId]   = useState(null);
   const [expandedTab,  setExpandedTab]  = useState('DETAILS');
   const [addingTo,     setAddingTo]     = useState(null);
-  const [newDraft,     setNewDraft]     = useState({ title: '', time: '', category: 'activity', icon: '📍', duration: '', notes: '' });
+  const [newDraft,     setNewDraft]     = useState({
+    title: '', time: '', category: 'activity', duration: '', notes: '',
+    location: '', locationCoords: null, bookingRef: '', cost: '', alertTime: '',
+    links: [], items: [], subtasks: [], contacts: [],
+  });
   const [culinaryAnchor, setCulinaryAnchor] = useState(null); // injected recipe from What's Cooking
   const [inspireDay,    setInspireDay]    = useState(null);  // day object whose Inspire panel is open
   const [activeStopId,  setActiveStopId]  = useState(null);
   const [coordsVersion, setCoordsVersion] = useState(0);
   const coordsRef = useRef(new Map()); // blockId → [lat, lng] | false (failed)
+
+  const { cities } = useInspireData();
 
   function patchBlock(blockId, patch) {
     setDays(prev => prev.map(d => ({
@@ -187,11 +195,20 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
     if (!newDraft.title.trim()) return;
     const block = {
       id: makeId(),
-      ...newDraft,
-      duration: newDraft.duration ? Number(newDraft.duration) : undefined,
+      title: newDraft.title.trim(),
+      time: newDraft.time,
+      category: newDraft.category,
+      ...(newDraft.duration ? { duration: Number(newDraft.duration) } : {}),
+      ...(newDraft.notes ? { notes: newDraft.notes } : {}),
+      ...(newDraft.location ? { location: newDraft.location } : {}),
+      ...(newDraft.locationCoords ? { locationCoords: newDraft.locationCoords } : {}),
     };
     setDays(prev => prev.map(d => d.id === dayId ? { ...d, blocks: [...d.blocks, block] } : d));
-    setNewDraft({ title: '', time: '', category: 'activity', icon: '📍', duration: '', notes: '' });
+    setNewDraft({
+      title: '', time: '', category: 'activity', duration: '', notes: '',
+      location: '', locationCoords: null, bookingRef: '', cost: '', alertTime: '',
+      links: [], items: [], subtasks: [], contacts: [],
+    });
     setAddingTo(null);
   }
 
@@ -274,7 +291,6 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
           id:       `ledger-${item.id}-${Date.now()}`,
           title:    item.name,
           category: 'activity',
-          icon:     '📍',
           time:     '',
           duration: undefined,
           notes:    item.type ?? '',
@@ -387,6 +403,7 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
             dropIndicator={dropIndicator}
             addingTo={addingTo}
             newDraft={newDraft}
+            cities={cities}
             columnRefs={columnRefs}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
@@ -398,7 +415,11 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
             onAutoSort={autoSortDay}
             onSetAddingTo={(id) => {
               setAddingTo(id);
-              setNewDraft({ title: '', time: '', category: 'activity', icon: '📍', duration: '', notes: '' });
+              setNewDraft({
+                title: '', time: '', category: 'activity', duration: '', notes: '',
+                location: '', locationCoords: null, bookingRef: '', cost: '', alertTime: '',
+                links: [], items: [], subtasks: [], contacts: [],
+              });
             }}
             onCancelAdd={() => setAddingTo(null)}
             onNewDraftChange={setNewDraft}
@@ -437,7 +458,7 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
 // ── Kanban view ───────────────────────────────────────────────────────────────
 
 function KanbanView({
-  days, ghostId, dropIndicator, addingTo, newDraft,
+  days, ghostId, dropIndicator, addingTo, newDraft, cities,
   columnRefs, onDragStart, onDragEnd, onDragOver, onDragLeave, onDrop,
   onAddDay, onRemoveDay, onAutoSort,
   onSetAddingTo, onCancelAdd, onNewDraftChange, onAddBlock, onRemoveBlock,
@@ -586,6 +607,7 @@ function KanbanView({
                   onChange={onNewDraftChange}
                   onAdd={() => onAddBlock(day.id)}
                   onCancel={onCancelAdd}
+                  matchedCity={cities.length ? matchCity(cities, day.label) : null}
                 />
               )}
             </div>
@@ -952,6 +974,10 @@ const ACTIVITY_SUGGESTIONS = [
   'Temple visit', 'Monastery tour', 'Art gallery', 'Street art walk',
 ];
 
+function poiCategoryToBlock(cat) {
+  return { landmark: 'activity', food: 'food', activity: 'activity', hidden_gem: 'activity', transport_hub: 'transport' }[cat] ?? 'activity';
+}
+
 const INSTANCE_OF_CATEGORY = [
   [['restaurant', 'café', 'bar', 'brewery', 'winery', 'food'], 'food'],
   [['train station', 'railway', 'airport', 'ferry', 'bus station', 'port', 'transit'], 'transport'],
@@ -968,8 +994,26 @@ function inferCategoryFromInstanceOf(instanceOf) {
   return null;
 }
 
-function AddCard({ draft, onChange, onAdd, onCancel }) {
+function AddCard({ draft, onChange, onAdd, onCancel, matchedCity }) {
   const [suggestions, setSuggestions] = useState([]);
+  const [locationQuery, setLocationQuery] = useState('');
+  const { results: remoteResults, loading: remoteLoading } = useLocationSearch(locationQuery);
+
+  const localResults = matchedCity
+    ? matchedCity.pois.filter(p => p.name.toLowerCase().includes(locationQuery.toLowerCase())).slice(0, 5)
+    : [];
+
+  const showLocationDropdown = locationQuery.length > 0 && (localResults.length > 0 || remoteResults.length > 0);
+
+  function pickLocation(label, coords, poi = null) {
+    onChange(p => ({
+      ...p,
+      location: label,
+      locationCoords: coords,
+      ...(poi ? { category: poiCategoryToBlock(poi.category), duration: poi.duration_min ?? p.duration } : {}),
+    }));
+    setLocationQuery('');
+  }
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [wdHint, setWdHint] = useState(null); // { description, instance_of }
   const wdTimerRef = useRef(null);
@@ -1095,21 +1139,73 @@ function AddCard({ draft, onChange, onAdd, onCancel }) {
           )}
         </div>
       )}
-      <div className="grid grid-cols-2 gap-1.5">
+      {/* Location field with layered autocomplete */}
+      <div className="relative">
         <input
-          value={draft.icon}
-          onChange={e => onChange(p => ({ ...p, icon: e.target.value }))}
-          placeholder="Icon 📍"
-          className="bg-[#0E1012] border border-[#2a2f36] rounded px-2 py-1 text-xs text-white font-mono focus:outline-none focus:border-[#E67E22]"
+          value={draft.location || locationQuery}
+          onChange={e => {
+            setLocationQuery(e.target.value);
+            onChange(p => ({ ...p, location: e.target.value, locationCoords: null }));
+          }}
+          onBlur={() => setTimeout(() => setLocationQuery(''), 200)}
+          placeholder="Location…"
+          className="bg-[#0E1012] border border-[#2a2f36] rounded px-2 py-1.5 text-xs text-white font-mono focus:outline-none focus:border-[#E67E22] w-full"
         />
-        <input
-          value={draft.duration}
-          onChange={e => onChange(p => ({ ...p, duration: e.target.value }))}
-          placeholder="Min"
-          type="number"
-          className="bg-[#0E1012] border border-[#2a2f36] rounded px-2 py-1 text-xs text-white font-mono focus:outline-none focus:border-[#E67E22]"
-        />
+        {showLocationDropdown && (
+          <div
+            className="absolute z-20 left-0 right-0 top-full mt-0.5 rounded border overflow-hidden"
+            style={{ background: '#111316', borderColor: '#2a2f36' }}
+          >
+            {localResults.length > 0 && (
+              <>
+                <div className="px-2.5 py-1 text-[8px] font-mono tracking-widest text-slate-600 uppercase border-b border-[#1e2328]">
+                  NEARBY — {matchedCity.name}
+                </div>
+                {localResults.map(poi => (
+                  <button
+                    key={poi.id}
+                    type="button"
+                    onMouseDown={() => pickLocation(poi.name, poi.coords ?? null, poi)}
+                    className="w-full text-left px-2.5 py-1.5 text-[11px] font-mono text-slate-300 hover:text-[#E67E22] hover:bg-[#E67E22]/5 transition-colors flex items-center gap-2"
+                  >
+                    <span className="flex-1">{poi.name}</span>
+                    {poi.duration_min && <span className="text-[9px] text-slate-600">{poi.duration_min}min</span>}
+                  </button>
+                ))}
+              </>
+            )}
+            {remoteResults.length > 0 && (
+              <>
+                <div className="px-2.5 py-1 text-[8px] font-mono tracking-widest text-slate-600 uppercase border-b border-[#1e2328]">
+                  SEARCH
+                </div>
+                {remoteResults.map((r, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onMouseDown={() => pickLocation(r.label, r.coords)}
+                    className="w-full text-left px-2.5 py-1.5 text-[11px] font-mono text-slate-300 hover:text-[#E67E22] hover:bg-[#E67E22]/5 transition-colors"
+                  >
+                    {r.label}
+                  </button>
+                ))}
+              </>
+            )}
+            {remoteLoading && (
+              <div className="px-2.5 py-1.5 text-[10px] font-mono text-slate-600">Searching…</div>
+            )}
+          </div>
+        )}
       </div>
+
+      {/* Duration only (icon input removed) */}
+      <input
+        value={draft.duration}
+        onChange={e => onChange(p => ({ ...p, duration: e.target.value }))}
+        placeholder="Duration (min)"
+        type="number"
+        className="bg-[#0E1012] border border-[#2a2f36] rounded px-2 py-1 text-xs text-white font-mono focus:outline-none focus:border-[#E67E22]"
+      />
       <div className="flex gap-2">
         <button
           onClick={onAdd}
