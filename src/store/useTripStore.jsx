@@ -33,6 +33,26 @@ const DEFAULT_MANIFEST_SETTINGS = { climate: 'temperate', days: 18, hasChildren:
 
 // ── Reducer ───────────────────────────────────────────────────────────────────
 
+/**
+ * @typedef {Object} Ticket
+ * @property {string} id - uuid
+ * @property {'flight'|'transit'|'accommodation'|'access_pass'|'visa'|'document'} type
+ * @property {string} title
+ * @property {string} [provider]
+ * @property {string} [referenceCode]
+ * @property {string} [validFrom]   - ISO string
+ * @property {string} [validUntil] - ISO string
+ * @property {string} [barcodeData]
+ * @property {'qr'|'pdf417'|'aztec'|'code128'} [barcodeType]
+ * @property {string} [fileUrl]
+ * @property {Object} [rawData]
+ * @property {'manual'|'scan'|'email_import'} source
+ * @property {boolean} isShared
+ * @property {string[]} [sharedWith] - pioneer ids
+ * @property {string} [expeditionId]
+ * @property {string} createdAt - ISO string
+ */
+
 const initialState = {
   trip: DEFAULT_TRIP,
   legs: DEFAULT_LEGS,
@@ -46,6 +66,7 @@ const initialState = {
     lastGeneratedAt: null,
   },
   vault: { documents: [] },
+  tickets: [],
   booking: { whatIfScenarios: [] },
   journeyData: { breadcrumbs: [], gpxImported: false, photos: [] },
 };
@@ -212,6 +233,31 @@ function reducer(state, action) {
     case 'SET_JOURNEY_DATA': {
       return { ...state, journeyData: { ...state.journeyData, ...action.payload } };
     }
+    case 'ADD_TICKET': {
+      return { ...state, tickets: [...state.tickets, action.payload] };
+    }
+    case 'UPDATE_TICKET': {
+      return {
+        ...state,
+        tickets: state.tickets.map(t =>
+          t.id === action.payload.id ? { ...t, ...action.payload } : t
+        ),
+      };
+    }
+    case 'DELETE_TICKET': {
+      return { ...state, tickets: state.tickets.filter(t => t.id !== action.payload) };
+    }
+    case 'SHARE_TICKET': {
+      // payload: { ticketId, pioneerIds: string[] }
+      return {
+        ...state,
+        tickets: state.tickets.map(t =>
+          t.id === action.payload.ticketId
+            ? { ...t, sharedWith: [...new Set([...(t.sharedWith ?? []), ...action.payload.pioneerIds])] }
+            : t
+        ),
+      };
+    }
     default:
       return state;
   }
@@ -248,6 +294,7 @@ export function TripStoreProvider({ children }) {
         userRole: state.userRole,
         journey: state.journey,
         vault: state.vault,
+        tickets: state.tickets,
         booking: state.booking,
         journeyData: state.journeyData,
       }));
@@ -293,9 +340,13 @@ export function TripStoreProvider({ children }) {
   const addScenario = (scenario) => dispatch({ type: 'ADD_SCENARIO', payload: scenario });
   const setJourneyData = (data) => dispatch({ type: 'SET_JOURNEY_DATA', payload: data });
   const appendObjectiveItem = (legId, item) => dispatch({ type: 'APPEND_OBJECTIVE_ITEM', payload: { legId, item } });
+  const addTicket = (ticket) => dispatch({ type: 'ADD_TICKET', payload: ticket });
+  const updateTicket = (id, changes) => dispatch({ type: 'UPDATE_TICKET', payload: { id, ...changes } });
+  const deleteTicket = (id) => dispatch({ type: 'DELETE_TICKET', payload: id });
+  const shareTicket = (ticketId, pioneerIds) => dispatch({ type: 'SHARE_TICKET', payload: { ticketId, pioneerIds } });
 
   return (
-    <TripStoreContext.Provider value={{ ...state, clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, resetTrip, setRole, updateLegStatus, loadExpedition, addPhoto, removePhoto, updatePhoto, reorderPhotos, appendObjectiveItem, setJourneyMeta, completeExpedition, addInsight, dismissInsight, addVaultDocument, updateVaultDocument, addScenario, setJourneyData }}>
+    <TripStoreContext.Provider value={{ ...state, clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, resetTrip, setRole, updateLegStatus, loadExpedition, addPhoto, removePhoto, updatePhoto, reorderPhotos, appendObjectiveItem, setJourneyMeta, completeExpedition, addInsight, dismissInsight, addVaultDocument, updateVaultDocument, addScenario, setJourneyData, addTicket, updateTicket, deleteTicket, shareTicket }}>
       {children}
     </TripStoreContext.Provider>
   );
