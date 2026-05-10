@@ -150,8 +150,11 @@ export default function TripPlanner({ onBackToDashboard }) {
             )}
 
             {tab === 'LOGISTICS' && (
-              <div className="space-y-4">
+              <div className="space-y-4 max-w-5xl">
                 <PackingManifest climate={manifestSettings.climate} days={manifestSettings.days} />
+                <BentoPacker climate={manifestSettings.climate} days={manifestSettings.days} />
+                <PackingEngine />
+                <VehicleSearch distanceKm={legs.reduce((s, l) => s + l.distanceKm, 0)} />
               </div>
             )}
 
