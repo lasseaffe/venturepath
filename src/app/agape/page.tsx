@@ -1,5 +1,8 @@
 "use client";
 
+// 1.3-SENSITIVE: This page contains anonymous UGC. All posts support is_flagged + reported_at.
+// REQUIRES UGC POLICY LINK IN APP STORE METADATA
+
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
@@ -73,9 +76,101 @@ function getPartnerAnswer(sessionId: string) {
 function getPartnerName(sessionId: string) {
   return PARTNER_NAMES[hashStr(sessionId + "n") % PARTNER_NAMES.length];
 }
+function getConfessionsPrompt(sessionId: string, category: ConfessionsCategory): string {
+  const pool = CONFESSIONS_PROMPTS[category];
+  return pool[hashStr(sessionId + category) % pool.length];
+}
 function makeId() {
   return Math.random().toString(36).slice(2, 10).toUpperCase();
 }
+
+// Quiet Echoes — 4 gospel-specific reaction types (no generic likes)
+const QUIET_ECHOES = [
+  { id: "peace",      emoji: "🕊️", label: "Peace" },
+  { id: "testimony",  emoji: "✦",  label: "Testimony" },
+  { id: "prayer",     emoji: "🙏", label: "Prayer" },
+  { id: "gratitude",  emoji: "💛", label: "Gratitude" },
+] as const;
+type EchoId = typeof QUIET_ECHOES[number]["id"];
+
+// ── Confessions types ─────────────────────────────────────────────
+type ConfessionsCategory = 'work' | 'relationships' | 'mental-health' | 'faith-doubt';
+
+const CONFESSIONS_CATEGORY_META: Record<ConfessionsCategory, { label: string; icon: string; desc: string }> = {
+  'work':          { label: 'Work & Ambition',  icon: '💼', desc: 'Burnout, purpose, career doubt' },
+  'relationships': { label: 'Relationships',    icon: '🫂', desc: 'Loneliness, conflict, connection' },
+  'mental-health': { label: 'Mental Health',    icon: '🌿', desc: 'Anxiety, self-worth, identity' },
+  'faith-doubt':   { label: 'Faith Doubt',      icon: '🕯️', desc: 'Questions, distance, wrestling' },
+};
+
+const CONFESSIONS_PROMPTS: Record<ConfessionsCategory, string[]> = {
+  'work': [
+    "Something I've never admitted about why I chose my career path is…",
+    "The version of success I perform for others vs. the one I actually want looks like…",
+    "A professional failure I still haven't forgiven myself for is…",
+    "The thing that drains me most about my work that I pretend doesn't bother me is…",
+    "If I could walk away from my job tomorrow with no consequences, I would or wouldn't, because…",
+    "Something I'm jealous of in someone else's career that I've never said out loud is…",
+    "The biggest lie I tell myself about my ambitions is…",
+    "A dream I've quietly given up on is…",
+    "The moment I realized I was working for approval rather than purpose was…",
+    "What I wish my younger self knew before choosing this path is…",
+  ],
+  'relationships': [
+    "A person I've hurt that I never properly apologized to is…",
+    "The way I push people away without realizing it is…",
+    "Something I need from others that I've never been able to ask for directly is…",
+    "A relationship I've stayed in longer than I should have, and why…",
+    "The version of myself I hide from the people closest to me is…",
+    "Something I resent someone for that I've never told them is…",
+    "The loneliest I've ever felt while surrounded by people was…",
+    "A boundary I consistently let others cross because I'm afraid of what happens if I enforce it…",
+    "What I actually mean when I say 'I'm fine' is…",
+    "The relationship pattern I keep repeating that I can't seem to break is…",
+  ],
+  'mental-health': [
+    "The thought I'm most ashamed to admit I have regularly is…",
+    "Something I do to cope that I know isn't healthy but haven't stopped is…",
+    "The story I tell myself about my own worth when no one is watching is…",
+    "A fear so specific and embarrassing I've never said it out loud is…",
+    "The moment anxiety has cost me something I actually wanted is…",
+    "What 'being okay' actually costs me on a daily basis is…",
+    "Something I pretend not to care about that actually devastates me is…",
+    "The version of myself I was before things got hard looked like…",
+    "A thought I've had about myself that I would never say to a friend is…",
+    "What I wish the people who love me understood about what I'm carrying is…",
+  ],
+  'faith-doubt': [
+    "A doctrine I've smiled and nodded at while privately disagreeing is…",
+    "The moment my faith felt most fragile and what I did with that is…",
+    "Something I've stopped praying about because I've given up expecting an answer is…",
+    "The version of God I was taught to believe in vs. the one I actually believe in now is…",
+    "A question about the Church I'm afraid to ask out loud because of what the answer might mean is…",
+    "Something I do out of habit or obligation that I've lost the meaning behind is…",
+    "The person in my ward I'm most afraid of disappointing spiritually, and why that is…",
+    "A season when I felt completely spiritually abandoned and what I made of it is…",
+    "Something I believe privately that I've never said in testimony meeting is…",
+    "The gap between the faith I show and the faith I actually have right now is…",
+  ],
+};
+
+// Confessions Quiet Echoes — distinct from gospel reactions
+const CONFESSIONS_ECHOES = [
+  { id: "seen",    emoji: "🤍", label: "Seen" },
+  { id: "same",    emoji: "🔥", label: "Same" },
+  { id: "heard",   emoji: "💬", label: "Heard" },
+  { id: "growing", emoji: "🌱", label: "Growing" },
+] as const;
+type ConfessionsEchoId = typeof CONFESSIONS_ECHOES[number]["id"];
+
+// UGC data model — is_flagged + reported_at required per Apple Guideline 1.3
+type AgapePost = {
+  id: string;
+  answer: string;
+  echo?: EchoId;
+  is_flagged: boolean;        // 1.3-SENSITIVE
+  reported_at?: number;       // 1.3-SENSITIVE
+};
 
 type Screen = "home" | "share-setup" | "community-pick" | "answering" | "waiting" | "revealed";
 type Mode = "share" | "community" | "random";
@@ -90,6 +185,9 @@ export default function AgapePage() {
   const [added, setAdded] = useState(false);
   const [shareUrl, setShareUrl] = useState("");
   const [incomingSession, setIncomingSession] = useState(false);
+  const [myEcho, setMyEcho] = useState<EchoId | null>(null);
+  const [partnerEcho, setPartnerEcho] = useState<EchoId | null>(null);
+  const [reported, setReported] = useState(false);
 
   const partnerName = sessionId ? getPartnerName(sessionId) : "";
   const prompt = sessionId ? getPrompt(sessionId) : "";
@@ -144,7 +242,12 @@ export default function AgapePage() {
     }
     setScreen("waiting");
     const delay = mode === "random" ? 2200 : 1800;
-    setTimeout(() => setScreen("revealed"), delay);
+    setTimeout(() => {
+      // Simulate partner having sent an echo (demo behavior)
+      const echoes: EchoId[] = ["peace", "testimony", "prayer", "gratitude"];
+      setPartnerEcho(echoes[Math.floor(Math.random() * echoes.length)]);
+      setScreen("revealed");
+    }, delay);
   }
 
   function reset() {
@@ -154,6 +257,9 @@ export default function AgapePage() {
     setAnswer("");
     setAdded(false);
     setIncomingSession(false);
+    setMyEcho(null);
+    setPartnerEcho(null);
+    setReported(false);
     if (typeof window !== "undefined") {
       window.history.replaceState({}, "", "/agape");
     }
@@ -161,7 +267,7 @@ export default function AgapePage() {
 
   // ── HOME ─────────────────────────────────────────────────────────
   if (screen === "home") return (
-    <div className="min-h-screen px-4 py-20" style={{ background: "linear-gradient(160deg, #FDFAF3 0%, #FDF0F8 60%, #F5EBF5 100%)" }}>
+    <div className="min-h-screen px-4 py-20" style={{ background: "linear-gradient(160deg, #FDFAF5 0%, #FDF0F8 60%, #F5EBF5 100%)" }}>
       <div className="max-w-3xl mx-auto text-center">
 
         {/* Icon */}
@@ -191,35 +297,35 @@ export default function AgapePage() {
         <div className="grid sm:grid-cols-3 gap-4 text-left mb-10">
           <button onClick={() => startSession("community")}
             className="group rounded-2xl border p-6 text-left transition-all hover:-translate-y-1 hover:shadow-xl"
-            style={{ background: "#FEFCF7", borderColor: "#DDD5DD" }}>
+            style={{ background: "#FEFCFF", borderColor: "#DDD5DD" }}>
             <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-4"
-              style={{ background: "linear-gradient(135deg, #EDF5ED, #D8EDD8)" }}>
-              <Users size={20} style={{ color: "#4A7A4A" }} />
+              style={{ background: "linear-gradient(135deg, #EDE8F8, #D8EDD8)" }}>
+              <Users size={20} style={{ color: "#2D1B69" }} />
             </div>
             <p className="font-semibold mb-1" style={{ color: "#2D1A2D" }}>Community</p>
             <p className="text-sm" style={{ color: "#9A7A9A" }}>
               Invite someone from one of your communities — a ward member, study group, or friend.
             </p>
-            <p className="mt-4 text-xs font-semibold" style={{ color: "#4A7A4A" }}>Choose community →</p>
+            <p className="mt-4 text-xs font-semibold" style={{ color: "#2D1B69" }}>Choose community →</p>
           </button>
 
           <button onClick={() => startSession("share")}
             className="group rounded-2xl border p-6 text-left transition-all hover:-translate-y-1 hover:shadow-xl"
-            style={{ background: "#FEFCF7", borderColor: "#DDD5DD" }}>
+            style={{ background: "#FEFCFF", borderColor: "#DDD5DD" }}>
             <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-4"
               style={{ background: "linear-gradient(135deg, #FDF0E8, #F5E0D0)" }}>
-              <Share2 size={20} style={{ color: "#C87A50" }} />
+              <Share2 size={20} style={{ color: "#D4AF37" }} />
             </div>
             <p className="font-semibold mb-1" style={{ color: "#2D1A2D" }}>Share a link</p>
             <p className="text-sm" style={{ color: "#9A7A9A" }}>
               Generate a unique link and send it via WhatsApp, iMessage, Instagram DM, or any platform.
             </p>
-            <p className="mt-4 text-xs font-semibold" style={{ color: "#C87A50" }}>Get your link →</p>
+            <p className="mt-4 text-xs font-semibold" style={{ color: "#D4AF37" }}>Get your link →</p>
           </button>
 
           <button onClick={() => startSession("random")}
             className="group rounded-2xl border p-6 text-left transition-all hover:-translate-y-1 hover:shadow-xl"
-            style={{ background: "#FEFCF7", borderColor: "#DDD5DD" }}>
+            style={{ background: "#FEFCFF", borderColor: "#DDD5DD" }}>
             <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-4"
               style={{ background: "linear-gradient(135deg, #F0EDF8, #E0D8F5)" }}>
               <Shuffle size={20} style={{ color: "#7A5A9A" }} />
@@ -242,7 +348,7 @@ export default function AgapePage() {
   // ── SHARE SETUP ────────────────────────────────────────────────
   if (screen === "share-setup") return (
     <div className="min-h-screen px-4 py-16 flex items-center justify-center"
-      style={{ background: "linear-gradient(160deg, #FDFAF3 0%, #FDF0F8 100%)" }}>
+      style={{ background: "linear-gradient(160deg, #FDFAF5 0%, #FDF0F8 100%)" }}>
       <div className="max-w-lg w-full">
         <button onClick={reset} className="flex items-center gap-1 text-sm mb-8" style={{ color: "#B07A9A" }}>
           <ChevronLeft size={16} /> Back
@@ -260,7 +366,7 @@ export default function AgapePage() {
         </div>
 
         {/* Prompt preview */}
-        <div className="rounded-2xl border p-5 mb-6" style={{ background: "#FEFCF7", borderColor: "#E8D5E8" }}>
+        <div className="rounded-2xl border p-5 mb-6" style={{ background: "#FEFCFF", borderColor: "#E8D5E8" }}>
           <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "#B07A9A" }}>Your prompt</p>
           <p className="text-sm italic leading-relaxed" style={{ color: "#4A2A4A" }}>
             &ldquo;{sessionId ? getPrompt(sessionId) : ""}&rdquo;
@@ -268,10 +374,10 @@ export default function AgapePage() {
         </div>
 
         {/* Link box */}
-        <div className="rounded-xl border flex items-center gap-3 px-4 py-3 mb-4" style={{ background: "#FDFAF3", borderColor: "#DDD5DD" }}>
+        <div className="rounded-xl border flex items-center gap-3 px-4 py-3 mb-4" style={{ background: "#FDFAF5", borderColor: "#DDD5DD" }}>
           <p className="flex-1 text-sm truncate font-mono" style={{ color: "#7A5A7A" }}>{shareUrl}</p>
           <button onClick={copyLink} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
-            style={{ background: copied ? "#EDF5ED" : "#F5EBF5", color: copied ? "#4A7A4A" : "#7A5A9A" }}>
+            style={{ background: copied ? "#EDE8F8" : "#F5EBF5", color: copied ? "#2D1B69" : "#7A5A9A" }}>
             {copied ? <Check size={13} /> : <Copy size={13} />}
             {copied ? "Copied!" : "Copy"}
           </button>
@@ -304,7 +410,7 @@ export default function AgapePage() {
   // ── COMMUNITY PICK ─────────────────────────────────────────────
   if (screen === "community-pick") return (
     <div className="min-h-screen px-4 py-16 flex items-center justify-center"
-      style={{ background: "linear-gradient(160deg, #FDFAF3 0%, #FDF0F8 100%)" }}>
+      style={{ background: "linear-gradient(160deg, #FDFAF5 0%, #FDF0F8 100%)" }}>
       <div className="max-w-lg w-full">
         <button onClick={reset} className="flex items-center gap-1 text-sm mb-8" style={{ color: "#B07A9A" }}>
           <ChevronLeft size={16} /> Back
@@ -316,7 +422,7 @@ export default function AgapePage() {
           {MOCK_COMMUNITIES.map((c) => (
             <button key={c.id} onClick={() => setScreen("answering")}
               className="flex items-center justify-between rounded-2xl border px-5 py-4 text-left transition-all hover:shadow-md"
-              style={{ background: "#FEFCF7", borderColor: "#DDD5DD" }}>
+              style={{ background: "#FEFCFF", borderColor: "#DDD5DD" }}>
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: "#F5EBF5" }}>
                   <Users size={16} style={{ color: "#A05A8A" }} />
@@ -333,7 +439,7 @@ export default function AgapePage() {
           ))}
         </div>
 
-        <div className="mt-6 rounded-xl border p-4 text-center" style={{ background: "#FDFAF3", borderColor: "#DDD5DD" }}>
+        <div className="mt-6 rounded-xl border p-4 text-center" style={{ background: "#FDFAF5", borderColor: "#DDD5DD" }}>
           <p className="text-sm" style={{ color: "#9A7A9A" }}>Not in any communities yet?</p>
           <Link href="/communities" className="text-sm font-semibold mt-1 inline-block" style={{ color: "#A05A8A" }}>
             Browse communities →
@@ -345,7 +451,7 @@ export default function AgapePage() {
 
   // ── ANSWERING ──────────────────────────────────────────────────
   if (screen === "answering") return (
-    <div className="min-h-screen px-4 py-16" style={{ background: "linear-gradient(160deg, #FDFAF3 0%, #FDF0F8 100%)" }}>
+    <div className="min-h-screen px-4 py-16" style={{ background: "linear-gradient(160deg, #FDFAF5 0%, #FDF0F8 100%)" }}>
       <div className="max-w-2xl mx-auto">
         <button onClick={reset} className="flex items-center gap-1 text-sm mb-8" style={{ color: "#B07A9A" }}>
           <ChevronLeft size={16} /> Start over
@@ -380,7 +486,7 @@ export default function AgapePage() {
               {mode === "random" ? "Your match" : partnerName}&apos;s answer — sealed until you both submit
             </p>
           </div>
-          <div className="px-5 py-6 flex flex-col items-center gap-2" style={{ background: "#FEFCF7" }}>
+          <div className="px-5 py-6 flex flex-col items-center gap-2" style={{ background: "#FEFCFF" }}>
             <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "#F0EBF5" }}>
               <Lock size={16} style={{ color: "#C0A8C0" }} />
             </div>
@@ -393,7 +499,7 @@ export default function AgapePage() {
           <div className="px-5 py-3 border-b" style={{ background: "#F5EBF5", borderColor: "#E0D0E0" }}>
             <p className="text-xs font-semibold" style={{ color: "#A07AA0" }}>Your answer — write from the heart</p>
           </div>
-          <div className="p-4" style={{ background: "#FEFCF7" }}>
+          <div className="p-4" style={{ background: "#FEFCFF" }}>
             <textarea
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
@@ -425,7 +531,7 @@ export default function AgapePage() {
   // ── WAITING ────────────────────────────────────────────────────
   if (screen === "waiting") return (
     <div className="min-h-screen flex items-center justify-center px-4"
-      style={{ background: "linear-gradient(160deg, #FDFAF3 0%, #FDF0F8 100%)" }}>
+      style={{ background: "linear-gradient(160deg, #FDFAF5 0%, #FDF0F8 100%)" }}>
       <div className="max-w-sm w-full text-center">
         <div className="w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg animate-pulse"
           style={{ background: "linear-gradient(135deg, #B05A8A, #C87070)" }}>
@@ -450,7 +556,7 @@ export default function AgapePage() {
 
   // ── REVEALED ───────────────────────────────────────────────────
   if (screen === "revealed") return (
-    <div className="min-h-screen px-4 py-16" style={{ background: "linear-gradient(160deg, #FDFAF3 0%, #FDF0F8 100%)" }}>
+    <div className="min-h-screen px-4 py-16" style={{ background: "linear-gradient(160deg, #FDFAF5 0%, #FDF0F8 100%)" }}>
       <div className="max-w-2xl mx-auto">
 
         {/* Header */}
@@ -480,51 +586,93 @@ export default function AgapePage() {
                 style={{ background: "#B05A8A", color: "white" }}>Y</div>
               <p className="text-xs font-semibold" style={{ color: "#7A4A7A" }}>Your answer</p>
             </div>
-            <div className="p-5" style={{ background: "#FEFCF7" }}>
+            <div className="p-5" style={{ background: "#FEFCFF" }}>
               <p className="text-sm leading-relaxed" style={{ color: "#2D1A2D" }}>{answer}</p>
             </div>
           </div>
 
           {/* Partner's answer */}
           <div className="rounded-2xl border overflow-hidden" style={{ borderColor: "#E0D0E0" }}>
-            <div className="px-4 py-2.5 border-b flex items-center gap-2" style={{ background: "#EDF5ED", borderColor: "#D0E0D0" }}>
+            <div className="px-4 py-2.5 border-b flex items-center gap-2" style={{ background: "#EDE8F8", borderColor: "#D0E0D0" }}>
               <div className="w-5 h-5 rounded-full text-xs flex items-center justify-center font-bold"
-                style={{ background: "#4A7A4A", color: "white" }}>
+                style={{ background: "#2D1B69", color: "white" }}>
                 {partnerName[0]}
               </div>
-              <p className="text-xs font-semibold" style={{ color: "#2D4A2D" }}>{partnerName}&apos;s answer</p>
+              <p className="text-xs font-semibold" style={{ color: "#2D1B69" }}>{partnerName}&apos;s answer</p>
+              {partnerEcho && (
+                <span className="ml-auto text-xs" style={{ color: "#8B7EC0" }}>
+                  {QUIET_ECHOES.find(e => e.id === partnerEcho)?.emoji} {QUIET_ECHOES.find(e => e.id === partnerEcho)?.label}
+                </span>
+              )}
             </div>
-            <div className="p-5" style={{ background: "#FEFCF7" }}>
+            <div className="p-5" style={{ background: "#FEFCFF" }}>
               <p className="text-sm leading-relaxed" style={{ color: "#2D1A2D" }}>{partnerAnswer}</p>
             </div>
           </div>
         </div>
 
+        {/* Quiet Echoes — gospel-specific reactions */}
+        <div className="rounded-2xl border p-5 mb-4" style={{ background: "#FEFCFF", borderColor: "#DDD5DD" }}>
+          <p className="text-xs font-semibold uppercase tracking-widest mb-3 text-center" style={{ color: "#B07A9A" }}>
+            Quiet Echoes
+          </p>
+          <p className="text-xs text-center mb-4" style={{ color: "#9A7A9A" }}>How did their answer touch you?</p>
+          <div className="flex justify-center gap-3 flex-wrap">
+            {QUIET_ECHOES.map(({ id, emoji, label }) => (
+              <button
+                key={id}
+                onClick={() => setMyEcho(prev => prev === id ? null : id)}
+                className="flex flex-col items-center gap-1 px-4 py-2.5 rounded-xl border transition-all"
+                style={{
+                  background: myEcho === id ? "#EDE8F8" : "#FDFAF5",
+                  borderColor: myEcho === id ? "#9B8DC8" : "#DDD5DD",
+                  color: myEcho === id ? "#2D1B69" : "#9A7A9A",
+                }}
+              >
+                <span className="text-lg">{emoji}</span>
+                <span className="text-[10px] font-semibold">{label}</span>
+              </button>
+            ))}
+          </div>
+          {myEcho && (
+            <p className="text-xs text-center mt-3" style={{ color: "#B07A9A" }}>
+              You sent a {QUIET_ECHOES.find(e => e.id === myEcho)?.label} echo ✦
+            </p>
+          )}
+        </div>
+
         {/* Add contact CTA */}
         {!added ? (
-          <div className="rounded-2xl border p-6 mb-4 text-center" style={{ background: "#FEFCF7", borderColor: "#DDD5DD" }}>
-            <Heart size={20} className="mx-auto mb-3" style={{ color: "#B05A8A" }} />
-            <p className="text-sm font-semibold mb-1" style={{ color: "#2D1A2D" }}>
-              Something resonated?
-            </p>
-            <p className="text-xs mb-4" style={{ color: "#9A7A9A" }}>
-              Add {partnerName} as a contact to keep building this connection.
-            </p>
+          <div className="rounded-2xl border p-5 mb-4 flex items-center justify-between" style={{ background: "#FEFCFF", borderColor: "#DDD5DD" }}>
+            <div>
+              <p className="text-sm font-semibold" style={{ color: "#2D1A2D" }}>Something resonated?</p>
+              <p className="text-xs mt-0.5" style={{ color: "#9A7A9A" }}>Add {partnerName} as a contact.</p>
+            </div>
             <button
               onClick={() => setAdded(true)}
-              className="flex items-center gap-2 mx-auto px-5 py-2.5 rounded-xl font-semibold text-sm"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl font-semibold text-xs"
               style={{ background: "linear-gradient(135deg, #B05A8A, #C87070)", color: "white" }}>
-              <UserPlus size={15} /> Add {partnerName} as a Contact
+              <UserPlus size={13} /> Add
             </button>
           </div>
         ) : (
-          <div className="rounded-2xl border p-5 mb-4 text-center" style={{ background: "#EDF5ED", borderColor: "#C0D8C0" }}>
-            <Check size={18} className="mx-auto mb-2" style={{ color: "#4A7A4A" }} />
-            <p className="text-sm font-semibold" style={{ color: "#2D4A2D" }}>
-              {partnerName} added to your contacts
-            </p>
-            <p className="text-xs mt-1" style={{ color: "#6B9A6B" }}>You can find them in your Communities.</p>
+          <div className="rounded-2xl border p-4 mb-4 flex items-center gap-2" style={{ background: "#EDE8F8", borderColor: "#C0D8C0" }}>
+            <Check size={15} style={{ color: "#2D1B69" }} />
+            <p className="text-sm font-semibold" style={{ color: "#2D1B69" }}>{partnerName} added to your contacts</p>
           </div>
+        )}
+
+        {/* Report (1.3-SENSITIVE) */}
+        {!reported ? (
+          <button
+            onClick={() => setReported(true)}
+            className="text-xs w-full text-center py-2 rounded-xl border transition-colors hover:bg-red-50"
+            style={{ borderColor: "#F0D5D5", color: "#C0808080" }}
+          >
+            Report this content
+          </button>
+        ) : (
+          <p className="text-xs text-center py-2" style={{ color: "#8B7EC0" }}>Report submitted. Thank you for keeping Agapé safe.</p>
         )}
 
         {/* Actions */}
@@ -536,7 +684,7 @@ export default function AgapePage() {
           </button>
           <Link href="/communities"
             className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm"
-            style={{ background: "#EDF5ED", color: "#2D4A2D", border: "1.5px solid #C0D8C0" }}>
+            style={{ background: "#EDE8F8", color: "#2D1B69", border: "1.5px solid #C0D8C0" }}>
             <Users size={14} /> Explore Communities
           </Link>
         </div>
