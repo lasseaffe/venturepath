@@ -44,6 +44,9 @@ const initialState = {
     insights: [],
     lastGeneratedAt: null,
   },
+  vault: { documents: [] },
+  booking: { whatIfScenarios: [] },
+  journeyData: { breadcrumbs: [], gpxImported: false, photos: [] },
 };
 
 let nextLegId = 100; // start above seeded leg IDs so there's no collision
@@ -179,6 +182,23 @@ function reducer(state, action) {
         },
       };
     }
+    case 'ADD_VAULT_DOCUMENT': {
+      const doc = { ...action.payload, id: `doc_${Date.now()}` };
+      return { ...state, vault: { documents: [...state.vault.documents, doc] } };
+    }
+    case 'UPDATE_VAULT_DOCUMENT': {
+      const documents = state.vault.documents.map(d =>
+        d.id === action.payload.id ? { ...d, ...action.payload.changes } : d
+      );
+      return { ...state, vault: { documents } };
+    }
+    case 'ADD_SCENARIO': {
+      const scenario = { ...action.payload, id: `scenario_${Date.now()}` };
+      return { ...state, booking: { whatIfScenarios: [...state.booking.whatIfScenarios, scenario] } };
+    }
+    case 'SET_JOURNEY_DATA': {
+      return { ...state, journeyData: { ...state.journeyData, ...action.payload } };
+    }
     default:
       return state;
   }
@@ -214,6 +234,9 @@ export function TripStoreProvider({ children }) {
         manifestSettings: state.manifestSettings,
         userRole: state.userRole,
         journey: state.journey,
+        vault: state.vault,
+        booking: state.booking,
+        journeyData: state.journeyData,
       }));
     } catch { /* storage full or unavailable */ }
   }, [state]);
@@ -241,9 +264,13 @@ export function TripStoreProvider({ children }) {
   const completeExpedition = () => dispatch({ type: 'COMPLETE_EXPEDITION' });
   const addInsight = (insight) => dispatch({ type: 'ADD_INSIGHT', payload: insight });
   const dismissInsight = (id) => dispatch({ type: 'DISMISS_INSIGHT', payload: { id } });
+  const addVaultDocument = (doc) => dispatch({ type: 'ADD_VAULT_DOCUMENT', payload: doc });
+  const updateVaultDocument = (id, changes) => dispatch({ type: 'UPDATE_VAULT_DOCUMENT', payload: { id, changes } });
+  const addScenario = (scenario) => dispatch({ type: 'ADD_SCENARIO', payload: scenario });
+  const setJourneyData = (data) => dispatch({ type: 'SET_JOURNEY_DATA', payload: data });
 
   return (
-    <TripStoreContext.Provider value={{ ...state, clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, resetTrip, setRole, updateLegStatus, loadExpedition, addPhoto, removePhoto, updatePhoto, reorderPhotos, setJourneyMeta, completeExpedition, addInsight, dismissInsight }}>
+    <TripStoreContext.Provider value={{ ...state, clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, resetTrip, setRole, updateLegStatus, loadExpedition, addPhoto, removePhoto, updatePhoto, reorderPhotos, setJourneyMeta, completeExpedition, addInsight, dismissInsight, addVaultDocument, updateVaultDocument, addScenario, setJourneyData }}>
       {children}
     </TripStoreContext.Provider>
   );
