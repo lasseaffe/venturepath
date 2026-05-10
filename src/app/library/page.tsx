@@ -24,8 +24,8 @@ import {
 type TalkType = "sacrament" | "fhe" | "sunday_school" | "youth";
 
 const TYPE_META: Record<TalkType, { label: string; color: string; bg: string; icon: React.ElementType }> = {
-  sacrament: { label: "Sacrament Talk", color: "#4A7A4A", bg: "linear-gradient(135deg,#EDF5ED,#D8EDD8)", icon: MessageSquare },
-  fhe: { label: "FHE Lesson", color: "#C87A50", bg: "linear-gradient(135deg,#FDF0E8,#F5E0D0)", icon: Home },
+  sacrament: { label: "Sacrament Talk", color: "#2D1B69", bg: "linear-gradient(135deg,#EDE8F8,#D8EDD8)", icon: MessageSquare },
+  fhe: { label: "FHE Lesson", color: "#D4AF37", bg: "linear-gradient(135deg,#FDF0E8,#F5E0D0)", icon: Home },
   sunday_school: { label: "Sunday School", color: "#3A6A8A", bg: "linear-gradient(135deg,#EDF2F8,#DCE7F5)", icon: BookOpen },
   youth: { label: "Youth Lesson", color: "#8A4A7A", bg: "linear-gradient(135deg,#F5EDF4,#EDD8E8)", icon: Users },
 };
@@ -126,10 +126,10 @@ export default function LibraryPage() {
     <div className="max-w-5xl mx-auto px-4 py-10">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-1" style={{ color: "#2D4A2D" }}>
+        <h1 className="text-3xl font-bold mb-1" style={{ color: "#2D1B69" }}>
           My Library
         </h1>
-        <p style={{ color: "#7A9A7A" }}>
+        <p style={{ color: "#6B5FA0" }}>
           All your saved talks and lessons in one place.
         </p>
       </div>
@@ -142,15 +142,15 @@ export default function LibraryPage() {
             className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-all"
             style={
               !activeFolder
-                ? { background: "#EDF5ED", color: "#2D4A2D" }
-                : { color: "#7A9A7A" }
+                ? { background: "#EDE8F8", color: "#2D1B69" }
+                : { color: "#6B5FA0" }
             }
           >
             <BookMarked size={14} />
             All lessons
             <span
               className="ml-auto text-xs px-1.5 py-0.5 rounded-full"
-              style={{ background: "#4A7A4A22", color: "#4A7A4A" }}
+              style={{ background: "#2D1B6922", color: "#2D1B69" }}
             >
               {lessons.length}
             </span>
@@ -159,7 +159,7 @@ export default function LibraryPage() {
           <div className="pt-2">
             <p
               className="text-xs font-semibold uppercase tracking-widest px-3 mb-2"
-              style={{ color: "#9BB89A" }}
+              style={{ color: "#8B7EC0" }}
             >
               Folders
             </p>
@@ -170,20 +170,20 @@ export default function LibraryPage() {
                 className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium transition-all"
                 style={
                   activeFolder === f
-                    ? { background: "#EDF5ED", color: "#2D4A2D" }
-                    : { color: "#7A9A7A" }
+                    ? { background: "#EDE8F8", color: "#2D1B69" }
+                    : { color: "#6B5FA0" }
                 }
               >
                 <Folder size={14} />
                 {f}
-                <span className="ml-auto text-xs" style={{ color: "#9AAA9A" }}>
+                <span className="ml-auto text-xs" style={{ color: "#8B7EC0" }}>
                   {lessons.filter((l) => l.folder === f).length}
                 </span>
               </button>
             ))}
             <button
               className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-all"
-              style={{ color: "#9BB89A" }}
+              style={{ color: "#8B7EC0" }}
             >
               <FolderPlus size={14} />
               New folder
@@ -193,14 +193,14 @@ export default function LibraryPage() {
           <div className="pt-3">
             <p
               className="text-xs font-semibold uppercase tracking-widest px-3 mb-2"
-              style={{ color: "#9BB89A" }}
+              style={{ color: "#8B7EC0" }}
             >
               Filter by type
             </p>
             <button
               onClick={() => setFilterType("all")}
               className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-all"
-              style={filterType === "all" ? { color: "#2D4A2D", fontWeight: 600 } : { color: "#7A9A7A" }}
+              style={filterType === "all" ? { color: "#2D1B69", fontWeight: 600 } : { color: "#6B5FA0" }}
             >
               All types
             </button>
@@ -211,7 +211,7 @@ export default function LibraryPage() {
                   key={t}
                   onClick={() => setFilterType(t)}
                   className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-all"
-                  style={filterType === t ? { color, fontWeight: 600 } : { color: "#7A9A7A" }}
+                  style={filterType === t ? { color, fontWeight: 600 } : { color: "#6B5FA0" }}
                 >
                   <Icon size={13} style={{ color }} />
                   {label}
@@ -229,7 +229,7 @@ export default function LibraryPage() {
               <Search
                 size={14}
                 className="absolute left-3.5 top-1/2 -translate-y-1/2"
-                style={{ color: "#9BB89A" }}
+                style={{ color: "#8B7EC0" }}
               />
               <input
                 type="text"
@@ -237,13 +237,13 @@ export default function LibraryPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full pl-9 pr-4 py-2.5 rounded-xl border text-sm outline-none"
-                style={{ background: "#FEFCF7", borderColor: "#DDE8DD", color: "#2D4A2D" }}
+                style={{ background: "#FEFCFF", borderColor: "#DDD5F0", color: "#2D1B69" }}
               />
             </div>
             <a
               href="/talk-generator"
               className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold"
-              style={{ background: "#4A7A4A", color: "#F5F0E8" }}
+              style={{ background: "#2D1B69", color: "#F5F0FF" }}
             >
               <Plus size={14} />
               New
@@ -256,7 +256,7 @@ export default function LibraryPage() {
               style={{ borderColor: "#C8D8C8" }}
             >
               <FileText size={36} className="mx-auto mb-3" style={{ color: "#C8D8C8" }} />
-              <p className="font-medium mb-1" style={{ color: "#9AAA9A" }}>
+              <p className="font-medium mb-1" style={{ color: "#8B7EC0" }}>
                 No lessons yet
               </p>
               <p className="text-sm mb-5" style={{ color: "#B8C8B8" }}>
@@ -265,7 +265,7 @@ export default function LibraryPage() {
               <a
                 href="/talk-generator"
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold"
-                style={{ background: "#4A7A4A", color: "#F5F0E8" }}
+                style={{ background: "#2D1B69", color: "#F5F0FF" }}
               >
                 <Plus size={14} />
                 Create your first lesson
@@ -278,7 +278,7 @@ export default function LibraryPage() {
                 <div>
                   <p
                     className="text-xs font-semibold uppercase tracking-widest mb-3"
-                    style={{ color: "#9BB89A" }}
+                    style={{ color: "#8B7EC0" }}
                   >
                     Pinned
                   </p>
@@ -303,7 +303,7 @@ export default function LibraryPage() {
                   {pinned.length > 0 && (
                     <p
                       className="text-xs font-semibold uppercase tracking-widest mb-3"
-                      style={{ color: "#9BB89A" }}
+                      style={{ color: "#8B7EC0" }}
                     >
                       Recent
                     </p>
@@ -349,7 +349,7 @@ function LessonCard({
   return (
     <div
       className="rounded-2xl border flex items-center gap-4 px-5 py-4 transition-all hover:shadow-md relative group"
-      style={{ background: "#FEFCF7", borderColor: "#DDE8DD" }}
+      style={{ background: "#FEFCFF", borderColor: "#DDD5F0" }}
     >
       {/* Type icon */}
       <div
@@ -371,7 +371,7 @@ function LessonCard({
           {lesson.folder && (
             <span
               className="text-xs px-2 py-0.5 rounded-full"
-              style={{ background: "#EDF5ED", color: "#4A7A4A" }}
+              style={{ background: "#EDE8F8", color: "#2D1B69" }}
             >
               <Folder size={9} className="inline mr-0.5" />
               {lesson.folder}
@@ -383,12 +383,12 @@ function LessonCard({
             </span>
           )}
         </div>
-        <h3 className="font-bold text-sm mt-0.5 truncate" style={{ color: "#2D4A2D" }}>
+        <h3 className="font-bold text-sm mt-0.5 truncate" style={{ color: "#2D1B69" }}>
           {lesson.title}
         </h3>
         <div
           className="flex items-center gap-3 text-xs mt-0.5"
-          style={{ color: "#9AAA9A" }}
+          style={{ color: "#8B7EC0" }}
         >
           <span className="flex items-center gap-1">
             <Calendar size={10} />
@@ -404,24 +404,24 @@ function LessonCard({
           href="/talk-generator"
           className="p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gray-100"
         >
-          <ChevronRight size={14} style={{ color: "#4A7A4A" }} />
+          <ChevronRight size={14} style={{ color: "#2D1B69" }} />
         </a>
         <div className="relative">
           <button
             onClick={() => setOpenMenu(isOpen ? null : lesson.id)}
             className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
           >
-            <MoreHorizontal size={14} style={{ color: "#9AAA9A" }} />
+            <MoreHorizontal size={14} style={{ color: "#8B7EC0" }} />
           </button>
           {isOpen && (
             <div
               className="absolute right-0 top-full mt-1 w-44 rounded-xl shadow-xl border py-1 z-20"
-              style={{ background: "#FEFCF7", borderColor: "#DDE8DD" }}
+              style={{ background: "#FEFCFF", borderColor: "#DDD5F0" }}
             >
               <button
                 onClick={() => { onPrint(lesson); setOpenMenu(null); }}
                 className="w-full flex items-center gap-2.5 px-4 py-2 text-sm hover:bg-gray-50 transition-colors"
-                style={{ color: "#2D4A2D" }}
+                style={{ color: "#2D1B69" }}
               >
                 <Download size={13} />
                 Save as PDF
@@ -434,12 +434,12 @@ function LessonCard({
                   setOpenMenu(null);
                 }}
                 className="w-full flex items-center gap-2.5 px-4 py-2 text-sm hover:bg-gray-50 transition-colors"
-                style={{ color: "#2D4A2D" }}
+                style={{ color: "#2D1B69" }}
               >
                 <Share2 size={13} />
                 Share
               </button>
-              <div className="h-px my-1" style={{ background: "#EDF5ED" }} />
+              <div className="h-px my-1" style={{ background: "#EDE8F8" }} />
               <button
                 onClick={() => onDelete(lesson.id)}
                 className="w-full flex items-center gap-2.5 px-4 py-2 text-sm hover:bg-red-50 transition-colors"

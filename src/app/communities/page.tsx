@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { RichTextarea } from "@/components/ui/rich-textarea";
 import {
   Users,
   Plus,
@@ -37,8 +38,8 @@ const COMMUNITIES = [
     members: 312,
     posts: 84,
     icon: "star",
-    color: "#4A7A4A",
-    bg: "linear-gradient(135deg, #EDF5ED 0%, #D8EDD8 100%)",
+    color: "#2D1B69",
+    bg: "linear-gradient(135deg, #EDE8F8 0%, #D8EDD8 100%)",
     tags: ["Easter", "Atonement", "Come Follow Me"],
     public: true,
   },
@@ -51,7 +52,7 @@ const COMMUNITIES = [
     members: 1247,
     posts: 302,
     icon: "flame",
-    color: "#C87A50",
+    color: "#D4AF37",
     bg: "linear-gradient(135deg, #FDF0E8 0%, #F5E0D0 100%)",
     tags: ["Dirty Soda", "Utah Culture", "Recipes"],
     public: true,
@@ -120,6 +121,7 @@ export default function CommunitiesPage() {
   const [newName, setNewName] = useState("");
   const [newTopic, setNewTopic] = useState("");
   const [newDesc, setNewDesc] = useState("");
+  const [comment, setComment] = useState("");
   const [newPublic, setNewPublic] = useState(true);
   const [joined, setJoined] = useState<Set<string>>(new Set(["c1"]));
 
@@ -145,17 +147,17 @@ export default function CommunitiesPage() {
       <div className="mb-8">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
-            <h1 className="text-3xl font-bold mb-1" style={{ color: "#2D4A2D" }}>
+            <h1 className="text-3xl font-bold mb-1" style={{ color: "#2D1B69" }}>
               Communities
             </h1>
-            <p style={{ color: "#7A9A7A" }}>
+            <p style={{ color: "#6B5FA0" }}>
               Connect with members who share your interests and calling.
             </p>
           </div>
           <button
             onClick={() => setShowCreate(true)}
             className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm shadow-sm transition-all hover:scale-105"
-            style={{ background: "#4A7A4A", color: "#F5F0E8" }}
+            style={{ background: "#2D1B69", color: "#F5F0FF" }}
           >
             <Plus size={16} />
             Create Community
@@ -167,7 +169,7 @@ export default function CommunitiesPage() {
           <Search
             size={15}
             className="absolute left-3.5 top-1/2 -translate-y-1/2"
-            style={{ color: "#9BB89A" }}
+            style={{ color: "#8B7EC0" }}
           />
           <input
             type="text"
@@ -176,9 +178,9 @@ export default function CommunitiesPage() {
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-10 pr-4 py-2.5 rounded-xl border text-sm outline-none"
             style={{
-              background: "#FEFCF7",
-              borderColor: "#DDE8DD",
-              color: "#2D4A2D",
+              background: "#FEFCFF",
+              borderColor: "#DDD5F0",
+              color: "#2D1B69",
             }}
           />
         </div>
@@ -189,7 +191,7 @@ export default function CommunitiesPage() {
         <div className="mb-8">
           <p
             className="text-xs font-semibold uppercase tracking-widest mb-3"
-            style={{ color: "#9BB89A" }}
+            style={{ color: "#8B7EC0" }}
           >
             My Communities
           </p>
@@ -233,23 +235,23 @@ export default function CommunitiesPage() {
                   </div>
                   <div className="flex items-center gap-1.5">
                     {c.public ? (
-                      <Globe size={12} style={{ color: "#9AAA9A" }} />
+                      <Globe size={12} style={{ color: "#8B7EC0" }} />
                     ) : (
-                      <Lock size={12} style={{ color: "#9AAA9A" }} />
+                      <Lock size={12} style={{ color: "#8B7EC0" }} />
                     )}
-                    <span className="text-xs" style={{ color: "#9AAA9A" }}>
+                    <span className="text-xs" style={{ color: "#8B7EC0" }}>
                       {c.public ? "Public" : "Private"}
                     </span>
                   </div>
                 </div>
 
-                <h3 className="font-bold text-base mb-0.5" style={{ color: "#1A2818" }}>
+                <h3 className="font-bold text-base mb-0.5" style={{ color: "#1A1430" }}>
                   {c.name}
                 </h3>
                 <p className="text-xs font-medium mb-2" style={{ color: c.color }}>
                   {c.topic}
                 </p>
-                <p className="text-xs leading-relaxed" style={{ color: "#5A7A5A" }}>
+                <p className="text-xs leading-relaxed" style={{ color: "#6B5FA0" }}>
                   {c.description}
                 </p>
               </div>
@@ -260,7 +262,7 @@ export default function CommunitiesPage() {
                   <span
                     key={t}
                     className="text-xs px-2 py-0.5 rounded-full"
-                    style={{ background: "rgba(255,255,255,0.55)", color: "#5A7A5A" }}
+                    style={{ background: "rgba(255,255,255,0.55)", color: "#6B5FA0" }}
                   >
                     <Hash size={9} className="inline mr-0.5" />
                     {t}
@@ -270,7 +272,7 @@ export default function CommunitiesPage() {
 
               {/* Footer */}
               <div className="mt-auto px-5 py-4 border-t border-white/40 flex items-center justify-between">
-                <div className="flex items-center gap-3 text-xs" style={{ color: "#7A9A7A" }}>
+                <div className="flex items-center gap-3 text-xs" style={{ color: "#6B5FA0" }}>
                   <span className="flex items-center gap-1">
                     <Users size={11} />
                     {c.members.toLocaleString()}
@@ -300,7 +302,7 @@ export default function CommunitiesPage() {
       {filtered.length === 0 && (
         <div className="text-center py-16">
           <Search size={32} className="mx-auto mb-3" style={{ color: "#C8D8C8" }} />
-          <p className="font-medium" style={{ color: "#9AAA9A" }}>
+          <p className="font-medium" style={{ color: "#8B7EC0" }}>
             No communities match &ldquo;{search}&rdquo;
           </p>
           <button
@@ -309,12 +311,37 @@ export default function CommunitiesPage() {
               setNewName(search);
             }}
             className="mt-4 text-sm font-semibold"
-            style={{ color: "#4A7A4A" }}
+            style={{ color: "#2D1B69" }}
           >
             Create &ldquo;{search}&rdquo; as a new community →
           </button>
         </div>
       )}
+
+      {/* Community comment / post box */}
+      <div className="mt-10 rounded-2xl border p-6" style={{ background: "#FEFCFF", borderColor: "#DDD5F0" }}>
+        <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "#8B7EC0" }}>
+          Post to Community
+        </p>
+        <RichTextarea
+          value={comment}
+          onChange={setComment}
+          rows={4}
+          placeholder="Share an insight, question, or testimony with your community…"
+          className="text-sm resize-none"
+          style={{ color: "#2D1B69" }}
+        />
+        <div className="mt-3 flex justify-end">
+          <button
+            disabled={!comment.trim()}
+            onClick={() => { alert("Sign in to post."); setComment(""); }}
+            className="px-5 py-2 rounded-xl text-sm font-semibold disabled:opacity-40 transition-all"
+            style={{ background: "#2D1B69", color: "#F5F0FF" }}
+          >
+            Post
+          </button>
+        </div>
+      </div>
 
       {/* Create modal */}
       {showCreate && (
@@ -324,17 +351,17 @@ export default function CommunitiesPage() {
         >
           <div
             className="w-full max-w-md rounded-3xl shadow-2xl p-7"
-            style={{ background: "#FEFCF7" }}
+            style={{ background: "#FEFCFF" }}
           >
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold" style={{ color: "#2D4A2D" }}>
+              <h2 className="text-xl font-bold" style={{ color: "#2D1B69" }}>
                 Create a Community
               </h2>
               <button
                 onClick={() => setShowCreate(false)}
                 className="p-1.5 rounded-lg hover:bg-gray-100"
               >
-                <X size={16} style={{ color: "#7A9A7A" }} />
+                <X size={16} style={{ color: "#6B5FA0" }} />
               </button>
             </div>
 
@@ -342,7 +369,7 @@ export default function CommunitiesPage() {
               <div>
                 <label
                   className="text-xs font-semibold uppercase tracking-wide block mb-1.5"
-                  style={{ color: "#7A9A7A" }}
+                  style={{ color: "#6B5FA0" }}
                 >
                   Community Name *
                 </label>
@@ -352,14 +379,14 @@ export default function CommunitiesPage() {
                   onChange={(e) => setNewName(e.target.value)}
                   placeholder="e.g. Provo 4th Ward Moms"
                   className="w-full px-3.5 py-2.5 rounded-xl border text-sm outline-none"
-                  style={{ borderColor: "#DDE8DD", color: "#2D4A2D" }}
+                  style={{ borderColor: "#DDD5F0", color: "#2D1B69" }}
                 />
               </div>
 
               <div>
                 <label
                   className="text-xs font-semibold uppercase tracking-wide block mb-1.5"
-                  style={{ color: "#7A9A7A" }}
+                  style={{ color: "#6B5FA0" }}
                 >
                   Topic / Focus
                 </label>
@@ -369,31 +396,31 @@ export default function CommunitiesPage() {
                   onChange={(e) => setNewTopic(e.target.value)}
                   placeholder="e.g. FHE Ideas · Young Families"
                   className="w-full px-3.5 py-2.5 rounded-xl border text-sm outline-none"
-                  style={{ borderColor: "#DDE8DD", color: "#2D4A2D" }}
+                  style={{ borderColor: "#DDD5F0", color: "#2D1B69" }}
                 />
               </div>
 
               <div>
                 <label
                   className="text-xs font-semibold uppercase tracking-wide block mb-1.5"
-                  style={{ color: "#7A9A7A" }}
+                  style={{ color: "#6B5FA0" }}
                 >
                   Description
                 </label>
-                <textarea
+                <RichTextarea
                   value={newDesc}
-                  onChange={(e) => setNewDesc(e.target.value)}
+                  onChange={setNewDesc}
                   rows={3}
                   placeholder="What is this community about? Who should join?"
-                  className="w-full px-3.5 py-2.5 rounded-xl border text-sm outline-none resize-none"
-                  style={{ borderColor: "#DDE8DD", color: "#2D4A2D" }}
+                  className="px-3.5 py-2.5 text-sm resize-none"
+                  style={{ color: "#2D1B69" }}
                 />
               </div>
 
               <div>
                 <label
                   className="text-xs font-semibold uppercase tracking-wide block mb-2"
-                  style={{ color: "#7A9A7A" }}
+                  style={{ color: "#6B5FA0" }}
                 >
                   Visibility
                 </label>
@@ -408,16 +435,16 @@ export default function CommunitiesPage() {
                       className="flex-1 flex items-start gap-2.5 p-3 rounded-xl border-2 text-left transition-all"
                       style={
                         newPublic === val
-                          ? { borderColor: "#4A7A4A", background: "#EDF5ED" }
-                          : { borderColor: "#DDE8DD", background: "transparent" }
+                          ? { borderColor: "#2D1B69", background: "#EDE8F8" }
+                          : { borderColor: "#DDD5F0", background: "transparent" }
                       }
                     >
-                      <Icon size={16} style={{ color: newPublic === val ? "#4A7A4A" : "#9AAA9A", marginTop: 2 }} />
+                      <Icon size={16} style={{ color: newPublic === val ? "#2D1B69" : "#8B7EC0", marginTop: 2 }} />
                       <div>
-                        <p className="text-sm font-semibold" style={{ color: "#2D4A2D" }}>
+                        <p className="text-sm font-semibold" style={{ color: "#2D1B69" }}>
                           {label}
                         </p>
-                        <p className="text-xs" style={{ color: "#9AAA9A" }}>{sub}</p>
+                        <p className="text-xs" style={{ color: "#8B7EC0" }}>{sub}</p>
                       </div>
                     </button>
                   ))}
@@ -428,7 +455,7 @@ export default function CommunitiesPage() {
                 <button
                   onClick={() => setShowCreate(false)}
                   className="flex-1 py-2.5 rounded-xl border text-sm font-semibold"
-                  style={{ borderColor: "#DDE8DD", color: "#7A9A7A" }}
+                  style={{ borderColor: "#DDD5F0", color: "#6B5FA0" }}
                 >
                   Cancel
                 </button>
@@ -442,7 +469,7 @@ export default function CommunitiesPage() {
                   }}
                   disabled={!newName.trim()}
                   className="flex-1 py-2.5 rounded-xl text-sm font-semibold disabled:opacity-40 flex items-center justify-center gap-2"
-                  style={{ background: "#4A7A4A", color: "#F5F0E8" }}
+                  style={{ background: "#2D1B69", color: "#F5F0FF" }}
                 >
                   <Plus size={14} />
                   Create Community

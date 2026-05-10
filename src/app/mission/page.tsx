@@ -197,14 +197,14 @@ export default function MissionPage() {
           {/* Filters */}
           <div className="flex items-center gap-3 mb-5 flex-wrap">
             <div className="relative">
-              <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "#9BB89A" }} />
+              <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "#8B7EC0" }} />
               <input
                 type="text"
                 placeholder="Search missionaries…"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="pl-8 pr-3 py-2 rounded-xl border text-sm outline-none w-48"
-                style={{ borderColor: "#DDE8DD", color: "#2D4A2D" }}
+                style={{ borderColor: "#DDD5F0", color: "#2D1B69" }}
               />
             </div>
             <div className="flex gap-1.5 flex-wrap">
@@ -231,7 +231,7 @@ export default function MissionPage() {
               <div
                 key={post.id}
                 className="rounded-2xl border overflow-hidden transition-all hover:shadow-md"
-                style={{ background: "#FEFCF7", borderColor: "#DDE8DD" }}
+                style={{ background: "#FEFCFF", borderColor: "#DDD5F0" }}
               >
                 <div className="flex gap-0">
                   {/* Image */}
@@ -252,7 +252,7 @@ export default function MissionPage() {
                         <p className="text-xs font-bold" style={{ color: "#3A6A8A" }}>
                           {post.missionary}
                         </p>
-                        <p className="text-xs" style={{ color: "#9AAA9A" }}>
+                        <p className="text-xs" style={{ color: "#8B7EC0" }}>
                           {post.mission} · {post.date}
                         </p>
                       </div>
@@ -261,7 +261,7 @@ export default function MissionPage() {
                           <Bookmark
                             size={13}
                             style={{
-                              color: savedPosts.has(post.id) ? "#3A6A8A" : "#9AAA9A",
+                              color: savedPosts.has(post.id) ? "#3A6A8A" : "#8B7EC0",
                               fill: savedPosts.has(post.id) ? "#3A6A8A" : "none",
                             }}
                           />
@@ -272,7 +272,7 @@ export default function MissionPage() {
                           rel="noopener noreferrer"
                           className="p-1.5 rounded-lg hover:bg-gray-100"
                         >
-                          <ExternalLink size={13} style={{ color: "#9AAA9A" }} />
+                          <ExternalLink size={13} style={{ color: "#8B7EC0" }} />
                         </a>
                       </div>
                     </div>
@@ -295,7 +295,7 @@ export default function MissionPage() {
                       ))}
                       <span
                         className="ml-auto flex items-center gap-1 text-xs"
-                        style={{ color: "#9AAA9A" }}
+                        style={{ color: "#8B7EC0" }}
                       >
                         <Heart size={10} />
                         {post.hearts}
@@ -303,8 +303,8 @@ export default function MissionPage() {
                     </div>
 
                     {/* Actions */}
-                    <div className="flex items-center gap-2 mt-3 pt-3 border-t" style={{ borderColor: "#EDF5ED" }}>
-                      <span className="text-xs" style={{ color: "#9AAA9A" }}>
+                    <div className="flex items-center gap-2 mt-3 pt-3 border-t" style={{ borderColor: "#EDE8F8" }}>
+                      <span className="text-xs" style={{ color: "#8B7EC0" }}>
                         via {post.source}
                       </span>
                       <button
@@ -323,7 +323,7 @@ export default function MissionPage() {
             {filtered.length === 0 && (
               <div className="text-center py-12">
                 <Globe size={32} className="mx-auto mb-3" style={{ color: "#C8D8C8" }} />
-                <p style={{ color: "#9AAA9A" }}>No posts match your filter.</p>
+                <p style={{ color: "#8B7EC0" }}>No posts match your filter.</p>
               </div>
             )}
           </div>
@@ -333,31 +333,31 @@ export default function MissionPage() {
         <aside className="space-y-4 sticky top-20">
           <div
             className="rounded-2xl p-5"
-            style={{ background: "#FEFCF7", border: "1px solid #DDE8DD" }}
+            style={{ background: "#FEFCFF", border: "1px solid #DDD5F0" }}
           >
-            <p className="text-sm font-bold mb-1" style={{ color: "#2D4A2D" }}>
+            <p className="text-sm font-bold mb-1" style={{ color: "#2D1B69" }}>
               Mission Prep Checklist
             </p>
-            <p className="text-xs mb-4" style={{ color: "#9AAA9A" }}>
+            <p className="text-xs mb-4" style={{ color: "#8B7EC0" }}>
               Track your steps to serving
             </p>
 
             {/* Progress */}
             <div className="mb-4">
               <div className="flex justify-between text-xs mb-1">
-                <span style={{ color: "#7A9A7A" }}>
+                <span style={{ color: "#6B5FA0" }}>
                   {prepDone.size}/{PREP_STEPS.length} complete
                 </span>
-                <span style={{ color: "#4A7A4A" }}>
+                <span style={{ color: "#2D1B69" }}>
                   {Math.round((prepDone.size / PREP_STEPS.length) * 100)}%
                 </span>
               </div>
-              <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "#EDF5ED" }}>
+              <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "#EDE8F8" }}>
                 <div
                   className="h-full rounded-full"
                   style={{
                     width: `${(prepDone.size / PREP_STEPS.length) * 100}%`,
-                    background: "linear-gradient(90deg, #9BB89A, #4A7A4A)",
+                    background: "linear-gradient(90deg, #8B7EC0, #2D1B69)",
                   }}
                 />
               </div>
@@ -382,8 +382,8 @@ export default function MissionPage() {
                     <div
                       className="w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5"
                       style={{
-                        borderColor: done ? "#4A7A4A" : "#C8D8C8",
-                        background: done ? "#4A7A4A" : "transparent",
+                        borderColor: done ? "#2D1B69" : "#C8D8C8",
+                        background: done ? "#2D1B69" : "transparent",
                       }}
                     >
                       {done && <span className="text-white text-[8px] font-bold">✓</span>}
@@ -392,7 +392,7 @@ export default function MissionPage() {
                       <p
                         className="text-xs font-semibold"
                         style={{
-                          color: done ? "#9AAA9A" : "#2D4A2D",
+                          color: done ? "#8B7EC0" : "#2D1B69",
                           textDecoration: done ? "line-through" : "none",
                         }}
                       >

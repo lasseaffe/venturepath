@@ -6,6 +6,7 @@ import remarkGfm from "remark-gfm";
 import { getTopicImageUrl } from "@/lib/topic-images";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { RichTextarea } from "@/components/ui/rich-textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
@@ -256,10 +257,10 @@ export default function TalkGeneratorPage() {
 
       <div className="max-w-5xl mx-auto px-4 py-10">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2" style={{ color: "#2D4A2D" }}>
+          <h1 className="text-3xl font-bold mb-2" style={{ color: "#2D1B69" }}>
             Talk &amp; Lesson Generator
           </h1>
-          <p style={{ color: "#7A9A7A" }}>
+          <p style={{ color: "#6B5FA0" }}>
             Enter your topic and we&apos;ll create a faith-positive starting point for your preparation.
           </p>
         </div>
@@ -268,16 +269,16 @@ export default function TalkGeneratorPage() {
           {/* ── Form ── */}
           <Card
             className="border shadow-sm sticky top-20 no-print"
-            style={{ background: "#FEFCF7", borderColor: "#DDE8DD" }}
+            style={{ background: "#FEFCFF", borderColor: "#DDD5F0" }}
           >
             <CardHeader className="pb-3">
-              <CardTitle className="text-base" style={{ color: "#2D4A2D" }}>
+              <CardTitle className="text-base" style={{ color: "#2D1B69" }}>
                 Configure your lesson
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold uppercase tracking-wide" style={{ color: "#7A9A7A" }}>
+                <label className="text-xs font-semibold uppercase tracking-wide" style={{ color: "#6B5FA0" }}>
                   Type
                 </label>
                 <Select value={type} onValueChange={(v) => v && setType(v)}>
@@ -292,29 +293,29 @@ export default function TalkGeneratorPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold uppercase tracking-wide" style={{ color: "#7A9A7A" }}>
-                  Topic <span style={{ color: "#C87A50" }}>*</span>
+                <label className="text-xs font-semibold uppercase tracking-wide" style={{ color: "#6B5FA0" }}>
+                  Topic <span style={{ color: "#D4AF37" }}>*</span>
                 </label>
-                <Textarea
+                <RichTextarea
                   placeholder="e.g. Faith and trusting in the Lord's timing"
                   value={topic}
-                  onChange={(e) => setTopic(e.target.value)}
+                  onChange={setTopic}
                   rows={3}
                   className="resize-none text-sm"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold uppercase tracking-wide" style={{ color: "#7A9A7A" }}>
+                <label className="text-xs font-semibold uppercase tracking-wide" style={{ color: "#6B5FA0" }}>
                   Scripture{" "}
-                  <span className="font-normal normal-case" style={{ color: "#9AAA9A" }}>
+                  <span className="font-normal normal-case" style={{ color: "#8B7EC0" }}>
                     (optional)
                   </span>
                 </label>
-                <Textarea
+                <RichTextarea
                   placeholder="e.g. D&C 58:3–4"
                   value={scripture}
-                  onChange={(e) => setScripture(e.target.value)}
+                  onChange={setScripture}
                   rows={2}
                   className="resize-none text-sm"
                 />
@@ -322,7 +323,7 @@ export default function TalkGeneratorPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold uppercase tracking-wide" style={{ color: "#7A9A7A" }}>
+                  <label className="text-xs font-semibold uppercase tracking-wide" style={{ color: "#6B5FA0" }}>
                     Audience
                   </label>
                   <Select value={audience} onValueChange={(v) => v && setAudience(v)}>
@@ -337,7 +338,7 @@ export default function TalkGeneratorPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold uppercase tracking-wide" style={{ color: "#7A9A7A" }}>
+                  <label className="text-xs font-semibold uppercase tracking-wide" style={{ color: "#6B5FA0" }}>
                     Length
                   </label>
                   <Select value={length} onValueChange={(v) => v && setLength(v)}>
@@ -362,7 +363,7 @@ export default function TalkGeneratorPage() {
                     onClick={generate}
                     disabled={!topic.trim()}
                     className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold transition-opacity disabled:opacity-40"
-                    style={{ background: "#4A7A4A", color: "#F5F0E8" }}
+                    style={{ background: "#2D1B69", color: "#F5F0FF" }}
                   >
                     <Sparkles size={15} />
                     Generate {typeLabels[type] ?? "Lesson"}
@@ -370,9 +371,9 @@ export default function TalkGeneratorPage() {
                 )}
               </div>
 
-              <div className="flex items-center justify-between text-xs pt-1" style={{ color: "#9AAA9A" }}>
+              <div className="flex items-center justify-between text-xs pt-1" style={{ color: "#8B7EC0" }}>
                 <span>Free tier</span>
-                <Badge variant="secondary" className="text-xs" style={{ background: "#EDF5ED", color: "#4A7A4A" }}>
+                <Badge variant="secondary" className="text-xs" style={{ background: "#EDE8F8", color: "#2D1B69" }}>
                   0 / 3 this month
                 </Badge>
               </div>
@@ -385,10 +386,10 @@ export default function TalkGeneratorPage() {
             {!output && !loading && (
               <div
                 className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed py-24 text-center no-print"
-                style={{ borderColor: "#C8D8C8", background: "#FEFCF7" }}
+                style={{ borderColor: "#C8D8C8", background: "#FEFCFF" }}
               >
                 <FileText size={36} className="mb-3" style={{ color: "#C8D8C8" }} />
-                <p className="text-sm font-medium" style={{ color: "#9AAA9A" }}>
+                <p className="text-sm font-medium" style={{ color: "#8B7EC0" }}>
                   Your {typeLabels[type] ?? "lesson"} will appear here
                 </p>
                 <p className="text-xs mt-1" style={{ color: "#B8C8B8" }}>
@@ -401,28 +402,28 @@ export default function TalkGeneratorPage() {
             {loading && !output && (
               <div
                 className="rounded-2xl border shadow-sm overflow-hidden"
-                style={{ background: "#FEFCF7", borderColor: "#DDE8DD" }}
+                style={{ background: "#FEFCFF", borderColor: "#DDD5F0" }}
               >
                 {displayImage && (
-                  <div className="relative h-40 overflow-hidden animate-pulse" style={{ background: "#EDF5ED" }}>
+                  <div className="relative h-40 overflow-hidden animate-pulse" style={{ background: "#EDE8F8" }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={displayImage} alt="" className="w-full h-full object-cover opacity-60" />
-                    <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 40%, #FEFCF7 100%)" }} />
+                    <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 40%, #FEFCFF 100%)" }} />
                   </div>
                 )}
                 <div className="p-8">
                   <div className="flex items-center gap-3 mb-6">
-                    <Loader2 size={18} className="animate-spin" style={{ color: "#9BB89A" }} />
-                    <span className="text-sm" style={{ color: "#7A9A7A" }}>
+                    <Loader2 size={18} className="animate-spin" style={{ color: "#8B7EC0" }} />
+                    <span className="text-sm" style={{ color: "#6B5FA0" }}>
                       Writing your {typeLabels[type]}…
                     </span>
                   </div>
                   <div className="space-y-3 animate-pulse">
-                    <div className="h-5 rounded w-2/3" style={{ background: "#EDF5ED" }} />
-                    <div className="h-3 rounded w-full" style={{ background: "#EDF5ED" }} />
-                    <div className="h-3 rounded w-5/6" style={{ background: "#EDF5ED" }} />
-                    <div className="h-3 rounded w-full" style={{ background: "#EDF5ED" }} />
-                    <div className="h-3 rounded w-4/5" style={{ background: "#EDF5ED" }} />
+                    <div className="h-5 rounded w-2/3" style={{ background: "#EDE8F8" }} />
+                    <div className="h-3 rounded w-full" style={{ background: "#EDE8F8" }} />
+                    <div className="h-3 rounded w-5/6" style={{ background: "#EDE8F8" }} />
+                    <div className="h-3 rounded w-full" style={{ background: "#EDE8F8" }} />
+                    <div className="h-3 rounded w-4/5" style={{ background: "#EDE8F8" }} />
                   </div>
                 </div>
               </div>
@@ -433,20 +434,20 @@ export default function TalkGeneratorPage() {
               <>
                 <div
                   className="rounded-2xl border shadow-sm overflow-hidden print-content"
-                  style={{ background: "#FEFCF7", borderColor: "#DDE8DD" }}
+                  style={{ background: "#FEFCFF", borderColor: "#DDD5F0" }}
                 >
                   {/* Toolbar */}
                   <div
                     className="flex items-center justify-between px-5 py-3 border-b no-print"
-                    style={{ background: "linear-gradient(135deg, #F5F0E8 0%, #EDF5ED 100%)", borderColor: "#DDE8DD" }}
+                    style={{ background: "linear-gradient(135deg, #F5F0FF 0%, #EDE8F8 100%)", borderColor: "#DDD5F0" }}
                   >
                     <div className="flex items-center gap-2">
-                      <FileText size={14} style={{ color: "#4A7A4A" }} />
-                      <span className="text-xs font-medium" style={{ color: "#2D4A2D" }}>
+                      <FileText size={14} style={{ color: "#2D1B69" }} />
+                      <span className="text-xs font-medium" style={{ color: "#2D1B69" }}>
                         {typeLabels[type]}
                       </span>
                       {loading && (
-                        <Loader2 size={12} className="animate-spin" style={{ color: "#9AAA9A" }} />
+                        <Loader2 size={12} className="animate-spin" style={{ color: "#8B7EC0" }} />
                       )}
                     </div>
 
@@ -458,10 +459,10 @@ export default function TalkGeneratorPage() {
                         size="sm"
                         onClick={copyToClipboard}
                         className="h-7 px-2 text-xs"
-                        style={{ color: "#7A9A7A" }}
+                        style={{ color: "#6B5FA0" }}
                       >
                         {copied ? (
-                          <><Check size={12} className="mr-1" style={{ color: "#4A7A4A" }} /><span style={{ color: "#4A7A4A" }}>Copied!</span></>
+                          <><Check size={12} className="mr-1" style={{ color: "#2D1B69" }} /><span style={{ color: "#2D1B69" }}>Copied!</span></>
                         ) : (
                           <><Copy size={12} className="mr-1" />Copy</>
                         )}
@@ -473,7 +474,7 @@ export default function TalkGeneratorPage() {
                         size="sm"
                         onClick={share}
                         className="h-7 px-2 text-xs"
-                        style={{ color: "#7A9A7A" }}
+                        style={{ color: "#6B5FA0" }}
                       >
                         <Share2 size={12} className="mr-1" />
                         {shareMsg || "Share"}
@@ -485,7 +486,7 @@ export default function TalkGeneratorPage() {
                         size="sm"
                         onClick={savePdf}
                         className="h-7 px-2 text-xs"
-                        style={{ color: "#7A9A7A" }}
+                        style={{ color: "#6B5FA0" }}
                       >
                         <Printer size={12} className="mr-1" />
                         PDF
@@ -497,14 +498,14 @@ export default function TalkGeneratorPage() {
                           variant="ghost"
                           size="sm"
                           className="h-7 px-2 text-xs"
-                          style={{ color: "#7A9A7A" }}
+                          style={{ color: "#6B5FA0" }}
                         >
                           <Download size={12} className="mr-1" />
                           More ↓
                         </Button>
                         <div
                           className="absolute right-0 top-full mt-1 w-48 rounded-xl shadow-xl border py-1 z-20 hidden group-hover:block"
-                          style={{ background: "#FEFCF7", borderColor: "#DDE8DD" }}
+                          style={{ background: "#FEFCFF", borderColor: "#DDD5F0" }}
                         >
                           {[
                             { label: "Save as PDF", icon: Printer, action: savePdf },
@@ -528,7 +529,7 @@ export default function TalkGeneratorPage() {
                               key={label}
                               onClick={action}
                               className="w-full flex items-center gap-2.5 px-4 py-2 text-xs hover:bg-gray-50 transition-colors"
-                              style={{ color: "#2D4A2D" }}
+                              style={{ color: "#2D1B69" }}
                             >
                               <Icon size={12} />
                               {label}
@@ -543,7 +544,7 @@ export default function TalkGeneratorPage() {
                         size="sm"
                         onClick={() => { setOutput(""); setShowEnhance(false); }}
                         className="h-7 px-2 text-xs"
-                        style={{ color: "#7A9A7A" }}
+                        style={{ color: "#6B5FA0" }}
                       >
                         <RotateCcw size={12} className="mr-1" />
                         Clear
@@ -568,7 +569,7 @@ export default function TalkGeneratorPage() {
                           className="absolute inset-0"
                           style={{
                             background:
-                              "linear-gradient(to bottom, transparent 30%, #FEFCF7 100%)",
+                              "linear-gradient(to bottom, transparent 30%, #FEFCFF 100%)",
                           }}
                         />
                       </div>
@@ -621,15 +622,15 @@ export default function TalkGeneratorPage() {
                         prose-hr:my-6
                       "
                       style={{
-                        "--tw-prose-headings": "#2D4A2D",
+                        "--tw-prose-headings": "#2D1B69",
                         "--tw-prose-body": "#3D4A3D",
-                        "--tw-prose-bold": "#1A2818",
-                        "--tw-prose-links": "#4A7A4A",
-                        "--tw-prose-hr": "#DDE8DD",
-                        "--tw-prose-quotes": "#5A7A5A",
-                        "--tw-prose-quote-borders": "#E8B49A",
-                        "--tw-prose-bullets": "#9BB89A",
-                        "--tw-prose-counters": "#9BB89A",
+                        "--tw-prose-bold": "#1A1430",
+                        "--tw-prose-links": "#2D1B69",
+                        "--tw-prose-hr": "#DDD5F0",
+                        "--tw-prose-quotes": "#6B5FA0",
+                        "--tw-prose-quote-borders": "#D4AF37",
+                        "--tw-prose-bullets": "#8B7EC0",
+                        "--tw-prose-counters": "#8B7EC0",
                       } as React.CSSProperties}
                     >
                       <ReactMarkdown remarkPlugins={[remarkGfm]}>
@@ -650,30 +651,30 @@ export default function TalkGeneratorPage() {
                 {quotedScriptures.length > 0 && (
                   <div
                     className="rounded-2xl border overflow-hidden no-print"
-                    style={{ background: "#FEFCF7", borderColor: "#DDE8DD" }}
+                    style={{ background: "#FEFCFF", borderColor: "#DDD5F0" }}
                   >
                     <button
                       onClick={() => setShowQuotes(!showQuotes)}
                       className="w-full flex items-center justify-between px-5 py-3.5 text-left"
-                      style={{ background: "linear-gradient(135deg, #EDF5ED, #D8EDD8)" }}
+                      style={{ background: "linear-gradient(135deg, #EDE8F8, #D8EDD8)" }}
                     >
                       <div className="flex items-center gap-2">
-                        <BookMarked size={14} style={{ color: "#4A7A4A" }} />
-                        <span className="text-sm font-semibold" style={{ color: "#2D4A2D" }}>
+                        <BookMarked size={14} style={{ color: "#2D1B69" }} />
+                        <span className="text-sm font-semibold" style={{ color: "#2D1B69" }}>
                           Referenced Scriptures ({quotedScriptures.length})
                         </span>
                       </div>
                       {showQuotes ? (
-                        <ChevronUp size={14} style={{ color: "#7A9A7A" }} />
+                        <ChevronUp size={14} style={{ color: "#6B5FA0" }} />
                       ) : (
-                        <ChevronDown size={14} style={{ color: "#7A9A7A" }} />
+                        <ChevronDown size={14} style={{ color: "#6B5FA0" }} />
                       )}
                     </button>
                     {showQuotes && (
                       <div className="px-5 py-4">
                         <p
                           className="text-xs mb-3"
-                          style={{ color: "#7A9A7A" }}
+                          style={{ color: "#6B5FA0" }}
                         >
                           Study each reference to deepen your preparation:
                         </p>
@@ -682,10 +683,10 @@ export default function TalkGeneratorPage() {
                             <div
                               key={ref}
                               className="flex items-center gap-3 px-3 py-2 rounded-xl"
-                              style={{ background: "#F5F0E8" }}
+                              style={{ background: "#F5F0FF" }}
                             >
-                              <BookOpen size={13} style={{ color: "#C87A50" }} />
-                              <span className="text-sm font-medium flex-1" style={{ color: "#2D4A2D" }}>
+                              <BookOpen size={13} style={{ color: "#D4AF37" }} />
+                              <span className="text-sm font-medium flex-1" style={{ color: "#2D1B69" }}>
                                 {ref}
                               </span>
                               <a
@@ -693,7 +694,7 @@ export default function TalkGeneratorPage() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-xs"
-                                style={{ color: "#C87A50" }}
+                                style={{ color: "#D4AF37" }}
                               >
                                 Look up →
                               </a>
@@ -708,7 +709,7 @@ export default function TalkGeneratorPage() {
                 {/* ── Enhance Panel ── */}
                 <div
                   className="rounded-2xl border overflow-hidden no-print"
-                  style={{ background: "#FEFCF7", borderColor: "#DDE8DD" }}
+                  style={{ background: "#FEFCFF", borderColor: "#DDD5F0" }}
                 >
                   <button
                     onClick={() => setShowEnhance(!showEnhance)}
@@ -716,21 +717,21 @@ export default function TalkGeneratorPage() {
                     style={{ background: "linear-gradient(135deg, #FDF0E8, #F5E0D0)" }}
                   >
                     <div className="flex items-center gap-2">
-                      <Wand2 size={14} style={{ color: "#C87A50" }} />
+                      <Wand2 size={14} style={{ color: "#D4AF37" }} />
                       <span className="text-sm font-semibold" style={{ color: "#2D1A0E" }}>
                         Enhance Your Lesson
                       </span>
                       <span
                         className="text-xs px-2 py-0.5 rounded-full"
-                        style={{ background: "rgba(200,122,80,0.15)", color: "#C87A50" }}
+                        style={{ background: "rgba(200,122,80,0.15)", color: "#D4AF37" }}
                       >
                         Add more depth
                       </span>
                     </div>
                     {showEnhance ? (
-                      <ChevronUp size={14} style={{ color: "#C87A50" }} />
+                      <ChevronUp size={14} style={{ color: "#D4AF37" }} />
                     ) : (
-                      <ChevronDown size={14} style={{ color: "#C87A50" }} />
+                      <ChevronDown size={14} style={{ color: "#D4AF37" }} />
                     )}
                   </button>
 
@@ -740,7 +741,7 @@ export default function TalkGeneratorPage() {
                       <div>
                         <p
                           className="text-xs font-semibold uppercase tracking-wide mb-2"
-                          style={{ color: "#C87A50" }}
+                          style={{ color: "#D4AF37" }}
                         >
                           Suggested related topics
                         </p>
@@ -775,8 +776,8 @@ export default function TalkGeneratorPage() {
                               className="px-3 py-1.5 rounded-full text-xs font-medium transition-all"
                               style={
                                 enhanceType === et.value
-                                  ? { background: "#C87A50", color: "#fff" }
-                                  : { background: "#F5F0E8", color: "#9A7A5A" }
+                                  ? { background: "#D4AF37", color: "#fff" }
+                                  : { background: "#F5F0FF", color: "#9A7A5A" }
                               }
                             >
                               {enhanceType === "video" && et.value === "video" && (
@@ -801,7 +802,7 @@ export default function TalkGeneratorPage() {
                             onClick={enhance}
                             disabled={!enhanceInput.trim() || enhancing}
                             className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold disabled:opacity-40"
-                            style={{ background: "#C87A50", color: "#fff" }}
+                            style={{ background: "#D4AF37", color: "#fff" }}
                           >
                             {enhancing ? (
                               <Loader2 size={14} className="animate-spin" />
@@ -816,7 +817,7 @@ export default function TalkGeneratorPage() {
                       {/* Video / TikTok Premium stub */}
                       <div
                         className="rounded-xl p-4 flex items-center gap-3"
-                        style={{ background: "linear-gradient(135deg, #1E3320 0%, #2D4A2D 100%)" }}
+                        style={{ background: "linear-gradient(135deg, #1E3320 0%, #2D1B69 100%)" }}
                       >
                         <Video size={18} style={{ color: "#E8C49A" }} />
                         <div className="flex-1">
@@ -830,7 +831,7 @@ export default function TalkGeneratorPage() {
                         <button
                           onClick={() => alert("Video generation is a Premium feature. Upgrade coming soon!")}
                           className="px-3 py-1.5 rounded-lg text-xs font-semibold flex-shrink-0"
-                          style={{ background: "#E8B49A", color: "#2D1A0E" }}
+                          style={{ background: "#D4AF37", color: "#2D1A0E" }}
                         >
                           Unlock
                         </button>
@@ -842,19 +843,19 @@ export default function TalkGeneratorPage() {
                 {/* ── Save to Library nudge ── */}
                 <div
                   className="rounded-xl p-4 flex items-center gap-3 no-print"
-                  style={{ background: "#EDF5ED", border: "1px solid #C8DCC8" }}
+                  style={{ background: "#EDE8F8", border: "1px solid #C8DCC8" }}
                 >
-                  <BookMarked size={16} style={{ color: "#4A7A4A" }} />
-                  <p className="text-sm flex-1" style={{ color: "#2D4A2D" }}>
+                  <BookMarked size={16} style={{ color: "#2D1B69" }} />
+                  <p className="text-sm flex-1" style={{ color: "#2D1B69" }}>
                     Save this to your{" "}
-                    <a href="/library" className="font-semibold underline" style={{ color: "#4A7A4A" }}>
+                    <a href="/library" className="font-semibold underline" style={{ color: "#2D1B69" }}>
                       Library
                     </a>{" "}
                     to access it later, organise your lessons, and share with your ward.
                   </p>
                   <button
                     className="px-3 py-1.5 rounded-lg text-xs font-semibold flex-shrink-0"
-                    style={{ background: "#4A7A4A", color: "#F5F0E8" }}
+                    style={{ background: "#2D1B69", color: "#F5F0FF" }}
                     onClick={() => alert("Sign in to save to your library.")}
                   >
                     Save

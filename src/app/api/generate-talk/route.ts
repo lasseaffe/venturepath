@@ -1,4 +1,4 @@
-import { openai, SYSTEM_PROMPT } from "@/lib/anthropic";
+import { openai, getNextModel, SYSTEM_PROMPT } from "@/lib/anthropic";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -42,7 +42,7 @@ ${type !== "sacrament" ? "5. Discussion questions for the class/family\n6. An ac
 End with a note reminding the speaker/teacher that this is a starting point — encourage them to study, pray, and let the Spirit guide their personal preparation.`;
 
   const stream = await openai.chat.completions.create({
-    model: "gpt-4o",
+    model: getNextModel(),
     max_tokens: 2048,
     stream: true,
     messages: [

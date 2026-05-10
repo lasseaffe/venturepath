@@ -9,7 +9,7 @@ const slides = [
   {
     type: "temple",
     variant: "salt-lake" as const,
-    bg: "linear-gradient(160deg, #2D4A2D 0%, #3D6040 100%)",
+    bg: "linear-gradient(160deg, #2D1B69 0%, #4A2D8A 100%)",
     label: "Salt Lake Temple",
     sub: "Salt Lake City, Utah",
     quote: null,
@@ -26,7 +26,7 @@ const slides = [
   {
     type: "symbol",
     symbol: "ctr",
-    bg: "linear-gradient(150deg, #4A7050 0%, #6A9060 100%)",
+    bg: "linear-gradient(150deg, #1A0D4A 0%, #2D1B69 100%)",
     quote: '\u201cChoose the right when a choice is placed before you.\u201d',
     ref: "LDS Hymn #239",
   },
@@ -34,7 +34,7 @@ const slides = [
   {
     type: "temple",
     variant: "dc" as const,
-    bg: "linear-gradient(160deg, #1E3320 0%, #2D4A2D 100%)",
+    bg: "linear-gradient(160deg, #1A0D4A 0%, #2D1B69 100%)",
     label: "Washington D.C. Temple",
     sub: "Kensington, Maryland",
     quote: null,
@@ -51,7 +51,7 @@ const slides = [
   {
     type: "symbol",
     symbol: "beehive",
-    bg: "linear-gradient(150deg, #5A4A2A 0%, #8A7040 100%)",
+    bg: "linear-gradient(150deg, #2D1B69 0%, #4A2D8A 100%)",
     quote: '\u201cBy small and simple things are great things brought to pass.\u201d',
     ref: "Alma 37:6",
   },
@@ -59,7 +59,7 @@ const slides = [
   {
     type: "temple",
     variant: "provo" as const,
-    bg: "linear-gradient(160deg, #2D3A4A 0%, #3D5060 100%)",
+    bg: "linear-gradient(160deg, #16103A 0%, #231855 100%)",
     label: "Provo Utah Temple",
     sub: "Provo, Utah",
     quote: null,
@@ -92,7 +92,14 @@ export function HeroSlideshow() {
   const slide = slides[current];
 
   return (
-    <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl select-none">
+    <div
+      className="relative w-full h-full select-none overflow-hidden"
+      style={{
+        borderRadius: "20px 28px 28px 20px",
+        boxShadow: "0 20px 60px rgba(26,13,74,0.45), 0 4px 16px rgba(26,13,74,0.25)",
+        minHeight: 280,
+      }}
+    >
       {/* Slide content */}
       <div
         className="absolute inset-0 transition-opacity duration-500"
@@ -106,7 +113,7 @@ export function HeroSlideshow() {
               fill
               className="object-cover"
             />
-            <div className="absolute inset-0" style={{ background: "rgba(20,35,20,0.58)" }} />
+            <div className="absolute inset-0" style={{ background: "rgba(26,13,74,0.60)" }} />
           </>
         )}
 
@@ -119,12 +126,12 @@ export function HeroSlideshow() {
             <TempleSilhouette
               variant={(slide as { variant: "salt-lake" | "dc" | "provo" }).variant}
               height={160}
-              className="text-[#9BB89A] opacity-90"
+              className="text-[#D4AF37] opacity-90"
             />
-            <p className="text-sm font-semibold" style={{ color: "#C8DCC8" }}>
+            <p className="text-sm font-semibold" style={{ color: "#EDE8F8" }}>
               {(slide as { label: string }).label}
             </p>
-            <p className="text-xs" style={{ color: "#5A7A5A" }}>
+            <p className="text-xs" style={{ color: "#8B7EC0" }}>
               {(slide as { sub: string }).sub}
             </p>
           </div>
@@ -135,15 +142,15 @@ export function HeroSlideshow() {
             {/* CTR-inspired geometric shield */}
             <svg width="80" height="90" viewBox="0 0 80 90" fill="none">
               <path d="M40 4 L74 18 L74 52 C74 68 56 82 40 88 C24 82 6 68 6 52 L6 18 Z"
-                fill="none" stroke="#9BB89A" strokeWidth="2.5" />
+                fill="none" stroke="#D4AF37" strokeWidth="2.5" />
               <path d="M40 14 L64 24 L64 52 C64 64 52 74 40 80 C28 74 16 64 16 52 L16 24 Z"
-                fill="#9BB89A" opacity="0.15" />
-              <text x="40" y="55" textAnchor="middle" fontSize="22" fontWeight="700" fill="#C8DCC8" fontFamily="serif">CTR</text>
+                fill="#D4AF37" opacity="0.15" />
+              <text x="40" y="55" textAnchor="middle" fontSize="22" fontWeight="700" fill="#F5F0FF" fontFamily="serif">CTR</text>
             </svg>
-            <p className="text-center text-sm italic leading-relaxed max-w-[180px]" style={{ color: "#C8DCC8" }}>
+            <p className="text-center text-sm italic leading-relaxed max-w-[180px]" style={{ color: "#EDE8F8" }}>
               {(slide as { quote: string }).quote}
             </p>
-            <p className="text-xs" style={{ color: "#5A7A5A" }}>
+            <p className="text-xs" style={{ color: "#8B7EC0" }}>
               {(slide as { ref: string }).ref}
             </p>
           </div>
@@ -154,19 +161,19 @@ export function HeroSlideshow() {
             {/* Deseret beehive */}
             <svg width="80" height="88" viewBox="0 0 80 88" fill="none">
               <path d="M40 8 C20 8 10 24 10 40 C10 56 14 68 14 68 L66 68 C66 68 70 56 70 40 C70 24 60 8 40 8 Z"
-                fill="#E8C49A" opacity="0.9" />
+                fill="#D4AF37" opacity="0.9" />
               <path d="M15 58 Q40 52 65 58" stroke="white" strokeWidth="1.5" fill="none" opacity="0.5" />
               <path d="M13 48 Q40 41 67 48" stroke="white" strokeWidth="1.5" fill="none" opacity="0.5" />
               <path d="M13 38 Q40 31 67 38" stroke="white" strokeWidth="1.5" fill="none" opacity="0.5" />
               <path d="M16 28 Q40 22 64 28" stroke="white" strokeWidth="1.5" fill="none" opacity="0.45" />
-              <rect x="6" y="68" width="68" height="9" rx="4.5" fill="#C8A070" />
-              <ellipse cx="40" cy="68" rx="8" ry="3" fill="#A07840" opacity="0.4" />
+              <rect x="6" y="68" width="68" height="9" rx="4.5" fill="#C9A84C" />
+              <ellipse cx="40" cy="68" rx="8" ry="3" fill="#A08830" opacity="0.4" />
               <circle cx="40" cy="5" r="5" fill="white" opacity="0.3" />
             </svg>
-            <p className="text-center text-sm italic leading-relaxed max-w-[200px]" style={{ color: "#F5EDE0" }}>
+            <p className="text-center text-sm italic leading-relaxed max-w-[200px]" style={{ color: "#F5F0FF" }}>
               {(slide as { quote: string }).quote}
             </p>
-            <p className="text-xs" style={{ color: "#C8A870" }}>
+            <p className="text-xs" style={{ color: "#D4AF37" }}>
               {(slide as { ref: string }).ref}
             </p>
           </div>
@@ -174,10 +181,10 @@ export function HeroSlideshow() {
 
         {(slide.type === "photo") && "quote" in slide && slide.quote && (
           <div className="absolute bottom-0 left-0 right-0 p-6">
-            <p className="text-sm font-medium italic leading-relaxed" style={{ color: "#F5F0E8", textShadow: "0 1px 6px rgba(0,0,0,0.6)" }}>
+            <p className="text-sm font-medium italic leading-relaxed" style={{ color: "#F5F0FF", textShadow: "0 1px 6px rgba(0,0,0,0.6)" }}>
               {(slide as { quote: string }).quote}
             </p>
-            <p className="text-xs mt-1" style={{ color: "#9BB89A", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
+            <p className="text-xs mt-1" style={{ color: "#D4AF37", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
               {(slide as { ref: string }).ref}
             </p>
           </div>
@@ -194,7 +201,7 @@ export function HeroSlideshow() {
             style={{
               width: i === current ? "18px" : "6px",
               height: "6px",
-              background: i === current ? "#E8B49A" : "rgba(255,255,255,0.35)",
+              background: i === current ? "#D4AF37" : "rgba(255,255,255,0.35)",
             }}
           />
         ))}

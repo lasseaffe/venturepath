@@ -1,12 +1,23 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Cormorant_Garamond, Source_Sans_3, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/nav";
 import { Chatbot } from "@/components/chatbot";
+import { AuthGateProvider } from "@/components/auth-gate";
+import { SabbathProvider } from "@/components/sabbath-toggle";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
   subsets: ["latin"],
+  weight: ["400", "600", "700"],
+  display: "swap",
+});
+
+const sourceSans = Source_Sans_3({
+  variable: "--font-source-sans",
+  subsets: ["latin"],
+  weight: ["400", "600"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
@@ -29,16 +40,20 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${cormorant.variable} ${sourceSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col" style={{ background: "#FDFAF3" }} suppressHydrationWarning>
-        <Nav />
-        <main className="flex-1">{children}</main>
-        <Chatbot />
-        <footer className="border-t py-6 text-center text-xs" style={{ background: "#F5F0E8", borderColor: "#DDE8DD", color: "#7A9A7A" }}>
-          <p>HolyFlex is an independent tool and is not affiliated with The Church of Jesus Christ of Latter-day Saints.</p>
-          <p className="mt-1">All AI-generated content is a starting point — please seek personal revelation and the guidance of the Holy Ghost.</p>
-        </footer>
+      <body className="min-h-full flex flex-col" style={{ background: "#FDFAF5" }} suppressHydrationWarning>
+        <SabbathProvider>
+          <AuthGateProvider>
+            <Nav />
+            <main className="flex-1">{children}</main>
+            <Chatbot />
+            <footer className="border-t py-6 text-center text-xs" style={{ background: "#F0EBF8", borderColor: "#DDD5F0", color: "#8B7EC0" }}>
+              <p>HolyFlex is an independent tool and is not affiliated with The Church of Jesus Christ of Latter-day Saints.</p>
+              <p className="mt-1">All AI-generated content is a starting point — please seek personal revelation and the guidance of the Holy Ghost.</p>
+            </footer>
+          </AuthGateProvider>
+        </SabbathProvider>
       </body>
     </html>
   );

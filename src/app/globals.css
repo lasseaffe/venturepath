@@ -8,9 +8,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
+  --font-sans: var(--font-source-sans);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-cormorant);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -50,68 +50,68 @@
 }
 
 :root {
-  /* Desert Sage palette */
-  --background: oklch(0.99 0.008 90);        /* warm cream #FDFAF3 */
-  --foreground: oklch(0.20 0.04 145);        /* deep forest #1A2818 */
-  --card: oklch(1 0.004 90);                 /* off-white warm */
-  --card-foreground: oklch(0.20 0.04 145);
-  --popover: oklch(1 0.004 90);
-  --popover-foreground: oklch(0.20 0.04 145);
-  --primary: oklch(0.50 0.09 145);           /* sage green button #4A7A4A */
-  --primary-foreground: oklch(0.99 0 0);     /* white */
-  --secondary: oklch(0.94 0.03 145);         /* light sage */
-  --secondary-foreground: oklch(0.25 0.05 145);
-  --muted: oklch(0.95 0.02 100);             /* muted cream */
-  --muted-foreground: oklch(0.50 0.04 120);
-  --accent: oklch(0.80 0.07 50);             /* warm peach #E8B49A */
-  --accent-foreground: oklch(0.25 0.05 45);
+  /* Celestial & Bold palette */
+  --background: oklch(0.98 0.010 85);        /* warm cream #FDFAF5 */
+  --foreground: oklch(0.16 0.06 278);        /* deep indigo #1A1430 */
+  --card: oklch(1.00 0.006 88);              /* off-white warm #FFFDF8 */
+  --card-foreground: oklch(0.16 0.06 278);
+  --popover: oklch(1.00 0.006 88);
+  --popover-foreground: oklch(0.16 0.06 278);
+  --primary: oklch(0.28 0.15 278);           /* deep indigo #2D1B69 */
+  --primary-foreground: oklch(0.98 0.010 85);
+  --secondary: oklch(0.93 0.04 278);         /* light lavender #EDE8F8 */
+  --secondary-foreground: oklch(0.28 0.15 278);
+  --muted: oklch(0.94 0.03 285);             /* muted lavender #F0EBF8 */
+  --muted-foreground: oklch(0.52 0.06 278);  /* soft indigo-gray */
+  --accent: oklch(0.74 0.13 83);             /* gold shimmer #D4AF37 */
+  --accent-foreground: oklch(0.16 0.06 278);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.90 0.02 120);
-  --input: oklch(0.92 0.02 120);
-  --ring: oklch(0.60 0.08 145);
-  --radius: 0.75rem;
-  --sidebar: oklch(0.97 0.015 100);
-  --sidebar-foreground: oklch(0.20 0.04 145);
-  --sidebar-primary: oklch(0.50 0.09 145);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.94 0.03 145);
-  --sidebar-accent-foreground: oklch(0.25 0.05 145);
-  --sidebar-border: oklch(0.90 0.02 120);
-  --sidebar-ring: oklch(0.60 0.08 145);
+  --border: oklch(0.87 0.05 280);            /* #DDD5F0 */
+  --input: oklch(0.91 0.04 280);             /* #E8E2F5 */
+  --ring: oklch(0.74 0.13 83);              /* gold focus ring */
+  --radius: 0.875rem;
+  --sidebar: oklch(0.95 0.04 278);
+  --sidebar-foreground: oklch(0.16 0.06 278);
+  --sidebar-primary: oklch(0.28 0.15 278);
+  --sidebar-primary-foreground: oklch(0.98 0.010 85);
+  --sidebar-accent: oklch(0.93 0.04 278);
+  --sidebar-accent-foreground: oklch(0.28 0.15 278);
+  --sidebar-border: oklch(0.87 0.05 280);
+  --sidebar-ring: oklch(0.74 0.13 83);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --background: oklch(0.12 0.06 278);
+  --foreground: oklch(0.96 0.01 85);
+  --card: oklch(0.17 0.07 278);
+  --card-foreground: oklch(0.96 0.01 85);
+  --popover: oklch(0.17 0.07 278);
+  --popover-foreground: oklch(0.96 0.01 85);
+  --primary: oklch(0.74 0.13 83);
+  --primary-foreground: oklch(0.12 0.06 278);
+  --secondary: oklch(0.22 0.09 278);
+  --secondary-foreground: oklch(0.96 0.01 85);
+  --muted: oklch(0.22 0.09 278);
+  --muted-foreground: oklch(0.65 0.05 280);
+  --accent: oklch(0.74 0.13 83);
+  --accent-foreground: oklch(0.12 0.06 278);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 16%);
+  --ring: oklch(0.74 0.13 83);
+  --chart-1: oklch(0.74 0.13 83);
+  --chart-2: oklch(0.65 0.10 278);
+  --chart-3: oklch(0.50 0.10 278);
+  --chart-4: oklch(0.35 0.10 278);
+  --chart-5: oklch(0.22 0.09 278);
+  --sidebar: oklch(0.17 0.07 278);
+  --sidebar-foreground: oklch(0.96 0.01 85);
+  --sidebar-primary: oklch(0.74 0.13 83);
+  --sidebar-primary-foreground: oklch(0.12 0.06 278);
+  --sidebar-accent: oklch(0.22 0.09 278);
+  --sidebar-accent-foreground: oklch(0.96 0.01 85);
+  --sidebar-border: oklch(1 0 0 / 12%);
+  --sidebar-ring: oklch(0.74 0.13 83);
 }
 
 @layer base {
@@ -124,6 +124,48 @@
   html {
     @apply font-sans;
   }
+  h1, h2, h3 {
+    font-family: var(--font-heading);
+  }
+}
+
+/* ── Parchment utilities ─────────────────────────────── */
+
+/* Warm parchment card surface */
+.hf-parchment {
+  background: #FDFAF5;
+  border: 1px solid oklch(0.87 0.05 280);
+  position: relative;
+  overflow: hidden;
+}
+.hf-parchment::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-size: 300px 300px;
+  opacity: 0.03;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+/* Ink-gold horizontal rule */
+.hf-ink-rule {
+  border: none;
+  border-top: 1px solid #D4AF37;
+  opacity: 0.35;
+}
+
+/* Typewriter cursor blink */
+@keyframes hf-cursor-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+.hf-cursor::after {
+  content: "▎";
+  color: #D4AF37;
+  animation: hf-cursor-blink 1s step-end infinite;
+  margin-left: 1px;
 }
 
 /* ── HolyFlex Animations ─────────────────────────────── */
@@ -172,12 +214,12 @@
 .hf-stripe-bg {
   background: linear-gradient(
     to bottom,
-    var(--stripe-a, #1A0902) 0%,
-    var(--stripe-a, #1A0902) 34%,
-    var(--stripe-b, #3D1A0A) 34%,
-    var(--stripe-b, #3D1A0A) 66%,
-    var(--stripe-a, #1A0902) 66%,
-    var(--stripe-a, #1A0902) 100%
+    var(--stripe-a, #1A0D4A) 0%,
+    var(--stripe-a, #1A0D4A) 34%,
+    var(--stripe-b, #2D1B69) 34%,
+    var(--stripe-b, #2D1B69) 66%,
+    var(--stripe-a, #1A0D4A) 66%,
+    var(--stripe-a, #1A0D4A) 100%
   );
 }
 
@@ -187,7 +229,7 @@
   position: absolute;
   bottom: 0; left: 0; right: 0;
   height: 55%;
-  background: linear-gradient(to bottom, transparent 0%, var(--fade-to, #FDFAF3) 100%);
+  background: linear-gradient(to bottom, transparent 0%, var(--fade-to, #FDFAF5) 100%);
   pointer-events: none;
 }
 
@@ -197,8 +239,35 @@
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 40%;
-  background: linear-gradient(to top, transparent 0%, var(--fade-to, #FDFAF3) 100%);
+  background: linear-gradient(to top, transparent 0%, var(--fade-to, #FDFAF5) 100%);
   pointer-events: none;
+}
+
+/* Celestial deep-indigo radial background with subtle star-noise */
+.hf-celestial-bg {
+  background: radial-gradient(ellipse at 60% 0%, #4A2D8A 0%, #2D1B69 40%, #1A0D4A 100%);
+  position: relative;
+  overflow: hidden;
+}
+.hf-celestial-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  opacity: 0.06;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+/* Gold shimmer text effect */
+.hf-gold-shimmer {
+  background: linear-gradient(90deg, #C9A84C 0%, #F0D060 30%, #D4AF37 55%, #F0D060 80%, #C9A84C 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s linear infinite;
 }
 
 @keyframes scaleIn {
@@ -229,13 +298,13 @@
 .delay-400 { animation-delay: 0.4s; }
 .delay-500 { animation-delay: 0.5s; }
 
-/* Button glow / lift effect */
+/* Button glow / lift effects */
 .btn-primary-glow {
   transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 .btn-primary-glow:hover {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 8px 28px rgba(232, 180, 154, 0.45);
+  box-shadow: 0 8px 28px rgba(212, 175, 55, 0.45);
   filter: brightness(1.06);
 }
 
@@ -244,6 +313,57 @@
 }
 .btn-outline-lift:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(74, 122, 74, 0.18);
-  background: rgba(74, 122, 74, 0.06) !important;
+  box-shadow: 0 6px 20px rgba(45, 27, 105, 0.18);
+  background: rgba(45, 27, 105, 0.06) !important;
+}
+
+/* Gold glow — for CTA buttons on dark sections */
+.btn-gold-glow {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+.btn-gold-glow:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 32px rgba(212, 175, 55, 0.55);
+  filter: brightness(1.08);
+}
+
+/* ── Sabbath Mode (Sacrament HUD palette) ────────────── */
+/* Applied via .sabbath class on <html> — auto Sunday or manual toggle */
+.sabbath {
+  --background: oklch(0.14 0.07 278);      /* deep reverent purple */
+  --foreground: oklch(0.93 0.02 85);       /* soft cream */
+  --card: oklch(0.18 0.08 278);
+  --card-foreground: oklch(0.93 0.02 85);
+  --primary: oklch(0.60 0.08 83);          /* muted gold — no urgency */
+  --primary-foreground: oklch(0.14 0.07 278);
+  --secondary: oklch(0.22 0.09 278);
+  --secondary-foreground: oklch(0.93 0.02 85);
+  --muted: oklch(0.20 0.08 278);
+  --muted-foreground: oklch(0.65 0.05 280);
+  --accent: oklch(0.60 0.08 83);           /* muted gold */
+  --accent-foreground: oklch(0.14 0.07 278);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 14%);
+  --ring: oklch(0.60 0.08 83);
+}
+
+/* Nav gold border in Sabbath Mode */
+.sabbath header {
+  border-bottom-color: rgba(212, 175, 55, 0.25) !important;
+}
+
+/* Remove urgency red/orange in Sabbath Mode */
+.sabbath [style*="color: #D4AF37"],
+.sabbath [style*="color:#D4AF37"] {
+  color: oklch(0.60 0.08 83) !important;
+}
+
+/* Indigo lift — for outline buttons on light sections */
+.btn-indigo-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.btn-indigo-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(45, 27, 105, 0.22);
+  background: rgba(45, 27, 105, 0.06) !important;
 }

@@ -25,8 +25,8 @@ const UNITS = [
     title: "The Restoration",
     description: "The First Vision, Joseph Smith, and the restoration of the gospel.",
     lessons: 4,
-    color: "#4A7A4A",
-    bg: "linear-gradient(135deg, #EDF5ED 0%, #D8EDD8 100%)",
+    color: "#2D1B69",
+    bg: "linear-gradient(135deg, #EDE8F8 0%, #D8EDD8 100%)",
     unlocked: true,
   },
   {
@@ -35,7 +35,7 @@ const UNITS = [
     title: "The Book of Mormon",
     description: "Another Testament of Jesus Christ — its origins, message, and witness.",
     lessons: 5,
-    color: "#C87A50",
+    color: "#D4AF37",
     bg: "linear-gradient(135deg, #FDF0E8 0%, #F5E0D0 100%)",
     unlocked: true,
   },
@@ -105,14 +105,14 @@ const CLASSROOMS = [
     name: "Provo YSA Scripture Study",
     members: 24,
     unit: "The Book of Mormon",
-    color: "#4A7A4A",
+    color: "#2D1B69",
   },
   {
     id: "cr2",
     name: "Smith Family Come Follow Me",
     members: 6,
     unit: "The Atonement",
-    color: "#C87A50",
+    color: "#D4AF37",
   },
 ];
 
@@ -148,10 +148,10 @@ export default function LearnPage() {
       {/* Header */}
       <div className="flex items-start justify-between mb-8 flex-wrap gap-4">
         <div>
-          <h1 className="text-3xl font-bold mb-1" style={{ color: "#2D4A2D" }}>
+          <h1 className="text-3xl font-bold mb-1" style={{ color: "#2D1B69" }}>
             Scripture Learning
           </h1>
-          <p style={{ color: "#7A9A7A" }}>
+          <p style={{ color: "#6B5FA0" }}>
             Study the gospel at your own pace. Track your progress, take quizzes, and grow.
           </p>
         </div>
@@ -160,17 +160,17 @@ export default function LearnPage() {
             className="flex items-center gap-2 px-3 py-2 rounded-xl"
             style={{ background: "#FDF0E8" }}
           >
-            <Flame size={16} style={{ color: "#C87A50" }} />
-            <span className="text-sm font-bold" style={{ color: "#C87A50" }}>
+            <Flame size={16} style={{ color: "#D4AF37" }} />
+            <span className="text-sm font-bold" style={{ color: "#D4AF37" }}>
               {streak} day streak
             </span>
           </div>
           <div
             className="flex items-center gap-2 px-3 py-2 rounded-xl"
-            style={{ background: "#EDF5ED" }}
+            style={{ background: "#EDE8F8" }}
           >
-            <Trophy size={16} style={{ color: "#4A7A4A" }} />
-            <span className="text-sm font-bold" style={{ color: "#4A7A4A" }}>
+            <Trophy size={16} style={{ color: "#2D1B69" }} />
+            <span className="text-sm font-bold" style={{ color: "#2D1B69" }}>
               {completedUnits.size} / {UNITS.length} units
             </span>
           </div>
@@ -180,7 +180,7 @@ export default function LearnPage() {
       {/* Progress bar */}
       <div
         className="rounded-2xl p-5 mb-8"
-        style={{ background: "linear-gradient(135deg, #1E3320 0%, #2D4A2D 100%)" }}
+        style={{ background: "linear-gradient(135deg, #1E3320 0%, #2D1B69 100%)" }}
       >
         <div className="flex items-center justify-between mb-3">
           <p className="text-sm font-semibold" style={{ color: "#C8DCC8" }}>
@@ -198,7 +198,7 @@ export default function LearnPage() {
             className="h-full rounded-full transition-all duration-1000"
             style={{
               width: `${progress}%`,
-              background: "linear-gradient(90deg, #9BB89A 0%, #E8C49A 100%)",
+              background: "linear-gradient(90deg, #8B7EC0 0%, #E8C49A 100%)",
             }}
           />
         </div>
@@ -217,7 +217,7 @@ export default function LearnPage() {
         <div>
           <p
             className="text-xs font-semibold uppercase tracking-widest mb-5"
-            style={{ color: "#9BB89A" }}
+            style={{ color: "#8B7EC0" }}
           >
             Learning Roadmap
           </p>
@@ -227,7 +227,7 @@ export default function LearnPage() {
             {/* Vertical connector line */}
             <div
               className="absolute left-5 top-8 bottom-8 w-0.5"
-              style={{ background: "linear-gradient(to bottom, #9BB89A 0%, #DDE8DD 100%)" }}
+              style={{ background: "linear-gradient(to bottom, #8B7EC0 0%, #DDD5F0 100%)" }}
             />
 
             <div className="space-y-3">
@@ -242,8 +242,8 @@ export default function LearnPage() {
                     <div
                       className="absolute left-2.5 top-5 w-5 h-5 rounded-full flex items-center justify-center border-2 z-10"
                       style={{
-                        background: done ? unit.color : locked ? "#DDE8DD" : "#FEFCF7",
-                        borderColor: done ? unit.color : locked ? "#DDE8DD" : unit.color,
+                        background: done ? unit.color : locked ? "#DDD5F0" : "#FEFCFF",
+                        borderColor: done ? unit.color : locked ? "#DDD5F0" : unit.color,
                       }}
                     >
                       {done ? (
@@ -259,8 +259,8 @@ export default function LearnPage() {
                     <div
                       className="rounded-2xl border p-4 transition-all cursor-pointer hover:shadow-md"
                       style={{
-                        background: active ? unit.bg : "#FEFCF7",
-                        borderColor: active ? "transparent" : "#DDE8DD",
+                        background: active ? unit.bg : "#FEFCFF",
+                        borderColor: active ? "transparent" : "#DDD5F0",
                         opacity: locked ? 0.55 : 1,
                       }}
                       onClick={() => !locked && setActiveUnit(active ? null : unit.id)}
@@ -270,7 +270,7 @@ export default function LearnPage() {
                           <div className="flex items-center gap-2 mb-0.5">
                             <span
                               className="text-xs font-semibold uppercase tracking-wide"
-                              style={{ color: locked ? "#9AAA9A" : unit.color }}
+                              style={{ color: locked ? "#8B7EC0" : unit.color }}
                             >
                               Unit {unit.number}
                             </span>
@@ -285,7 +285,7 @@ export default function LearnPage() {
                             {locked && (
                               <span
                                 className="text-xs px-2 py-0.5 rounded-full"
-                                style={{ background: "#F5F0E8", color: "#9AAA9A" }}
+                                style={{ background: "#F5F0FF", color: "#8B7EC0" }}
                               >
                                 Locked
                               </span>
@@ -293,24 +293,24 @@ export default function LearnPage() {
                           </div>
                           <h3
                             className="font-bold text-base"
-                            style={{ color: locked ? "#9AAA9A" : "#2D4A2D" }}
+                            style={{ color: locked ? "#8B7EC0" : "#2D1B69" }}
                           >
                             {unit.title}
                           </h3>
                           {active && (
-                            <p className="text-sm mt-1 leading-relaxed" style={{ color: "#5A7A5A" }}>
+                            <p className="text-sm mt-1 leading-relaxed" style={{ color: "#6B5FA0" }}>
                               {unit.description}
                             </p>
                           )}
                         </div>
                         <div className="flex items-center gap-2 flex-shrink-0">
-                          <span className="text-xs" style={{ color: "#9AAA9A" }}>
+                          <span className="text-xs" style={{ color: "#8B7EC0" }}>
                             {unit.lessons} lessons
                           </span>
                           <ChevronRight
                             size={14}
                             style={{
-                              color: "#9BB89A",
+                              color: "#8B7EC0",
                               transform: active ? "rotate(90deg)" : "none",
                               transition: "transform 0.2s",
                             }}
@@ -352,7 +352,7 @@ export default function LearnPage() {
                                 });
                               }}
                               className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold border"
-                              style={{ borderColor: "#DDE8DD", color: "#9AAA9A" }}
+                              style={{ borderColor: "#DDD5F0", color: "#8B7EC0" }}
                             >
                               <CheckCircle2 size={13} />
                               Mark complete
@@ -373,13 +373,13 @@ export default function LearnPage() {
           {/* My Classrooms */}
           <div
             className="rounded-2xl p-5"
-            style={{ background: "#FEFCF7", border: "1px solid #DDE8DD" }}
+            style={{ background: "#FEFCFF", border: "1px solid #DDD5F0" }}
           >
             <div className="flex items-center justify-between mb-4">
-              <p className="text-sm font-bold" style={{ color: "#2D4A2D" }}>
+              <p className="text-sm font-bold" style={{ color: "#2D1B69" }}>
                 My Classrooms
               </p>
-              <button style={{ color: "#4A7A4A" }}>
+              <button style={{ color: "#2D1B69" }}>
                 <Plus size={14} />
               </button>
             </div>
@@ -387,7 +387,7 @@ export default function LearnPage() {
               <div
                 key={c.id}
                 className="flex items-center gap-3 py-2.5 border-b last:border-0"
-                style={{ borderColor: "#EDF5ED" }}
+                style={{ borderColor: "#EDE8F8" }}
               >
                 <div
                   className="w-8 h-8 rounded-lg flex items-center justify-center"
@@ -396,10 +396,10 @@ export default function LearnPage() {
                   <Users size={14} style={{ color: c.color }} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold truncate" style={{ color: "#2D4A2D" }}>
+                  <p className="text-xs font-semibold truncate" style={{ color: "#2D1B69" }}>
                     {c.name}
                   </p>
-                  <p className="text-xs" style={{ color: "#9AAA9A" }}>
+                  <p className="text-xs" style={{ color: "#8B7EC0" }}>
                     {c.members} members · {c.unit}
                   </p>
                 </div>
@@ -408,7 +408,7 @@ export default function LearnPage() {
             ))}
             <button
               className="w-full mt-3 py-2 rounded-xl border text-xs font-medium transition-colors hover:bg-green-50"
-              style={{ borderColor: "#DDE8DD", color: "#4A7A4A" }}
+              style={{ borderColor: "#DDD5F0", color: "#2D1B69" }}
             >
               + Create classroom
             </button>
@@ -418,15 +418,15 @@ export default function LearnPage() {
           <div
             className="rounded-2xl p-5"
             style={{
-              background: "linear-gradient(135deg, #1E3320 0%, #2D4A2D 100%)",
+              background: "linear-gradient(135deg, #1E3320 0%, #2D1B69 100%)",
             }}
           >
-            <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: "#9BB89A" }}>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: "#8B7EC0" }}>
               Your Progress
             </p>
             {[
               { label: "Days active", value: `${streak}`, icon: Flame, color: "#E8C49A" },
-              { label: "Units complete", value: `${completedUnits.size}/${UNITS.length}`, icon: Trophy, color: "#9BB89A" },
+              { label: "Units complete", value: `${completedUnits.size}/${UNITS.length}`, icon: Trophy, color: "#8B7EC0" },
               { label: "Quizzes passed", value: "3", icon: Star, color: "#A8C4E8" },
             ].map(({ label, value, icon: Icon, color }) => (
               <div key={label} className="flex items-center gap-3 mb-3 last:mb-0">
@@ -451,7 +451,7 @@ export default function LearnPage() {
             className="rounded-2xl p-5"
             style={{ background: "#FDF0E8", border: "1px solid #F0DDD0" }}
           >
-            <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "#C87A50" }}>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "#D4AF37" }}>
               Use What You&apos;ve Learned
             </p>
             <p className="text-sm mb-3" style={{ color: "#7A5A3A" }}>
@@ -460,7 +460,7 @@ export default function LearnPage() {
             <Link
               href="/talk-generator"
               className="flex items-center gap-1.5 text-sm font-semibold"
-              style={{ color: "#C87A50" }}
+              style={{ color: "#D4AF37" }}
             >
               Open Talk Generator
               <ArrowRight size={13} />
@@ -477,17 +477,17 @@ export default function LearnPage() {
         >
           <div
             className="w-full max-w-md rounded-3xl p-7 shadow-2xl"
-            style={{ background: "#FEFCF7" }}
+            style={{ background: "#FEFCFF" }}
           >
             {!quizDone ? (
               <>
                 <p
                   className="text-xs font-semibold uppercase tracking-widest mb-2"
-                  style={{ color: "#9BB89A" }}
+                  style={{ color: "#8B7EC0" }}
                 >
                   Quick Quiz · {quizQ + 1} of {QUIZ_QUESTIONS.length}
                 </p>
-                <h3 className="text-lg font-bold mb-6" style={{ color: "#2D4A2D" }}>
+                <h3 className="text-lg font-bold mb-6" style={{ color: "#2D1B69" }}>
                   {QUIZ_QUESTIONS[quizQ].q}
                 </h3>
                 <div className="space-y-2.5">
@@ -496,7 +496,7 @@ export default function LearnPage() {
                       key={i}
                       onClick={() => answerQuiz(i)}
                       className="w-full text-left px-4 py-3 rounded-xl border-2 text-sm font-medium transition-all hover:scale-[1.01]"
-                      style={{ borderColor: "#DDE8DD", color: "#2D4A2D" }}
+                      style={{ borderColor: "#DDD5F0", color: "#2D1B69" }}
                     >
                       {opt}
                     </button>
@@ -508,10 +508,10 @@ export default function LearnPage() {
                 <div className="text-5xl mb-4">
                   {quizScore === QUIZ_QUESTIONS.length ? "🏆" : quizScore >= 2 ? "⭐" : "📚"}
                 </div>
-                <h3 className="text-xl font-bold mb-2" style={{ color: "#2D4A2D" }}>
+                <h3 className="text-xl font-bold mb-2" style={{ color: "#2D1B69" }}>
                   {quizScore}/{QUIZ_QUESTIONS.length} correct
                 </h3>
-                <p className="text-sm mb-6" style={{ color: "#7A9A7A" }}>
+                <p className="text-sm mb-6" style={{ color: "#6B5FA0" }}>
                   {quizScore === QUIZ_QUESTIONS.length
                     ? "Perfect score! Keep up the great study habits."
                     : "Good effort! Keep reading and try again."}
@@ -519,7 +519,7 @@ export default function LearnPage() {
                 <button
                   onClick={() => setQuizActive(false)}
                   className="px-6 py-2.5 rounded-xl text-sm font-semibold"
-                  style={{ background: "#4A7A4A", color: "#F5F0E8" }}
+                  style={{ background: "#2D1B69", color: "#F5F0FF" }}
                 >
                   Done
                 </button>

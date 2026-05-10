@@ -93,8 +93,8 @@ export default function ComeFollowMePage() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-2" style={{ color: "#2D4A2D" }}>Come Follow Me Companion</h1>
-        <p style={{ color: "#7A9A7A" }}>
+        <h1 className="text-3xl font-bold mb-2" style={{ color: "#2D1B69" }}>Come Follow Me Companion</h1>
+        <p style={{ color: "#6B5FA0" }}>
           Ask any question about this week&apos;s lesson. Doctrine &amp; Covenants 2026.
         </p>
       </div>
@@ -102,35 +102,35 @@ export default function ComeFollowMePage() {
       <div className="grid md:grid-cols-3 gap-6">
         {/* Week panel */}
         <div className="md:col-span-1 space-y-4">
-          <Card className="border shadow-sm" style={{ background: "#FEFCF7", borderColor: "#DDE8DD" }}>
+          <Card className="border shadow-sm" style={{ background: "#FEFCFF", borderColor: "#DDD5F0" }}>
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-semibold" style={{ color: "#2D4A2D" }}>Current Week</CardTitle>
-                <Badge className="text-xs" style={{ background: "#EDF5ED", color: "#4A7A4A", border: "none" }}>
+                <CardTitle className="text-sm font-semibold" style={{ color: "#2D1B69" }}>Current Week</CardTitle>
+                <Badge className="text-xs" style={{ background: "#EDE8F8", color: "#2D1B69", border: "none" }}>
                   Week {selectedWeek.week}
                 </Badge>
               </div>
             </CardHeader>
             <CardContent className="space-y-2">
               <div className="flex items-start gap-2">
-                <BookOpen size={14} className="mt-0.5 shrink-0" style={{ color: "#E8B49A" }} />
+                <BookOpen size={14} className="mt-0.5 shrink-0" style={{ color: "#D4AF37" }} />
                 <div>
-                  <p className="text-sm font-medium" style={{ color: "#2D4A2D" }}>{selectedWeek.title}</p>
-                  <p className="text-xs mt-0.5" style={{ color: "#9AAA9A" }}>{selectedWeek.dateRange}</p>
+                  <p className="text-sm font-medium" style={{ color: "#2D1B69" }}>{selectedWeek.title}</p>
+                  <p className="text-xs mt-0.5" style={{ color: "#8B7EC0" }}>{selectedWeek.dateRange}</p>
                 </div>
               </div>
-              <Separator style={{ background: "#DDE8DD" }} />
+              <Separator style={{ background: "#DDD5F0" }} />
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide mb-1" style={{ color: "#9AAA9A" }}>Scriptures</p>
+                <p className="text-xs font-semibold uppercase tracking-wide mb-1" style={{ color: "#8B7EC0" }}>Scriptures</p>
                 <p className="text-sm" style={{ color: "#3D4A3D" }}>{selectedWeek.scriptures}</p>
               </div>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide mb-1" style={{ color: "#9AAA9A" }}>Theme</p>
+                <p className="text-xs font-semibold uppercase tracking-wide mb-1" style={{ color: "#8B7EC0" }}>Theme</p>
                 <p className="text-sm" style={{ color: "#3D4A3D" }}>{selectedWeek.theme}</p>
               </div>
               <button
                 className="w-full flex items-center justify-center gap-1 mt-2 py-1.5 rounded-lg text-xs font-medium border transition-colors"
-                style={{ borderColor: "#C8D8C8", color: "#4A7A4A", background: "transparent" }}
+                style={{ borderColor: "#C8D8C8", color: "#2D1B69", background: "transparent" }}
                 onClick={() => setShowWeekPicker(!showWeekPicker)}
               >
                 {showWeekPicker ? <><ChevronUp size={12} /> Hide weeks</> : <><ChevronDown size={12} /> Browse all weeks</>}
@@ -140,7 +140,7 @@ export default function ComeFollowMePage() {
 
           {/* Week picker */}
           {showWeekPicker && (
-            <Card className="border shadow-sm" style={{ background: "#FEFCF7", borderColor: "#DDE8DD" }}>
+            <Card className="border shadow-sm" style={{ background: "#FEFCFF", borderColor: "#DDD5F0" }}>
               <CardContent className="p-2 max-h-72 overflow-y-auto">
                 {CFM_2026.map((week) => (
                   <button
@@ -153,11 +153,11 @@ export default function ComeFollowMePage() {
                         : "hover:opacity-80"
                     )}
                     style={selectedWeek.week === week.week
-                      ? { background: "#EDF5ED", color: "#2D4A2D" }
-                      : { color: "#5A7A5A" }
+                      ? { background: "#EDE8F8", color: "#2D1B69" }
+                      : { color: "#6B5FA0" }
                     }
                   >
-                    <span className="mr-2" style={{ color: "#9AAA9A" }}>Wk {week.week}</span>
+                    <span className="mr-2" style={{ color: "#8B7EC0" }}>Wk {week.week}</span>
                     {week.title}
                   </button>
                 ))}
@@ -166,9 +166,9 @@ export default function ComeFollowMePage() {
           )}
 
           {/* Suggested questions */}
-          <Card className="border shadow-sm" style={{ background: "#FEFCF7", borderColor: "#DDE8DD" }}>
+          <Card className="border shadow-sm" style={{ background: "#FEFCFF", borderColor: "#DDD5F0" }}>
             <CardHeader className="pb-2">
-              <CardTitle className="text-xs font-semibold uppercase tracking-wide" style={{ color: "#9AAA9A" }}>
+              <CardTitle className="text-xs font-semibold uppercase tracking-wide" style={{ color: "#8B7EC0" }}>
                 Suggested questions
               </CardTitle>
             </CardHeader>
@@ -179,9 +179,9 @@ export default function ComeFollowMePage() {
                   onClick={() => ask(q)}
                   disabled={loading}
                   className="w-full text-left text-xs px-3 py-2 rounded-lg transition-colors disabled:opacity-50"
-                  style={{ background: "#F5F0E8", color: "#6B7A6B" }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = "#EDF5ED"; e.currentTarget.style.color = "#2D4A2D"; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = "#F5F0E8"; e.currentTarget.style.color = "#6B7A6B"; }}
+                  style={{ background: "#F5F0FF", color: "#6B5FA0" }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = "#EDE8F8"; e.currentTarget.style.color = "#2D1B69"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = "#F5F0FF"; e.currentTarget.style.color = "#6B5FA0"; }}
                 >
                   {q}
                 </button>
@@ -192,14 +192,14 @@ export default function ComeFollowMePage() {
 
         {/* Chat panel */}
         <div className="md:col-span-2 flex flex-col">
-          <Card className="border shadow-sm flex-1 flex flex-col" style={{ background: "#FEFCF7", borderColor: "#DDE8DD" }}>
+          <Card className="border shadow-sm flex-1 flex flex-col" style={{ background: "#FEFCFF", borderColor: "#DDD5F0" }}>
             <CardContent className="p-4 flex-1 flex flex-col">
               {/* Messages */}
               <div className="flex-1 space-y-4 min-h-[300px] max-h-[500px] overflow-y-auto pr-1">
                 {messages.length === 0 && (
                   <div className="flex flex-col items-center justify-center h-full text-center py-10">
                     <BookOpen size={32} className="mb-3" style={{ color: "#C8D8C8" }} />
-                    <p className="text-sm" style={{ color: "#9AAA9A" }}>Ask anything about this week&apos;s lesson.</p>
+                    <p className="text-sm" style={{ color: "#8B7EC0" }}>Ask anything about this week&apos;s lesson.</p>
                     <p className="text-xs mt-1" style={{ color: "#B8C8B8" }}>Or tap a suggested question →</p>
                   </div>
                 )}
@@ -209,8 +209,8 @@ export default function ComeFollowMePage() {
                     <div
                       className="max-w-[85%] rounded-2xl px-4 py-2.5 text-sm"
                       style={msg.role === "user"
-                        ? { background: "#3D6040", color: "#F5F0E8", borderBottomRightRadius: "4px" }
-                        : { background: "#EDF5ED", color: "#2D4A2D", borderBottomLeftRadius: "4px" }
+                        ? { background: "#2D1B69", color: "#F5F0FF", borderBottomRightRadius: "4px" }
+                        : { background: "#EDE8F8", color: "#2D1B69", borderBottomLeftRadius: "4px" }
                       }
                     >
                       <p className="whitespace-pre-wrap leading-relaxed">{msg.content}</p>
@@ -220,8 +220,8 @@ export default function ComeFollowMePage() {
 
                 {loading && messages[messages.length - 1]?.role === "user" && (
                   <div className="flex justify-start">
-                    <div className="rounded-2xl px-4 py-3" style={{ background: "#EDF5ED", borderBottomLeftRadius: "4px" }}>
-                      <Loader2 size={14} className="animate-spin" style={{ color: "#9BB89A" }} />
+                    <div className="rounded-2xl px-4 py-3" style={{ background: "#EDE8F8", borderBottomLeftRadius: "4px" }}>
+                      <Loader2 size={14} className="animate-spin" style={{ color: "#8B7EC0" }} />
                     </div>
                   </div>
                 )}
@@ -229,7 +229,7 @@ export default function ComeFollowMePage() {
                 <div ref={bottomRef} />
               </div>
 
-              <Separator className="my-3" style={{ background: "#DDE8DD" }} />
+              <Separator className="my-3" style={{ background: "#DDD5F0" }} />
 
               {/* Input */}
               <div className="flex gap-2">
@@ -246,7 +246,7 @@ export default function ComeFollowMePage() {
                   onClick={() => ask()}
                   disabled={!question.trim() || loading}
                   className="rounded-lg px-3 self-end shrink-0 flex items-center justify-center h-10 transition-opacity disabled:opacity-40"
-                  style={{ background: "#4A7A4A", color: "#F5F0E8" }}
+                  style={{ background: "#2D1B69", color: "#F5F0FF" }}
                 >
                   {loading ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
                 </button>

@@ -1,4 +1,4 @@
-import { openai, SYSTEM_PROMPT } from "@/lib/anthropic";
+import { openai, getNextModel, SYSTEM_PROMPT } from "@/lib/anthropic";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -28,7 +28,7 @@ ${enhancementGuide[enhancementType] ?? `Adding content about: "${enhancement}"`}
 Write ONLY the new section to add — do not rewrite the original. Start with a markdown heading (##) and write 200–400 words.`;
 
   const stream = await openai.chat.completions.create({
-    model: "gpt-4o",
+    model: getNextModel(),
     max_tokens: 700,
     stream: true,
     messages: [

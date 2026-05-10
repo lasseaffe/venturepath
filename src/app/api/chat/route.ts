@@ -1,4 +1,4 @@
-import { openai, SYSTEM_PROMPT } from "@/lib/anthropic";
+import { openai, getNextModel, SYSTEM_PROMPT } from "@/lib/anthropic";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
   }
 
   const stream = await openai.chat.completions.create({
-    model: "gpt-4o",
+    model: getNextModel(),
     max_tokens: 512,
     stream: true,
     messages: [

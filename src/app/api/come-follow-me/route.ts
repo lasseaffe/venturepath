@@ -1,4 +1,4 @@
-import { openai, SYSTEM_PROMPT } from "@/lib/anthropic";
+import { openai, getNextModel, SYSTEM_PROMPT } from "@/lib/anthropic";
 import { getCurrentCfmWeek } from "@/lib/come-follow-me";
 
 export const runtime = "nodejs";
@@ -22,7 +22,7 @@ The member's question or request: ${question}
 Please respond in a helpful, faith-affirming way that draws on this week's Come Follow Me lesson. Connect your answer to the featured scriptures where relevant. Keep your response focused and practical for personal or family study.`;
 
   const stream = await openai.chat.completions.create({
-    model: "gpt-4o",
+    model: getNextModel(),
     max_tokens: 1024,
     stream: true,
     messages: [

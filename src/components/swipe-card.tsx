@@ -1,6 +1,16 @@
 "use client";
 
 import { useRef, useState, useCallback } from "react";
+import { AlertTriangle, X } from "lucide-react";
+
+const ISSUE_TYPES = [
+  { value: "faulty_image", label: "Faulty / missing image" },
+  { value: "wrong_ingredients", label: "Wrong ingredients" },
+  { value: "broken_function", label: "Broken function / interaction" },
+  { value: "other", label: "Other problem" },
+] as const;
+
+type IssueType = (typeof ISSUE_TYPES)[number]["value"];
 
 export interface SodaCard {
   id: string;
@@ -12,6 +22,8 @@ export interface SodaCard {
   gradientFrom: string;
   gradientTo: string;
   description: string;
+  /** Original source URL — Instagram Reel or recipe website. Used to auto-fix faulty images. */
+  sourceUrl?: string;
 }
 
 interface SwipeCardProps {
@@ -37,6 +49,32 @@ export function SwipeCard({ card, active, zIndex, stackOffset, onSwipeRight, onS
   const [flying, setFlying] = useState<"left" | "right" | null>(null);
   const [confetti, setConfetti] = useState<{ x: number; y: number } | null>(null);
   const [localAmens, setLocalAmens] = useState(card.amens);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [issueType, setIssueType] = useState<IssueType>("faulty_image");
+  const [reportDesc, setReportDesc] = useState("");
+  const [reportStatus, setReportStatus] = useState<"idle" | "sending" | "done">("idle");
+
+  async function submitReport() {
+    setReportStatus("sending");
+    await fetch("/api/report", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        recipeId: card.id,
+        recipeName: card.name,
+        creator: card.creator,
+        sourceUrl: card.sourceUrl ?? null,
+        issueType,
+        description: reportDesc,
+      }),
+    });
+    setReportStatus("done");
+    setTimeout(() => {
+      setReportOpen(false);
+      setReportStatus("idle");
+      setReportDesc("");
+    }, 1400);
+  }
 
   const onPointerDown = useCallback((e: React.PointerEvent) => {
     if (!active) return;
@@ -129,6 +167,7 @@ export function SwipeCard({ card, active, zIndex, stackOffset, onSwipeRight, onS
           transition: flying || !active ? "transform 0.32s cubic-bezier(0.25,1,0.5,1), opacity 0.32s" : "none",
           cursor: active ? "grab" : "default",
           touchAction: "none",
+          pointerEvents: flying ? "none" : undefined,
         }}
       >
         {/* Card background */}
@@ -187,22 +226,113 @@ export function SwipeCard({ card, active, zIndex, stackOffset, onSwipeRight, onS
                 ))}
               </div>
 
-              {/* Stats + hint */}
+              {/* Stats + hint + report */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4 text-sm font-semibold opacity-70" style={{ color: "#2D1A0E" }}>
                   <span>🙏 {localAmens.toLocaleString()} Amens</span>
                   <span>🔖 {card.saves.toLocaleString()} saves</span>
                 </div>
-                {active && (
-                  <p className="text-xs opacity-40" style={{ color: "#2D1A0E" }}>
-                    swipe or double-tap
-                  </p>
-                )}
+                <div className="flex items-center gap-2">
+                  {active && (
+                    <p className="text-xs opacity-40" style={{ color: "#2D1A0E" }}>
+                      swipe or double-tap
+                    </p>
+                  )}
+                  {/* Report bug button — stops swipe propagation */}
+                  <button
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onClick={(e) => { e.stopPropagation(); setReportOpen(true); }}
+                    title="Report a problem"
+                    className="w-7 h-7 rounded-full flex items-center justify-center transition-opacity hover:opacity-100 opacity-50"
+                    style={{ background: "rgba(255,255,255,0.5)", color: "#B03A3A" }}
+                  >
+                    <AlertTriangle size={13} strokeWidth={2.5} />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Report modal */}
+      {reportOpen && (
+        <div
+          className="fixed inset-0 z-[300] flex items-end justify-center"
+          style={{ background: "rgba(0,0,0,0.45)" }}
+          onPointerDown={(e) => { e.stopPropagation(); setReportOpen(false); }}
+        >
+          <div
+            className="w-full max-w-md rounded-t-3xl p-6 pb-8"
+            style={{ background: "#FDFAF5" }}
+            onPointerDown={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between mb-5">
+              <div className="flex items-center gap-2">
+                <AlertTriangle size={16} style={{ color: "#B03A3A" }} />
+                <h3 className="font-black text-base" style={{ color: "#2D1A0E" }}>
+                  Report a problem
+                </h3>
+              </div>
+              <button
+                onClick={() => setReportOpen(false)}
+                className="w-7 h-7 flex items-center justify-center rounded-full"
+                style={{ background: "#F0EAE0", color: "#7A6858" }}
+              >
+                <X size={14} />
+              </button>
+            </div>
+
+            <p className="text-xs mb-4 opacity-60" style={{ color: "#2D1A0E" }}>
+              Recipe: <strong>{card.name}</strong> by @{card.creator}
+            </p>
+
+            {/* Issue type */}
+            <div className="flex flex-col gap-2 mb-4">
+              {ISSUE_TYPES.map((t) => (
+                <button
+                  key={t.value}
+                  onClick={() => setIssueType(t.value)}
+                  className="text-left px-4 py-2.5 rounded-xl text-sm font-semibold border transition-all"
+                  style={
+                    issueType === t.value
+                      ? { background: "#2D1A0E", color: "#F5F0FF", borderColor: "#2D1A0E" }
+                      : { background: "transparent", color: "#4A3A2E", borderColor: "#DDD5CC" }
+                  }
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Optional description */}
+            <textarea
+              value={reportDesc}
+              onChange={(e) => setReportDesc(e.target.value)}
+              placeholder="Extra details (optional)…"
+              rows={2}
+              className="w-full rounded-xl px-4 py-3 text-sm resize-none outline-none border mb-4"
+              style={{ borderColor: "#DDD5CC", background: "#FEFCFF", color: "#2D1A0E" }}
+            />
+
+            <button
+              onClick={submitReport}
+              disabled={reportStatus !== "idle"}
+              className="w-full py-3 rounded-2xl font-black text-sm transition-all"
+              style={
+                reportStatus === "done"
+                  ? { background: "#4A7A4A", color: "#fff" }
+                  : { background: "#2D1A0E", color: "#F5F0FF" }
+              }
+            >
+              {reportStatus === "idle" && "Submit report"}
+              {reportStatus === "sending" && "Sending…"}
+              {reportStatus === "done" && "✓ Report saved"}
+            </button>
+          </div>
+        </div>
+      )}
 
       <style>{`
         @keyframes confetti-burst-0 {
