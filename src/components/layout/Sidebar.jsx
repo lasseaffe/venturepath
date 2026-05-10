@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { id: 'STAYS',     icon: '🏨',  label: 'Stays' },
   { id: 'LOGISTICS', icon: '🎒',  label: 'Logistics' },
   { id: 'DISCOVERY', icon: '🔍',  label: 'Discover' },
+  { id: 'JOURNEY',   icon: '📸',  label: 'Journey' },
   { id: 'VAULT',     icon: '📂',  label: 'Saved trips' },
 ];
 
