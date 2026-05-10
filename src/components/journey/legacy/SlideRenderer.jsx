@@ -22,11 +22,15 @@ function FactSlide({ slide }) {
   const [loading, setLoading]       = useState(true);
 
   useEffect(() => {
+    let alive = true;
     setLoading(true);
     enrichmentCache.get(slide.poi_id).then(data => {
-      setEnrichment(data);
-      setLoading(false);
+      if (alive) {
+        setEnrichment(data);
+        setLoading(false);
+      }
     });
+    return () => { alive = false; };
   }, [slide.poi_id]);
 
   return (
