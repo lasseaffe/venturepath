@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useInspireData, matchCity } from '../../hooks/useInspireData';
 import ReportButton from './ReportButton.jsx';
+import { useTrendSignal } from '../../hooks/useTrendSignal';
+import TrendBadge from './TrendBadge';
 
 const CATEGORY_META = {
   landmark:      { label: 'LANDMARK',      dot: '#E67E22' },
@@ -13,6 +15,10 @@ const CATEGORY_META = {
 export default function InspirePanel({ open, dayLabel, onClose, onAddBlock }) {
   const { cities, loading, error } = useInspireData();
   const [selectedCity, setSelectedCity] = useState(null);
+  const { trendMap } = useTrendSignal(cities);
+  const sortedCities = [...cities].sort(
+    (a, b) => (trendMap.get(b.id)?.score ?? 0) - (trendMap.get(a.id)?.score ?? 0),
+  );
 
   const city = selectedCity ?? (open && cities.length ? matchCity(cities, dayLabel) : null);
 
@@ -69,8 +75,13 @@ export default function InspirePanel({ open, dayLabel, onClose, onAddBlock }) {
             <div className="text-[9px] font-mono tracking-[0.2em] text-[#E67E22] uppercase">
               Inspire Me
             </div>
-            <div className="text-[11px] font-mono font-bold text-white tracking-wider mt-0.5 uppercase">
-              {loading ? 'Loading…' : city ? `${city.name}, ${city.country}` : dayLabel || 'Explore'}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 2 }}>
+              <div className="text-[11px] font-mono font-bold text-white tracking-wider uppercase">
+                {loading ? 'Loading…' : city ? `${city.name}, ${city.country}` : dayLabel || 'Explore'}
+              </div>
+              {city && trendMap.has(city.id) && (
+                <TrendBadge score={trendMap.get(city.id).score} label={trendMap.get(city.id).label} />
+              )}
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -150,13 +161,17 @@ export default function InspirePanel({ open, dayLabel, onClose, onAddBlock }) {
                     Browse destinations
                   </div>
                   <div className="flex gap-1.5 flex-wrap">
-                    {cities.map(c => (
+                    {sortedCities.map(c => (
                       <button
                         key={c.id}
                         onClick={() => setSelectedCity(c)}
                         className="text-[8px] font-mono px-2 py-1 rounded border border-[#1e2328] text-[#4b5563] hover:border-[#E67E22]/50 hover:text-[#E67E22] transition-colors tracking-widest uppercase"
+                        style={{ display: 'flex', alignItems: 'center', gap: 4 }}
                       >
                         {c.name}
+                        {trendMap.has(c.id) && (
+                          <TrendBadge score={trendMap.get(c.id).score} label={trendMap.get(c.id).label} />
+                        )}
                       </button>
                     ))}
                   </div>
@@ -205,7 +220,7 @@ export default function InspirePanel({ open, dayLabel, onClose, onAddBlock }) {
               {/* City selector pills */}
               {cities.length > 1 && (
                 <div className="px-4 py-2 flex gap-1.5 flex-wrap" style={{ borderBottom: '1px solid #1a1e22' }}>
-                  {cities.map(c => (
+                  {sortedCities.map(c => (
                     <button
                       key={c.id}
                       onClick={() => setSelectedCity(c)}
@@ -214,9 +229,13 @@ export default function InspirePanel({ open, dayLabel, onClose, onAddBlock }) {
                         background: c.id === city.id ? 'rgba(230,126,34,0.15)' : 'transparent',
                         borderColor: c.id === city.id ? 'rgba(230,126,34,0.5)' : '#1e2328',
                         color: c.id === city.id ? '#E67E22' : '#4b5563',
+                        display: 'flex', alignItems: 'center', gap: 4,
                       }}
                     >
                       {c.name}
+                      {trendMap.has(c.id) && (
+                        <TrendBadge score={trendMap.get(c.id).score} label={trendMap.get(c.id).label} />
+                      )}
                     </button>
                   ))}
                 </div>
