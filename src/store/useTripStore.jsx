@@ -184,17 +184,17 @@ function reducer(state, action) {
     }
     case 'ADD_VAULT_DOCUMENT': {
       const doc = { ...action.payload, id: `doc_${Date.now()}` };
-      return { ...state, vault: { documents: [...state.vault.documents, doc] } };
+      return { ...state, vault: { ...state.vault, documents: [...state.vault.documents, doc] } };
     }
     case 'UPDATE_VAULT_DOCUMENT': {
       const documents = state.vault.documents.map(d =>
         d.id === action.payload.id ? { ...d, ...action.payload.changes } : d
       );
-      return { ...state, vault: { documents } };
+      return { ...state, vault: { ...state.vault, documents } };
     }
     case 'ADD_SCENARIO': {
       const scenario = { ...action.payload, id: `scenario_${Date.now()}` };
-      return { ...state, booking: { whatIfScenarios: [...state.booking.whatIfScenarios, scenario] } };
+      return { ...state, booking: { ...state.booking, whatIfScenarios: [...state.booking.whatIfScenarios, scenario] } };
     }
     case 'SET_JOURNEY_DATA': {
       return { ...state, journeyData: { ...state.journeyData, ...action.payload } };
