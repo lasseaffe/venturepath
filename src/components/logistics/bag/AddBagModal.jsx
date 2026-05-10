@@ -1,11 +1,17 @@
 // src/components/logistics/bag/AddBagModal.jsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { nanoid } from 'nanoid';
 import { BAG_TYPES, BAG_TYPE_IDS } from './bagTypes';
 
 export default function AddBagModal({ onAdd, onClose }) {
   const [selectedTypeId, setSelectedTypeId] = useState(null);
   const [label, setLabel] = useState('');
+
+  useEffect(() => {
+    const handler = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [onClose]);
 
   const handleConfirm = () => {
     if (!selectedTypeId) return;
@@ -99,10 +105,7 @@ export default function AddBagModal({ onAdd, onClose }) {
                 fontSize: 11, padding: '6px 10px',
                 outline: 'none', boxSizing: 'border-box',
               }}
-              onKeyDown={e => {
-                if (e.key === 'Enter') handleConfirm();
-                if (e.key === 'Escape') onClose();
-              }}
+              onKeyDown={e => { if (e.key === 'Enter') handleConfirm(); }}
             />
           </div>
         )}

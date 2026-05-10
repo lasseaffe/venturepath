@@ -6,7 +6,7 @@ import { useDragCtx } from './DragContext';
 function BagThumbnail({ bag, isActive, weight, isOverweight, onSelect }) {
   const { setNodeRef, isOver } = useDroppable({ id: bag.id });
   const { mobileSelected, handleMobileDrop } = useDragCtx();
-  const bagType = BAG_TYPES[bag.typeId];
+  const bagType = BAG_TYPES[bag.typeId] ?? BAG_TYPES.backpack;
 
   const borderColor = isOverweight  ? '#F2A900'
     : isActive                      ? '#E67E22'
@@ -52,7 +52,7 @@ function BagThumbnail({ bag, isActive, weight, isOverweight, onSelect }) {
           fontFamily: 'JetBrains Mono, monospace',
           borderRadius: 2, padding: '1px 3px',
         }}>
-          {isOverweight ? `⚠ ${weight.toFixed(1)}kg` : `${weight.toFixed(1)}kg`}
+          {isOverweight ? `⚠ ${(weight ?? 0).toFixed(1)}kg` : `${(weight ?? 0).toFixed(1)}kg`}
         </div>
       </div>
       <div style={{
@@ -67,8 +67,8 @@ function BagThumbnail({ bag, isActive, weight, isOverweight, onSelect }) {
   );
 }
 
-export default function BagShelf({ bags, activeBagId, getBagWeight, isOverweight, bagTypes, onSelect, onAdd }) {
-  const { mobileSelected } = useDragCtx();
+export default function BagShelf({ bags, activeBagId, getBagWeight, isOverweight, onSelect, onAdd }) {
+  const { mobileSelected, clearMobileSelection } = useDragCtx();
 
   return (
     <div style={{
@@ -91,7 +91,7 @@ export default function BagShelf({ bags, activeBagId, getBagWeight, isOverweight
 
       {/* Add bag slot */}
       <div
-        onClick={onAdd}
+        onClick={() => { clearMobileSelection(); onAdd(); }}
         style={{
           display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
           cursor: 'pointer', opacity: mobileSelected ? 0.3 : 0.5,
