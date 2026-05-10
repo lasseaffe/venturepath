@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useTripStore } from '../../store/useTripStore';
 import { useSquadGear } from '../../context/SquadGearContext';
@@ -24,6 +25,7 @@ export default function LaunchDashboard({ onEnterTrip, onOpenVault, onOpenChat, 
   const { syncReady } = useSquadSync();
   const { theme } = useTheme();
   const labels = useLabels();
+  const router = useRouter();
   const [ticker, setTicker] = useState(0);
 
   const heroImg = HERO_IMAGES[trip.destination] ?? HERO_IMAGES.default;
@@ -268,7 +270,14 @@ export default function LaunchDashboard({ onEnterTrip, onOpenVault, onOpenChat, 
           </div>
 
           {/* CTA */}
-          <div className="mt-auto">
+          <div className="mt-auto flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => router.push('/expedition/new/welcome')}
+              className="flex items-center gap-2 px-4 py-2 bg-[#E67E22]/10 border border-[#E67E22]/40 text-[#E67E22] font-mono text-sm rounded hover:bg-[#E67E22]/20 transition-colors"
+            >
+              ✦ Plan with Guide
+            </button>
             <button
               onClick={onEnterTrip}
               className="px-8 py-4 font-semibold text-sm text-white transition-colors"

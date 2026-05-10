@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTripStore } from '../../store/useTripStore';
 import { filterDestinations } from '../../utils/destinationEngine';
@@ -7,6 +8,7 @@ import { searchLocations } from '../../utils/geocodeEngine';
 const CLIMATES = ['temperate', 'tropical', 'alpine', 'arctic', 'desert'];
 
 export default function NewTripModal({ onClose, onCreated, initialData = null, expeditionId = null, onSaveExpedition = null, currentExpedition = null }) {
+  const router = useRouter();
   const { createTrip, updateTrip, trip, legs, objectives, manifestSettings } = useTripStore();
   const isEdit = !!initialData;
 
@@ -113,6 +115,25 @@ export default function NewTripModal({ onClose, onCreated, initialData = null, e
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          {/* Wizard entry split */}
+          {!isEdit && (
+            <div className="flex gap-3 mb-6 p-4 bg-[#0E1012] rounded-lg border border-white/5">
+              <button
+                type="button"
+                onClick={() => { if (typeof onClose === 'function') onClose(); router.push('/expedition/new/welcome') }}
+                className="flex-1 py-3 px-4 bg-[#E67E22] text-[#0E1012] font-mono font-semibold rounded hover:bg-[#d4711f] transition-colors text-sm"
+              >
+                ✦ Plan with Guide
+              </button>
+              <button
+                type="button"
+                className="flex-1 py-3 px-4 border border-white/20 text-[#D9C5B2] font-mono rounded hover:border-white/40 transition-colors text-sm"
+              >
+                Quick Create
+              </button>
+            </div>
+          )}
+
           {/* Destination */}
           <div className="relative">
             <label className="label-tag block mb-1.5">Destination</label>
