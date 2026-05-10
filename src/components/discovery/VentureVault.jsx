@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTripStore } from '../../store/useTripStore';
 import { useSquadSync } from '../../hooks/useSquadSync';
+import { SwipeDeck } from '../swipe/SwipeDeck';
+import { useSwipePreferences } from '../../hooks/useSwipePreferences';
 
 const PRO_PATHS = [
   {
@@ -103,6 +105,8 @@ export default function VentureVault({ onCloneComplete }) {
   const { broadcastClone } = useSquadSync();
   const [cloneId, setCloneId] = useState(null);
   const [memberRequest, setMemberRequest] = useState(null);
+  const [swipeOpen, setSwipeOpen] = useState(false);
+  const { getAffinityScore } = useSwipePreferences();
 
   const handleClone = (path) => {
     if (userRole !== 'LEADER') {
@@ -117,6 +121,21 @@ export default function VentureVault({ onCloneComplete }) {
       if (onCloneComplete) onCloneComplete();
     }, 3800);
   };
+
+  const expeditionCards = PRO_PATHS
+    .map(p => ({
+      id: p.id,
+      name: p.name,
+      architect: p.architect,
+      difficulty: p.difficulty,
+      days: p.days,
+      distanceKm: p.distance,
+      rating: p.rating,
+      tags: [p.difficulty, `${p.days}d`, `squad ${p.squadSize}`],
+      imageUrl: undefined,
+      proPath: p,
+    }))
+    .sort((a, b) => getAffinityScore(b.tags) - getAffinityScore(a.tags));
 
   return (
     <div className="tactical-panel p-5">
@@ -142,6 +161,22 @@ export default function VentureVault({ onCloneComplete }) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <button
+        onClick={() => setSwipeOpen(true)}
+        className="mb-4 px-4 py-2 rounded-full text-sm font-semibold"
+        style={{ background: '#E67E22', color: '#0E1012', fontFamily: 'Inter, sans-serif' }}
+      >
+        Swipe Expeditions
+      </button>
+
+      {swipeOpen && (
+        <SwipeDeck
+          mode="expedition"
+          cards={expeditionCards}
+          onClose={() => setSwipeOpen(false)}
+        />
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {PRO_PATHS.map(path => {
