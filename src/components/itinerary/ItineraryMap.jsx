@@ -42,6 +42,26 @@ function makePin(num, color, isActive) {
 
 function MapController({ activeStopId, coords, markerRefs }) {
   const map = useMap();
+  const fittedRef = useRef(false);
+
+  // One-time fit to all resolved stops on mount
+  useEffect(() => {
+    if (fittedRef.current) return;
+    const points = Object.values(coords).filter(Array.isArray);
+    if (points.length === 0) return;
+    fittedRef.current = true;
+    if (points.length === 1) {
+      map.setView(points[0], 13);
+    } else {
+      const bounds = points.reduce(
+        (b, p) => b.extend(p),
+        window.L.latLngBounds(points[0], points[0])
+      );
+      map.fitBounds(bounds, { padding: [40, 40], maxZoom: 13 });
+    }
+  }, [coords, map]);
+
+  // Fly to active stop when selected
   useEffect(() => {
     if (!activeStopId) return;
     const latLng = coords[activeStopId];
@@ -50,6 +70,7 @@ function MapController({ activeStopId, coords, markerRefs }) {
     const markerRef = markerRefs.current.get(activeStopId);
     if (markerRef) markerRef.openPopup();
   }, [activeStopId, coords, map, markerRefs]);
+
   return null;
 }
 
