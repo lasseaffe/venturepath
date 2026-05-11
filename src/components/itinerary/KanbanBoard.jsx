@@ -1048,12 +1048,22 @@ function ActivityBlock({ block, isGhost, isActive, onDragStart, onDragEnd, onRem
             <span className="text-[10px] font-mono" style={{ color: '#E67E22' }}>{block.time}</span>
           )}
         </div>
-        <span
-          className="text-[8px] font-mono uppercase tracking-widest px-1.5 py-0.5 rounded"
-          style={{ background: colors.bg, color: colors.text, border: `1px solid ${colors.border}` }}
-        >
-          {block.category}
-        </span>
+        <div className="flex items-center gap-1.5">
+          <span
+            className="text-[8px] font-mono uppercase tracking-widest px-1.5 py-0.5 rounded"
+            style={{ background: colors.bg, color: colors.text, border: `1px solid ${colors.border}` }}
+          >
+            {block.category}
+          </span>
+          {hovered && !isGhost && (
+            <ReportButton
+              cityId={block.id}
+              cityName={block.title}
+              country=""
+              small
+            />
+          )}
+        </div>
       </div>
 
       <div className="px-2.5 pb-2">
@@ -1080,9 +1090,9 @@ function ActivityBlock({ block, isGhost, isActive, onDragStart, onDragEnd, onRem
           </button>
         </div>
       )}
+      <BlockCardImage title={block.title} tripName={tripName} visible={hovered || isExpanded} />
       {isExpanded && (
         <>
-          <BlockCardImage title={block.title} tripName={tripName} />
           <BlockHub
             block={block}
             onPatch={patch => onPatch(block.id, patch)}
