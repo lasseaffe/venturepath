@@ -1,37 +1,60 @@
 // src/components/onboarding/TooltipBubble.jsx
 import { motion } from 'framer-motion'
 
-export function TooltipBubble({ title, body, position, rect, padding = 12, onNext, isDoStep, stepIndex, totalSteps }) {
+function computePosition(rect, position, padding, tooltipW, tooltipH) {
+  const vw = window.innerWidth
+  const vh = window.innerHeight
   const gap = 14
-  const tooltipW = Math.min(280, window.innerWidth - 32)
+  const margin = 16
+
+  // If the target fills most of the viewport, centre the tooltip instead of
+  // trying to place it relative to an edge that is offscreen.
+  const isFullscreen = rect.width > vw * 0.7 || rect.height > vh * 0.7
+
+  if (isFullscreen) {
+    return {
+      top: Math.round(vh / 2 - tooltipH / 2),
+      left: Math.round(vw / 2 - tooltipW / 2),
+    }
+  }
 
   let top = 0
   let left = 0
 
   switch (position) {
     case 'bottom':
-      top = rect.y + rect.height + padding + gap
+      top  = rect.y + rect.height + padding + gap
       left = rect.x + rect.width / 2 - tooltipW / 2
       break
     case 'top':
-      top = rect.y - padding - gap - 160
+      top  = rect.y - padding - gap - tooltipH
       left = rect.x + rect.width / 2 - tooltipW / 2
       break
     case 'right':
-      top = rect.y + rect.height / 2 - 80
+      top  = rect.y + rect.height / 2 - tooltipH / 2
       left = rect.x + rect.width + padding + gap
       break
     case 'left':
-      top = rect.y + rect.height / 2 - 80
+      top  = rect.y + rect.height / 2 - tooltipH / 2
       left = rect.x - padding - gap - tooltipW
       break
     default:
-      top = rect.y + rect.height + padding + gap
+      top  = rect.y + rect.height + padding + gap
       left = rect.x + rect.width / 2 - tooltipW / 2
   }
 
-  left = Math.max(16, Math.min(left, window.innerWidth - tooltipW - 16))
-  top = Math.max(16, top)
+  // Clamp to viewport
+  left = Math.max(margin, Math.min(left, vw - tooltipW - margin))
+  top  = Math.max(margin, Math.min(top,  vh - tooltipH - margin))
+
+  return { top, left }
+}
+
+export function TooltipBubble({ title, body, position, rect, padding = 12, onNext, isDoStep, stepIndex, totalSteps }) {
+  const tooltipW = Math.min(280, window.innerWidth - 32)
+  const tooltipH = body ? 190 : 140
+
+  const { top, left } = computePosition(rect, position, padding, tooltipW, tooltipH)
 
   return (
     <motion.div
@@ -75,8 +98,8 @@ export function TooltipBubble({ title, body, position, rect, padding = 12, onNex
             letterSpacing: 1,
             transition: 'all 0.12s steps(3, end)',
           }}
-          onMouseEnter={e => { e.target.style.background = '#E67E22'; e.target.style.color = '#0C0F0A' }}
-          onMouseLeave={e => { e.target.style.background = 'transparent'; e.target.style.color = '#E67E22' }}
+          onMouseEnter={e => { e.currentTarget.style.background = '#E67E22'; e.currentTarget.style.color = '#0C0F0A' }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#E67E22' }}
         >
           {'> NEXT'}
         </button>

@@ -52,6 +52,7 @@ export function OnboardingEngine({ config }) {
           state={state}
           onAdvance={handleTourAdvance}
           onComplete={handleTourComplete}
+          onSkip={skip}
         />
       )}
       {state.mode === 'beacons' && (

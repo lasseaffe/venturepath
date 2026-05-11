@@ -6,7 +6,7 @@ import { TooltipBubble } from './TooltipBubble'
 import { ActionGate } from './ActionGate'
 import { CelebrationOverlay } from './CelebrationOverlay'
 
-export function OverlayTour({ config, state, onAdvance, onComplete }) {
+export function OverlayTour({ config, state, onAdvance, onComplete, onSkip }) {
   const { waypoints } = config.tour
   const waypoint = waypoints[state.tourStep]
   const [targetRect, setTargetRect] = useState(null)
@@ -47,6 +47,19 @@ export function OverlayTour({ config, state, onAdvance, onComplete }) {
   return (
     <>
       <Spotlight rect={targetRect} />
+
+      {/* Always-visible skip button */}
+      <button
+        onClick={onSkip}
+        style={{
+          position: 'fixed', top: 14, right: 16, zIndex: 10000,
+          fontSize: 10, fontWeight: 700, letterSpacing: 1,
+          color: '#4A7C59', background: 'none', border: 'none',
+          cursor: 'pointer', fontFamily: '"JetBrains Mono", monospace',
+        }}
+      >
+        [SKIP]
+      </button>
 
       <AnimatePresence>
         {showCelebration && (
