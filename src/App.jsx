@@ -8,6 +8,8 @@ import TripPlanner from './pages/TripPlanner';
 import ArchitectProfile from './components/social/ArchitectProfile';
 import VentureVault from './components/discovery/VentureVault';
 import ExpeditionSelectScreen from './components/trip/ExpeditionSelectScreen';
+import { OnboardingEngine } from './components/onboarding/OnboardingEngine';
+import { hfOnboardingConfig } from './config/holyflex.onboarding.config';
 
 // Inner router has access to TripStore context
 function AppRouter() {
@@ -86,6 +88,7 @@ function App() {
       <SquadGearProvider>
         <ExpeditionProvider>
           <AppRouter />
+          <OnboardingEngine config={hfOnboardingConfig} />
         </ExpeditionProvider>
       </SquadGearProvider>
     </TripStoreProvider>

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+
 import { useWizardStore } from '@/store/useWizardStore'
 import { useTripStore } from '@/store/useTripStore'
 
@@ -60,7 +60,6 @@ function ScoreBar({ score, color, animated }) {
 }
 
 export default function ReadinessStep() {
-  const router = useRouter()
   const wizardStore = useWizardStore()
   const { setReadinessScore, resetWizard } = wizardStore
 
@@ -98,7 +97,7 @@ export default function ReadinessStep() {
       })
 
       resetWizard()
-      router.push('/')
+      window.location.assign('/')
     } catch (e) {
       console.error('Launch failed:', e)
       setLaunching(false)
@@ -147,7 +146,7 @@ export default function ReadinessStep() {
               <ScoreBar score={score} color={color} animated={animated} />
               {score < 60 && (
                 <button
-                  onClick={() => router.push(`/expedition/new/${AXIS_STEPS[axis]}`)}
+                  onClick={() => wizardStore.setStep(AXIS_STEPS[axis])}
                   className="text-xs text-amber-400 font-mono hover:underline mt-0.5"
                 >
                   ← Go back and improve

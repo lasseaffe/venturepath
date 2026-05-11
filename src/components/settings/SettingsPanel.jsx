@@ -140,6 +140,34 @@ export default function SettingsPanel({ open, onClose, onLaunchWizard }) {
                   ⊕ Launch →
                 </button>
               </div>
+
+              <div
+                className="flex items-center justify-between p-4 rounded"
+                style={{ background: '#111316', border: '1px solid #1e2328' }}
+              >
+                <div>
+                  <div className="text-[11px] font-mono font-bold text-white">
+                    Restart Onboarding Tour
+                  </div>
+                  <div className="text-[9px] font-mono text-slate-500 mt-0.5">
+                    Replay the guided HolyFlex onboarding from the start
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    localStorage.removeItem('hf-onboarding')
+                    window.location.reload()
+                  }}
+                  className="text-[9px] font-mono px-3 py-1.5 rounded border tracking-widest uppercase transition-colors"
+                  style={{
+                    background: 'rgba(147,51,234,0.1)',
+                    borderColor: 'rgba(147,51,234,0.35)',
+                    color: '#9333EA',
+                  }}
+                >
+                  ↻ Restart Tour
+                </button>
+              </div>
             </div>
           )}
 
