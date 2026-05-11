@@ -19,6 +19,9 @@ import { useExpedition } from '../../../context/ExpeditionContext';
 import { searchPlaces } from '../../../utils/foursquareEngine';
 import { useTripStore } from '../../../store/useTripStore';
 import InspirePanel from '../../inspire/InspirePanel';
+import { useDestinationImage } from '../../../hooks/useDestinationImage';
+import ImageAttribution from '../../ui/ImageAttribution';
+import ReportButton from '../../inspire/ReportButton';
 
 // ── Current user (in real app this comes from auth) ───────────────────────────
 const CURRENT_MEMBER = 'lead';
@@ -33,6 +36,10 @@ function LedgerCard({ item, zone, onVote }) {
   const [cooldown, setCooldown] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const cooldownTimer = useRef(null);
+
+  const { image: scraped } = useDestinationImage(item.thumb ? null : item.name, 'poi', 1);
+  const thumbSrc         = item.thumb || scraped?.thumb || null;
+  const thumbAttribution = item.thumb ? null : (scraped ?? null);
 
   const ups   = Object.values(item.votes).filter(v => v === 'up').length;
   const downs = Object.values(item.votes).filter(v => v === 'down').length;
@@ -91,25 +98,39 @@ function LedgerCard({ item, zone, onVote }) {
       style={style}
       draggable={zone === 'path'}
       onDragStart={zone === 'path' ? handleNativeDragStart : undefined}
-      className={`relative glass-panel p-3 mb-2 border ${borderColor} transition-colors ${shaking ? 'animate-shake' : ''}`}
+      {...attributes}
+      {...listeners}
+      className={`relative glass-panel p-3 mb-2 border ${borderColor} transition-colors cursor-grab active:cursor-grabbing ${shaking ? 'animate-shake' : ''}`}
     >
       {showTooltip && (
         <div className="absolute -top-7 left-1/2 -translate-x-1/2 text-[10px] bg-red-900 text-red-300 px-2 py-0.5 rounded font-mono whitespace-nowrap z-10">
           Vetoed by Squad
         </div>
       )}
-      <div className="flex items-start gap-2">
-        {/* Drag handle */}
-        <button
-          {...attributes}
-          {...listeners}
-          className="text-slate-600 hover:text-slate-400 mt-0.5 cursor-grab active:cursor-grabbing"
-        >
-          ⠿
-        </button>
-        {item.thumb && (
-          <img src={item.thumb} alt="" className="w-9 h-9 rounded object-cover shrink-0" />
-        )}
+      <div className="flex items-center gap-3">
+        <div className="relative w-16 h-16 shrink-0">
+          {thumbSrc ? (
+            <img src={thumbSrc} alt={item.name} className="w-16 h-16 rounded-lg object-cover" />
+          ) : (
+            <div className="w-16 h-16 rounded-lg bg-white/5 flex items-center justify-center text-slate-600 text-xl">📍</div>
+          )}
+          {thumbAttribution && (
+            <ImageAttribution attribution={thumbAttribution} className="rounded-b-lg" />
+          )}
+          {thumbSrc && (
+            <div className="absolute top-0.5 right-0.5" onClick={e => e.stopPropagation()}>
+              <ReportButton
+                cityId={item.name.toLowerCase().replace(/\s+/g, '-')}
+                cityName={item.name}
+                country=""
+                poiId={item.id ?? item.name}
+                small
+                imageUrl={thumbSrc}
+                imageAttribution={thumbAttribution}
+              />
+            </div>
+          )}
+        </div>
         <div className="flex-1 min-w-0">
           <div className="text-white text-sm font-semibold truncate">{item.name}</div>
           <div className="text-xs text-slate-400 font-mono mt-0.5">{item.type}</div>
@@ -121,17 +142,17 @@ function LedgerCard({ item, zone, onVote }) {
         </div>
         {/* Voting buttons (pool only) */}
         {zone === 'pool' && (
-          <div className="flex gap-1 shrink-0">
+          <div className="flex gap-1 shrink-0" onPointerDown={e => e.stopPropagation()}>
             <button
               onClick={handleUpvote}
-              className="px-2 py-1 text-[10px] font-mono rounded border border-green-700/50 text-green-400 hover:bg-green-900/30 transition-colors"
+              className="px-2 py-1 text-[10px] font-mono rounded border border-green-700/50 text-green-400 hover:bg-green-900/30 transition-colors cursor-pointer"
             >
               ↑
             </button>
             <button
               onClick={handleDownvote}
               disabled={cooldown}
-              className={`px-2 py-1 text-[10px] font-mono rounded border transition-colors ${
+              className={`px-2 py-1 text-[10px] font-mono rounded border transition-colors cursor-pointer ${
                 cooldown
                   ? 'border-red-800/30 text-red-800 cursor-not-allowed'
                   : 'border-red-700/50 text-red-400 hover:bg-red-900/30'
