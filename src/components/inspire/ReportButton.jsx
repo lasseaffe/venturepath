@@ -9,11 +9,14 @@ const ISSUE_TYPES = [
   { id: 'other',          label: '💬 Other problem' },
 ];
 
-const RECEIVER_URL = 'http://localhost:3099/report';
+const RECEIVER_URL = '/api/element-reports';
 
-export default function ReportButton({ cityId, cityName, country, poiId = null, small = false }) {
+export default function ReportButton({
+  cityId, cityName, country, poiId = null, small = false,
+  imageUrl = null, imageAttribution = null,
+}) {
   const [open, setOpen]       = useState(false);
-  const [type, setType]       = useState('bad_poi');
+  const [type, setType]       = useState(imageUrl ? 'missing_image' : 'bad_poi');
   const [detail, setDetail]   = useState('');
   const [state, setState]     = useState('idle'); // idle | sending | done | error
 
@@ -23,7 +26,14 @@ export default function ReportButton({ cityId, cityName, country, poiId = null, 
       const res = await fetch(RECEIVER_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cityId, cityName, country, type, poiId, detail }),
+        body: JSON.stringify({
+          cityId, cityName, country,
+          issueType: type,
+          poiId,
+          detail,
+          imageUrl,
+          card_type: poiId ? 'inspire_poi' : 'inspire_city',
+        }),
       });
       if (!res.ok) throw new Error('Server error');
       setState('done');
@@ -81,6 +91,26 @@ export default function ReportButton({ cityId, cityName, country, poiId = null, 
             <div className="text-[12px] font-mono font-bold text-white mb-4">
               {cityName}{poiId ? ` — ${poiId.replace(/^[^-]+-/, '')}` : ''}
             </div>
+
+            {imageAttribution?.author && (
+              <div className="mb-4 p-2 rounded" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                <div className="text-[9px] font-mono text-[#E67E22] uppercase tracking-widest mb-1.5">Image credit</div>
+                <div className="flex flex-col gap-1">
+                  <a href={imageAttribution.authorUrl} target="_blank" rel="noopener noreferrer"
+                     className="text-[10px] font-mono text-[#E67E22]" style={{ textDecoration: 'none' }}>
+                    {imageAttribution.author} ↗
+                  </a>
+                  <a href={imageAttribution.licenseUrl} target="_blank" rel="noopener noreferrer"
+                     className="text-[10px] font-mono" style={{ color: 'rgba(255,255,255,0.4)', textDecoration: 'none' }}>
+                    {imageAttribution.license} ↗
+                  </a>
+                  <a href={imageAttribution.photoPageUrl} target="_blank" rel="noopener noreferrer"
+                     className="text-[10px] font-mono text-[#E67E22]" style={{ textDecoration: 'none' }}>
+                    View original ↗
+                  </a>
+                </div>
+              </div>
+            )}
 
             {/* Issue type pills */}
             <div className="flex flex-col gap-1.5 mb-4">
