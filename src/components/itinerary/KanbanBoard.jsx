@@ -995,30 +995,22 @@ function DropLine() {
 
 // ── Activity block (kanban card) ──────────────────────────────────────────────
 
-function BlockCardImage({ title, tripName }) {
+function BlockCardImage({ title, tripName, visible }) {
   const query = title || tripName;
   const { image, loading } = useDestinationImage(query, 'poi', 3);
 
-  if (loading) {
-    return <div className="w-full animate-pulse" style={{ height: 120, background: '#1a2030' }} />;
-  }
-  if (!image?.url) return null;
-
   return (
-    <div className="relative overflow-hidden" style={{ height: 120 }}>
-      <img src={image.url} alt={title} className="absolute inset-0 w-full h-full object-cover" />
-      <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(14,16,18,0.05) 0%, rgba(14,16,18,0.45) 100%)' }} />
-      {image.author && <ImageAttribution attribution={image} />}
-      <div className="absolute top-1 right-1" style={{ zIndex: 15 }}>
-        <ReportButton
-          cityId={title}
-          cityName={title}
-          country=""
-          small
-          imageUrl={image.url}
-          imageAttribution={image}
-        />
-      </div>
+    <div style={{ height: visible ? 120 : 0, overflow: 'hidden', transition: 'height 0.2s ease', position: 'relative', flexShrink: 0 }}>
+      {loading && visible && (
+        <div className="w-full animate-pulse" style={{ height: 120, background: '#1a2030' }} />
+      )}
+      {image?.url && (
+        <>
+          <img src={image.url} alt={title} className="absolute inset-0 w-full h-full object-cover" />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(14,16,18,0.05) 0%, rgba(14,16,18,0.45) 100%)' }} />
+          {image.author && <ImageAttribution attribution={image} />}
+        </>
+      )}
     </div>
   );
 }
