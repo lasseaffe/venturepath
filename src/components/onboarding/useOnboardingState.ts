@@ -12,6 +12,7 @@ const DEFAULT: OnboardingState = {
 }
 
 function load(key: string): OnboardingState {
+  if (typeof window === 'undefined') return { ...DEFAULT }
   try {
     const raw = localStorage.getItem(key)
     return raw ? { ...DEFAULT, ...JSON.parse(raw) } : { ...DEFAULT }

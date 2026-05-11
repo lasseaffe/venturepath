@@ -47,7 +47,7 @@ export function OverlayTour({ config, state, onAdvance, onActionComplete, onComp
       window.removeEventListener('scroll', compute)
       window.removeEventListener('resize', compute)
     }
-  }, [waypoint])
+  }, [state.tourStep, config])
 
   if (!waypoint) return null
 
