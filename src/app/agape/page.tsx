@@ -10,6 +10,7 @@ import {
   Copy, Check, RefreshCw, UserPlus, ChevronLeft,
   Sparkles, Eye,
 } from "lucide-react";
+import { TypewriterText } from "@/components/ui/TypewriterText";
 
 // ── Prompt pool ───────────────────────────────────────────────────
 const PROMPTS = [
@@ -768,7 +769,13 @@ export default function AgapePage() {
                 )}
               </div>
               <div className="p-5" style={{ background: "#FEFCFF" }}>
-                <p className="text-sm leading-relaxed" style={{ color: "#2D1A2D" }}>{partnerAnswer}</p>
+                <TypewriterText
+                  text={partnerAnswer}
+                  speed={52}
+                  cursorColor="#c8a96e"
+                  className="text-sm leading-relaxed"
+                  style={{ color: "#2D1A2D" }}
+                />
               </div>
             </div>
           </div>
