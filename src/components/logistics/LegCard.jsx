@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { filterExpeditionFlights } from '../../utils/flightEngine';
 import { searchAirports, searchStations, searchTransportHubs, searchBusStops, searchTramStops } from '../../utils/geocodeEngine';
+import { resolveStop, searchConnections } from '../../utils/transitEngine';
 import EmergencyRebook from './EmergencyRebook';
 
 const MODE_CONFIG = {
@@ -104,7 +105,12 @@ function AutocompleteField({ label, value, field, ac, mode, onUpdate, legId }) {
                     const snap = s.transportType === 'flight' ? 'flight'
                                : s.transportType === 'train'  ? 'train'
                                : mode;
-                    onUpdate(legId, { [field]: s.name, ...(snap !== mode ? { mode: snap } : {}) });
+                    const coordKey = field === 'from' ? 'fromCoords' : 'toCoords';
+                    onUpdate(legId, {
+                      [field]: s.name,
+                      [coordKey]: s.coords ?? null,
+                      ...(snap !== mode ? { mode: snap } : {}),
+                    });
                     ac.clear();
                   }}
                   className="w-full text-left px-3 py-2 text-xs font-mono text-white hover:bg-white/5 transition-colors border-b border-white/5 last:border-0"
@@ -128,8 +134,10 @@ function AutocompleteField({ label, value, field, ac, mode, onUpdate, legId }) {
 
 export default function LegCard({ leg, index, onUpdate, onRemove }) {
   const { id, mode, from, to, searched } = leg;
-  const [priority, setPriority]         = useState('CHEAPEST');
-  const [showSimulate, setShowSimulate] = useState(false);
+  const [priority, setPriority]           = useState('CHEAPEST');
+  const [showSimulate, setShowSimulate]   = useState(false);
+  const [loadingResults, setLoadingResults] = useState(false);
+  const [liveResults, setLiveResults]       = useState([]);
 
   const fromAC = useTransportAutocomplete(from, mode);
   const toAC   = useTransportAutocomplete(to,   mode);
@@ -215,7 +223,31 @@ export default function LegCard({ leg, index, onUpdate, onRemove }) {
 
         {/* FROM / TO inputs */}
         <form
-          onSubmit={e => { e.preventDefault(); onUpdate(id, { searched: true }); }}
+          onSubmit={async e => {
+            e.preventDefault();
+            onUpdate(id, { searched: true });
+            setLiveResults([]);
+
+            if (mode !== 'flight') {
+              setLoadingResults(true);
+              try {
+                const [fromStop, toStop] = await Promise.all([
+                  resolveStop(leg.fromCoords?.lat, leg.fromCoords?.lng),
+                  resolveStop(leg.toCoords?.lat,   leg.toCoords?.lng),
+                ]);
+                if (fromStop && toStop) {
+                  const connections = await searchConnections(
+                    fromStop.id, toStop.id, new Date().toISOString(), mode
+                  );
+                  setLiveResults(connections);
+                  onUpdate(id, { stopFromId: fromStop.id, stopToId: toStop.id });
+                }
+              } catch {
+                // fall through to mock results
+              }
+              setLoadingResults(false);
+            }
+          }}
           className="space-y-2"
         >
           <div className="grid grid-cols-2 gap-2">
@@ -248,31 +280,103 @@ export default function LegCard({ leg, index, onUpdate, onRemove }) {
                 </button>
               ))}
             </div>
-            <div className="space-y-2">
-              {results.map(r => (
-                <div
-                  key={r.id}
-                  className="bg-[#0E1012] rounded-lg p-3 border border-[#1e2328] transition-colors"
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-[10px] font-mono text-[var(--text-muted)] tracking-widest">{r.carrier}</div>
-                      <div className="text-white text-sm font-semibold font-mono mt-0.5">{r.route}</div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-lg font-mono font-bold" style={{ color: accent }}>${r.price}</div>
-                      <div className="text-[9px] text-[var(--text-muted)] font-mono">{r.label}</div>
+
+            {/* Loading skeleton */}
+            {loadingResults && (
+              <div className="space-y-2">
+                {[0, 1, 2].map(i => (
+                  <div key={i} className="bg-[#0E1012] rounded-lg p-3 border border-[#1e2328] animate-pulse">
+                    <div className="h-3 bg-white/5 rounded w-1/3 mb-2" />
+                    <div className="h-4 bg-white/10 rounded w-2/3 mb-3" />
+                    <div className="flex justify-between">
+                      <div className="h-3 bg-white/5 rounded w-16" />
+                      <div className="h-3 bg-white/5 rounded w-16" />
                     </div>
                   </div>
-                  <div className="flex justify-between mt-2">
-                    <span className="text-[10px] font-mono text-[var(--text-muted)]">{r.duration}</span>
-                    <span className={`text-[10px] font-mono ${r.co2 < 20 ? 'text-green-400' : r.co2 < 100 ? 'text-yellow-400' : 'text-red-400'}`}>
-                      {r.co2}kg CO₂
-                    </span>
+                ))}
+              </div>
+            )}
+
+            {/* Results area (hidden while loading) */}
+            {!loadingResults && (
+              <div className="space-y-2">
+                {/* LIVE DATA UNAVAILABLE notice */}
+                {liveResults.length === 0 && mode !== 'flight' && (
+                  <div className="text-[9px] font-mono text-amber-500/70 border border-amber-900/40 rounded px-2 py-1 mb-2">
+                    LIVE DATA UNAVAILABLE — showing cached options
                   </div>
-                </div>
-              ))}
-            </div>
+                )}
+
+                {/* Live results (train/bus/tram with real data) */}
+                {liveResults.length > 0 && mode !== 'flight'
+                  ? liveResults.map(r => (
+                    <div
+                      key={r.id}
+                      onClick={() => onUpdate(id, { selectedOption: r })}
+                      className={`bg-[#0E1012] rounded-lg p-3 border transition-colors cursor-pointer ${
+                        leg.selectedOption?.id === r.id
+                          ? 'border-[var(--accent)]'
+                          : 'border-[#1e2328] hover:border-white/20'
+                      }`}
+                      style={leg.selectedOption?.id === r.id ? { borderColor: `${accent}80` } : {}}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="text-[10px] font-mono text-[var(--text-muted)] tracking-widest flex items-center gap-2">
+                            {r.carrier}
+                            {r.realtime && (
+                              <span className="text-[8px] text-green-400 font-mono">● LIVE</span>
+                            )}
+                          </div>
+                          <div className="text-white text-sm font-semibold font-mono mt-0.5">
+                            {new Date(r.departure).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}
+                            {' → '}
+                            {new Date(r.arrival).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })}
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          {r.price != null
+                            ? <div className="text-lg font-mono font-bold" style={{ color: accent }}>€{r.price}</div>
+                            : <div className="text-xs font-mono text-[var(--text-muted)]">price n/a</div>
+                          }
+                          <div className="text-[9px] text-[var(--text-muted)] font-mono">{r.duration}</div>
+                        </div>
+                      </div>
+                      <div className="flex justify-between mt-2">
+                        <span className="text-[10px] font-mono text-[var(--text-muted)]">{r.platform ? `Platform ${r.platform}` : ''}</span>
+                        <span className={`text-[10px] font-mono ${r.co2 < 20 ? 'text-green-400' : r.co2 < 100 ? 'text-yellow-400' : 'text-red-400'}`}>
+                          {r.co2}kg CO₂
+                        </span>
+                      </div>
+                    </div>
+                  ))
+                  /* Mock results (flight mode or live fetch fallback) */
+                  : results.map(r => (
+                    <div
+                      key={r.id}
+                      className="bg-[#0E1012] rounded-lg p-3 border border-[#1e2328] transition-colors"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="text-[10px] font-mono text-[var(--text-muted)] tracking-widest">{r.carrier}</div>
+                          <div className="text-white text-sm font-semibold font-mono mt-0.5">{r.route}</div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-lg font-mono font-bold" style={{ color: accent }}>${r.price}</div>
+                          <div className="text-[9px] text-[var(--text-muted)] font-mono">{r.label}</div>
+                        </div>
+                      </div>
+                      <div className="flex justify-between mt-2">
+                        <span className="text-[10px] font-mono text-[var(--text-muted)]">{r.duration}</span>
+                        <span className={`text-[10px] font-mono ${r.co2 < 20 ? 'text-green-400' : r.co2 < 100 ? 'text-yellow-400' : 'text-red-400'}`}>
+                          {r.co2}kg CO₂
+                        </span>
+                      </div>
+                    </div>
+                  ))
+                }
+              </div>
+            )}
           </>
         )}
 
