@@ -1,6 +1,6 @@
 // src/components/logistics/PackingHudScreen.jsx
 import { useState, useMemo, useRef, useCallback } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion'; // eslint-disable-line no-unused-vars
 import { generatePackingList } from '../../utils/packingLogic';
 import { BAG_TYPES } from './bag/bagTypes';
 import { DragProvider } from './bag/DragContext';

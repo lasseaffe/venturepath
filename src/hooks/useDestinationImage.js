@@ -12,15 +12,13 @@ export function useDestinationImage(query, type = 'city', index = 0) {
 
   useEffect(() => {
     const q = query?.trim();
-    if (!q) {
-      setImages(null);
-      return;
-    }
+    if (!q) return;
 
     // Check sessionStorage cache first
     try {
       const cached = sessionStorage.getItem(sessionKey(type, q));
       if (cached) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setImages(JSON.parse(cached));
         return;
       }
@@ -29,7 +27,6 @@ export function useDestinationImage(query, type = 'city', index = 0) {
     }
 
     // No cache — fetch
-    setImages(null);
     let cancelled = false;
     setLoading(true);
     setError(false);
@@ -59,6 +56,7 @@ export function useDestinationImage(query, type = 'city', index = 0) {
     return () => { cancelled = true; };
   }, [query, type]);
 
-  const image = images?.length > 0 ? images[index % images.length] : null;
+  // Guard on query so stale images don't show when query clears
+  const image = (query?.trim() && images?.length > 0) ? images[index % images.length] : null;
   return { image, loading, error };
 }
