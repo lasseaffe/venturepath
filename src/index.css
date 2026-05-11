@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* VenturePath onboarding terminal card */
+.vp-terminal-card {
+  transition: all 0.12s steps(3, end) !important;
+}
+.vp-terminal-card:hover {
+  border-color: #4A7C59 !important;
+  background: #152010 !important;
+}
+
 @keyframes shake {
   0%   { transform: translateX(0); }
   25%  { transform: translateX(-5px); }
@@ -131,48 +140,14 @@ body {
   font-family: Inter, ui-sans-serif, system-ui;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Prevent horizontal overflow on narrow screens */
-  overflow-x: hidden;
 }
 
 #root {
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
-  min-height: 100dvh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-}
-
-/* ─── Touch & hover safety ─── */
-
-/* Only fire hover transforms on devices that can hover (not touch) */
-@media (hover: hover) {
-  .btn-primary-glow:hover { transform: translateY(-2px) scale(1.02); }
-  .btn-outline-lift:hover  { transform: translateY(-2px); }
-}
-
-/* Active state for touch feedback */
-.btn-primary-glow:active,
-.btn-outline-lift:active { transform: scale(0.97); }
-
-/* Smooth momentum scrolling on iOS */
-.overflow-auto,
-.overflow-y-auto,
-.overflow-x-auto {
-  -webkit-overflow-scrolling: touch;
-}
-
-/* Prevent text size inflation on iOS rotation */
-* { -webkit-text-size-adjust: 100%; }
-
-/* Respect user's reduced-motion preference */
-@media (prefers-reduced-motion: reduce) {
-  .animate-shake,
-  .animate-pulse-gold,
-  .animate-ken-burns,
-  .animate-bounce,
-  .animate-ping,
-  .animate-spin { animation: none !important; }
 }

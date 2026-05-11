@@ -62,11 +62,13 @@ function LedgerCard({ item, zone, onVote }) {
     if (navigator.vibrate) navigator.vibrate(50);
     onVote(item.id, CURRENT_MEMBER, 'down');
     cooldownTimer.current = setTimeout(() => setCooldown(false), 1000);
+    window.dispatchEvent(new CustomEvent('onboarding:action', { detail: { id: 'vote-cast' } }));
   };
 
   const handleUpvote = () => {
     setShaking(false);
     onVote(item.id, CURRENT_MEMBER, 'up');
+    window.dispatchEvent(new CustomEvent('onboarding:action', { detail: { id: 'vote-cast' } }));
   };
 
   const style = {
@@ -416,7 +418,7 @@ export default function LedgerWorkbench() {
   const activeItem = [...pool, ...activePath].find(i => i.id === activeId);
 
   return (
-    <div className="tactical-panel p-5">
+    <div data-tour="ledger" className="tactical-panel p-5">
       {/* Header */}
       <div className="flex items-center justify-between mb-1">
         <h2 className="label-tag">Expedition Ledger</h2>

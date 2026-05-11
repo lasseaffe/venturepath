@@ -37,6 +37,7 @@ function DraggableItem({ item, packed, onToggle }) {
   function handleToggle(e) {
     const rect = e.currentTarget.getBoundingClientRect();
     onToggle(item.id, rect);
+    window.dispatchEvent(new CustomEvent('onboarding:action', { detail: { id: 'gear-checked' } }));
   }
 
   return (
@@ -168,7 +169,7 @@ export default function PackingChecklist({
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div data-tour="packing" className="flex flex-col h-full">
       <div className="flex items-center justify-between mb-3">
         <span className="label-tag">Gear Manifest</span>
         <span className="text-[10px] font-mono text-slate-400">

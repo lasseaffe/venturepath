@@ -255,6 +255,7 @@ export default function ARGhostTours({ destinationId = 'patagonia', center = [-5
 function PoiOverlay({ poi, onClose, floating = false }) {
   return (
     <motion.div
+      data-beacon="ar-tours"
       initial={{ opacity: 0, y: floating ? 20 : 0, scale: floating ? 0.95 : 1 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: floating ? 20 : 0 }}

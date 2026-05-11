@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTripStore } from '../../store/useTripStore';
 import { useTheme } from '../../context/ThemeContext';
-import { useExpedition } from '../../context/ExpeditionContext';
-import CompassRing from '../tactical/CompassRing';
 
 const CACHED_MESSAGES = [
   'Scout: River crossing waist-deep as of 07:30',
@@ -13,18 +11,12 @@ const CACHED_MESSAGES = [
 export default function TacticalMode({ onExit }) {
   const { trip, legs } = useTripStore();
   const { setTheme } = useTheme();
-  const { setActiveSection } = useExpedition();
   const [time, setTime] = useState(new Date());
 
   useEffect(() => {
     setTheme('tactical');
     return () => setTheme('default');
   }, [setTheme]);
-
-  useEffect(() => {
-    setActiveSection('tactical');
-    return () => setActiveSection('planner');
-  }, [setActiveSection]);
   const [coords] = useState({ lat: -50.9423, lng: -73.4068 });
   const [freshness] = useState('14 min ago');
   const [sosReady, setSosReady] = useState(false);
@@ -53,7 +45,7 @@ export default function TacticalMode({ onExit }) {
   };
 
   return (
-    <div className="min-h-screen bg-black text-amber-400 font-mono p-4 flex flex-col">
+    <div data-tour="tactical" data-beacon="tactical-mode" className="min-h-screen bg-black text-amber-400 font-mono p-4 flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between mb-4 pb-3 border-b border-amber-400/30">
         <div>
@@ -116,12 +108,6 @@ export default function TacticalMode({ onExit }) {
         >
           ⚠ SOS EMERGENCY BEACON
         </button>
-        {/* TACTICAL-CRITICAL: CompassRing uses navigator.geolocation — works offline */}
-        <div className="flex justify-center mt-6">
-          <CompassRing
-            stops={legs.map(l => ({ label: `${l.from ?? ''} → ${l.to ?? ''}`, lat: null, lng: null }))}
-          />
-        </div>
         <button
           onClick={onExit}
           className="w-full py-2 border border-amber-400/30 text-amber-600 text-xs tracking-widest rounded hover:border-amber-400/60 transition-colors"

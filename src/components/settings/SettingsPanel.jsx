@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import ElementReportsClient from './ElementReportsClient';
+import { useOnboardingState } from '../onboarding/useOnboardingState';
 
 const TABS = [
   { id: 'DISPLAY',  label: 'Display' },
@@ -10,6 +11,7 @@ const TABS = [
 export default function SettingsPanel({ open, onClose, onLaunchWizard }) {
   const [activeTab, setActiveTab] = useState('DISPLAY');
   const { theme, setTheme } = useTheme();
+  const { reset: resetOnboarding } = useOnboardingState('vp-onboarding');
   const isTactical = theme === 'tactical';
 
   if (!open) return null;
@@ -139,6 +141,33 @@ export default function SettingsPanel({ open, onClose, onLaunchWizard }) {
                 >
                   ⊕ Launch →
                 </button>
+              </div>
+
+              {/* Restart Tour */}
+              <div style={{ borderTop: '1px solid #2a3a22', marginTop: 16, paddingTop: 16 }}>
+                <button
+                  onClick={resetOnboarding}
+                  style={{
+                    padding: '10px 20px',
+                    background: 'transparent',
+                    border: '1px solid #E67E22',
+                    color: '#E67E22',
+                    borderRadius: 6,
+                    fontSize: 12,
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    fontFamily: '"JetBrains Mono", monospace',
+                    letterSpacing: 1,
+                    transition: 'all 0.12s steps(3, end)',
+                  }}
+                  onMouseEnter={e => { e.target.style.background = '#E67E22'; e.target.style.color = '#0C0F0A' }}
+                  onMouseLeave={e => { e.target.style.background = 'transparent'; e.target.style.color = '#E67E22' }}
+                >
+                  [RESTART TOUR]
+                </button>
+                <p style={{ fontSize: 10, color: '#8FAF80', marginTop: 6, fontFamily: '"JetBrains Mono", monospace' }}>
+                  Re-run the expedition onboarding protocol
+                </p>
               </div>
             </div>
           )}

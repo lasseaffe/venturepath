@@ -104,7 +104,7 @@ function dayStats(blocks) {
 
 // ── Main component ─────────────────────────────────────────────────────────────
 
-export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Operation Patagonia' }) {
+export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Operation Patagonia', destination = '' }) {
   const { removeFromPath } = useExpedition();
   const [days,         setDays]         = useState(initialDays);
   const [viewMode,     setViewMode]     = useState('kanban'); // 'kanban' | 'timeline'
@@ -206,6 +206,7 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
       ...(newDraft.locationCoords ? { locationCoords: newDraft.locationCoords } : {}),
     };
     setDays(prev => prev.map(d => d.id === dayId ? { ...d, blocks: [...d.blocks, block] } : d));
+    window.dispatchEvent(new CustomEvent('onboarding:action', { detail: { id: 'stop-added' } }));
     setNewDraft({
       title: '', time: '', category: 'activity', duration: '', notes: '',
       location: '', locationCoords: null, bookingRef: '', cost: '', alertTime: '',
@@ -332,6 +333,7 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
     setGhostId(null);
     setDropIndicator(null);
     dragState.current = null;
+    window.dispatchEvent(new CustomEvent('onboarding:action', { detail: { id: 'stop-dragged' } }));
   }
 
   // ── Render ────────────────────────────────────────────────────────────────────
@@ -343,7 +345,10 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
   );
 
   return (
-    <div className="flex flex-col gap-3">
+    <div data-tour="itinerary" className="flex flex-col gap-3">
+
+      {/* ── Destination cover hero ── */}
+      {destination && <PlannerHero destination={destination} />}
 
       {/* ── Toolbar ── */}
       <div className="flex items-center justify-between">
@@ -466,16 +471,21 @@ function extractDayDestination(label) {
   return m ? m[1].trim() : null;
 }
 
-function DayColumnHeaderImage({ label, tripName }) {
+function DayColumnHeaderImage({ label, tripName, colIndex = 0 }) {
   const dest = extractDayDestination(label) ?? tripName;
-  const { image, loading } = useDestinationImage(dest, 'city', 2);
+  const imageIndex = 2 + (colIndex % 3); // cycles 2→3→4 so each column shows a distinct image
+  const { image, loading } = useDestinationImage(dest, 'city', imageIndex);
 
   if (loading) {
     return (
       <div className="w-full animate-pulse" style={{ height: 48, background: '#1a2030' }} />
     );
   }
-  if (!image?.url) return null;
+  if (!image?.url) {
+    return (
+      <div style={{ width: '100%', height: 48, flexShrink: 0, background: 'linear-gradient(90deg, #111316 0%, #1a1f26 100%)', borderBottom: '1px solid #1e2328' }} />
+    );
+  }
 
   return (
     <div className="relative overflow-hidden shrink-0" style={{ height: 48 }}>
@@ -496,6 +506,63 @@ function DayColumnHeaderImage({ label, tripName }) {
   );
 }
 
+// ── Planner hero ─────────────────────────────────────────────────────────────
+
+function PlannerHero({ destination }) {
+  const { image, loading } = useDestinationImage(destination, 'city', 4);
+
+  return (
+    <div style={{ position: 'relative', width: '100%', height: 260, overflow: 'hidden', flexShrink: 0, borderRadius: '8px 8px 0 0' }}>
+      {/* Base gradient — always visible as fallback */}
+      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, #0E1012 0%, #1a1f26 50%, #0E1012 100%)' }} />
+
+      {image && !loading && (
+        <img
+          src={image.url}
+          alt={destination}
+          style={{
+            position: 'absolute', inset: 0, width: '100%', height: '100%',
+            objectFit: 'cover', objectPosition: 'center 30%',
+            opacity: 0.55,
+            transition: 'opacity 0.6s ease',
+          }}
+        />
+      )}
+
+      {/* Cinematic fade into board background */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: 'linear-gradient(to bottom, rgba(14,16,18,0.15) 0%, rgba(14,16,18,0.6) 60%, #0E1012 100%)',
+      }} />
+
+      {/* Destination label */}
+      <div style={{ position: 'absolute', bottom: 24, left: 28, display: 'flex', flexDirection: 'column', gap: 4 }}>
+        <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.2em', color: '#E67E22', textTransform: 'uppercase' }}>
+          Active Expedition
+        </div>
+        <div style={{ fontFamily: 'Playfair Display, serif', fontSize: 26, fontWeight: 700, color: '#fff', textShadow: '0 2px 12px rgba(0,0,0,0.8)', lineHeight: 1.15 }}>
+          {destination}
+        </div>
+      </div>
+
+      {/* CC attribution + report button */}
+      {image && (
+        <div style={{ position: 'absolute', bottom: 10, right: 10, display: 'flex', gap: 6, alignItems: 'center' }}>
+          {image.author && <ImageAttribution attribution={image} />}
+          <ReportButton
+            cityId={destination?.toLowerCase().replace(/\s+/g, '-')}
+            cityName={destination}
+            country=""
+            imageUrl={image.url}
+            imageAttribution={image}
+            small
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── Kanban view ───────────────────────────────────────────────────────────────
 
 function KanbanView({
@@ -507,7 +574,7 @@ function KanbanView({
 }) {
   return (
     <div className="flex gap-4 overflow-x-auto pb-3" style={{ minHeight: '480px' }}>
-      {days.map(day => {
+      {days.map((day, colIndex) => {
         const isTarget = dropIndicator?.dayId === day.id;
         const stats = dayStats(day.blocks);
         return (
@@ -560,7 +627,7 @@ function KanbanView({
             </div>
 
             {/* Destination image strip */}
-            <DayColumnHeaderImage label={day.label} tripName={tripName} />
+            <DayColumnHeaderImage label={day.label} tripName={tripName} colIndex={colIndex} />
 
             {/* Action strip */}
             <div className="flex items-center gap-1 px-2 py-1.5 shrink-0" style={{ borderBottom: '1px solid #1a1e23', background: '#0c0e10' }}>

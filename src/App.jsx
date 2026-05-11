@@ -1,19 +1,15 @@
-import { useState, useCallback, useEffect } from 'react';
-import TourPage from './pages/TourPage';
+import { useState, useCallback } from 'react';
 import { TripStoreProvider, useTripStore } from './store/useTripStore';
 import { ExpeditionProvider } from './context/ExpeditionContext';
 import { SquadGearProvider } from './context/SquadGearContext';
 import { useExpeditionList } from './hooks/useExpeditionList';
+import { OnboardingEngine } from './components/onboarding/OnboardingEngine';
+import vpConfig from './config/venturepath.onboarding.config';
 import LaunchDashboard from './components/dashboard/LaunchDashboard';
 import TripPlanner from './pages/TripPlanner';
 import ArchitectProfile from './components/social/ArchitectProfile';
 import VentureVault from './components/discovery/VentureVault';
 import ExpeditionSelectScreen from './components/trip/ExpeditionSelectScreen';
-
-function getTourSlug() {
-  const match = window.location.hash.match(/^#tour\/(.+)$/);
-  return match ? match[1] : null;
-}
 
 // Inner router has access to TripStore context
 function AppRouter() {
@@ -87,22 +83,11 @@ function AppRouter() {
 }
 
 function App() {
-  const [tourSlug, setTourSlug] = useState(getTourSlug);
-
-  useEffect(() => {
-    function onHashChange() { setTourSlug(getTourSlug()); }
-    window.addEventListener('hashchange', onHashChange);
-    return () => window.removeEventListener('hashchange', onHashChange);
-  }, []);
-
-  if (tourSlug) {
-    return <TourPage slug={tourSlug} />;
-  }
-
   return (
     <TripStoreProvider>
       <SquadGearProvider>
         <ExpeditionProvider>
+          <OnboardingEngine config={vpConfig} />
           <AppRouter />
         </ExpeditionProvider>
       </SquadGearProvider>

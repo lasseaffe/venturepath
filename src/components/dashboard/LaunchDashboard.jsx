@@ -5,7 +5,6 @@ import { useSquadGear } from '../../context/SquadGearContext';
 import { useSquadSync } from '../../hooks/useSquadSync';
 import { useTheme } from '../../context/ThemeContext';
 import { useLabels } from '../../hooks/useLabels';
-import DepartingSoonStrip from '../vault/DepartingSoonStrip';
 
 const HERO_IMAGES = {
   'Torres del Paine, Chile': 'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1600&q=80',
@@ -41,7 +40,7 @@ export default function LaunchDashboard({ onEnterTrip, onOpenVault, onOpenChat, 
     : 'linear-gradient(to right, #B4844A 0%, rgba(180,132,74,0.70) 45%, rgba(180,132,74,0.10) 100%)';
 
   return (
-    <div className="min-h-screen relative overflow-hidden" style={{ background: 'var(--bg)', color: 'var(--text-primary)' }}>
+    <div data-tour="world-map" className="min-h-screen relative overflow-hidden" style={{ background: 'var(--bg)', color: 'var(--text-primary)' }}>
       {/* Hero background */}
       <div className="absolute inset-0 z-0">
         <div
@@ -231,9 +230,6 @@ export default function LaunchDashboard({ onEnterTrip, onOpenVault, onOpenChat, 
             ))}
           </div>
 
-          {/* Departing soon tickets */}
-          <DepartingSoonStrip onOpenVault={onOpenVault} />
-
           {/* Featured trips */}
           <div>
             <div className="flex items-center justify-between mb-3">
@@ -272,7 +268,14 @@ export default function LaunchDashboard({ onEnterTrip, onOpenVault, onOpenChat, 
           </div>
 
           {/* CTA */}
-          <div className="mt-auto">
+          <div className="mt-auto flex items-center gap-3">
+            <button
+              type="button"
+              onClick={onEnterTrip}
+              className="flex items-center gap-2 px-4 py-2 bg-[#E67E22]/10 border border-[#E67E22]/40 text-[#E67E22] font-mono text-sm rounded hover:bg-[#E67E22]/20 transition-colors"
+            >
+              ✦ Plan with Guide
+            </button>
             <button
               onClick={onEnterTrip}
               className="px-8 py-4 font-semibold text-sm text-white transition-colors"

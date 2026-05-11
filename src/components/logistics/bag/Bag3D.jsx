@@ -21,7 +21,7 @@ export default function Bag3D({ zoneMap, packed, zoneMode }) {
     : FIXED_LAYERS;
 
   return (
-    <div className="flex flex-col items-center justify-center h-full"
+    <div data-beacon="3d-bag" className="flex flex-col items-center justify-center h-full"
       style={{ perspective: '600px' }}>
       <div style={{ transform: 'rotateX(30deg)', transformStyle: 'preserve-3d' }}
         className="w-48 space-y-1">
