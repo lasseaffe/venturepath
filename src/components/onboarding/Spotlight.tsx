@@ -52,7 +52,6 @@ export function Spotlight({ rect, padding = 12, borderRadius = 16 }: SpotlightPr
         x={0} y={0} width={vw} height={vh}
         fill="rgba(0,0,0,0.72)"
         clipPath={`url(#${clipId})`}
-        style={{ clipRule: 'evenodd' }}
       />
       {rect && (
         <motion.rect
