@@ -2,8 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSquadGear } from '../../context/SquadGearContext';
 import { useTripStore } from '../../store/useTripStore';
-import sentinelBus from '../../utils/sentinelBus.js';
-import { buildInsights } from '../../utils/architectEngine.js';
+import { TypewriterText } from '../ui/TypewriterText';
 
 const MEMBERS = {
   lead:  { name: 'Lead',  avatar: '🧗', color: 'text-[#E67E22]' },
@@ -53,23 +52,6 @@ export default function PioneerChat({ onClose }) {
   }, [overEncumbered.length]);
 
   useEffect(() => {
-    const unsub = sentinelBus.on('HAZARD_UPDATED', ({ hazards }) => {
-      const insights = buildInsights('HAZARD_UPDATED', { hazards }, {});
-      insights.forEach(insight => {
-        const newMsg = {
-          id: `arch_${insight.id}_${Date.now()}`,
-          type: 'architect',
-          stream: 'LOGS',
-          text: insight.message,
-          timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
-        };
-        setMessages(prev => [...prev, newMsg]);
-      });
-    });
-    return unsub;
-  }, []);
-
-  useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
@@ -102,8 +84,8 @@ export default function PioneerChat({ onClose }) {
   };
 
   const filteredMessages = stream === 'LOGS'
-    ? messages.filter(m => m.type === 'log' || m.type === 'fragment' || m.type === 'architect')
-    : messages.filter(m => m.type !== 'log' && m.type !== 'architect');
+    ? messages.filter(m => m.type === 'log' || m.type === 'fragment')
+    : messages.filter(m => m.type !== 'log');
 
   return (
     <div className="tactical-panel flex flex-col h-[520px]">
@@ -159,24 +141,29 @@ export default function PioneerChat({ onClose }) {
                     <div className={`text-[10px] font-mono mb-1 ${MEMBERS[msg.from]?.color}`}>
                       {MEMBERS[msg.from]?.name}
                     </div>
-                    <div className="text-sm text-slate-200">{msg.text}</div>
+                    {msg.from === 'ai' ? (
+                      <TypewriterText
+                        text={msg.text}
+                        speed={38}
+                        cursorColor="#E67E22"
+                        className="text-sm text-slate-200"
+                      />
+                    ) : (
+                      <div className="text-sm text-slate-200">{msg.text}</div>
+                    )}
                   </div>
                 </div>
               )}
               {msg.type === 'status' && (
                 <div className="glass-panel p-3 border border-[#F2C94C]/30">
                   <div className="label-tag text-[#F2C94C] mb-2">⚡ AI Scout Status Brief</div>
-                  <pre className="text-xs font-mono text-slate-300 whitespace-pre-wrap">{msg.text}</pre>
-                </div>
-              )}
-              {msg.type === 'architect' && (
-                <div key={msg.id} className="flex items-start gap-2 text-xs text-[#E67E22] [.tactical_&]:text-[#F2A900]">
-                  <span className="mt-0.5 shrink-0">⬡</span>
-                  <div>
-                    <span className="font-bold mr-1">ARCHITECT</span>
-                    <span className="opacity-70">{msg.timestamp}</span>
-                    <p className="mt-0.5">{msg.text}</p>
-                  </div>
+                  <pre className="text-xs font-mono text-slate-300 whitespace-pre-wrap">
+                    <TypewriterText
+                      text={msg.text}
+                      speed={38}
+                      cursorColor="#F2C94C"
+                    />
+                  </pre>
                 </div>
               )}
               {msg.type === 'fragment' && (
@@ -189,7 +176,12 @@ export default function PioneerChat({ onClose }) {
                     <span className="text-xl">⚡</span>
                     <div className="flex-1">
                       <div className="text-[10px] font-mono text-[#F2C94C] mb-1">AI Scout Alert</div>
-                      <div className="text-sm text-slate-200">{msg.text}</div>
+                      <TypewriterText
+                        text={msg.text}
+                        speed={38}
+                        cursorColor="#F2C94C"
+                        className="text-sm text-slate-200"
+                      />
                     </div>
                     {msg.action && (
                       <button className="text-[10px] font-mono px-2 py-1 border border-[#F2C94C]/50 text-[#F2C94C] rounded hover:bg-[#F2C94C]/10 transition-colors shrink-0">
