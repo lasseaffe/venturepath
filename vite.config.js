@@ -99,7 +99,8 @@ function apiRoutes() {
           const { createClient } = await import('@supabase/supabase-js');
 
           const supabaseUrl = process.env.VITE_SUPABASE_URL;
-          const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
+          // Service key bypasses RLS — safe here since this runs server-side only
+          const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
           const queryKey    = normalizeQueryKey(rawQuery);
           const CACHE_TTL   = 30 * 24 * 60 * 60 * 1000;
 
@@ -125,16 +126,23 @@ function apiRoutes() {
           // Scrape
           const images = await scrapeImages(rawQuery, count);
 
-          // Cache result (fire-and-forget)
-          if (images.length > 0 && supabaseUrl && supabaseKey) {
-            const sb = createClient(supabaseUrl, supabaseKey);
-            sb.from('destination_images').upsert({
-              query_key: queryKey, images, scraped_at: new Date().toISOString(),
-            }, { onConflict: 'query_key' }).catch(() => {});
-          }
-
+          // Send response BEFORE cache write so a cache error can never block the client
           res.setHeader('Content-Type', 'application/json');
           res.end(JSON.stringify({ images, cached: false }));
+
+          // Cache result (true fire-and-forget — response already sent above)
+          if (images.length > 0 && supabaseUrl && supabaseKey) {
+            (async () => {
+              try {
+                const sb = createClient(supabaseUrl, supabaseKey);
+                await sb.from('destination_images').upsert({
+                  query_key: queryKey, images, scraped_at: new Date().toISOString(),
+                }, { onConflict: 'query_key' });
+              } catch (e) {
+                console.error('[destination-images] cache upsert failed:', e.message);
+              }
+            })();
+          }
         } catch (err) {
           console.error('[destination-images]', err);
           res.statusCode = 500;
@@ -151,6 +159,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   process.env.VITE_SUPABASE_URL      = env.VITE_SUPABASE_URL;
   process.env.VITE_SUPABASE_ANON_KEY = env.VITE_SUPABASE_ANON_KEY;
+  process.env.SUPABASE_SERVICE_KEY   = env.SUPABASE_SERVICE_KEY;
 
   return {
     plugins: [react(), apiRoutes()],
