@@ -1,10 +1,12 @@
 // src/components/onboarding/CelebrationOverlay.jsx
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 
 export function CelebrationOverlay({ text, subtext, onDone, autoAdvanceMs = 2400 }) {
   const [displayed, setDisplayed] = useState('')
   const fullText = `> ${text.toUpperCase()}.`
+  const onDoneRef = useRef(onDone)
+  useEffect(() => { onDoneRef.current = onDone })
 
   useEffect(() => {
     setDisplayed('')
@@ -18,9 +20,9 @@ export function CelebrationOverlay({ text, subtext, onDone, autoAdvanceMs = 2400
   }, [fullText])
 
   useEffect(() => {
-    const t = setTimeout(onDone, autoAdvanceMs)
+    const t = setTimeout(() => onDoneRef.current(), autoAdvanceMs)
     return () => clearTimeout(t)
-  }, [onDone, autoAdvanceMs])
+  }, [autoAdvanceMs])
 
   return (
     <motion.div

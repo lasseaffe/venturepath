@@ -10,7 +10,17 @@ export function FeatureBeacon({ targetSelector, label, beaconKey, onDismiss }) {
   useEffect(() => {
     const el = document.querySelector(targetSelector)
     if (!el) return
-    setRect(el.getBoundingClientRect())
+    const update = () => setRect(el.getBoundingClientRect())
+    update()
+    const ro = new ResizeObserver(update)
+    ro.observe(el)
+    window.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('resize', update)
+    return () => {
+      ro.disconnect()
+      window.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
+    }
   }, [targetSelector])
 
   if (!rect || dismissed.current) return null
