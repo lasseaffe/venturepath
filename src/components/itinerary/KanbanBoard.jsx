@@ -512,7 +512,7 @@ function PlannerHero({ destination }) {
   const { image, loading } = useDestinationImage(destination, 'city', 4);
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: 260, overflow: 'hidden', flexShrink: 0, borderRadius: '8px 8px 0 0' }}>
+    <div style={{ position: 'relative', width: '100%', height: 360, overflow: 'hidden', flexShrink: 0, borderRadius: '8px 8px 0 0' }}>
       {/* Base gradient — always visible as fallback */}
       <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, #0E1012 0%, #1a1f26 50%, #0E1012 100%)' }} />
 
@@ -523,7 +523,7 @@ function PlannerHero({ destination }) {
           style={{
             position: 'absolute', inset: 0, width: '100%', height: '100%',
             objectFit: 'cover', objectPosition: 'center 30%',
-            opacity: 0.55,
+            opacity: 0.70,
             transition: 'opacity 0.6s ease',
           }}
         />
