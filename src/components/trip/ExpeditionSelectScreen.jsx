@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTripStore } from '../../store/useTripStore';
 import { useExpeditionList } from '../../hooks/useExpeditionList';
 import NewTripModal from './NewTripModal';
+import ReportButton from '../inspire/ReportButton';
+import { useDestinationImage } from '../../hooks/useDestinationImage';
+import ImageAttribution from '../ui/ImageAttribution';
 
 // ── Trip-type detection from destination text ──────────────────────────────────
 const CITY_KEYWORDS = ['hamburg', 'berlin', 'paris', 'london', 'tokyo', 'new york', 'rome', 'amsterdam', 'barcelona', 'madrid', 'lisbon', 'vienna', 'prague', 'warsaw', 'budapest', 'city', 'downtown', 'metro'];
@@ -68,12 +70,6 @@ const TripIcons = {
   ),
 };
 
-// ── Hero image URL from destination name (Unsplash Source) ────────────────────
-function getHeroUrl(destination = '', tripType = 'city') {
-  const clean = encodeURIComponent(destination.split(',')[0].trim());
-  // Using picsum for reliable fallback; use Unsplash source with destination keyword
-  return `https://source.unsplash.com/featured/800x400?${clean},${tripType},travel`;
-}
 
 const TRIP_TYPE_LABELS = {
   city: 'City Expedition',
@@ -109,8 +105,10 @@ function TrashIcon() {
   );
 }
 
-function ExpeditionCard({ exp, i, tripType, Icon, heroUrl, onLoad, onEdit, onDelete }) {
+function ExpeditionCard({ exp, i, tripType, Icon, onLoad, onEdit, onDelete }) {
   const [imgError, setImgError] = useState(false);
+  const destination = exp.trip?.destination ?? '';
+  const { image: destImage, loading: imgLoading } = useDestinationImage(destination, 'city', 0);
   const fallbackGradients = {
     city:     'linear-gradient(135deg, #1a2035 0%, #2d3a5c 50%, #1e2d40 100%)',
     mountain: 'linear-gradient(135deg, #0d1f1a 0%, #1a3328 50%, #0f2420 100%)',
@@ -137,29 +135,36 @@ function ExpeditionCard({ exp, i, tripType, Icon, heroUrl, onLoad, onEdit, onDel
         className="relative overflow-hidden"
         style={{ height: 160 }}
       >
-        {!imgError ? (
+        {imgLoading && (
+          <div className="w-full h-full animate-pulse" style={{ background: '#1a2030' }} />
+        )}
+        {!imgLoading && destImage && !imgError ? (
           <motion.img
-            src={heroUrl}
-            alt={exp.trip?.destination ?? ''}
+            src={destImage.url}
+            alt={destination}
             onError={() => setImgError(true)}
             className="w-full h-full object-cover"
             animate={{ scale: [1, 1.04, 1] }}
             transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
           />
-        ) : (
+        ) : !imgLoading ? (
           <motion.div
             className="w-full h-full"
             style={{ background: fallbackGradients[tripType] ?? fallbackGradients.city }}
             animate={{ opacity: [0.85, 1, 0.85] }}
             transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
           />
-        )}
+        ) : null}
 
         {/* Overlay gradient */}
         <div
           className="absolute inset-0"
           style={{ background: 'linear-gradient(to bottom, rgba(14,16,18,0.1) 0%, rgba(14,16,18,0.55) 100%)' }}
         />
+
+        {destImage && !imgError && (
+          <ImageAttribution attribution={destImage} />
+        )}
 
         {/* Trip-type badge top-left */}
         <div
@@ -181,7 +186,7 @@ function ExpeditionCard({ exp, i, tripType, Icon, heroUrl, onLoad, onEdit, onDel
           </span>
         </div>
 
-        {/* Action buttons top-right */}
+        {/* Action buttons top-right — edit & delete on hover */}
         <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <button
             onClick={e => onEdit(exp, e)}
@@ -209,6 +214,22 @@ function ExpeditionCard({ exp, i, tripType, Icon, heroUrl, onLoad, onEdit, onDel
           >
             <TrashIcon />
           </button>
+        </div>
+
+        {/* Report button — always visible, top-left */}
+        <div
+          className="absolute top-2 left-3"
+          onClick={e => e.stopPropagation()}
+        >
+          <ReportButton
+            cityId={exp.id}
+            cityName={exp.trip?.destination ?? ''}
+            country=""
+            poiId={null}
+            small
+            imageUrl={destImage?.url ?? null}
+            imageAttribution={destImage ?? null}
+          />
         </div>
 
         {/* Destination name overlaid on bottom of hero */}
@@ -274,7 +295,6 @@ function ExpeditionCard({ exp, i, tripType, Icon, heroUrl, onLoad, onEdit, onDel
 export default function ExpeditionSelectScreen({ onEnter }) {
   const { trip, legs, objectives, manifestSettings, loadExpedition } = useTripStore();
   const { expeditions, saveExpedition, deleteExpedition } = useExpeditionList();
-  const router = useRouter();
   const [showNew, setShowNew] = useState(false);
   const [editTarget, setEditTarget] = useState(null); // expedition id being edited
   const [confirmDelete, setConfirmDelete] = useState(null);
@@ -368,7 +388,6 @@ export default function ExpeditionSelectScreen({ onEnter }) {
               {expeditions.map((exp, i) => {
                 const tripType = detectTripType(exp.trip?.destination, exp.trip?.climate);
                 const Icon = TripIcons[tripType] ?? TripIcons.city;
-                const heroUrl = getHeroUrl(exp.trip?.destination ?? '', tripType);
                 return (
                   <ExpeditionCard
                     key={exp.id}
@@ -376,7 +395,6 @@ export default function ExpeditionSelectScreen({ onEnter }) {
                     i={i}
                     tripType={tripType}
                     Icon={Icon}
-                    heroUrl={heroUrl}
                     onLoad={handleLoad}
                     onEdit={handleEdit}
                     onDelete={handleDelete}
@@ -398,7 +416,7 @@ export default function ExpeditionSelectScreen({ onEnter }) {
           <div className="flex gap-3 justify-center">
             <button
               type="button"
-              onClick={() => router.push('/expedition/new/welcome')}
+              onClick={() => setShowNew(true)}
               className="px-5 py-2 bg-[#E67E22] text-[#0E1012] font-mono font-semibold text-sm rounded hover:bg-[#d4711f] transition-colors"
             >
               ✦ Plan with Guide
