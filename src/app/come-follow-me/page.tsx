@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { Loader2, Send, BookOpen, ChevronDown, ChevronUp } from "lucide-react";
 import { CFM_2026, getCurrentCfmWeek, type CfmWeek } from "@/lib/come-follow-me";
 import { cn } from "@/lib/utils";
+import { TypewriterText } from "@/components/ui/TypewriterText";
 
 interface Message {
   role: "user" | "assistant";
@@ -205,19 +206,29 @@ export default function ComeFollowMePage() {
                   </div>
                 )}
 
-                {messages.map((msg, i) => (
-                  <div key={i} className={cn("flex", msg.role === "user" ? "justify-end" : "justify-start")}>
-                    <div
-                      className="max-w-[85%] rounded-2xl px-4 py-2.5 text-sm"
-                      style={msg.role === "user"
-                        ? { background: "#2D1B69", color: "#F5F0FF", borderBottomRightRadius: "4px" }
-                        : { background: "#EDE8F8", color: "#2D1B69", borderBottomLeftRadius: "4px" }
-                      }
-                    >
-                      <p className="whitespace-pre-wrap leading-relaxed">{msg.content}</p>
+                {messages.map((msg, i) => {
+                  const isCurrentlyStreaming = loading && i === messages.length - 1;
+
+                  return (
+                    <div key={i} className={cn("flex", msg.role === "user" ? "justify-end" : "justify-start")}>
+                      <div
+                        className="max-w-[85%] rounded-2xl px-4 py-2.5 text-sm"
+                        style={msg.role === "user"
+                          ? { background: "#2D1B69", color: "#F5F0FF", borderBottomRightRadius: "4px" }
+                          : { background: "#EDE8F8", color: "#2D1B69", borderBottomLeftRadius: "4px" }
+                        }
+                      >
+                        <p className="whitespace-pre-wrap leading-relaxed">
+                          {msg.role === "assistant" && !isCurrentlyStreaming ? (
+                            <TypewriterText text={msg.content} speed={44} cursorColor="#c8a96e" />
+                          ) : (
+                            msg.content
+                          )}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
 
                 {loading && messages[messages.length - 1]?.role === "user" && (
                   <div className="flex justify-start">
