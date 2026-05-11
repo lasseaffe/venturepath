@@ -138,7 +138,7 @@ export default function LaunchDashboard({ onEnterTrip, onOpenVault, onOpenChat, 
           </button>
 
           {/* Travel party / Squad */}
-          <div className="glass-panel p-4 space-y-3">
+          <div className="glass-panel p-4 space-y-3" data-tour="squad">
             <div className="label-tag">{labels.group}</div>
             {members.map(m => {
               const w = weights[m.id] ?? 0;

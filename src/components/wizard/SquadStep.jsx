@@ -40,7 +40,7 @@ export default function SquadStep({ onNext }) {
   }
 
   return (
-    <div data-tour="squad" className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8">
       <div>
         <h2 className="font-['Playfair_Display'] text-3xl text-white mb-1">Assemble the Squad</h2>
         <p className="text-[#D9C5B2] text-sm">Who's joining this expedition? Add members or proceed solo.</p>

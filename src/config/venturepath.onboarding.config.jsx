@@ -95,16 +95,14 @@ const vpConfig = {
         body: "Each Pioneer has a role and weight allocation. The manifest tracks everyone's gear load.",
         position: 'left',
       },
-      // Screen 11 — DO: Add squad member
+      // Screen 11 — DEMO: Squad manifest detail
       {
         id: 'add-member',
-        type: 'do',
+        type: 'demo',
         target: '[data-tour="squad"]',
-        title: 'Add a squad member',
-        body: 'Enter a name and role. Their avatar joins the manifest and weight board updates live.',
+        title: 'Squad weight board',
+        body: 'Each Pioneer\'s weight load is tracked live. Add squad members from the trip wizard to see their bar fill up.',
         position: 'left',
-        completeOn: 'member-added',
-        celebrationText: 'Pioneer joined the squad',
       },
       // Screen 12 — DEMO: Ledger Workbench
       {
