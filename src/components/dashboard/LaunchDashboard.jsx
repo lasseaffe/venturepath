@@ -5,11 +5,7 @@ import { useSquadGear } from '../../context/SquadGearContext';
 import { useSquadSync } from '../../hooks/useSquadSync';
 import { useTheme } from '../../context/ThemeContext';
 import { useLabels } from '../../hooks/useLabels';
-
-const HERO_IMAGES = {
-  'Torres del Paine, Chile': 'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1600&q=80',
-  default: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1600&q=80',
-};
+import { useDestinationImage } from '../../hooks/useDestinationImage';
 
 const ACTIVITY_FEED = [
   'Scout updated Packing Manifest',
@@ -26,7 +22,7 @@ export default function LaunchDashboard({ onEnterTrip, onOpenVault, onOpenChat, 
   const labels = useLabels();
   const [ticker, setTicker] = useState(0);
 
-  const heroImg = HERO_IMAGES[trip.destination] ?? HERO_IMAGES.default;
+  const { image: heroImage } = useDestinationImage(trip.destination, 'city', 0);
   const totalKm = legs.reduce((s, l) => s + l.distanceKm, 0);
   const isTactical = theme === 'tactical';
 
@@ -45,7 +41,7 @@ export default function LaunchDashboard({ onEnterTrip, onOpenVault, onOpenChat, 
       <div className="absolute inset-0 z-0">
         <div
           className="absolute inset-0 animate-ken-burns bg-cover bg-center"
-          style={{ backgroundImage: `url(${heroImg})` }}
+          style={heroImage?.url ? { backgroundImage: `url(${heroImage.url})` } : {}}
         />
         <div className="absolute inset-0" style={{ background: heroGradient }} />
       </div>
