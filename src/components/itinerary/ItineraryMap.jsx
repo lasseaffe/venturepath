@@ -79,7 +79,7 @@ export default function ItineraryMap({ days, coords, activeStopId, onPinClick, p
     [20, 0];
 
   return (
-    <div style={{ marginTop: '16px' }}>
+    <div style={{ marginTop: '16px', position: 'relative', isolation: 'isolate', overflow: 'hidden' }}>
       <div
         className="label-tag mb-2"
         style={{ color: '#4b5563', fontSize: '10px', fontFamily: 'monospace', letterSpacing: '0.1em' }}
