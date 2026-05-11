@@ -13,9 +13,10 @@ interface OverlayTourProps {
   onAdvance: (completedId: string) => void
   onActionComplete?: (id: string) => void
   onComplete?: () => void
+  onSkip?: () => void
 }
 
-export function OverlayTour({ config, state, onAdvance, onActionComplete, onComplete }: OverlayTourProps) {
+export function OverlayTour({ config, state, onAdvance, onActionComplete, onComplete, onSkip }: OverlayTourProps) {
   const { waypoints } = config.tour
   const waypoint = waypoints[state.tourStep]
   const [targetRect, setTargetRect] = useState<{ x: number; y: number; width: number; height: number } | null>(null)
@@ -75,6 +76,20 @@ export function OverlayTour({ config, state, onAdvance, onActionComplete, onComp
   return (
     <>
       <Spotlight rect={targetRect} />
+
+      {onSkip && (
+        <button
+          onClick={onSkip}
+          style={{
+            position: 'fixed', top: 14, right: 16, zIndex: 10000,
+            fontSize: 10, fontWeight: 700, letterSpacing: 1,
+            color: '#9333EA', background: 'none', border: 'none',
+            cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+          }}
+        >
+          Skip tour
+        </button>
+      )}
 
       <AnimatePresence>
         {celebration && (

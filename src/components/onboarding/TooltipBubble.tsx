@@ -26,34 +26,43 @@ export function TooltipBubble({
   totalSteps,
 }: TooltipBubbleProps) {
   const gap = 16
+  const margin = 16
   const tooltipW = Math.min(280, typeof window !== 'undefined' ? window.innerWidth - 32 : 280)
+  const tooltipH = body ? 190 : 140
+  const vw = typeof window !== 'undefined' ? window.innerWidth : 375
+  const vh = typeof window !== 'undefined' ? window.innerHeight : 812
+
+  // Centre tooltip when target fills most of the viewport (e.g. full-page panels)
+  const isFullscreen = rect.width > vw * 0.7 || rect.height > vh * 0.7
 
   let top = 0
   let left = 0
 
-  switch (position) {
-    case 'bottom':
-      top = rect.y + rect.height + padding + gap
-      left = rect.x + rect.width / 2 - tooltipW / 2
-      break
-    case 'top':
-      top = rect.y - padding - gap - 140
-      left = rect.x + rect.width / 2 - tooltipW / 2
-      break
-    case 'right':
-      top = rect.y + rect.height / 2 - 70
-      left = rect.x + rect.width + padding + gap
-      break
-    case 'left':
-      top = rect.y + rect.height / 2 - 70
-      left = rect.x - padding - gap - tooltipW
-      break
+  if (isFullscreen) {
+    top = Math.round(vh / 2 - tooltipH / 2)
+    left = Math.round(vw / 2 - tooltipW / 2)
+  } else {
+    switch (position) {
+      case 'bottom':
+        top = rect.y + rect.height + padding + gap
+        left = rect.x + rect.width / 2 - tooltipW / 2
+        break
+      case 'top':
+        top = rect.y - padding - gap - tooltipH
+        left = rect.x + rect.width / 2 - tooltipW / 2
+        break
+      case 'right':
+        top = rect.y + rect.height / 2 - tooltipH / 2
+        left = rect.x + rect.width + padding + gap
+        break
+      case 'left':
+        top = rect.y + rect.height / 2 - tooltipH / 2
+        left = rect.x - padding - gap - tooltipW
+        break
+    }
+    left = Math.max(margin, Math.min(left, vw - tooltipW - margin))
+    top  = Math.max(margin, Math.min(top,  vh - tooltipH - margin))
   }
-
-  if (typeof window !== 'undefined') {
-    left = Math.max(16, Math.min(left, window.innerWidth - tooltipW - 16))
-  }
-  top = Math.max(16, top)
 
   return (
     <motion.div

@@ -77,6 +77,7 @@ export function OnboardingEngine({ config }: OnboardingEngineProps) {
             if (config.beacons.length > 0) startBeacons()
             else completeTour()
           }}
+          onSkip={skip}
         />
       )}
       {state.mode === 'beacons' && (
