@@ -87,6 +87,7 @@ export function Chatbot() {
             return copy;
           });
         }
+        window.dispatchEvent(new CustomEvent('onboarding:action', { detail: { id: 'ai-question-asked' } }))
       } catch (err) {
         if ((err as Error).name !== "AbortError") {
           setMessages((prev) => {

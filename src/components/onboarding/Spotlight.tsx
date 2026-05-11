@@ -1,4 +1,3 @@
-// src/components/onboarding/Spotlight.tsx
 import { useId } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -8,51 +7,63 @@ interface SpotlightProps {
   borderRadius?: number
 }
 
+function roundedRectPath(x: number, y: number, w: number, h: number, r: number): string {
+  const r2 = Math.min(r, w / 2, h / 2)
+  return [
+    `M ${x + r2} ${y}`,
+    `H ${x + w - r2}`,
+    `Q ${x + w} ${y} ${x + w} ${y + r2}`,
+    `V ${y + h - r2}`,
+    `Q ${x + w} ${y + h} ${x + w - r2} ${y + h}`,
+    `H ${x + r2}`,
+    `Q ${x} ${y + h} ${x} ${y + h - r2}`,
+    `V ${y + r2}`,
+    `Q ${x} ${y} ${x + r2} ${y}`,
+    `Z`,
+  ].join(' ')
+}
+
 export function Spotlight({ rect, padding = 12, borderRadius = 16 }: SpotlightProps) {
-  const clipId = useId()
+  const clipId = useId().replace(/:/g, '')
 
   if (rect && rect.width === 0 && rect.height === 0) return null
 
   const vw = typeof window !== 'undefined' ? window.innerWidth : 375
   const vh = typeof window !== 'undefined' ? window.innerHeight : 812
 
+  const viewportPath = `M 0 0 H ${vw} V ${vh} H 0 Z`
+
+  const holePath = rect
+    ? roundedRectPath(
+        rect.x - padding,
+        rect.y - padding,
+        rect.width + padding * 2,
+        rect.height + padding * 2,
+        borderRadius,
+      )
+    : ''
+
+  // Compound path: viewport rect + hole sub-path. fillRule="evenodd" punches the hole.
+  const compoundPath = rect ? `${viewportPath} ${holePath}` : viewportPath
+
   return (
     <svg
       style={{ position: 'fixed', inset: 0, width: '100%', height: '100%', zIndex: 9998, pointerEvents: 'none' }}
       xmlns="http://www.w3.org/2000/svg"
     >
-      <defs>
-        <clipPath id={clipId}>
-          <rect width={vw} height={vh} clipRule="evenodd" />
-          <AnimatePresence>
-            {rect && (
-              <motion.rect
-                key="hole"
-                x={rect.x - padding}
-                y={rect.y - padding}
-                width={rect.width + padding * 2}
-                height={rect.height + padding * 2}
-                rx={borderRadius}
-                clipRule="evenodd"
-                initial={{ opacity: 0 }}
-                animate={{
-                  opacity: 1,
-                  x: rect.x - padding,
-                  y: rect.y - padding,
-                  width: rect.width + padding * 2,
-                  height: rect.height + padding * 2,
-                }}
-                transition={{ type: 'spring', stiffness: 350, damping: 30 }}
-              />
-            )}
-          </AnimatePresence>
-        </clipPath>
-      </defs>
-      <rect
-        x={0} y={0} width={vw} height={vh}
-        fill="rgba(0,0,0,0.72)"
-        clipPath={`url(#${clipId})`}
-      />
+      <AnimatePresence>
+        <motion.path
+          key={rect ? 'with-hole' : 'solid'}
+          d={compoundPath}
+          fill="rgba(0,0,0,0.72)"
+          fillRule="evenodd"
+          style={{ pointerEvents: 'all' }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+        />
+      </AnimatePresence>
       {rect && (
         <motion.rect
           x={rect.x - padding - 2}

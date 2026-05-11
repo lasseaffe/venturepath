@@ -75,27 +75,27 @@ export const hfOnboardingConfig: OnboardingConfig = {
         completeOn: 'topic-selected',
         celebrationText: 'Talk outline ready! 🎤',
       },
-      // 6 — DEMO: Family History
+      // 6 — DEMO: AI companion intro
       {
-        id: 'family-history',
+        id: 'ai-companion-intro',
         type: 'demo',
-        target: '[data-tour="family-history"]',
-        title: 'Family History — your tree',
-        body: 'An animated family tree grows as you add relatives. Each branch unlocks stories and records.',
-        position: 'bottom',
+        target: '[data-tour="ai-companion"]',
+        title: 'Your AI study companion',
+        body: 'Ask anything about scripture, talks, or your faith journey. The chatbot remembers your preferences.',
+        position: 'top',
       },
-      // 7 — DO: Add relative
+      // 7 — DO: Ask the AI a question
       {
-        id: 'add-relative',
+        id: 'ask-ai',
         type: 'do',
-        target: '[data-tour="family-history"]',
-        title: "Add a grandparent's name",
-        body: 'Type a name into the family tree. Watch their node appear and connect to yours.',
-        position: 'bottom',
-        completeOn: 'relative-added',
-        celebrationText: 'Family tree growing! 👨‍👩‍👧',
+        target: '[data-tour="ai-companion"]',
+        title: 'Ask a scripture question',
+        body: 'Open the chatbot and type any question about this week\'s lesson. Watch it answer in real time.',
+        position: 'top',
+        completeOn: 'ai-question-asked',
+        celebrationText: 'Great question! 🌟',
       },
-      // 8 — DEMO: AI companion / Mission prep
+      // 8 — DEMO: Mission prep
       {
         id: 'mission-prep',
         type: 'demo',
@@ -128,7 +128,7 @@ export const hfOnboardingConfig: OnboardingConfig = {
         type: 'celebrate',
         target: '[data-tour="streak"]',
         title: 'Your spiritual toolkit is ready ✦',
-        body: '1 note saved · 1 talk outline · 1 family member added · streak started',
+        body: '1 note saved · 1 talk outline · AI companion activated · streak started',
         position: 'top',
       },
     ],
