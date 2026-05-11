@@ -81,14 +81,14 @@ export default function ReportButton({
             onClick={e => e.stopPropagation()}
             style={{
               background: '#0E1012', border: '1px solid #1e2328',
-              borderRadius: 8, padding: 28, width: 460, maxWidth: '94vw',
+              borderRadius: 8, padding: 24, width: 340, maxWidth: '90vw',
             }}
           >
             {/* Header */}
             <div className="text-[10px] font-mono tracking-widest text-[#E67E22] uppercase mb-1">
               Report a problem
             </div>
-            <div className="text-[13px] font-mono font-bold text-white mb-4">
+            <div className="text-[12px] font-mono font-bold text-white mb-4">
               {cityName}{poiId ? ` — ${poiId.replace(/^[^-]+-/, '')}` : ''}
             </div>
 
@@ -113,12 +113,12 @@ export default function ReportButton({
             )}
 
             {/* Issue type pills */}
-            <div className="flex flex-col gap-2 mb-4">
+            <div className="flex flex-col gap-1.5 mb-4">
               {ISSUE_TYPES.map(t => (
                 <button
                   key={t.id}
                   onClick={() => setType(t.id)}
-                  className="text-left text-[11px] font-mono px-3 py-2.5 rounded border transition-colors"
+                  className="text-left text-[10px] font-mono px-3 py-2 rounded border transition-colors"
                   style={{
                     borderColor: type === t.id ? 'rgba(230,126,34,0.6)' : '#1e2328',
                     background:  type === t.id ? 'rgba(230,126,34,0.1)' : 'transparent',
