@@ -11,7 +11,8 @@ const CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const rawQuery = searchParams.get('q')?.trim();
-  const count    = Math.min(parseInt(searchParams.get('count') ?? '5', 10), 8);
+  const rawCount = parseInt(searchParams.get('count') ?? '5', 10);
+  const count    = Math.min(isNaN(rawCount) ? 5 : rawCount, 8);
 
   if (!rawQuery) {
     return NextResponse.json({ error: 'q param required' }, { status: 400 });
@@ -54,7 +55,7 @@ export async function GET(req) {
         query_key:  queryKey,
         images,
         scraped_at: new Date().toISOString(),
-      }))
+      }, { onConflict: 'query_key' }))
       .catch(err => console.error('[destination-images] cache upsert failed:', err));
   }
 

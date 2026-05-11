@@ -66,7 +66,7 @@ export async function scrapeWikimedia(browser, query, count = 5) {
 
         if (!author || !license) continue;
 
-        const filename = filePageUrl.split('/wiki/File:')[1] ?? '';
+        const filename = decodeURIComponent(filePageUrl.split('/wiki/File:')[1] ?? '');
         // Construct a 320px Wikimedia thumb URL from the full image URL
         const thumbUrl = imageUrl
           .replace(/\/commons\/([a-f0-9])\/([a-f0-9]{2})\//, '/commons/thumb/$1/$2/')

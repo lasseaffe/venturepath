@@ -21,6 +21,7 @@ export function useDestinationImage(query, type = 'city', index = 0) {
     if (!q) return;
 
     let cancelled = false;
+    setImages(null);
     setLoading(true);
     setError(false);
 
