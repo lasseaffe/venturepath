@@ -1,8 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { filterExpeditionFlights } from '../../utils/flightEngine';
-import { searchAirports, searchStations, searchTransportHubs } from '../../utils/geocodeEngine';
+import { searchAirports, searchStations, searchTransportHubs, searchBusStops, searchTramStops } from '../../utils/geocodeEngine';
 import EmergencyRebook from './EmergencyRebook';
+
+const MODE_CONFIG = {
+  flight: { label: 'FLIGHT', icon: '✈',  accent: '#E67E22', simulate: '⚠ SIMULATE CANCELLATION', placeholder: 'Airport…'  },
+  train:  { label: 'TRAIN',  icon: '🚂', accent: '#4a9eff', simulate: '⚠ SIMULATE DISRUPTION',  placeholder: 'Station…'  },
+  bus:    { label: 'BUS',    icon: '🚌', accent: '#22a060', simulate: '⚠ SIMULATE DISRUPTION',  placeholder: 'Bus stop…' },
+  tram:   { label: 'TRAM',   icon: '🚃', accent: '#a855f7', simulate: '⚠ SIMULATE DISRUPTION',  placeholder: 'Tram stop…' },
+};
 
 const FLIGHT_PRIORITIES = [
   { id: 'CHEAPEST', label: 'Economy', icon: '💰' },
@@ -48,9 +55,11 @@ function useTransportAutocomplete(query, mode) {
       setSearching(true);
       try {
         let results;
-        if (mode === 'flight')     results = await searchAirports(query, 5);
-        else if (mode === 'train') results = await searchStations(query, 5);
-        else                       results = await searchTransportHubs(query, 6);
+        if      (mode === 'flight') results = await searchAirports(query, 5);
+        else if (mode === 'train')  results = await searchStations(query, 5);
+        else if (mode === 'bus')    results = await searchBusStops(query, 5);
+        else if (mode === 'tram')   results = await searchTramStops(query, 5);
+        else                        results = await searchTransportHubs(query, 6);
         setSuggestions(results);
       } catch {
         setSuggestions([]);
@@ -66,17 +75,17 @@ function useTransportAutocomplete(query, mode) {
 function AutocompleteField({ label, value, field, ac, mode, onUpdate, legId }) {
   return (
     <div className="relative">
-      <div className="text-[8px] font-mono text-slate-500 tracking-widest mb-1">{label}</div>
+      <div className="text-[8px] font-mono text-[var(--text-muted)] tracking-widest mb-1">{label}</div>
       <input
         type="text"
         value={value}
         onChange={e => onUpdate(legId, { [field]: e.target.value, searched: false })}
         onBlur={() => setTimeout(ac.clear, 150)}
-        placeholder={mode === 'train' ? 'Station…' : mode === 'flight' ? 'Airport…' : 'Airport or station…'}
+        placeholder={MODE_CONFIG[mode]?.placeholder ?? 'Stop…'}
         className="w-full bg-[#0E1012] border border-[#2a2f36] rounded px-3 py-2 text-sm text-white placeholder-slate-600 font-mono focus:outline-none"
       />
       {ac.searching && (
-        <span className="absolute right-2 top-[30px] text-[9px] font-mono text-slate-500">…</span>
+        <span className="absolute right-2 top-[30px] text-[9px] font-mono text-[var(--text-muted)]">…</span>
       )}
       <AnimatePresence>
         {ac.suggestions.length > 0 && (
@@ -101,11 +110,11 @@ function AutocompleteField({ label, value, field, ac, mode, onUpdate, legId }) {
                   className="w-full text-left px-3 py-2 text-xs font-mono text-white hover:bg-white/5 transition-colors border-b border-white/5 last:border-0"
                 >
                   <span className="mr-1.5">
-                    {s.transportType === 'flight' ? '✈' : s.transportType === 'train' ? '🚂' : ''}
+                    {MODE_CONFIG[s.transportType]?.icon ?? ''}
                   </span>
                   {s.name}
                   {s.address !== s.name && (
-                    <span className="block text-[9px] text-slate-500 truncate">{s.address}</span>
+                    <span className="block text-[9px] text-[var(--text-muted)] truncate">{s.address}</span>
                   )}
                 </button>
               </li>
@@ -125,10 +134,10 @@ export default function LegCard({ leg, index, onUpdate, onRemove }) {
   const fromAC = useTransportAutocomplete(from, mode);
   const toAC   = useTransportAutocomplete(to,   mode);
 
-  const isFlight = mode === 'flight';
-  const isTrain  = mode === 'train';
-  const accent   = isTrain ? '#4a9eff' : '#E67E22';
+  const cfg = MODE_CONFIG[mode] ?? MODE_CONFIG.flight;
+  const accent = cfg.accent;
 
+  const isTrain = mode === 'train';
   const priorities = isTrain ? TRAIN_PRIORITIES : FLIGHT_PRIORITIES;
 
   const results = searched
@@ -137,17 +146,20 @@ export default function LegCard({ leg, index, onUpdate, onRemove }) {
         : filterExpeditionFlights(buildFlights(from, to), priority, 9999))
     : [];
 
-  const simulateLabel = isTrain ? '⚠ SIMULATE DISRUPTION' : '⚠ SIMULATE CANCELLATION';
-  const simulateCls   = isTrain
-    ? 'bg-blue-900/30 border-blue-500/40 text-blue-400 hover:bg-blue-900/50'
-    : 'bg-red-900/30 border-red-500/40 text-red-400 hover:bg-red-900/50';
+  const simulateCls = mode === 'flight'
+    ? 'bg-red-900/30 border-red-500/40 text-red-400 hover:bg-red-900/50'
+    : mode === 'bus'
+    ? 'bg-green-900/30 border-green-500/40 text-green-400 hover:bg-green-900/50'
+    : mode === 'tram'
+    ? 'bg-purple-900/30 border-purple-500/40 text-purple-400 hover:bg-purple-900/50'
+    : 'bg-blue-900/30 border-blue-500/40 text-blue-400 hover:bg-blue-900/50';
 
   return (
     <>
       <AnimatePresence>
         {showSimulate && (
           <EmergencyRebook
-            mode={isTrain ? 'train' : 'flight'}
+            mode={mode}
             cancelledFlight={`${from || '?'} → ${to || '?'}`}
             onClose={() => setShowSimulate(false)}
           />
@@ -161,22 +173,23 @@ export default function LegCard({ leg, index, onUpdate, onRemove }) {
         {/* Header: leg index + mode toggle + simulate + remove */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="text-[8px] font-mono text-slate-600 tracking-widest">LEG {index + 1}</span>
+            <span className="text-[8px] font-mono text-[var(--text-muted)] tracking-widest">LEG {index + 1}</span>
             <div className="flex border border-[#2a2f36] rounded overflow-hidden text-[9px] font-mono">
-              <button
-                type="button"
-                onClick={() => onUpdate(id, { mode: 'flight', searched: false })}
-                className={`px-3 py-1.5 transition-colors ${isFlight ? 'bg-[#E67E22] text-[#0E1012] font-bold' : 'text-slate-500 hover:text-slate-300'}`}
-              >
-                ✈ FLIGHT
-              </button>
-              <button
-                type="button"
-                onClick={() => onUpdate(id, { mode: 'train', searched: false })}
-                className={`px-3 py-1.5 transition-colors ${isTrain ? 'bg-[#1a4a7a] text-[#4a9eff] font-bold' : 'text-slate-500 hover:text-slate-300'}`}
-              >
-                🚂 TRAIN
-              </button>
+              {Object.entries(MODE_CONFIG).map(([m, c]) => (
+                <button
+                  key={m}
+                  type="button"
+                  onClick={() => onUpdate(id, { mode: m, searched: false })}
+                  className={`px-2.5 py-1.5 transition-colors ${
+                    mode === m
+                      ? 'font-bold text-[#0E1012]'
+                      : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'
+                  }`}
+                  style={mode === m ? { background: c.accent } : {}}
+                >
+                  {c.icon} {c.label}
+                </button>
+              ))}
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -185,13 +198,13 @@ export default function LegCard({ leg, index, onUpdate, onRemove }) {
               onClick={() => setShowSimulate(true)}
               className={`px-2.5 py-1 border text-[9px] font-mono rounded transition-colors tracking-widest ${simulateCls}`}
             >
-              {simulateLabel}
+              {cfg.simulate}
             </button>
             {onRemove && (
               <button
                 type="button"
                 onClick={() => onRemove(id)}
-                className="text-slate-600 hover:text-slate-400 text-xs font-mono transition-colors"
+                className="text-[var(--text-muted)] hover:text-[var(--text-secondary)] text-xs font-mono transition-colors"
                 title="Remove leg"
               >
                 ✕
@@ -214,7 +227,7 @@ export default function LegCard({ leg, index, onUpdate, onRemove }) {
             className="w-full py-2 rounded text-[10px] font-mono tracking-widest border transition-colors"
             style={{ borderColor: `${accent}80`, color: accent }}
           >
-            {isTrain ? 'SEARCH TRAINS' : 'SEARCH FLIGHTS'}
+            SEARCH {cfg.label}S
           </button>
         </form>
 
@@ -227,7 +240,7 @@ export default function LegCard({ leg, index, onUpdate, onRemove }) {
                   key={p.id}
                   onClick={() => setPriority(p.id)}
                   className={`flex-1 py-1.5 text-[9px] font-mono tracking-widest rounded border transition-colors ${
-                    priority === p.id ? 'font-bold text-[#0E1012]' : 'bg-transparent border-[#2a2f36] text-slate-500 hover:text-slate-300'
+                    priority === p.id ? 'font-bold text-[#0E1012]' : 'bg-transparent border-[#2a2f36] text-[var(--text-muted)] hover:text-[var(--text-secondary)]'
                   }`}
                   style={priority === p.id ? { background: accent, borderColor: accent } : {}}
                 >
@@ -243,16 +256,16 @@ export default function LegCard({ leg, index, onUpdate, onRemove }) {
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="text-[10px] font-mono text-slate-500 tracking-widest">{r.carrier}</div>
+                      <div className="text-[10px] font-mono text-[var(--text-muted)] tracking-widest">{r.carrier}</div>
                       <div className="text-white text-sm font-semibold font-mono mt-0.5">{r.route}</div>
                     </div>
                     <div className="text-right">
                       <div className="text-lg font-mono font-bold" style={{ color: accent }}>${r.price}</div>
-                      <div className="text-[9px] text-slate-600 font-mono">{r.label}</div>
+                      <div className="text-[9px] text-[var(--text-muted)] font-mono">{r.label}</div>
                     </div>
                   </div>
                   <div className="flex justify-between mt-2">
-                    <span className="text-[10px] font-mono text-slate-600">{r.duration}</span>
+                    <span className="text-[10px] font-mono text-[var(--text-muted)]">{r.duration}</span>
                     <span className={`text-[10px] font-mono ${r.co2 < 20 ? 'text-green-400' : r.co2 < 100 ? 'text-yellow-400' : 'text-red-400'}`}>
                       {r.co2}kg CO₂
                     </span>
@@ -266,9 +279,9 @@ export default function LegCard({ leg, index, onUpdate, onRemove }) {
         {!searched && (
           <div className="py-6 text-center">
             <div className="text-xl mb-1" style={{ color: `${accent}66` }}>
-              {isTrain ? '🚂' : '✈'}
+              {cfg.icon}
             </div>
-            <div className="text-[9px] font-mono text-slate-700 tracking-widest">
+            <div className="text-[9px] font-mono text-[var(--text-muted)] tracking-widest">
               {mode ? 'ENTER ORIGIN + DESTINATION TO SEARCH' : 'SELECT MODE TO BEGIN'}
             </div>
           </div>
