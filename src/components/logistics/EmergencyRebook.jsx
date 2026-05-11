@@ -1,274 +1,217 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { findAlternatives } from '../../utils/alternativeEngine';
+
+const MODE_META = {
+  flight: { header: 'SERVICE DISRUPTED',  accent: '#E67E22', icon: '✈' },
+  train:  { header: 'SERVICE DISRUPTED',  accent: '#4a9eff', icon: '🚂' },
+  bus:    { header: 'ROUTE DIVERSION',    accent: '#22a060', icon: '🚌' },
+  tram:   { header: 'SERVICE DISRUPTION', accent: '#a855f7', icon: '🚃' },
+};
 
 const SQUAD = [
-  { id: 'lead',  name: 'Lead',  avatar: '🧗' },
-  { id: 'scout', name: 'Scout', avatar: '🗺' },
-  { id: 'medic', name: 'Medic', avatar: '🩺' },
+  { id: 'lead',  label: 'Lead',  icon: '🧗' },
+  { id: 'scout', label: 'Scout', icon: '🗺' },
+  { id: 'medic', label: 'Medic', icon: '🩺' },
 ];
 
-const ALTERNATIVES = [
-  {
-    id: 'alt1',
-    priority: 'FASTEST',
-    label: 'Fastest Route',
-    icon: '⚡',
-    airline: 'DirectJet',
-    route: 'JFK → SCL',
-    price: 890,
-    duration: '2h 15m connection',
-    departs: 'Today 18:40',
-    co2: 210,
-    type: 'Non-stop rebooking',
-  },
-  {
-    id: 'alt2',
-    priority: 'CHEAPEST',
-    label: 'Economy Option',
-    icon: '💰',
-    airline: 'Lufthansa',
-    route: 'JFK → FRA → SCL',
-    price: 420,
-    duration: '14h 20m',
-    departs: 'Tomorrow 06:15',
-    co2: 145,
-    type: 'Lowest cost',
-  },
-  {
-    id: 'alt3',
-    priority: 'COMFORTABLE',
-    label: 'Most Comfortable',
-    icon: '🛋',
-    airline: 'LATAM Premium',
-    route: 'JFK → MIA → SCL',
-    price: 1240,
-    duration: '11h 00m',
-    departs: 'Today 21:55',
-    co2: 190,
-    type: 'Business class upgrade',
-  },
+const PRIORITIES = [
+  { badge: 'FASTEST ROUTE',   icon: '⚡' },
+  { badge: 'ECONOMY OPTION',  icon: '💰' },
+  { badge: 'GREENEST OPTION', icon: '🌿' },
 ];
 
-const COUNTDOWN_SECS = 60;
+export default function EmergencyRebook({ onClose, route, mode, fromCoords, toCoords, cascadeRisk }) {
+  const meta        = MODE_META[mode] ?? MODE_META.train;
+  const isCascade   = !!cascadeRisk;
+  const initialTime = isCascade && cascadeRisk.severity === 'red' ? 45 : 60;
 
-export default function EmergencyRebook({ onClose, cancelledFlight = 'LH 504 JFK→SCL', mode = 'flight' }) {
-  const isTrain = mode === 'train';
-  const alertBg      = isTrain ? 'bg-blue-900/40'    : 'bg-red-900/40';
-  const alertBorder  = isTrain ? 'border-blue-500/40' : 'border-red-500/40';
-  const alertText    = isTrain ? 'text-blue-300'      : 'text-red-300';
-  const alertSubText = isTrain ? 'text-blue-400/70'   : 'text-red-400/70';
-  const alertIcon    = isTrain ? 'text-blue-400'      : 'text-red-400';
-  const barColor     = isTrain ? 'bg-blue-500'        : 'bg-red-500';
-  const headingCopy  = isTrain ? 'SERVICE DISRUPTED'  : 'FLIGHT CANCELLED';
-  const subCopy      = isTrain ? 'train disruption detected' : 'disruption detected';
+  const [alts, setAlts]               = useState([]);
+  const [altsLoading, setAltsLoading] = useState(true);
+  const [altsError, setAltsError]     = useState(false);
+  const [selected, setSelected]       = useState(null);
+  const [votes, setVotes]             = useState({ 0: [], 1: [], 2: [] });
+  const [confirmed, setConfirmed]     = useState(false);
+  const [timeLeft, setTimeLeft]       = useState(initialTime);
+  const timerRef = useRef(null);
 
-  const [votes, setVotes] = useState(
-    Object.fromEntries(SQUAD.map(m => [m.id, null]))
-  );
-  const [timeLeft, setTimeLeft] = useState(COUNTDOWN_SECS);
-  const [selected, setSelected] = useState(null);
-
-  // Countdown
   useEffect(() => {
-    if (selected) return;
-    const timer = setInterval(() => {
+    if (!fromCoords || !toCoords) { setAltsLoading(false); return; }
+    findAlternatives(fromCoords, toCoords, new Date().toISOString())
+      .then(results => { setAlts(results.slice(0, 3)); setAltsLoading(false); })
+      .catch(() => { setAltsError(true); setAltsLoading(false); });
+  }, []);
+
+  useEffect(() => {
+    if (confirmed || altsLoading) return;
+    timerRef.current = setInterval(() => {
       setTimeLeft(t => {
         if (t <= 1) {
-          clearInterval(timer);
-          // Auto-select Group Favorite
-          const winner = getGroupFavorite(votes);
-          setSelected(winner ?? ALTERNATIVES[0].id);
+          clearInterval(timerRef.current);
+          const bestIdx = [0, 1, 2].reduce((best, i) => (votes[i]?.length ?? 0) > (votes[best]?.length ?? 0) ? i : best, 0);
+          setSelected(bestIdx);
+          setConfirmed(true);
           return 0;
         }
         return t - 1;
       });
     }, 1000);
-    return () => clearInterval(timer);
-  }, [selected, votes]);
+    return () => clearInterval(timerRef.current);
+  }, [altsLoading, confirmed]);
 
-  function castVote(memberId, altId) {
-    setVotes(prev => ({ ...prev, [memberId]: altId }));
-  }
+  const groupFavorite = [0, 1, 2].reduce(
+    (best, i) => (votes[i]?.length ?? 0) > (votes[best]?.length ?? 0) ? i : best, 0
+  );
 
-  function getGroupFavorite(currentVotes) {
-    const tally = {};
-    for (const v of Object.values(currentVotes)) {
-      if (v) tally[v] = (tally[v] ?? 0) + 1;
-    }
-    const sorted = Object.entries(tally).sort((a, b) => b[1] - a[1]);
-    return sorted[0]?.[0] ?? null;
-  }
-
-  const groupFavorite = getGroupFavorite(votes);
-
-  const tallyFor = (altId) =>
-    Object.values(votes).filter(v => v === altId).length;
-
-  const pct = Math.round(((COUNTDOWN_SECS - timeLeft) / COUNTDOWN_SECS) * 100);
+  const cards = alts.length > 0
+    ? alts.map((a, i) => ({ ...a, ...PRIORITIES[i] }))
+    : PRIORITIES.map((p, i) => ({ ...p, id: `placeholder-${i}`, label: '—', duration: '—', price: null, co2: 0 }));
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 bg-[#080a0c]/95 backdrop-blur-sm flex flex-col"
+      className="fixed inset-0 z-50 flex flex-col"
+      style={{ background: 'rgba(10,10,14,0.97)' }}
     >
-      {/* Alert header */}
-      <div className={`${alertBg} border-b ${alertBorder} px-6 py-4 flex items-center justify-between`}>
+      {/* Top bar */}
+      <div className="flex items-center justify-between px-6 py-3 border-b border-white/10">
         <div className="flex items-center gap-3">
-          <span className={`${alertIcon} text-xl animate-pulse`}>⚠</span>
+          <span className="text-lg">{meta.icon}</span>
           <div>
-            <div className={`${alertText} font-mono font-bold tracking-widest text-sm`}>{headingCopy}</div>
-            <div className={`${alertSubText} font-mono text-[10px] mt-0.5`}>{cancelledFlight} — {subCopy}</div>
+            <div className="text-[10px] font-mono tracking-widest" style={{ color: meta.accent }}>⚠ {meta.header}</div>
+            <div className="text-[9px] font-mono text-[var(--text-muted)]">{route}</div>
           </div>
         </div>
         <div className="flex items-center gap-4">
-          {!selected && (
-            <div className="text-center">
-              <div className="text-[9px] font-mono text-slate-500 tracking-widest">AUTO-SELECT IN</div>
-              <div className={`font-mono text-2xl font-bold ${timeLeft <= 10 ? `${alertText} animate-pulse` : 'text-[#F2C94C]'}`}>
-                {timeLeft}s
-              </div>
+          {!confirmed && (
+            <div className="text-right">
+              <div className="text-[8px] font-mono text-[var(--text-muted)] tracking-widest">AUTO-SELECT IN</div>
+              <div className="text-2xl font-mono font-bold" style={{ color: meta.accent }}>{timeLeft}s</div>
             </div>
           )}
-          <button
-            onClick={onClose}
-            className="text-slate-500 hover:text-white transition-colors font-mono text-xs"
-          >
-            ✕ CLOSE
-          </button>
+          <button onClick={onClose} className="text-[9px] font-mono text-[var(--text-muted)] hover:text-white tracking-widest">✕ CLOSE</button>
         </div>
       </div>
 
-      {/* Countdown bar */}
-      {!selected && (
-        <div className="h-0.5 bg-[#1a1f24]">
+      {/* Progress bar */}
+      {!confirmed && (
+        <div className="h-0.5 w-full" style={{ background: '#1e2328' }}>
           <motion.div
-            className={`h-full ${barColor}`}
-            animate={{ width: `${100 - pct}%` }}
-            transition={{ duration: 0.5 }}
+            className="h-full"
+            style={{ background: meta.accent }}
+            initial={{ width: '100%' }}
+            animate={{ width: `${(timeLeft / initialTime) * 100}%` }}
+            transition={{ duration: 1, ease: 'linear' }}
           />
         </div>
       )}
 
-      <div className="flex-1 overflow-y-auto p-6">
-        <AnimatePresence mode="wait">
-          {selected ? (
-            <motion.div
-              key="confirmed"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="flex flex-col items-center justify-center h-full text-center py-16"
+      <div className="flex-1 overflow-auto px-6 py-4">
+        {/* Cascade banner */}
+        {isCascade && (
+          <div className="mb-4 px-4 py-2 rounded border border-amber-500/40 bg-amber-900/20 text-[9px] font-mono text-amber-300 tracking-widest">
+            ↑ CASCADE — upstream disruption caused this missed connection
+            {cascadeRisk.remainingMinutes < 0 && ` (${Math.abs(cascadeRisk.remainingMinutes)}m overrun)`}
+          </div>
+        )}
+
+        <div className="text-center mb-4">
+          <div className="text-white font-mono text-sm">AI found {alts.length || '…'} alternatives</div>
+          <div className="text-[9px] font-mono text-[var(--text-muted)] tracking-widest mt-0.5">SQUAD FLASH VOTE — SELECT YOUR PREFERENCE</div>
+        </div>
+
+        {altsError && (
+          <div className="text-center text-[9px] font-mono text-red-400 tracking-widest mb-4">
+            LIVE ALTERNATIVES UNAVAILABLE — squad vote disabled, manual rebook required
+          </div>
+        )}
+
+        {/* Alternative cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {cards.map((card, cardIdx) => (
+            <div
+              key={card.id ?? cardIdx}
+              className={`rounded-lg border p-4 transition-colors ${
+                selected === cardIdx ? '' : 'border-[#2a2f36]'
+              } ${cardIdx === groupFavorite && !altsLoading ? 'ring-1 ring-inset' : ''}`}
+              style={{
+                background: '#0e1118',
+                ...(selected === cardIdx ? { borderColor: meta.accent, borderWidth: 1, borderStyle: 'solid' } : {}),
+              }}
             >
-              <div className="text-5xl mb-4">✅</div>
-              <div className="text-white font-editorial text-2xl mb-2">Rebooking Confirmed</div>
-              <div className="text-slate-400 font-mono text-sm">
-                {ALTERNATIVES.find(a => a.id === selected)?.label} selected
-              </div>
-              <div className="mt-6 bg-[#1a1f24] rounded-lg p-4 border border-[#E67E22]/30 max-w-sm w-full">
-                {(() => {
-                  const alt = ALTERNATIVES.find(a => a.id === selected);
-                  return (
-                    <>
-                      <div className="text-white font-mono font-bold">{alt.airline}</div>
-                      <div className="text-slate-300 font-mono text-sm mt-1">{alt.route}</div>
-                      <div className="text-[#E67E22] font-mono text-lg font-bold mt-2">${alt.price}</div>
-                      <div className="text-slate-500 font-mono text-[10px] mt-1">{alt.departs} · {alt.duration}</div>
-                    </>
-                  );
-                })()}
-              </div>
-              <button
-                onClick={onClose}
-                className="mt-6 px-8 py-3 bg-[#E67E22] text-[#0E1012] font-mono font-bold rounded hover:bg-[#F2C94C] transition-colors"
-              >
-                CONFIRM & CLOSE
-              </button>
-            </motion.div>
-          ) : (
-            <motion.div key="voting" className="max-w-4xl mx-auto space-y-6">
-              <div className="text-center">
-                <div className="text-white font-editorial text-xl mb-1">AI found 3 alternatives</div>
-                <div className="text-slate-500 font-mono text-[10px] tracking-widest">SQUAD FLASH VOTE — SELECT YOUR PREFERENCE</div>
+              <div className="flex justify-between items-start mb-2">
+                <div>
+                  <div className="text-[8px] font-mono tracking-widest text-[var(--text-muted)]">{card.badge}</div>
+                  {cardIdx === groupFavorite && !altsLoading && (
+                    <div className="text-[7px] font-mono tracking-widest mt-0.5" style={{ color: meta.accent }}>★ GROUP FAVOURITE</div>
+                  )}
+                </div>
+                <span className="text-xl">{card.icon}</span>
               </div>
 
-              {/* Alternative cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {ALTERNATIVES.map(alt => {
-                  const tally = tallyFor(alt.id);
-                  const isFavorite = groupFavorite === alt.id && tally > 0;
+              {altsLoading ? (
+                <div className="space-y-2 animate-pulse">
+                  <div className="h-4 bg-white/10 rounded w-3/4" />
+                  <div className="h-3 bg-white/10 rounded w-1/2" />
+                  <div className="h-6 bg-white/10 rounded w-1/3" />
+                </div>
+              ) : (
+                <>
+                  <div className="text-white font-mono text-sm font-semibold mb-1">{card.label}</div>
+                  <div className="text-[10px] font-mono text-[var(--text-muted)]">{card.duration}</div>
+                  <div className="text-lg font-mono font-bold mt-1" style={{ color: meta.accent }}>
+                    {card.price != null ? `€${card.price}` : '—'}
+                  </div>
+                </>
+              )}
+
+              {/* Squad vote buttons */}
+              <div className="mt-3 space-y-1">
+                {SQUAD.map(member => {
+                  const hasVoted = votes[cardIdx]?.includes(member.id);
                   return (
-                    <motion.div
-                      key={alt.id}
-                      layout
-                      className={`rounded-lg p-4 border-2 transition-colors relative ${
-                        isFavorite
-                          ? 'border-[#E2725B] bg-[#E2725B]/10'
-                          : 'border-[#2a2f36] bg-[#1a1f24]'
+                    <button
+                      key={member.id}
+                      type="button"
+                      disabled={altsLoading || altsError}
+                      onClick={() => {
+                        setVotes(prev => {
+                          const cleared = {
+                            0: prev[0].filter(v => v !== member.id),
+                            1: prev[1].filter(v => v !== member.id),
+                            2: prev[2].filter(v => v !== member.id),
+                          };
+                          return { ...cleared, [cardIdx]: hasVoted ? cleared[cardIdx] : [...cleared[cardIdx], member.id] };
+                        });
+                      }}
+                      className={`w-full text-left px-2 py-1 rounded text-[9px] font-mono transition-colors border ${
+                        hasVoted ? 'border-white/30 bg-white/10 text-white' : 'border-white/10 text-[var(--text-muted)] hover:bg-white/5'
                       }`}
                     >
-                      {isFavorite && (
-                        <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-[#E2725B] text-[#0E1012] text-[9px] font-mono font-bold px-2 py-0.5 rounded-full tracking-widest">
-                          GROUP FAVORITE
-                        </div>
-                      )}
-                      <div className="flex items-start justify-between mb-3">
-                        <span className="text-xl">{alt.icon}</span>
-                        <span className="text-[9px] font-mono text-slate-500 tracking-widest">{alt.label.toUpperCase()}</span>
-                      </div>
-                      <div className="text-white font-mono font-bold text-sm">{alt.airline}</div>
-                      <div className="text-slate-300 font-mono text-xs mt-0.5">{alt.route}</div>
-                      <div className="text-[#E67E22] font-mono text-xl font-bold mt-2">${alt.price}</div>
-                      <div className="text-[9px] font-mono text-slate-500 mt-0.5">{alt.departs}</div>
-                      <div className="text-[9px] font-mono text-slate-600 mt-0.5">{alt.duration} · {alt.co2}kg CO₂</div>
-
-                      {/* Tally */}
-                      <div className="flex gap-1 mt-3">
-                        {Array.from({ length: tally }).map((_, i) => (
-                          <span key={i} className="text-sm">
-                            {SQUAD.find(m => votes[m.id] === alt.id)?.avatar ?? '👤'}
-                          </span>
-                        ))}
-                      </div>
-
-                      {/* Squad vote buttons */}
-                      <div className="mt-3 space-y-1.5">
-                        {SQUAD.map(member => (
-                          <button
-                            key={member.id}
-                            onClick={() => castVote(member.id, alt.id)}
-                            className={`w-full py-1.5 text-[10px] font-mono rounded border transition-colors flex items-center justify-center gap-1.5 ${
-                              votes[member.id] === alt.id
-                                ? 'bg-[#E67E22] border-[#E67E22] text-[#0E1012] font-bold'
-                                : votes[member.id] !== null
-                                ? 'border-[#1e2328] text-slate-600 bg-[#0E1012]'
-                                : 'border-[#2a2f36] text-slate-400 hover:border-[#E67E22]/50 hover:text-slate-200'
-                            }`}
-                          >
-                            {member.avatar} {member.name}
-                            {votes[member.id] === alt.id && ' ✓'}
-                          </button>
-                        ))}
-                      </div>
-                    </motion.div>
+                      {member.icon} {member.label}{hasVoted && ' ✓'}
+                    </button>
                   );
                 })}
               </div>
+            </div>
+          ))}
+        </div>
 
-              {/* Manual confirm */}
-              {groupFavorite && (
-                <div className="text-center">
-                  <button
-                    onClick={() => setSelected(groupFavorite)}
-                    className="px-8 py-3 bg-[#E2725B] text-white font-mono font-bold rounded hover:bg-[#E67E22] transition-colors"
-                  >
-                    CONFIRM GROUP FAVORITE
-                  </button>
-                </div>
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Confirm */}
+        {(confirmed || selected !== null) && !altsLoading && (
+          <div className="mt-6 text-center">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-8 py-2 rounded font-mono text-sm font-bold tracking-widest text-[#0E1012] transition-colors"
+              style={{ background: meta.accent }}
+            >
+              CONFIRM REBOOK
+            </button>
+          </div>
+        )}
       </div>
     </motion.div>
   );
