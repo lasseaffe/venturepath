@@ -133,7 +133,7 @@ function AutocompleteField({ label, value, field, ac, mode, onUpdate, legId }) {
 }
 
 export default function LegCard({ leg, index, onUpdate, onRemove }) {
-  const { id, mode, from, to, searched } = leg;
+  const { id, mode, from, to, searched, disruption = null, cascadeRisk = null, fromCoords = null, toCoords = null } = leg;
   const [priority, setPriority]           = useState('CHEAPEST');
   const [showSimulate, setShowSimulate]   = useState(false);
   const [loadingResults, setLoadingResults] = useState(false);
@@ -167,9 +167,15 @@ export default function LegCard({ leg, index, onUpdate, onRemove }) {
       <AnimatePresence>
         {showSimulate && (
           <EmergencyRebook
-            mode={mode}
-            cancelledFlight={`${from || '?'} → ${to || '?'}`}
-            onClose={() => setShowSimulate(false)}
+            mode={mode ?? 'train'}
+            route={`${from || '?'} → ${to || '?'}`}
+            fromCoords={fromCoords}
+            toCoords={toCoords}
+            cascadeRisk={cascadeRisk}
+            onClose={() => {
+              setShowSimulate(false);
+              onUpdate(id, { disruption: null });
+            }}
           />
         )}
       </AnimatePresence>
@@ -203,7 +209,34 @@ export default function LegCard({ leg, index, onUpdate, onRemove }) {
           <div className="flex items-center gap-2">
             <button
               type="button"
-              onClick={() => setShowSimulate(true)}
+              onClick={() => {
+                const delays = {
+                  flight: null,
+                  train:  20 + Math.floor(Math.random() * 70),
+                  bus:    10 + Math.floor(Math.random() * 30),
+                  tram:   10 + Math.floor(Math.random() * 30),
+                };
+                const typesByMode = {
+                  flight: ['cancellation'],
+                  train:  ['delay', 'cancellation', 'strike', 'construction'],
+                  bus:    ['delay', 'diversion'],
+                  tram:   ['delay', 'diversion'],
+                };
+                const types     = typesByMode[mode] ?? ['delay'];
+                const type      = types[Math.floor(Math.random() * types.length)];
+                const delayMins = delays[mode] ?? 30;
+                const severity  = delayMins >= 60 ? 'critical' : delayMins >= 20 ? 'medium' : 'low';
+                onUpdate(id, {
+                  disruption: {
+                    type,
+                    severity,
+                    delayMinutes: delayMins,
+                    message: `Simulated ${type} (+${delayMins ?? '∞'}m)`,
+                    source: 'simulated',
+                  },
+                });
+                setShowSimulate(true);
+              }}
               className={`px-2.5 py-1 border text-[9px] font-mono rounded transition-colors tracking-widest ${simulateCls}`}
             >
               {cfg.simulate}
@@ -220,6 +253,27 @@ export default function LegCard({ leg, index, onUpdate, onRemove }) {
             )}
           </div>
         </div>
+
+        {/* Disruption / cascade status bar */}
+        {(disruption || cascadeRisk) && (
+          <div
+            className="rounded px-3 py-1.5 text-[9px] font-mono tracking-widest flex items-center gap-2"
+            style={
+              (cascadeRisk?.severity === 'red' || disruption?.severity === 'critical')
+                ? { background: 'rgba(127,29,29,0.4)', borderLeft: '3px solid #f87171', color: '#fca5a5' }
+                : { background: 'rgba(120,53,15,0.4)', borderLeft: '3px solid #fbbf24', color: '#fde68a' }
+            }
+          >
+            {disruption && <span>⚠ {disruption.message}</span>}
+            {cascadeRisk && (
+              <span className="ml-1">
+                {cascadeRisk.severity === 'red'
+                  ? '— CONNECTION MISSED'
+                  : `— connection buffer: ${cascadeRisk.remainingMinutes}m remaining`}
+              </span>
+            )}
+          </div>
+        )}
 
         {/* FROM / TO inputs */}
         <form
