@@ -9,6 +9,9 @@ import { wikidataFetch } from '../../utils/wikidataEngine';
 import BlockHub from './BlockHub';
 import useLocationSearch from '../../hooks/useLocationSearch';
 import { useInspireData, matchCity } from '../../hooks/useInspireData';
+import { useDestinationImage } from '../../hooks/useDestinationImage';
+import ImageAttribution from '../ui/ImageAttribution';
+import ReportButton from '../inspire/ReportButton';
 
 const LEDGER_DND_KEY = 'application/vp-ledger-item';
 
@@ -98,6 +101,85 @@ function dayStats(blocks) {
     total: h ? `${h}h${m ? `${m}m` : ''}` : m ? `${m}m` : null,
     count: blocks.length,
   };
+}
+
+// ── Destination image helpers ──────────────────────────────────────────────────
+
+function extractDayDestination(label = '') {
+  // "Day 1 — Punta Arenas" → "Punta Arenas"
+  const m = label.match(/—\s*(.+)$/);
+  return m ? m[1].trim() : label;
+}
+
+function DayColumnHeaderImage({ dayLabel, tripDestination }) {
+  const dest  = extractDayDestination(dayLabel) || tripDestination || '';
+  const query = dest ? `${dest} ${tripDestination ?? ''}`.trim() : null;
+  const { image, loading } = useDestinationImage(query, 'city', 2);
+
+  return (
+    <div className="relative w-full overflow-hidden" style={{ height: 48 }}>
+      {loading && (
+        <div className="w-full h-full animate-pulse" style={{ background: '#1a2030' }} />
+      )}
+      {!loading && image && (
+        <>
+          <img
+            src={image.url} alt={dest}
+            className="w-full h-full object-cover" style={{ opacity: 0.75 }}
+            onError={e => { e.currentTarget.style.display = 'none'; }}
+          />
+          <div className="absolute inset-0"
+               style={{ background: 'linear-gradient(to bottom, rgba(14,16,18,0.2) 0%, rgba(14,16,18,0.6) 100%)' }} />
+          <ImageAttribution attribution={image} />
+          <div className="absolute top-1 right-1" onClick={e => e.stopPropagation()}>
+            <ReportButton
+              cityId={dest.toLowerCase().replace(/\s+/g, '-')}
+              cityName={dest} country="" small
+              imageUrl={image.url} imageAttribution={image}
+            />
+          </div>
+        </>
+      )}
+      {!loading && !image && (
+        <div className="w-full h-full"
+             style={{ background: 'linear-gradient(135deg, #1a2030 0%, #0e1520 100%)' }} />
+      )}
+    </div>
+  );
+}
+
+function BlockCardImage({ block, tripDestination }) {
+  const query = `${block.title}${tripDestination ? ' ' + tripDestination : ''}`;
+  const { image, loading } = useDestinationImage(query, 'poi', 3);
+
+  if (loading) {
+    return (
+      <div className="w-full rounded-md mt-2 animate-pulse"
+           style={{ height: 120, background: '#1a2030' }} />
+    );
+  }
+  if (!image) return null;
+
+  return (
+    <div className="relative w-full rounded-md mt-2 overflow-hidden" style={{ height: 120 }}>
+      <img
+        src={image.url} alt={block.title}
+        className="w-full h-full object-cover"
+        onError={e => { e.currentTarget.closest('div').style.display = 'none'; }}
+      />
+      <div className="absolute inset-0"
+           style={{ background: 'linear-gradient(to bottom, rgba(14,16,18,0.1) 0%, rgba(14,16,18,0.5) 100%)' }} />
+      <ImageAttribution attribution={image} />
+      <div className="absolute top-1.5 right-1.5" onClick={e => e.stopPropagation()}>
+        <ReportButton
+          cityId={block.title.toLowerCase().replace(/\s+/g, '-')}
+          cityName={block.title} country=""
+          poiId={block.id} small
+          imageUrl={image.url} imageAttribution={image}
+        />
+      </div>
+    </div>
+  );
 }
 
 // ── Main component ─────────────────────────────────────────────────────────────
@@ -399,6 +481,7 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
         ? (
           <KanbanView
             days={days}
+            tripName={tripName}
             ghostId={ghostId}
             dropIndicator={dropIndicator}
             addingTo={addingTo}
@@ -458,7 +541,7 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
 // ── Kanban view ───────────────────────────────────────────────────────────────
 
 function KanbanView({
-  days, ghostId, dropIndicator, addingTo, newDraft, cities,
+  days, tripName, ghostId, dropIndicator, addingTo, newDraft, cities,
   columnRefs, onDragStart, onDragEnd, onDragOver, onDragLeave, onDrop,
   onAddDay, onRemoveDay, onAutoSort,
   onSetAddingTo, onCancelAdd, onNewDraftChange, onAddBlock, onRemoveBlock,
@@ -480,6 +563,7 @@ function KanbanView({
               boxShadow: isTarget ? '0 0 0 1px rgba(230,126,34,0.4), 0 4px 20px rgba(230,126,34,0.1)' : 'none',
             }}
           >
+            <DayColumnHeaderImage dayLabel={day.label} tripDestination={tripName} />
             {/* Header */}
             <div className="px-3 py-2.5 shrink-0" style={{ background: '#0E1012', borderBottom: '1px solid #1e2328' }}>
               <div className="flex items-center justify-between">
@@ -576,6 +660,7 @@ function KanbanView({
                   {isTarget && dropIndicator.index === idx && <DropLine />}
                   <ActivityBlock
                     block={block}
+                    tripName={tripName}
                     isGhost={ghostId === block.id}
                     isActive={activeStopId === block.id}
                     onDragStart={e => onDragStart(e, day.id, block.id)}
@@ -883,7 +968,7 @@ function DropLine() {
 
 // ── Activity block (kanban card) ──────────────────────────────────────────────
 
-function ActivityBlock({ block, isGhost, isActive, onDragStart, onDragEnd, onRemove, isExpanded, onToggleExpand, onPatch, onTabChange, expandedTab }) {
+function ActivityBlock({ block, tripName, isGhost, isActive, onDragStart, onDragEnd, onRemove, isExpanded, onToggleExpand, onPatch, onTabChange, expandedTab }) {
   const [hovered, setHovered] = useState(false);
   const colors = CATEGORY_COLORS[block.category] ?? CATEGORY_COLORS.default;
 
@@ -949,12 +1034,15 @@ function ActivityBlock({ block, isGhost, isActive, onDragStart, onDragEnd, onRem
         </div>
       )}
       {isExpanded && (
-        <BlockHub
-          block={block}
-          onPatch={patch => onPatch(block.id, patch)}
-          activeTab={expandedTab}
-          onTabChange={onTabChange}
-        />
+        <>
+          <BlockCardImage block={block} tripDestination={tripName} />
+          <BlockHub
+            block={block}
+            onPatch={patch => onPatch(block.id, patch)}
+            activeTab={expandedTab}
+            onTabChange={onTabChange}
+          />
+        </>
       )}
     </div>
   );
