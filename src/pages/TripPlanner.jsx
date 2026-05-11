@@ -12,7 +12,7 @@ import LegGuide from '../components/itinerary/LegGuide';
 import KanbanBoard from '../components/itinerary/KanbanBoard';
 import LedgerWorkbench from '../components/itinerary/ledger/LedgerWorkbench';
 import PackingManifest from '../components/logistics/PackingManifest';
-import FlightScout from '../components/logistics/FlightScout';
+import PublicTransport from '../components/logistics/PublicTransport';
 import VehicleSearch from '../components/logistics/VehicleSearch';
 import PackingEngine from '../components/logistics/PackingEngine';
 import AccommodationSearch from '../components/logistics/AccommodationSearch';
@@ -128,7 +128,7 @@ export default function TripPlanner({ onBackToDashboard }) {
             {tab === 'ITINERARY' && (
               <div className="space-y-6">
                 <LedgerWorkbench />
-                <KanbanBoard tripName={trip.name} />
+                <KanbanBoard tripName={trip.name} destination={trip.destination} />
                 <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
                   <div className="lg:col-span-2"><TransitMap /></div>
                   <div className="lg:col-span-3"><LegGuide /></div>
@@ -137,9 +137,9 @@ export default function TripPlanner({ onBackToDashboard }) {
               </div>
             )}
 
-            {tab === 'FLIGHTS' && (
+            {tab === 'PUBLIC TRANSPORT' && (
               <div className="max-w-2xl space-y-4">
-                <FlightScout destination={trip.destination} />
+                <PublicTransport destination={trip.destination} />
               </div>
             )}
 
