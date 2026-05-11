@@ -9,7 +9,7 @@ const VIEW_MODES = [
   { id: '3dmodel', label: '3D MODEL' },
 ];
 
-export default function BagHud({ bag, bagType, zoneMap, packed, onZoneClick, onZoneHover, onRemove }) {
+export default function BagHud({ bag, bagType, zoneMap, packed, onZoneClick, onZoneHover, onRemove, destination }) {
   const [viewMode, setViewMode] = useState(
     () => {
       const stored = localStorage.getItem(`bagHud_viewMode_${bag.id}`);
@@ -31,7 +31,7 @@ export default function BagHud({ bag, bagType, zoneMap, packed, onZoneClick, onZ
   const totalWeight  = allItems.reduce((s, i) => s + (i.weight ?? 0), 0);
 
   return (
-    <div className="flex flex-col" style={{ height: 480 }}>
+    <div className="flex flex-col" style={{ height: 340 }}>
 
       {/* Top bar: skin selector + remove button */}
       <div className="flex items-center gap-2 mb-3">
@@ -51,11 +51,26 @@ export default function BagHud({ bag, bagType, zoneMap, packed, onZoneClick, onZ
         ))}
         <span className="text-[8px] font-mono text-slate-600 ml-1">{skin.label}</span>
 
+        {destination && (
+          <span style={{
+            marginLeft: onRemove ? 8 : 'auto',
+            fontFamily: 'JetBrains Mono, monospace',
+            fontSize: 7,
+            color: '#4b5563',
+            letterSpacing: '0.08em',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: 140,
+          }}>
+            {destination}
+          </span>
+        )}
         {onRemove && (
           <button
             onClick={onRemove}
             style={{
-              marginLeft: 'auto',
+              marginLeft: destination ? 4 : 'auto',
               background: 'none', border: '1px solid #c0392b', color: '#c0392b',
               fontFamily: 'JetBrains Mono, monospace', fontSize: 7,
               padding: '3px 8px', borderRadius: 3, cursor: 'pointer',

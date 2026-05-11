@@ -9,6 +9,7 @@ import BagHud from './BagHud';
 import BagShelf from './bag/BagShelf';
 import AddBagModal from './bag/AddBagModal';
 import PackingChecklist from './PackingChecklist';
+import { useTripStore } from '../../store/useTripStore';
 
 export default function PackingHudScreen({
   climate = 'temperate',
@@ -16,6 +17,7 @@ export default function PackingHudScreen({
   hasChildren = false,
   poiTags = [],
 }) {
+  const destination = useTripStore(s => s.trip?.destination ?? '');
   const [bags, setBags]                   = useState([]);
   const [activeBagId, setActiveBagId]     = useState(null);
   const [showAddModal, setShowAddModal]   = useState(false);
@@ -178,6 +180,7 @@ export default function PackingHudScreen({
                 bagType={activeBagType}
                 zoneMap={zoneMap}
                 packed={packedForActiveBag}
+                destination={destination}
                 onZoneClick={(zone) => {
                   setHighlightedZone(zone);
                   setTimeout(() => setHighlightedZone(null), 1500);
