@@ -2,9 +2,15 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import CulinaryAnchorBlock from './CulinaryAnchorBlock';
 import InspirePanel from '../inspire/InspirePanel';
 import ItineraryMap from './ItineraryMap';
-import PassportVault from '../vault/PassportVault';
 import { useExpedition } from '../../context/ExpeditionContext';
+import CategoryIcon from './CategoryIcon';
 import { geocodeLocation } from '../../utils/geocodeEngine';
+import BlockHub from './BlockHub';
+import useLocationSearch from '../../hooks/useLocationSearch';
+import { useInspireData, matchCity } from '../../hooks/useInspireData';
+import { useDestinationImage } from '../../hooks/useDestinationImage';
+import ImageAttribution from '../ui/ImageAttribution';
+import ReportButton from '../inspire/ReportButton';
 
 const LEDGER_DND_KEY = 'application/vp-ledger-item';
 
@@ -26,30 +32,30 @@ const SEED_DAYS = [
     id: 1,
     label: 'Day 1 — Punta Arenas',
     blocks: [
-      { id: 'b1',  time: '08:00', title: 'Airport pickup',               category: 'transport', icon: '✈',  duration: 60,  notes: 'Driver: Carlos (+56 9 1234)' },
-      { id: 'b2',  time: '10:00', title: 'Permit collection — CONAF',    category: 'logistics', icon: '📋', duration: 45,  notes: 'Bring passport + booking ref' },
-      { id: 'b3',  time: '13:00', title: "Lunch — Sotito's",             category: 'food',      icon: '🍽', duration: 90,  notes: 'Try the king crab' },
-      { id: 'b4',  time: '15:30', title: 'Gear check & resupply',        category: 'logistics', icon: '🎒', duration: 120 },
-      { id: 'b5',  time: '19:00', title: 'Briefing at hostel',           category: 'activity',  icon: '📍', duration: 60 },
+      { id: 'b1',  time: '08:00', title: 'Airport pickup',               category: 'transport', duration: 60,  notes: 'Driver: Carlos (+56 9 1234)' },
+      { id: 'b2',  time: '10:00', title: 'Permit collection — CONAF',    category: 'logistics', duration: 45,  notes: 'Bring passport + booking ref' },
+      { id: 'b3',  time: '13:00', title: "Lunch — Sotito's",             category: 'food',      duration: 90,  notes: 'Try the king crab' },
+      { id: 'b4',  time: '15:30', title: 'Gear check & resupply',        category: 'logistics', duration: 120 },
+      { id: 'b5',  time: '19:00', title: 'Briefing at hostel',           category: 'activity',  duration: 60 },
     ],
   },
   {
     id: 2,
     label: 'Day 2 — Transfer & Trailhead',
     blocks: [
-      { id: 'b6',  time: '06:00', title: 'Bus to Puerto Natales',        category: 'transport', icon: '🚌', duration: 180 },
-      { id: 'b7',  time: '10:30', title: 'Catamaran to park entrance',   category: 'transport', icon: '⛵', duration: 90 },
-      { id: 'b8',  time: '14:00', title: 'Hike to Refugio Chileno',      category: 'activity',  icon: '⛰', duration: 270, notes: 'River crossing at km 8' },
-      { id: 'b9',  time: '20:00', title: 'Camp setup + dinner',          category: 'food',      icon: '🏕', duration: 60 },
+      { id: 'b6',  time: '06:00', title: 'Bus to Puerto Natales',        category: 'transport', duration: 180 },
+      { id: 'b7',  time: '10:30', title: 'Catamaran to park entrance',   category: 'transport', duration: 90 },
+      { id: 'b8',  time: '14:00', title: 'Hike to Refugio Chileno',      category: 'activity',  duration: 270, notes: 'River crossing at km 8' },
+      { id: 'b9',  time: '20:00', title: 'Camp setup + dinner',          category: 'food',      duration: 60 },
     ],
   },
   {
     id: 3,
     label: 'Day 3 — Scout Day',
     blocks: [
-      { id: 'b10', time: '05:30', title: 'Pre-dawn summit attempt',      category: 'activity',  icon: '🌄', duration: 180, notes: 'Turn-around: 09:00 absolute' },
-      { id: 'b11', time: '11:00', title: 'Photography — Mirador Torres', category: 'activity',  icon: '📷', duration: 120 },
-      { id: 'b12', time: '15:00', title: 'Rest + acclimatize',           category: 'rest',      icon: '💤', duration: 180 },
+      { id: 'b10', time: '05:30', title: 'Pre-dawn summit attempt',      category: 'activity',  duration: 180, notes: 'Turn-around: 09:00 absolute' },
+      { id: 'b11', time: '11:00', title: 'Photography — Mirador Torres', category: 'activity',  duration: 120 },
+      { id: 'b12', time: '15:00', title: 'Rest + acclimatize',           category: 'rest',      duration: 180 },
     ],
   },
   {
@@ -60,12 +66,13 @@ const SEED_DAYS = [
 ];
 
 const CATEGORY_COLORS = {
-  transport: { bg: 'rgba(59,130,246,0.14)',  border: 'rgba(59,130,246,0.4)',  text: '#60A5FA', dot: '#3B82F6' },
-  logistics: { bg: 'rgba(234,179,8,0.1)',    border: 'rgba(234,179,8,0.35)', text: '#FBBF24', dot: '#EAB308' },
-  food:      { bg: 'rgba(34,197,94,0.1)',    border: 'rgba(34,197,94,0.35)', text: '#4ADE80', dot: '#22C55E' },
-  activity:  { bg: 'rgba(230,126,34,0.12)', border: 'rgba(230,126,34,0.4)', text: '#E67E22', dot: '#E67E22' },
-  rest:      { bg: 'rgba(148,163,184,0.08)', border: 'rgba(148,163,184,0.2)', text: '#94A3B8', dot: '#64748B' },
-  default:   { bg: 'rgba(148,163,184,0.08)', border: 'rgba(148,163,184,0.2)', text: '#94A3B8', dot: '#64748B' },
+  transport:     { bg: 'rgba(59,130,246,0.14)',  border: 'rgba(59,130,246,0.4)',  text: '#60A5FA', dot: '#3B82F6' },
+  logistics:     { bg: 'rgba(234,179,8,0.1)',    border: 'rgba(234,179,8,0.35)', text: '#FBBF24', dot: '#EAB308' },
+  food:          { bg: 'rgba(34,197,94,0.1)',    border: 'rgba(34,197,94,0.35)', text: '#4ADE80', dot: '#22C55E' },
+  activity:      { bg: 'rgba(230,126,34,0.12)', border: 'rgba(230,126,34,0.4)', text: '#E67E22', dot: '#E67E22' },
+  rest:          { bg: 'rgba(148,163,184,0.08)', border: 'rgba(148,163,184,0.2)', text: '#94A3B8', dot: '#64748B' },
+  accommodation: { bg: 'rgba(167,139,250,0.1)', border: 'rgba(167,139,250,0.35)', text: '#A78BFA', dot: '#7C3AED' },
+  default:       { bg: 'rgba(148,163,184,0.08)', border: 'rgba(148,163,184,0.2)', text: '#94A3B8', dot: '#64748B' },
 };
 
 function makeId() {
@@ -103,15 +110,28 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
   const [viewMode,     setViewMode]     = useState('kanban'); // 'kanban' | 'timeline'
   const [ghostId,      setGhostId]      = useState(null);
   const [dropIndicator,setDropIndicator]= useState(null); // { dayId, index }
-  const [editingId,    setEditingId]    = useState(null);
-  const [editDraft,    setEditDraft]    = useState({});
+  const [expandedId,   setExpandedId]   = useState(null);
+  const [expandedTab,  setExpandedTab]  = useState('DETAILS');
   const [addingTo,     setAddingTo]     = useState(null);
-  const [newDraft,     setNewDraft]     = useState({ title: '', time: '', category: 'activity', icon: '📍', duration: '', notes: '' });
+  const [newDraft,     setNewDraft]     = useState({
+    title: '', time: '', category: 'activity', duration: '', notes: '',
+    location: '', locationCoords: null, bookingRef: '', cost: '', alertTime: '',
+    links: [], items: [], subtasks: [], contacts: [],
+  });
   const [culinaryAnchor, setCulinaryAnchor] = useState(null); // injected recipe from What's Cooking
   const [inspireDay,    setInspireDay]    = useState(null);  // day object whose Inspire panel is open
   const [activeStopId,  setActiveStopId]  = useState(null);
   const [coordsVersion, setCoordsVersion] = useState(0);
   const coordsRef = useRef(new Map()); // blockId → [lat, lng] | false (failed)
+
+  const { cities } = useInspireData();
+
+  function patchBlock(blockId, patch) {
+    setDays(prev => prev.map(d => ({
+      ...d,
+      blocks: d.blocks.map(b => b.id === blockId ? { ...b, ...patch } : b),
+    })));
+  }
 
   // Read ?culinary= payload on mount and strip it from the URL
   useEffect(() => {
@@ -177,11 +197,20 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
     if (!newDraft.title.trim()) return;
     const block = {
       id: makeId(),
-      ...newDraft,
-      duration: newDraft.duration ? Number(newDraft.duration) : undefined,
+      title: newDraft.title.trim(),
+      time: newDraft.time,
+      category: newDraft.category,
+      ...(newDraft.duration ? { duration: Number(newDraft.duration) } : {}),
+      ...(newDraft.notes ? { notes: newDraft.notes } : {}),
+      ...(newDraft.location ? { location: newDraft.location } : {}),
+      ...(newDraft.locationCoords ? { locationCoords: newDraft.locationCoords } : {}),
     };
     setDays(prev => prev.map(d => d.id === dayId ? { ...d, blocks: [...d.blocks, block] } : d));
-    setNewDraft({ title: '', time: '', category: 'activity', icon: '📍', duration: '', notes: '' });
+    setNewDraft({
+      title: '', time: '', category: 'activity', duration: '', notes: '',
+      location: '', locationCoords: null, bookingRef: '', cost: '', alertTime: '',
+      links: [], items: [], subtasks: [], contacts: [],
+    });
     setAddingTo(null);
   }
 
@@ -264,7 +293,6 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
           id:       `ledger-${item.id}-${Date.now()}`,
           title:    item.name,
           category: 'activity',
-          icon:     '📍',
           time:     '',
           duration: undefined,
           notes:    item.type ?? '',
@@ -306,19 +334,6 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
     dragState.current = null;
   }
 
-  // ── Inline edit ───────────────────────────────────────────────────────────────
-
-  function startEdit(block) {
-    setEditingId(block.id);
-    setEditDraft({ ...block });
-  }
-
-  function commitEdit() {
-    if (!editDraft.title?.trim()) return;
-    updateBlock(editingId, editDraft);
-    setEditingId(null);
-  }
-
   // ── Render ────────────────────────────────────────────────────────────────────
 
   // Build plain object from ref for prop comparison (coordsVersion forces re-read)
@@ -339,21 +354,17 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
             className="flex items-center rounded border overflow-hidden"
             style={{ borderColor: '#1e2328' }}
           >
-            {[
-              { key: 'kanban',    label: 'KANBAN' },
-              { key: 'timeline',  label: 'TIMELINE' },
-              { key: 'documents', label: 'DOCUMENTS' },
-            ].map(({ key, label }) => (
+            {['kanban', 'timeline'].map(mode => (
               <button
-                key={key}
-                onClick={() => setViewMode(key)}
+                key={mode}
+                onClick={() => setViewMode(mode)}
                 className="px-3 py-1 text-[10px] font-mono tracking-widest transition-colors"
                 style={{
-                  background: viewMode === key ? '#E67E22' : 'transparent',
-                  color:      viewMode === key ? '#0E1012' : '#4b5563',
+                  background: viewMode === mode ? '#E67E22' : 'transparent',
+                  color:      viewMode === mode ? '#0E1012' : '#4b5563',
                 }}
               >
-                {label}
+                {mode === 'kanban' ? 'KANBAN' : 'TIMELINE'}
               </button>
             ))}
           </div>
@@ -385,24 +396,17 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
         }}
       />
 
-      {/* ── Documents (PassportVault) ── */}
-      {viewMode === 'documents' && (
-        // expeditionFilter is null because useExpedition() only exposes removeFromPath (no id)
-        // Wire expedition?.id here once ExpeditionContext provides an id field
-        <PassportVault expeditionFilter={null} />
-      )}
-
       {/* ── Board ── */}
-      {viewMode !== 'documents' && (viewMode === 'kanban'
+      {viewMode === 'kanban'
         ? (
           <KanbanView
             days={days}
             ghostId={ghostId}
             dropIndicator={dropIndicator}
-            editingId={editingId}
-            editDraft={editDraft}
             addingTo={addingTo}
             newDraft={newDraft}
+            cities={cities}
+            tripName={tripName}
             columnRefs={columnRefs}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
@@ -412,13 +416,13 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
             onAddDay={addDay}
             onRemoveDay={removeDay}
             onAutoSort={autoSortDay}
-            onStartEdit={startEdit}
-            onCommitEdit={commitEdit}
-            onCancelEdit={() => setEditingId(null)}
-            onEditDraftChange={setEditDraft}
             onSetAddingTo={(id) => {
               setAddingTo(id);
-              setNewDraft({ title: '', time: '', category: 'activity', icon: '📍', duration: '', notes: '' });
+              setNewDraft({
+                title: '', time: '', category: 'activity', duration: '', notes: '',
+                location: '', locationCoords: null, bookingRef: '', cost: '', alertTime: '',
+                links: [], items: [], subtasks: [], contacts: [],
+              });
             }}
             onCancelAdd={() => setAddingTo(null)}
             onNewDraftChange={setNewDraft}
@@ -426,31 +430,68 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
             onRemoveBlock={removeBlock}
             onInspire={day => setInspireDay(day)}
             activeStopId={activeStopId}
-            onCardClick={id => setActiveStopId(prev => prev === id ? null : id)}
+            expandedId={expandedId}
+            expandedTab={expandedTab}
+            onToggleExpand={id => {
+              setExpandedId(prev => prev === id ? null : id);
+              setExpandedTab('DETAILS');
+            }}
+            onPatch={patchBlock}
+            onTabChange={setExpandedTab}
           />
         )
         : (
           <TimelineView
             days={days}
-            editingId={editingId}
-            editDraft={editDraft}
-            onStartEdit={startEdit}
-            onCommitEdit={commitEdit}
-            onCancelEdit={() => setEditingId(null)}
-            onEditDraftChange={setEditDraft}
             onRemoveBlock={removeBlock}
           />
         )
-      )}
+      }
 
-      {viewMode !== 'documents' && (
-        <ItineraryMap
-          days={days}
-          coords={coords}
-          activeStopId={activeStopId}
-          onPinClick={id => setActiveStopId(prev => prev === id ? null : id)}
+      <ItineraryMap
+        days={days}
+        coords={coords}
+        activeStopId={activeStopId}
+        onPinClick={id => setActiveStopId(prev => prev === id ? null : id)}
+      />
+    </div>
+  );
+}
+
+// ── Destination image helpers ────────────────────────────────────────────────
+
+// Extract "Punta Arenas" from "Day 1 — Punta Arenas"
+function extractDayDestination(label) {
+  const m = label.match(/—\s*(.+)$/);
+  return m ? m[1].trim() : null;
+}
+
+function DayColumnHeaderImage({ label, tripName }) {
+  const dest = extractDayDestination(label) ?? tripName;
+  const { image, loading } = useDestinationImage(dest, 'city', 2);
+
+  if (loading) {
+    return (
+      <div className="w-full animate-pulse" style={{ height: 48, background: '#1a2030' }} />
+    );
+  }
+  if (!image?.url) return null;
+
+  return (
+    <div className="relative overflow-hidden shrink-0" style={{ height: 48 }}>
+      <img src={image.url} alt={dest} className="absolute inset-0 w-full h-full object-cover" />
+      <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(14,16,18,0.1) 0%, rgba(14,16,18,0.5) 100%)' }} />
+      {image.author && <ImageAttribution attribution={image} />}
+      <div className="absolute top-1 right-1" style={{ zIndex: 15 }}>
+        <ReportButton
+          cityId={dest}
+          cityName={dest}
+          country=""
+          small
+          imageUrl={image.url}
+          imageAttribution={image}
         />
-      )}
+      </div>
     </div>
   );
 }
@@ -458,15 +499,14 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
 // ── Kanban view ───────────────────────────────────────────────────────────────
 
 function KanbanView({
-  days, ghostId, dropIndicator, editingId, editDraft, addingTo, newDraft,
+  days, ghostId, dropIndicator, addingTo, newDraft, cities, tripName,
   columnRefs, onDragStart, onDragEnd, onDragOver, onDragLeave, onDrop,
   onAddDay, onRemoveDay, onAutoSort,
-  onStartEdit, onCommitEdit, onCancelEdit, onEditDraftChange,
   onSetAddingTo, onCancelAdd, onNewDraftChange, onAddBlock, onRemoveBlock,
-  onInspire, activeStopId, onCardClick,
+  onInspire, activeStopId, expandedId, expandedTab, onToggleExpand, onPatch, onTabChange,
 }) {
   return (
-    <div className="flex gap-4 overflow-x-auto pb-3 touch-pan-x" style={{ minHeight: '480px', WebkitOverflowScrolling: 'touch' }}>
+    <div className="flex gap-4 overflow-x-auto pb-3" style={{ minHeight: '480px' }}>
       {days.map(day => {
         const isTarget = dropIndicator?.dayId === day.id;
         const stats = dayStats(day.blocks);
@@ -518,6 +558,9 @@ function KanbanView({
                 </div>
               )}
             </div>
+
+            {/* Destination image strip */}
+            <DayColumnHeaderImage label={day.label} tripName={tripName} />
 
             {/* Action strip */}
             <div className="flex items-center gap-1 px-2 py-1.5 shrink-0" style={{ borderBottom: '1px solid #1a1e23', background: '#0c0e10' }}>
@@ -575,25 +618,20 @@ function KanbanView({
               {day.blocks.map((block, idx) => (
                 <div key={block.id}>
                   {isTarget && dropIndicator.index === idx && <DropLine />}
-                  {editingId === block.id ? (
-                    <EditCard
-                      draft={editDraft}
-                      onChange={onEditDraftChange}
-                      onCommit={onCommitEdit}
-                      onCancel={onCancelEdit}
-                    />
-                  ) : (
-                    <ActivityBlock
-                      block={block}
-                      isGhost={ghostId === block.id}
-                      isActive={activeStopId === block.id}
-                      onDragStart={e => onDragStart(e, day.id, block.id)}
-                      onDragEnd={onDragEnd}
-                      onEdit={() => onStartEdit(block)}
-                      onRemove={() => onRemoveBlock(block.id)}
-                      onCardClick={() => onCardClick(block.id)}
-                    />
-                  )}
+                  <ActivityBlock
+                    block={block}
+                    isGhost={ghostId === block.id}
+                    isActive={activeStopId === block.id}
+                    onDragStart={e => onDragStart(e, day.id, block.id)}
+                    onDragEnd={onDragEnd}
+                    onRemove={() => onRemoveBlock(block.id)}
+                    isExpanded={expandedId === block.id}
+                    onToggleExpand={onToggleExpand}
+                    onPatch={onPatch}
+                    expandedTab={expandedTab}
+                    onTabChange={onTabChange}
+                    tripName={tripName}
+                  />
                 </div>
               ))}
 
@@ -614,6 +652,7 @@ function KanbanView({
                   onChange={onNewDraftChange}
                   onAdd={() => onAddBlock(day.id)}
                   onCancel={onCancelAdd}
+                  matchedCity={cities.length ? matchCity(cities, day.label) : null}
                 />
               )}
             </div>
@@ -640,13 +679,13 @@ function KanbanView({
 
 // ── Timeline view ─────────────────────────────────────────────────────────────
 
-function TimelineView({ days, editingId, editDraft, onStartEdit, onCommitEdit, onCancelEdit, onEditDraftChange, onRemoveBlock }) {
+function TimelineView({ days, onRemoveBlock }) {
   // Build ruler hours
   const hours = [];
   for (let h = DAY_START_H; h <= DAY_END_H; h++) hours.push(h);
 
   return (
-    <div className="overflow-x-auto pb-4 touch-pan-x" style={{ WebkitOverflowScrolling: 'touch' }}>
+    <div className="overflow-x-auto pb-4">
       <div className="flex" style={{ minWidth: `${days.length * 240 + 52}px` }}>
 
         {/* ── Time ruler ── */}
@@ -678,7 +717,7 @@ function TimelineView({ days, editingId, editDraft, onStartEdit, onCommitEdit, o
             const untimed = day.blocks.filter(b => !b.time);
 
             return (
-              <div key={day.id} className="shrink-0 flex flex-col" style={{ width: '260px' }}>
+              <div key={day.id} className="shrink-0 flex flex-col" style={{ width: '224px' }}>
                 {/* Column header */}
                 <div
                   className="rounded-t-lg px-3 py-2 mb-0 shrink-0"
@@ -759,12 +798,6 @@ function TimelineView({ days, editingId, editDraft, onStartEdit, onCommitEdit, o
                         top={top}
                         height={height}
                         colors={colors}
-                        isEditing={editingId === block.id}
-                        editDraft={editDraft}
-                        onStartEdit={() => onStartEdit(block)}
-                        onCommitEdit={onCommitEdit}
-                        onCancelEdit={onCancelEdit}
-                        onEditDraftChange={onEditDraftChange}
                         onRemove={() => onRemoveBlock(block.id)}
                       />
                     );
@@ -786,14 +819,8 @@ function TimelineView({ days, editingId, editDraft, onStartEdit, onCommitEdit, o
                           className="flex items-center gap-2 px-2 py-1 rounded"
                           style={{ background: colors.bg, border: `1px solid ${colors.border}` }}
                         >
-                          <span className="text-sm">{block.icon}</span>
+                          <CategoryIcon category={block.category} color={colors.text} size={11} />
                           <span className="text-[10px] font-mono text-white truncate flex-1">{block.title}</span>
-                          <button
-                            onClick={() => onStartEdit(block)}
-                            className="text-[8px] font-mono text-slate-500 hover:text-slate-300 transition-colors tracking-widest shrink-0"
-                          >
-                            EDIT
-                          </button>
                         </div>
                       );
                     })}
@@ -828,24 +855,8 @@ function NowLine() {
 
 // ── Timeline block ────────────────────────────────────────────────────────────
 
-function TimelineBlock({ block, top, height, colors, isEditing, editDraft, onStartEdit, onCommitEdit, onCancelEdit, onEditDraftChange, onRemove }) {
+function TimelineBlock({ block, top, height, colors, onRemove }) {
   const [hovered, setHovered] = useState(false);
-
-  if (isEditing) {
-    return (
-      <div
-        className="absolute left-1 right-1 z-20 rounded"
-        style={{ top: `${top}px` }}
-      >
-        <EditCard
-          draft={editDraft}
-          onChange={onEditDraftChange}
-          onCommit={onCommitEdit}
-          onCancel={onCancelEdit}
-        />
-      </div>
-    );
-  }
 
   return (
     <div
@@ -860,7 +871,6 @@ function TimelineBlock({ block, top, height, colors, isEditing, editDraft, onSta
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onClick={onStartEdit}
     >
       <div className="flex items-start gap-1 px-1.5 pt-1 h-full">
         {/* Left accent bar */}
@@ -918,7 +928,35 @@ function DropLine() {
 
 // ── Activity block (kanban card) ──────────────────────────────────────────────
 
-function ActivityBlock({ block, isGhost, isActive, onDragStart, onDragEnd, onEdit, onRemove, onCardClick }) {
+function BlockCardImage({ title, tripName }) {
+  const query = title || tripName;
+  const { image, loading } = useDestinationImage(query, 'poi', 3);
+
+  if (loading) {
+    return <div className="w-full animate-pulse" style={{ height: 120, background: '#1a2030' }} />;
+  }
+  if (!image?.url) return null;
+
+  return (
+    <div className="relative overflow-hidden" style={{ height: 120 }}>
+      <img src={image.url} alt={title} className="absolute inset-0 w-full h-full object-cover" />
+      <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(14,16,18,0.05) 0%, rgba(14,16,18,0.45) 100%)' }} />
+      {image.author && <ImageAttribution attribution={image} />}
+      <div className="absolute top-1 right-1" style={{ zIndex: 15 }}>
+        <ReportButton
+          cityId={title}
+          cityName={title}
+          country=""
+          small
+          imageUrl={image.url}
+          imageAttribution={image}
+        />
+      </div>
+    </div>
+  );
+}
+
+function ActivityBlock({ block, isGhost, isActive, onDragStart, onDragEnd, onRemove, isExpanded, onToggleExpand, onPatch, onTabChange, expandedTab, tripName }) {
   const [hovered, setHovered] = useState(false);
   const colors = CATEGORY_COLORS[block.category] ?? CATEGORY_COLORS.default;
 
@@ -928,7 +966,7 @@ function ActivityBlock({ block, isGhost, isActive, onDragStart, onDragEnd, onEdi
       draggable
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
-      onClick={onCardClick}
+      onClick={e => { e.stopPropagation(); onToggleExpand(block.id); }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className="rounded-lg cursor-grab active:cursor-grabbing transition-all select-none overflow-hidden"
@@ -946,7 +984,7 @@ function ActivityBlock({ block, isGhost, isActive, onDragStart, onDragEnd, onEdi
     >
       <div className="flex items-center justify-between px-2.5 pt-2 pb-1">
         <div className="flex items-center gap-1.5">
-          <span className="text-sm leading-none">{block.icon}</span>
+          <CategoryIcon category={block.category} color={colors.text} size={14} />
           {block.time && (
             <span className="text-[10px] font-mono" style={{ color: '#E67E22' }}>{block.time}</span>
           )}
@@ -973,14 +1011,8 @@ function ActivityBlock({ block, isGhost, isActive, onDragStart, onDragEnd, onEdi
         )}
       </div>
 
-      {hovered && !isGhost && (
+      {hovered && !isGhost && !isExpanded && (
         <div className="flex items-center gap-1 px-2 pb-2" style={{ borderTop: '1px solid #1e2328' }}>
-          <button
-            onClick={e => { e.stopPropagation(); onEdit(); }}
-            className="text-[9px] font-mono px-2 py-0.5 rounded border border-[#2a2f36] text-slate-400 hover:text-white hover:border-[#3a3f46] transition-colors tracking-widest"
-          >
-            EDIT
-          </button>
           <button
             onClick={e => { e.stopPropagation(); onRemove(); }}
             className="text-[9px] font-mono px-2 py-0.5 rounded border border-transparent text-slate-600 hover:text-red-400 hover:border-red-800/40 transition-colors tracking-widest ml-auto"
@@ -989,79 +1021,17 @@ function ActivityBlock({ block, isGhost, isActive, onDragStart, onDragEnd, onEdi
           </button>
         </div>
       )}
-    </div>
-  );
-}
-
-// ── Edit card ─────────────────────────────────────────────────────────────────
-
-function EditCard({ draft, onChange, onCommit, onCancel }) {
-  return (
-    <div
-      className="rounded-lg p-3 flex flex-col gap-2"
-      style={{ background: '#1a1e24', border: '1px solid #E67E22', boxShadow: '0 0 0 1px rgba(230,126,34,0.2)' }}
-    >
-      <div className="grid grid-cols-2 gap-1.5">
-        <input
-          value={draft.time ?? ''}
-          onChange={e => onChange(p => ({ ...p, time: e.target.value }))}
-          type="time"
-          className="bg-[#0E1012] border border-[#2a2f36] rounded px-2 py-1 text-[11px] font-mono text-white focus:outline-none focus:border-[#E67E22]"
-        />
-        <select
-          value={draft.category ?? 'activity'}
-          onChange={e => onChange(p => ({ ...p, category: e.target.value }))}
-          className="bg-[#0E1012] border border-[#2a2f36] rounded px-2 py-1 text-[11px] font-mono text-slate-300 focus:outline-none focus:border-[#E67E22]"
-        >
-          {Object.keys(CATEGORY_COLORS).filter(k => k !== 'default').map(c => (
-            <option key={c} value={c}>{c}</option>
-          ))}
-        </select>
-      </div>
-      <input
-        value={draft.title ?? ''}
-        onChange={e => onChange(p => ({ ...p, title: e.target.value }))}
-        placeholder="Activity name…"
-        className="bg-[#0E1012] border border-[#2a2f36] rounded px-2 py-1.5 text-xs text-white font-mono focus:outline-none focus:border-[#E67E22] w-full"
-        autoFocus
-      />
-      <div className="grid grid-cols-2 gap-1.5">
-        <input
-          value={draft.icon ?? ''}
-          onChange={e => onChange(p => ({ ...p, icon: e.target.value }))}
-          placeholder="Icon 📍"
-          className="bg-[#0E1012] border border-[#2a2f36] rounded px-2 py-1 text-xs text-white font-mono focus:outline-none focus:border-[#E67E22]"
-        />
-        <input
-          value={draft.duration ?? ''}
-          onChange={e => onChange(p => ({ ...p, duration: e.target.value }))}
-          placeholder="Duration (min)"
-          type="number"
-          className="bg-[#0E1012] border border-[#2a2f36] rounded px-2 py-1 text-xs text-white font-mono focus:outline-none focus:border-[#E67E22]"
-        />
-      </div>
-      <input
-        value={draft.notes ?? ''}
-        onChange={e => onChange(p => ({ ...p, notes: e.target.value }))}
-        placeholder="Field notes…"
-        className="bg-[#0E1012] border border-[#2a2f36] rounded px-2 py-1 text-[11px] text-slate-400 font-mono focus:outline-none focus:border-[#E67E22] w-full"
-      />
-      <div className="flex gap-2">
-        <button
-          onClick={onCommit}
-          disabled={!draft.title?.trim()}
-          className="flex-1 py-1 text-[10px] font-mono font-bold tracking-widest rounded transition-colors disabled:opacity-40"
-          style={{ background: '#E67E22', color: '#0E1012' }}
-        >
-          CONFIRM
-        </button>
-        <button
-          onClick={onCancel}
-          className="px-3 py-1 text-[10px] font-mono tracking-widest rounded border border-[#2a2f36] text-slate-500 hover:text-slate-300 transition-colors"
-        >
-          ✕
-        </button>
-      </div>
+      {isExpanded && (
+        <>
+          <BlockCardImage title={block.title} tripName={tripName} />
+          <BlockHub
+            block={block}
+            onPatch={patch => onPatch(block.id, patch)}
+            activeTab={expandedTab}
+            onTabChange={onTabChange}
+          />
+        </>
+      )}
     </div>
   );
 }
@@ -1080,13 +1050,55 @@ const ACTIVITY_SUGGESTIONS = [
   'Temple visit', 'Monastery tour', 'Art gallery', 'Street art walk',
 ];
 
-function AddCard({ draft, onChange, onAdd, onCancel }) {
+function poiCategoryToBlock(cat) {
+  return { landmark: 'activity', food: 'food', activity: 'activity', hidden_gem: 'activity', transport_hub: 'transport' }[cat] ?? 'activity';
+}
+
+const INSTANCE_OF_CATEGORY = [
+  [['restaurant', 'café', 'bar', 'brewery', 'winery', 'food'], 'food'],
+  [['train station', 'railway', 'airport', 'ferry', 'bus station', 'port', 'transit'], 'transport'],
+  [['hotel', 'hostel', 'guesthouse', 'inn', 'resort', 'accommodation'], 'rest'],
+  [['museum', 'gallery', 'church', 'cathedral', 'mosque', 'temple', 'monument', 'landmark', 'palace', 'castle', 'square', 'bridge', 'harbour', 'market', 'park', 'beach', 'mountain'], 'activity'],
+];
+
+function inferCategoryFromInstanceOf(instanceOf) {
+  if (!instanceOf) return null;
+  const lower = instanceOf.toLowerCase();
+  for (const [keywords, cat] of INSTANCE_OF_CATEGORY) {
+    if (keywords.some(k => lower.includes(k))) return cat;
+  }
+  return null;
+}
+
+function AddCard({ draft, onChange, onAdd, onCancel, matchedCity }) {
   const [suggestions, setSuggestions] = useState([]);
+  const [locationQuery, setLocationQuery] = useState('');
+  const { results: remoteResults, loading: remoteLoading } = useLocationSearch(locationQuery);
+
+  const localResults = matchedCity
+    ? matchedCity.pois.filter(p => p.name.toLowerCase().includes(locationQuery.toLowerCase())).slice(0, 5)
+    : [];
+
+  const showLocationDropdown = locationQuery.length > 0 && (localResults.length > 0 || remoteResults.length > 0);
+
+  function pickLocation(label, coords, poi = null) {
+    onChange(p => ({
+      ...p,
+      location: label,
+      locationCoords: coords,
+      ...(poi ? { category: poiCategoryToBlock(poi.category), duration: poi.duration_min ?? p.duration } : {}),
+    }));
+    setLocationQuery('');
+  }
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [wdHint, setWdHint] = useState(null); // { description, instance_of }
+  const wdTimerRef = useRef(null);
 
   function handleTitleChange(e) {
     const val = e.target.value;
     onChange(p => ({ ...p, title: val }));
+
+    // Local static suggestions
     if (val.trim().length >= 1) {
       const filtered = ACTIVITY_SUGGESTIONS.filter(s =>
         s.toLowerCase().includes(val.toLowerCase())
@@ -1096,6 +1108,21 @@ function AddCard({ draft, onChange, onAdd, onCancel }) {
     } else {
       setSuggestions([]);
       setShowSuggestions(false);
+      setWdHint(null);
+    }
+
+    // Wikidata smart autofill — debounced 500ms, triggers at ≥3 chars
+    clearTimeout(wdTimerRef.current);
+    if (val.trim().length >= 3) {
+      wdTimerRef.current = setTimeout(async () => {
+        const result = await wikidataFetch(val.trim());
+        if (!result) { setWdHint(null); return; }
+        setWdHint(result);
+        const inferredCat = inferCategoryFromInstanceOf(result.instance_of);
+        if (inferredCat) onChange(p => ({ ...p, category: inferredCat }));
+      }, 500);
+    } else {
+      setWdHint(null);
     }
   }
 
@@ -1174,21 +1201,87 @@ function AddCard({ draft, onChange, onAdd, onCancel }) {
           </div>
         )}
       </div>
-      <div className="grid grid-cols-2 gap-1.5">
+      {wdHint?.description && (
+        <div
+          className="rounded px-2 py-1.5 text-[10px] font-mono leading-relaxed"
+          style={{ background: '#0c0e10', border: '1px solid #1e2328', color: '#6b7280' }}
+        >
+          <span style={{ color: '#E67E22' }}>✦ </span>
+          {wdHint.description}
+          {wdHint.instance_of && (
+            <span className="ml-2 text-[8px] tracking-widest uppercase" style={{ color: '#374151' }}>
+              [{wdHint.instance_of}]
+            </span>
+          )}
+        </div>
+      )}
+      {/* Location field with layered autocomplete */}
+      <div className="relative">
         <input
-          value={draft.icon}
-          onChange={e => onChange(p => ({ ...p, icon: e.target.value }))}
-          placeholder="Icon 📍"
-          className="bg-[#0E1012] border border-[#2a2f36] rounded px-2 py-1 text-xs text-white font-mono focus:outline-none focus:border-[#E67E22]"
+          value={draft.location || locationQuery}
+          onChange={e => {
+            setLocationQuery(e.target.value);
+            onChange(p => ({ ...p, location: e.target.value, locationCoords: null }));
+          }}
+          onBlur={() => setTimeout(() => setLocationQuery(''), 200)}
+          placeholder="Location…"
+          className="bg-[#0E1012] border border-[#2a2f36] rounded px-2 py-1.5 text-xs text-white font-mono focus:outline-none focus:border-[#E67E22] w-full"
         />
-        <input
-          value={draft.duration}
-          onChange={e => onChange(p => ({ ...p, duration: e.target.value }))}
-          placeholder="Min"
-          type="number"
-          className="bg-[#0E1012] border border-[#2a2f36] rounded px-2 py-1 text-xs text-white font-mono focus:outline-none focus:border-[#E67E22]"
-        />
+        {showLocationDropdown && (
+          <div
+            className="absolute z-20 left-0 right-0 top-full mt-0.5 rounded border overflow-hidden"
+            style={{ background: '#111316', borderColor: '#2a2f36' }}
+          >
+            {localResults.length > 0 && (
+              <>
+                <div className="px-2.5 py-1 text-[8px] font-mono tracking-widest text-slate-600 uppercase border-b border-[#1e2328]">
+                  NEARBY — {matchedCity.name}
+                </div>
+                {localResults.map(poi => (
+                  <button
+                    key={poi.id}
+                    type="button"
+                    onMouseDown={() => pickLocation(poi.name, poi.coords ?? null, poi)}
+                    className="w-full text-left px-2.5 py-1.5 text-[11px] font-mono text-slate-300 hover:text-[#E67E22] hover:bg-[#E67E22]/5 transition-colors flex items-center gap-2"
+                  >
+                    <span className="flex-1">{poi.name}</span>
+                    {poi.duration_min && <span className="text-[9px] text-slate-600">{poi.duration_min}min</span>}
+                  </button>
+                ))}
+              </>
+            )}
+            {remoteResults.length > 0 && (
+              <>
+                <div className="px-2.5 py-1 text-[8px] font-mono tracking-widest text-slate-600 uppercase border-b border-[#1e2328]">
+                  SEARCH
+                </div>
+                {remoteResults.map((r, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onMouseDown={() => pickLocation(r.label, r.coords)}
+                    className="w-full text-left px-2.5 py-1.5 text-[11px] font-mono text-slate-300 hover:text-[#E67E22] hover:bg-[#E67E22]/5 transition-colors"
+                  >
+                    {r.label}
+                  </button>
+                ))}
+              </>
+            )}
+            {remoteLoading && (
+              <div className="px-2.5 py-1.5 text-[10px] font-mono text-slate-600">Searching…</div>
+            )}
+          </div>
+        )}
       </div>
+
+      {/* Duration only (icon input removed) */}
+      <input
+        value={draft.duration}
+        onChange={e => onChange(p => ({ ...p, duration: e.target.value }))}
+        placeholder="Duration (min)"
+        type="number"
+        className="bg-[#0E1012] border border-[#2a2f36] rounded px-2 py-1 text-xs text-white font-mono focus:outline-none focus:border-[#E67E22]"
+      />
       <div className="flex gap-2">
         <button
           onClick={onAdd}

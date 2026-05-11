@@ -1,4 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useDestinationImage } from '../../../hooks/useDestinationImage';
+import ImageAttribution from '../../ui/ImageAttribution';
+import ReportButton from '../../inspire/ReportButton';
 import {
   DndContext,
   closestCenter,
@@ -18,9 +21,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useExpedition } from '../../../context/ExpeditionContext';
 import { searchPlaces } from '../../../utils/foursquareEngine';
 import { useTripStore } from '../../../store/useTripStore';
-import sentinelBus from '../../../utils/sentinelBus.js';
-import { buildInsights } from '../../../utils/architectEngine.js';
-import InsightCard from '../../ui/InsightCard.jsx';
 import InspirePanel from '../../inspire/InspirePanel';
 
 // ── Current user (in real app this comes from auth) ───────────────────────────
@@ -30,9 +30,10 @@ const CURRENT_MEMBER = 'lead';
 
 const LEDGER_DND_KEY = 'application/vp-ledger-item';
 
-function LedgerCard({ item, zone, onVote, hazardStopTypes = [] }) {
+function LedgerCard({ item, zone, onVote }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: item.id });
   const [shaking, setShaking] = useState(false);
+  const { image: scraped } = useDestinationImage(item.thumb ? null : item.name, 'poi', 1);
   const [cooldown, setCooldown] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const cooldownTimer = useRef(null);
@@ -94,34 +95,45 @@ function LedgerCard({ item, zone, onVote, hazardStopTypes = [] }) {
       style={style}
       draggable={zone === 'path'}
       onDragStart={zone === 'path' ? handleNativeDragStart : undefined}
-      className={`relative glass-panel p-3 mb-2 border ${borderColor} transition-colors ${shaking ? 'animate-shake' : ''}`}
+      {...attributes}
+      {...listeners}
+      className={`relative glass-panel p-3 mb-2 border ${borderColor} transition-colors cursor-grab active:cursor-grabbing ${shaking ? 'animate-shake' : ''}`}
     >
       {showTooltip && (
         <div className="absolute -top-7 left-1/2 -translate-x-1/2 text-[10px] bg-red-900 text-red-300 px-2 py-0.5 rounded font-mono whitespace-nowrap z-10">
           Vetoed by Squad
         </div>
       )}
-      <div className="flex items-start gap-2">
-        {/* Drag handle */}
-        <button
-          {...attributes}
-          {...listeners}
-          className="text-slate-600 hover:text-slate-400 mt-0.5 cursor-grab active:cursor-grabbing"
-        >
-          ⠿
-        </button>
-        {item.thumb && (
-          <img src={item.thumb} alt="" className="w-9 h-9 rounded object-cover shrink-0" />
-        )}
+      <div className="flex items-center gap-3">
+        <div className="relative w-16 h-16 rounded-lg shrink-0 overflow-hidden">
+          {(item.thumb || scraped?.url) ? (
+            <img
+              src={item.thumb ?? scraped?.url}
+              alt=""
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full bg-white/5 flex items-center justify-center text-slate-600 text-xl">📍</div>
+          )}
+          {!item.thumb && scraped?.author && (
+            <ImageAttribution attribution={scraped} />
+          )}
+          {!item.thumb && scraped?.url && (
+            <div className="absolute top-0.5 right-0.5" style={{ zIndex: 15 }}>
+              <ReportButton
+                cityId={item.name}
+                cityName={item.name}
+                country=""
+                poiId={item.id}
+                small
+                imageUrl={scraped.url}
+                imageAttribution={scraped}
+              />
+            </div>
+          )}
+        </div>
         <div className="flex-1 min-w-0">
-          <div className="text-white text-sm font-semibold truncate flex items-center flex-wrap gap-1">
-            {item.name}
-            {zone === 'path' && item.type && hazardStopTypes.includes(item.type) && (
-              <span className="ml-2 px-1.5 py-0.5 rounded text-xs font-bold bg-red-500/15 text-red-500 border border-red-500/30">
-                HIGH RISK · +4h delay recommended
-              </span>
-            )}
-          </div>
+          <div className="text-white text-sm font-semibold truncate">{item.name}</div>
           <div className="text-xs text-slate-400 font-mono mt-0.5">{item.type}</div>
           {zone === 'pool' && (
             <div className="text-[10px] text-slate-500 font-mono mt-1">
@@ -131,17 +143,17 @@ function LedgerCard({ item, zone, onVote, hazardStopTypes = [] }) {
         </div>
         {/* Voting buttons (pool only) */}
         {zone === 'pool' && (
-          <div className="flex gap-1 shrink-0">
+          <div className="flex gap-1 shrink-0" onPointerDown={e => e.stopPropagation()}>
             <button
               onClick={handleUpvote}
-              className="px-2 py-1 text-[10px] font-mono rounded border border-green-700/50 text-green-400 hover:bg-green-900/30 transition-colors"
+              className="px-2 py-1 text-[10px] font-mono rounded border border-green-700/50 text-green-400 hover:bg-green-900/30 transition-colors cursor-pointer"
             >
               ↑
             </button>
             <button
               onClick={handleDownvote}
               disabled={cooldown}
-              className={`px-2 py-1 text-[10px] font-mono rounded border transition-colors ${
+              className={`px-2 py-1 text-[10px] font-mono rounded border transition-colors cursor-pointer ${
                 cooldown
                   ? 'border-red-800/30 text-red-800 cursor-not-allowed'
                   : 'border-red-700/50 text-red-400 hover:bg-red-900/30'
@@ -164,7 +176,7 @@ function LedgerCard({ item, zone, onVote, hazardStopTypes = [] }) {
 
 // ── Droppable zone ─────────────────────────────────────────────────────────────
 
-function DropZone({ id, title, items, zone, onVote, isOver, hazardStopTypes = [] }) {
+function DropZone({ id, title, items, zone, onVote, isOver }) {
   return (
     <div className={`flex-1 min-h-[300px] rounded-xl p-4 border-2 transition-colors ${
       isOver ? 'border-[#F2C94C]/60 bg-[#F2C94C]/5' : 'border-white/10'
@@ -180,7 +192,7 @@ function DropZone({ id, title, items, zone, onVote, isOver, hazardStopTypes = []
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.2 }}
             >
-              <LedgerCard item={item} zone={zone} onVote={onVote} hazardStopTypes={hazardStopTypes} />
+              <LedgerCard item={item} zone={zone} onVote={onVote} />
             </motion.div>
           ))}
         </AnimatePresence>
@@ -363,9 +375,8 @@ function AddToPoolForm({ onAdd, destination, onOpenInspire }) {
 
 export default function LedgerWorkbench() {
   const { pool, activePath, vote, nominate, removeRejected, moveToPath } = useExpedition();
-  const { trip, addInsight, architect } = useTripStore();
+  const { trip } = useTripStore();
   const [activeId, setActiveId] = useState(null);
-  const [hazardStopTypes, setHazardStopTypes] = useState([]);
   const [overId, setOverId] = useState(null);
   const [inspireOpen, setInspireOpen] = useState(false);
 
@@ -380,21 +391,6 @@ export default function LedgerWorkbench() {
   }
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }));
-
-  useEffect(() => {
-    const unsub = sentinelBus.on('HAZARD_UPDATED', ({ hazards }) => {
-      const types = hazards.flatMap(h => h.affectedStopTypes ?? []);
-      setHazardStopTypes(types);
-      buildInsights('HAZARD_UPDATED', { hazards }, {}).forEach(i => addInsight(i));
-    });
-    return unsub;
-  }, [addInsight]);
-
-  function getRiskLevel(stop, stopTypes) {
-    if (!stop.type) return 'LOW';
-    if (stopTypes.includes(stop.type)) return 'HIGH';
-    return 'LOW';
-  }
 
   // Auto-remove rejected items after animation
   useEffect(() => {
@@ -433,12 +429,6 @@ export default function LedgerWorkbench() {
         <span className="text-[#F2C94C] font-mono">The Active Path</span>. Drag confirmed items across to lock them in.
       </p>
 
-      {architect.insights
-        .filter(i => i.targetTab === 'ITINERARY')
-        .slice(0, 3)
-        .map(insight => <InsightCard key={insight.id} insight={insight} />)
-      }
-
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
@@ -468,7 +458,6 @@ export default function LedgerWorkbench() {
             zone="path"
             onVote={vote}
             isOver={overId === 'active-path-zone'}
-            hazardStopTypes={hazardStopTypes}
           />
         </div>
 
