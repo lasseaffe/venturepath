@@ -1002,7 +1002,7 @@ function BlockCardImage({ title, tripName, visible }) {
   return (
     <div style={{ height: visible ? 120 : 0, overflow: 'hidden', transition: 'height 0.2s ease', position: 'relative', flexShrink: 0 }}>
       {loading && visible && (
-        <div className="w-full animate-pulse" style={{ height: 120, background: '#1a2030' }} />
+        <div className="animate-pulse" style={{ position: 'absolute', inset: 0, background: '#1a2030' }} />
       )}
       {image?.url && (
         <>
