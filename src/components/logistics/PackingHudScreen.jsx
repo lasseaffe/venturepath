@@ -197,6 +197,7 @@ export default function PackingHudScreen({
                 overweightBag={isOverweight(activeBagId)}
                 activeBagType={activeBagType}
                 activeBagLabel={activeBag.label || activeBagType.label}
+                zoneMap={zoneMap}
               />
             </div>
           </div>

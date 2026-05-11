@@ -952,8 +952,9 @@ function GenericBag({ bagType, zoneMap = {}, packed = {}, activeSkin = 'tactical
   function enter(z) { setInternalHover(z); onZoneHover?.(z); }
   function leave()  { setInternalHover(null); onZoneHover?.(null); }
 
-  const skin = SKINS[activeSkin] ?? SKINS.tactical;
-  const accentColor = (ILLUS_PALETTE[activeSkin] ?? ILLUS_PALETTE.tactical).accent;
+  const skin    = SKINS[activeSkin] ?? SKINS.tactical;
+  const palette = ILLUS_PALETTE[activeSkin] ?? ILLUS_PALETTE.tactical;
+  const accentColor = palette.accent;
   const illusProps = {
     bagFill:    skin.bagFill,
     zoneFill:   skin.zoneFill,
@@ -1006,6 +1007,7 @@ function GenericBag({ bagType, zoneMap = {}, packed = {}, activeSkin = 'tactical
               hoveredZone={hoveredZone}
               highlightedZone={highlightedZone}
               accentColor={accentColor}
+              palette={palette}
             />
           )}
         </g>
