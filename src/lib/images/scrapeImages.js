@@ -1,5 +1,5 @@
 // src/lib/images/scrapeImages.js
-import { chromium }        from '@playwright/browser-chromium';
+import { chromium }        from 'playwright-core';
 import { scrapeFlickr }    from './flickrScraper.js';
 import { scrapeWikimedia } from './wikimediaScraper.js';
 

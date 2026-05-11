@@ -4,7 +4,7 @@
  * Scrape up to `count` CC-licensed images from Wikimedia Commons.
  * Uses Playwright locator API — no legacy page.evaluate usage.
  *
- * @param {import('@playwright/browser-chromium').Browser} browser
+ * @param {import('playwright-core').Browser} browser
  * @param {string} query
  * @param {number} count
  * @returns {Promise<object[]>}  DestinationImage[]

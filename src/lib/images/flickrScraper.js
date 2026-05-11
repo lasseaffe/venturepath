@@ -65,7 +65,7 @@ async function scrapePhotoAttribution(page, photoPageUrl) {
  * Scrape up to `count` CC-licensed photos from Flickr for `query`.
  * Uses Playwright locator API throughout — no legacy page.evaluate usage.
  *
- * @param {import('@playwright/browser-chromium').Browser} browser
+ * @param {import('playwright-core').Browser} browser
  * @param {string} query
  * @param {number} count
  * @returns {Promise<object[]>}  DestinationImage[]

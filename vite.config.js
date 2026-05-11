@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 
 function apiRoutes() {
@@ -80,20 +80,90 @@ function apiRoutes() {
           }
         });
       });
+
+      server.middlewares.use('/api/destination-images', async (req, res, next) => {
+        if (req.method !== 'GET') return next();
+        try {
+          const url = new URL(req.url, 'http://localhost');
+          const rawQuery = url.searchParams.get('q')?.trim();
+          const rawCount = parseInt(url.searchParams.get('count') ?? '5', 10);
+          const count    = Math.min(isNaN(rawCount) ? 5 : rawCount, 8);
+
+          if (!rawQuery) {
+            res.statusCode = 400;
+            res.setHeader('Content-Type', 'application/json');
+            return res.end(JSON.stringify({ error: 'q param required' }));
+          }
+
+          const { scrapeImages, normalizeQueryKey } = await import('./src/lib/images/scrapeImages.js');
+          const { createClient } = await import('@supabase/supabase-js');
+
+          const supabaseUrl = process.env.VITE_SUPABASE_URL;
+          const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
+          const queryKey    = normalizeQueryKey(rawQuery);
+          const CACHE_TTL   = 30 * 24 * 60 * 60 * 1000;
+
+          // Cache check
+          if (supabaseUrl && supabaseKey) {
+            try {
+              const sb = createClient(supabaseUrl, supabaseKey);
+              const { data: cached } = await sb
+                .from('destination_images')
+                .select('images, scraped_at')
+                .eq('query_key', queryKey)
+                .single();
+              if (cached?.images?.length > 0) {
+                const age = Date.now() - new Date(cached.scraped_at).getTime();
+                if (age < CACHE_TTL) {
+                  res.setHeader('Content-Type', 'application/json');
+                  return res.end(JSON.stringify({ images: cached.images, cached: true }));
+                }
+              }
+            } catch { /* fall through to scrape */ }
+          }
+
+          // Scrape
+          const images = await scrapeImages(rawQuery, count);
+
+          // Cache result (fire-and-forget)
+          if (images.length > 0 && supabaseUrl && supabaseKey) {
+            const sb = createClient(supabaseUrl, supabaseKey);
+            sb.from('destination_images').upsert({
+              query_key: queryKey, images, scraped_at: new Date().toISOString(),
+            }, { onConflict: 'query_key' }).catch(() => {});
+          }
+
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ images, cached: false }));
+        } catch (err) {
+          console.error('[destination-images]', err);
+          res.statusCode = 500;
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ images: [], error: err.message }));
+        }
+      });
     },
   };
 }
 
 // https://vite.dev/config/
-export default defineConfig({
-  plugins: [react(), apiRoutes()],
-  server: {
-    proxy: {
-      '/api/trends': {
-        target: 'https://trends.google.com',
-        changeOrigin: true,
-        rewrite: () => '/trends/trendingSearches/daily/rss?geo=US&category=travel',
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '');
+  process.env.VITE_SUPABASE_URL      = env.VITE_SUPABASE_URL;
+  process.env.VITE_SUPABASE_ANON_KEY = env.VITE_SUPABASE_ANON_KEY;
+
+  return {
+    plugins: [react(), apiRoutes()],
+    server: {
+      port: 3001,
+      strictPort: true,
+      proxy: {
+        '/api/trends': {
+          target: 'https://trends.google.com',
+          changeOrigin: true,
+          rewrite: () => '/trends/trendingSearches/daily/rss?geo=US&category=travel',
+        },
       },
     },
-  },
+  };
 })
