@@ -1,18 +1,21 @@
 // src/hooks/useDestinationImage.js
 import { useState, useEffect } from 'react';
 
-/**
- * Fetch a CC-licensed image for a destination or POI.
- *
- * @param {string|null} query  e.g. "Lille France". Pass null/empty to skip.
- * @param {'city'|'poi'}  type
- * @param {number}        index  Stable per-callsite integer (0–4).
- *                               Different values on different surfaces = variety without randomness.
- *                               ExpeditionSelectScreen=0, LedgerCard=1, KanbanDay=2, KanbanBlock=3
- * @returns {{ image: object|null, loading: boolean, error: boolean }}
- */
+function sessionKey(type, query) {
+  return `destimg:${type}:${query.trim().toLowerCase()}`;
+}
+
 export function useDestinationImage(query, type = 'city', index = 0) {
-  const [images,  setImages]  = useState(null);
+  const [images, setImages] = useState(() => {
+    const q = query?.trim();
+    if (!q) return null;
+    try {
+      const cached = sessionStorage.getItem(sessionKey(type, q));
+      return cached ? JSON.parse(cached) : null;
+    } catch {
+      return null;
+    }
+  });
   const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState(false);
 
@@ -20,17 +23,26 @@ export function useDestinationImage(query, type = 'city', index = 0) {
     const q = query?.trim();
     if (!q) return;
 
+    // Already have data (from sessionStorage init or prior fetch)
+    if (images !== null) return;
+
     let cancelled = false;
-    setImages(null);
     setLoading(true);
     setError(false);
 
     fetch(`/api/destination-images?q=${encodeURIComponent(q)}&type=${type}&count=5`)
       .then(r => r.json())
       .then(data => {
-        if (!cancelled) {
-          setImages(data.images ?? []);
-          setLoading(false);
+        if (cancelled) return;
+        const imgs = data.images ?? [];
+        setImages(imgs);
+        setLoading(false);
+        if (imgs.length > 0) {
+          try {
+            sessionStorage.setItem(sessionKey(type, q), JSON.stringify(imgs));
+          } catch {
+            // sessionStorage full — not critical
+          }
         }
       })
       .catch(() => {
@@ -41,6 +53,7 @@ export function useDestinationImage(query, type = 'city', index = 0) {
       });
 
     return () => { cancelled = true; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, type]);
 
   const image = images?.length > 0 ? images[index % images.length] : null;
