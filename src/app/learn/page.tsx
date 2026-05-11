@@ -159,6 +159,8 @@ export default function LearnPage() {
           <div
             className="flex items-center gap-2 px-3 py-2 rounded-xl"
             style={{ background: "#FDF0E8" }}
+            data-tour="streak"
+            data-beacon="streak"
           >
             <Flame size={16} style={{ color: "#D4AF37" }} />
             <span className="text-sm font-bold" style={{ color: "#D4AF37" }}>
@@ -223,7 +225,7 @@ export default function LearnPage() {
           </p>
 
           {/* Vertical path */}
-          <div className="relative">
+          <div className="relative" data-tour="roadmap">
             {/* Vertical connector line */}
             <div
               className="absolute left-5 top-8 bottom-8 w-0.5"

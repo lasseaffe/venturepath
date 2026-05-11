@@ -124,6 +124,8 @@ export function Chatbot() {
           display: open ? "none" : "flex",
         }}
         aria-label="Open HolyFlex companion"
+        data-tour="ai-companion"
+        data-beacon="ai-insights"
       >
         <MessageCircle className="w-6 h-6 text-white" />
         {/* Pulse ring */}

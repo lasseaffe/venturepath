@@ -143,7 +143,7 @@ export default function MissionPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-10">
+    <div className="max-w-5xl mx-auto px-4 py-10" data-beacon="mission-prep">
       {/* Hero */}
       <div
         className="rounded-3xl overflow-hidden mb-10 relative"

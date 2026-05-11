@@ -141,6 +141,7 @@ export default function TalkGeneratorPage() {
         text += decoder.decode(value, { stream: true });
         setOutput(text);
       }
+      window.dispatchEvent(new CustomEvent('onboarding:action', { detail: { id: 'topic-selected' } }));
     } catch (err) {
       if ((err as Error).name !== "AbortError") {
         setOutput("Something went wrong. Please check your connection and try again.");
@@ -255,7 +256,7 @@ export default function TalkGeneratorPage() {
         }
       `}</style>
 
-      <div className="max-w-5xl mx-auto px-4 py-10">
+      <div className="max-w-5xl mx-auto px-4 py-10" data-tour="talk-gen">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2" style={{ color: "#2D1B69" }}>
             Talk &amp; Lesson Generator

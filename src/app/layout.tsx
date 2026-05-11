@@ -5,6 +5,7 @@ import { Nav } from "@/components/nav";
 import { Chatbot } from "@/components/chatbot";
 import { AuthGateProvider } from "@/components/auth-gate";
 import { SabbathProvider } from "@/components/sabbath-toggle";
+import { OnboardingProvider } from "@/components/onboarding/OnboardingProvider";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -48,6 +49,7 @@ export default function RootLayout({
             <Nav />
             <main className="flex-1">{children}</main>
             <Chatbot />
+            <OnboardingProvider />
             <footer className="border-t py-6 text-center text-xs" style={{ background: "#F0EBF8", borderColor: "#DDD5F0", color: "#8B7EC0" }}>
               <p>HolyFlex is an independent tool and is not affiliated with The Church of Jesus Christ of Latter-day Saints.</p>
               <p className="mt-1">All AI-generated content is a starting point — please seek personal revelation and the guidance of the Holy Ghost.</p>
