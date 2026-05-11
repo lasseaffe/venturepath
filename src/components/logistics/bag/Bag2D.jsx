@@ -6,6 +6,7 @@ import BagAnim_duffel   from './BagAnim_duffel';
 import BagAnim_suitcase from './BagAnim_suitcase';
 import BagAnim_carryon  from './BagAnim_carryon';
 import BagAnim_daypack  from './BagAnim_daypack';
+import BagAnim_backpack from './BagAnim_backpack';
 
 const ZONE_HIT_AREAS = {
   top_lid:      { x: 25,  y: 52,  w: 190, h: 62  },
@@ -708,6 +709,14 @@ function AnimatedBackpack({ zoneMap, packed, activeSkin = 'tactical', onZoneHove
         <ZoneLabel zone="hip_belt" z={ZONE_HIT_AREAS.hip_belt} isHov={isHov('hip_belt')} p={p}/>
         <ZoneBadge zone="hip_belt" zoneMap={zoneMap} packed={packed} isHov={isHov('hip_belt')} p={p}/>
       </g>
+
+      {/* ══ ANIMATION LAYER ══ */}
+      <BagAnim_backpack
+        hoveredZone={hoveredZone}
+        highlightedZone={null}
+        accentColor={p.accent}
+        activeSkin={activeSkin}
+      />
 
       {/* ══ HIGHLIGHT SHEEN ══ */}
       <ellipse cx="185" cy="72" rx="28" ry="16"
