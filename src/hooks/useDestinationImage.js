@@ -6,26 +6,30 @@ function sessionKey(type, query) {
 }
 
 export function useDestinationImage(query, type = 'city', index = 0) {
-  const [images, setImages] = useState(() => {
-    const q = query?.trim();
-    if (!q) return null;
-    try {
-      const cached = sessionStorage.getItem(sessionKey(type, q));
-      return cached ? JSON.parse(cached) : null;
-    } catch {
-      return null;
-    }
-  });
+  const [images,  setImages]  = useState(null);
   const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState(false);
 
   useEffect(() => {
     const q = query?.trim();
-    if (!q) return;
+    if (!q) {
+      setImages(null);
+      return;
+    }
 
-    // Already have data (from sessionStorage init or prior fetch)
-    if (images !== null) return;
+    // Check sessionStorage cache first
+    try {
+      const cached = sessionStorage.getItem(sessionKey(type, q));
+      if (cached) {
+        setImages(JSON.parse(cached));
+        return;
+      }
+    } catch {
+      // sessionStorage unavailable — fall through to fetch
+    }
 
+    // No cache — fetch
+    setImages(null);
     let cancelled = false;
     setLoading(true);
     setError(false);
@@ -53,7 +57,6 @@ export function useDestinationImage(query, type = 'city', index = 0) {
       });
 
     return () => { cancelled = true; };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, type]);
 
   const image = images?.length > 0 ? images[index % images.length] : null;

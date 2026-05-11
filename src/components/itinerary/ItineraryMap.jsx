@@ -55,7 +55,7 @@ function MapController({ activeStopId, coords, markerRefs }) {
     } else {
       const bounds = points.reduce(
         (b, p) => b.extend(p),
-        window.L.latLngBounds(points[0], points[0])
+        L.latLngBounds(points[0], points[0])
       );
       map.fitBounds(bounds, { padding: [40, 40], maxZoom: 13 });
     }
