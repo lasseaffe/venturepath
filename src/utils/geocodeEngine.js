@@ -58,9 +58,9 @@ async function searchByFilter(text, filterFn, transportType, limit = 5) {
       { headers: HEADERS }
     );
     const data = await res.json();
+    const seen = new Set();
     return data
       .filter(filterFn)
-      .slice(0, limit)
       .map(r => ({
         id: r.place_id,
         name: r.display_name.split(',')[0],
@@ -69,20 +69,38 @@ async function searchByFilter(text, filterFn, transportType, limit = 5) {
         type: r.type,
         class: r.class,
         transportType,
-      }));
+      }))
+      .filter(r => {
+        const key = `${r.coords.lat.toFixed(3)},${r.coords.lng.toFixed(3)}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      })
+      .slice(0, limit);
   } catch {
     return [];
   }
 }
 
-// Returns only airport results (OSM class: aeroway)
-export async function searchAirports(text, limit = 5) {
-  return searchByFilter(text, r => r.class === 'aeroway', 'flight', limit);
+const isAeroway = r => r.class === 'aeroway';
+const isStation = r => r.class === 'railway' && r.type === 'station';
+
+async function searchWithFallback(text, filterFn, transportType, suffix, limit) {
+  const strict = await searchByFilter(text, filterFn, transportType, limit);
+  if (strict.length >= 2) return strict;
+  const fallback = await searchByFilter(`${text} ${suffix}`, filterFn, transportType, limit);
+  const seen = new Set(strict.map(r => r.id));
+  return [...strict, ...fallback.filter(r => !seen.has(r.id))].slice(0, limit);
 }
 
-// Returns only train station results (OSM class: railway, type: station)
+// Returns airport results — falls back to "[text] airport" if city-name search yields < 2 hits
+export async function searchAirports(text, limit = 5) {
+  return searchWithFallback(text, isAeroway, 'flight', 'airport', limit);
+}
+
+// Returns train station results — falls back to "[text] station" if city-name search yields < 2 hits
 export async function searchStations(text, limit = 5) {
-  return searchByFilter(text, r => r.class === 'railway' && r.type === 'station', 'train', limit);
+  return searchWithFallback(text, isStation, 'train', 'station', limit);
 }
 
 // Returns airports + stations interleaved (for unset-mode legs)
@@ -99,4 +117,15 @@ export async function searchTransportHubs(text, limit = 5) {
     if (stations[i]) result.push(stations[i]);
   }
   return result.slice(0, limit);
+}
+
+const isBusStop  = r => r.class === 'highway' && r.type === 'bus_stop';
+const isTramStop = r => r.class === 'railway' && r.type === 'tram_stop';
+
+export async function searchBusStops(text, limit = 5) {
+  return searchWithFallback(text, isBusStop, 'bus', 'bus stop', limit);
+}
+
+export async function searchTramStops(text, limit = 5) {
+  return searchWithFallback(text, isTramStop, 'tram', 'tram stop', limit);
 }
