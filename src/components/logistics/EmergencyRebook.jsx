@@ -51,7 +51,17 @@ const ALTERNATIVES = [
 
 const COUNTDOWN_SECS = 60;
 
-export default function EmergencyRebook({ onClose, cancelledFlight = 'LH 504 JFK→SCL' }) {
+export default function EmergencyRebook({ onClose, cancelledFlight = 'LH 504 JFK→SCL', mode = 'flight' }) {
+  const isTrain = mode === 'train';
+  const alertBg      = isTrain ? 'bg-blue-900/40'    : 'bg-red-900/40';
+  const alertBorder  = isTrain ? 'border-blue-500/40' : 'border-red-500/40';
+  const alertText    = isTrain ? 'text-blue-300'      : 'text-red-300';
+  const alertSubText = isTrain ? 'text-blue-400/70'   : 'text-red-400/70';
+  const alertIcon    = isTrain ? 'text-blue-400'      : 'text-red-400';
+  const barColor     = isTrain ? 'bg-blue-500'        : 'bg-red-500';
+  const headingCopy  = isTrain ? 'SERVICE DISRUPTED'  : 'FLIGHT CANCELLED';
+  const subCopy      = isTrain ? 'train disruption detected' : 'disruption detected';
+
   const [votes, setVotes] = useState(
     Object.fromEntries(SQUAD.map(m => [m.id, null]))
   );
@@ -104,19 +114,19 @@ export default function EmergencyRebook({ onClose, cancelledFlight = 'LH 504 JFK
       className="fixed inset-0 z-50 bg-[#080a0c]/95 backdrop-blur-sm flex flex-col"
     >
       {/* Alert header */}
-      <div className="bg-red-900/40 border-b border-red-500/40 px-6 py-4 flex items-center justify-between">
+      <div className={`${alertBg} border-b ${alertBorder} px-6 py-4 flex items-center justify-between`}>
         <div className="flex items-center gap-3">
-          <span className="text-red-400 text-xl animate-pulse">⚠</span>
+          <span className={`${alertIcon} text-xl animate-pulse`}>⚠</span>
           <div>
-            <div className="text-red-300 font-mono font-bold tracking-widest text-sm">FLIGHT CANCELLED</div>
-            <div className="text-red-400/70 font-mono text-[10px] mt-0.5">{cancelledFlight} — disruption detected</div>
+            <div className={`${alertText} font-mono font-bold tracking-widest text-sm`}>{headingCopy}</div>
+            <div className={`${alertSubText} font-mono text-[10px] mt-0.5`}>{cancelledFlight} — {subCopy}</div>
           </div>
         </div>
         <div className="flex items-center gap-4">
           {!selected && (
             <div className="text-center">
               <div className="text-[9px] font-mono text-slate-500 tracking-widest">AUTO-SELECT IN</div>
-              <div className={`font-mono text-2xl font-bold ${timeLeft <= 10 ? 'text-red-400 animate-pulse' : 'text-[#F2C94C]'}`}>
+              <div className={`font-mono text-2xl font-bold ${timeLeft <= 10 ? `${alertText} animate-pulse` : 'text-[#F2C94C]'}`}>
                 {timeLeft}s
               </div>
             </div>
@@ -134,7 +144,7 @@ export default function EmergencyRebook({ onClose, cancelledFlight = 'LH 504 JFK
       {!selected && (
         <div className="h-0.5 bg-[#1a1f24]">
           <motion.div
-            className="h-full bg-red-500"
+            className={`h-full ${barColor}`}
             animate={{ width: `${100 - pct}%` }}
             transition={{ duration: 0.5 }}
           />
