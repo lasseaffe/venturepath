@@ -1,6 +1,11 @@
 // src/components/logistics/bag/Bag2D.jsx
 import { useState } from 'react';
 import { SKINS } from './bagSkins';
+import BagAnim_handbag  from './BagAnim_handbag';
+import BagAnim_duffel   from './BagAnim_duffel';
+import BagAnim_suitcase from './BagAnim_suitcase';
+import BagAnim_carryon  from './BagAnim_carryon';
+import BagAnim_daypack  from './BagAnim_daypack';
 
 const ZONE_HIT_AREAS = {
   top_lid:      { x: 25,  y: 52,  w: 190, h: 62  },
@@ -18,7 +23,48 @@ const BADGE_POS = {
   side_pocket:  { x: 218, y: 96  },
 };
 
-export default function Bag2D({ zoneMap, packed, activeSkin = 'tactical', onZoneHover }) {
+// ─────────────────────────────────────────────────────────────────────────────
+// Top-level dispatch: rich animated backpack OR generic non-backpack illustration.
+// Backpack uses the per-zone hover/opened animation system below.
+// Other types use a simpler animated overlay (Stage B work).
+// ─────────────────────────────────────────────────────────────────────────────
+export default function Bag2D({
+  bagType,
+  zoneMap         = {},
+  packed          = {},
+  activeSkin      = 'tactical',
+  onZoneHover,
+  onZoneClick,
+  highlightedZone,
+  hoveredZone,
+}) {
+  const isBackpack = !bagType || bagType.id === 'backpack';
+  if (isBackpack) {
+    return (
+      <AnimatedBackpack
+        zoneMap={zoneMap}
+        packed={packed}
+        activeSkin={activeSkin}
+        onZoneHover={onZoneHover}
+        onZoneClick={onZoneClick}
+      />
+    );
+  }
+  return (
+    <GenericBag
+      bagType={bagType}
+      zoneMap={zoneMap}
+      packed={packed}
+      activeSkin={activeSkin}
+      onZoneHover={onZoneHover}
+      onZoneClick={onZoneClick}
+      highlightedZone={highlightedZone}
+      hoveredZone={hoveredZone}
+    />
+  );
+}
+
+function AnimatedBackpack({ zoneMap, packed, activeSkin = 'tactical', onZoneHover, onZoneClick }) {
   const [hoveredZone, setHoveredZone] = useState(null);
 
   function enter(z) { setHoveredZone(z); onZoneHover?.(z); }
@@ -360,6 +406,7 @@ export default function Bag2D({ zoneMap, packed, activeSkin = 'tactical', onZone
           filter={isHov('top_lid') ? 'url(#zone-glow)' : undefined}
           onMouseEnter={() => enter('top_lid')}
           onMouseLeave={leave}
+          onClick={() => onZoneClick?.('top_lid')}
           style={{ cursor: 'pointer', transition: 'stroke-opacity 0.2s, stroke-width 0.2s' }}
         />
         {/* Zone label */}
@@ -425,6 +472,7 @@ export default function Bag2D({ zoneMap, packed, activeSkin = 'tactical', onZone
           filter={isHov('main') ? 'url(#zone-glow)' : undefined}
           onMouseEnter={() => enter('main')}
           onMouseLeave={leave}
+          onClick={() => onZoneClick?.('main')}
           style={{ cursor: 'pointer', transition: 'all 0.2s' }}
         />
         <ZoneLabel zone="main" z={ZONE_HIT_AREAS.main} isHov={isHov('main')} p={p}/>
@@ -517,6 +565,7 @@ export default function Bag2D({ zoneMap, packed, activeSkin = 'tactical', onZone
           filter={isHov('front_pocket') ? 'url(#zone-glow)' : undefined}
           onMouseEnter={() => enter('front_pocket')}
           onMouseLeave={leave}
+          onClick={() => onZoneClick?.('front_pocket')}
           style={{ cursor: 'pointer', transition: 'all 0.2s' }}
         />
         <ZoneLabel zone="front_pocket" z={ZONE_HIT_AREAS.front_pocket} isHov={isHov('front_pocket')} p={p}/>
@@ -596,6 +645,7 @@ export default function Bag2D({ zoneMap, packed, activeSkin = 'tactical', onZone
           filter={isHov('side_pocket') ? 'url(#zone-glow)' : undefined}
           onMouseEnter={() => enter('side_pocket')}
           onMouseLeave={leave}
+          onClick={() => onZoneClick?.('side_pocket')}
           style={{ cursor: 'pointer', transition: 'all 0.2s' }}
         />
         <ZoneLabel zone="side_pocket" z={ZONE_HIT_AREAS.side_pocket} isHov={isHov('side_pocket')} p={p}/>
@@ -652,6 +702,7 @@ export default function Bag2D({ zoneMap, packed, activeSkin = 'tactical', onZone
           filter={isHov('hip_belt') ? 'url(#zone-glow)' : undefined}
           onMouseEnter={() => enter('hip_belt')}
           onMouseLeave={leave}
+          onClick={() => onZoneClick?.('hip_belt')}
           style={{ cursor: 'pointer', transition: 'all 0.2s' }}
         />
         <ZoneLabel zone="hip_belt" z={ZONE_HIT_AREAS.hip_belt} isHov={isHov('hip_belt')} p={p}/>
@@ -799,3 +850,216 @@ const ILLUS_PALETTE = {
     beltIntSh:    '#120c04',
   },
 };
+
+// ═════════════════════════════════════════════════════════════════════════════
+// GENERIC BAG (non-backpack) — handbag, duffel, suitcase, carryon, daypack
+// Stage A: static illustration + generic zone overlay hit-test with hover glow
+// ═════════════════════════════════════════════════════════════════════════════
+// Per-zone animation layers for non-backpack bag types
+// ═════════════════════════════════════════════════════════════════════════════
+
+const BAG_ANIM_LAYER = {
+  handbag:  BagAnim_handbag,
+  duffel:   BagAnim_duffel,
+  suitcase: BagAnim_suitcase,
+  carryon:  BagAnim_carryon,
+  daypack:  BagAnim_daypack,
+};
+
+const NON_BACKPACK_ILLUSTRATIONS = {
+  handbag: (p) => (
+    <g>
+      <path d="M 58 92 L 32 262 L 208 262 L 182 92 Z"
+        fill={p.bagFill} stroke={p.zoneStroke} strokeWidth="1.5" opacity="0.9" />
+      <path d="M 74 92 Q 74 32 107 32 Q 137 32 137 92"
+        fill="none" stroke={p.labelColor} strokeWidth="9" strokeLinecap="round" />
+      <path d="M 103 92 Q 103 32 133 32 Q 166 32 166 92"
+        fill="none" stroke={p.labelColor} strokeWidth="9" strokeLinecap="round" />
+      <rect x="104" y="84" width="32" height="16" rx="4" fill={p.zoneStroke} />
+      <rect x="116" y="88" width="8" height="8" rx="2" fill={p.bagFill} />
+      <line x1="38" y1="240" x2="202" y2="240" stroke={p.zoneStroke} strokeWidth="1" strokeDasharray="5,4" opacity="0.5" />
+    </g>
+  ),
+  duffel: (p) => (
+    <g>
+      <ellipse cx="120" cy="163" rx="106" ry="64" fill={p.bagFill} stroke={p.zoneStroke} strokeWidth="1.5" />
+      <ellipse cx="17" cy="163" rx="16" ry="48" fill={p.zoneFill} stroke={p.zoneStroke} strokeWidth="1" />
+      <ellipse cx="223" cy="163" rx="16" ry="48" fill={p.zoneFill} stroke={p.zoneStroke} strokeWidth="1" />
+      <rect x="54" y="57" width="132" height="54" rx="6" fill={p.zoneFill} stroke={p.zoneStroke} strokeWidth="1.5" />
+      <line x1="62" y1="84" x2="178" y2="84" stroke={p.zoneStroke} strokeWidth="1.5" strokeDasharray="5,4" />
+      <path d="M 84 99 Q 120 72 156 99" fill="none" stroke={p.labelColor} strokeWidth="9" strokeLinecap="round" />
+      <path d="M 40 140 Q 10 90 60 70" fill="none" stroke={p.labelColor} strokeWidth="4" opacity="0.5" strokeLinecap="round" />
+      <path d="M 200 140 Q 230 90 180 70" fill="none" stroke={p.labelColor} strokeWidth="4" opacity="0.5" strokeLinecap="round" />
+    </g>
+  ),
+  suitcase: (p) => (
+    <g>
+      <rect x="34" y="38" width="172" height="228" rx="12" fill={p.bagFill} stroke={p.zoneStroke} strokeWidth="1.5" />
+      <line x1="34" y1="148" x2="206" y2="148" stroke={p.zoneStroke} strokeWidth="2" />
+      {[60, 90, 120, 150, 180].map(cx => (
+        <line key={cx} x1={cx} y1="60" x2={cx} y2="145" stroke={p.zoneStroke} strokeWidth="0.8" opacity="0.3" />
+      ))}
+      <rect x="83" y="2" width="74" height="36" rx="6" fill={p.zoneFill} stroke={p.zoneStroke} strokeWidth="1.5" />
+      <rect x="96"  y="2" width="9" height="36" rx="2" fill={p.labelColor} opacity="0.7" />
+      <rect x="135" y="2" width="9" height="36" rx="2" fill={p.labelColor} opacity="0.7" />
+      <rect x="96" y="6" width="48" height="12" rx="4" fill={p.zoneStroke} />
+      <circle cx="54"  cy="272" r="13" fill={p.zoneFill} stroke={p.zoneStroke} strokeWidth="2" />
+      <circle cx="186" cy="272" r="13" fill={p.zoneFill} stroke={p.zoneStroke} strokeWidth="2" />
+      <circle cx="54"  cy="272" r="5"  fill={p.zoneStroke} />
+      <circle cx="186" cy="272" r="5"  fill={p.zoneStroke} />
+      {[[44,50],[196,50],[44,256],[196,256]].map(([cx,cy]) => (
+        <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="8" fill={p.zoneStroke} opacity="0.7" />
+      ))}
+    </g>
+  ),
+  carryon: (p) => (
+    <g>
+      <rect x="46" y="48" width="148" height="210" rx="10" fill={p.bagFill} stroke={p.zoneStroke} strokeWidth="1.5" />
+      <rect x="94" y="48" width="52" height="210" rx="6" fill={p.zoneFill} stroke={p.zoneStroke} strokeWidth="1.5" />
+      <rect x="46" y="208" width="148" height="50" rx="6" fill={p.zoneFill} stroke={p.zoneStroke} strokeWidth="1.5" />
+      <line x1="54" y1="224" x2="186" y2="224" stroke={p.zoneStroke} strokeWidth="1" strokeDasharray="4,3" />
+      <rect x="87" y="12" width="66" height="36" rx="5" fill={p.zoneFill} stroke={p.zoneStroke} strokeWidth="1.5" />
+      <rect x="99"  y="12" width="8" height="36" rx="2" fill={p.labelColor} opacity="0.7" />
+      <rect x="133" y="12" width="8" height="36" rx="2" fill={p.labelColor} opacity="0.7" />
+      <rect x="99" y="14" width="42" height="12" rx="4" fill={p.zoneStroke} />
+      <circle cx="66"  cy="264" r="11" fill={p.zoneFill} stroke={p.zoneStroke} strokeWidth="2" />
+      <circle cx="174" cy="264" r="11" fill={p.zoneFill} stroke={p.zoneStroke} strokeWidth="2" />
+      <circle cx="66"  cy="264" r="4"  fill={p.zoneStroke} />
+      <circle cx="174" cy="264" r="4"  fill={p.zoneStroke} />
+    </g>
+  ),
+  daypack: (p) => (
+    <g>
+      <rect x="54" y="68" width="132" height="178" rx="22" fill={p.bagFill} stroke={p.zoneStroke} strokeWidth="1.5" />
+      <rect x="70" y="202" width="100" height="44" rx="8" fill={p.zoneFill} stroke={p.zoneStroke} strokeWidth="1.5" />
+      <line x1="78" y1="224" x2="162" y2="224" stroke={p.zoneStroke} strokeWidth="1.5" strokeDasharray="4,3" />
+      <circle cx="120" cy="203" r="4" fill={p.zoneStroke} />
+      <path d="M 72 68 Q 55 14 85 10 Q 110 8 110 68"
+        fill="none" stroke={p.labelColor} strokeWidth="11" strokeLinecap="round" />
+      <path d="M 130 68 Q 130 8 155 10 Q 185 14 168 68"
+        fill="none" stroke={p.labelColor} strokeWidth="11" strokeLinecap="round" />
+      <rect x="105" y="64" width="30" height="10" rx="4" fill={p.zoneStroke} />
+      <line x1="72" y1="145" x2="168" y2="145" stroke={p.zoneStroke} strokeWidth="3" strokeLinecap="round" opacity="0.4" />
+    </g>
+  ),
+};
+
+function GenericBag({ bagType, zoneMap = {}, packed = {}, activeSkin = 'tactical', onZoneHover, onZoneClick, hoveredZone: hoveredZoneProp, highlightedZone }) {
+  const [internalHover, setInternalHover] = useState(null);
+  const hoveredZone = hoveredZoneProp ?? internalHover;
+  const [isHovered, setIsHovered] = useState(false);
+
+  function enter(z) { setInternalHover(z); onZoneHover?.(z); }
+  function leave()  { setInternalHover(null); onZoneHover?.(null); }
+
+  const skin = SKINS[activeSkin] ?? SKINS.tactical;
+  const accentColor = (ILLUS_PALETTE[activeSkin] ?? ILLUS_PALETTE.tactical).accent;
+  const illusProps = {
+    bagFill:    skin.bagFill,
+    zoneFill:   skin.zoneFill,
+    zoneStroke: skin.zoneStroke,
+    labelColor: skin.labelColor,
+  };
+
+  const Illustration = NON_BACKPACK_ILLUSTRATIONS[bagType.id];
+  if (!Illustration) return null;
+  const AnimLayer = BAG_ANIM_LAYER[bagType.id];
+
+  const filterValue = isHovered
+    ? `drop-shadow(0 12px 28px rgba(0,0,0,0.7)) drop-shadow(0 0 20px ${accentColor}AA)`
+    : 'drop-shadow(0 12px 28px rgba(0,0,0,0.7))';
+
+  return (
+    <>
+      <style>{`
+        @keyframes gbag-bob {
+          0%, 100% { transform: translateY(0); }
+          50%      { transform: translateY(-6px); }
+        }
+        .gbag-illustration {
+          animation: gbag-bob 3.2s ease-in-out infinite;
+          transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .gbag-svg:hover .gbag-illustration {
+          animation-play-state: paused;
+          transform: translateY(-8px) scale(1.03);
+        }
+      `}</style>
+      <svg
+        viewBox="0 0 240 310"
+        className="w-full h-full gbag-svg"
+        style={{ maxHeight: 380, filter: filterValue, transition: 'filter 0.25s' }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <defs>
+          <filter id="zone-glow" x="-8%" y="-8%" width="116%" height="116%">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <g className="gbag-illustration">
+          <Illustration {...illusProps} />
+          {AnimLayer && (
+            <AnimLayer
+              hoveredZone={hoveredZone}
+              highlightedZone={highlightedZone}
+              accentColor={accentColor}
+            />
+          )}
+        </g>
+
+        {/* Zone overlays */}
+        {Object.entries(bagType.hitAreas ?? {}).map(([zoneId, { x, y, w, h }]) => {
+          const zoneItems   = zoneMap[zoneId] ?? [];
+          const packedN     = zoneItems.filter(item => packed[item.id]).length;
+          const badge       = bagType.badgePos?.[zoneId];
+          const isHover     = hoveredZone === zoneId;
+          const isHighlight = highlightedZone === zoneId;
+          return (
+            <g key={zoneId}>
+              <rect
+                x={x} y={y} width={w} height={h} rx="8"
+                fill={isHover ? `${accentColor}28` : `${accentColor}08`}
+                stroke={accentColor}
+                strokeWidth={isHover ? 1.8 : 1}
+                strokeOpacity={isHover ? 1 : (isHighlight ? 0.9 : 0.45)}
+                filter={isHover ? 'url(#zone-glow)' : undefined}
+                style={{ cursor: 'pointer', transition: 'all 0.18s' }}
+                onClick={() => onZoneClick?.(zoneId)}
+                onMouseEnter={() => enter(zoneId)}
+                onMouseLeave={leave}
+              />
+              <text
+                x={x + w / 2} y={y + h / 2}
+                textAnchor="middle" dominantBaseline="middle"
+                fill={isHover ? accentColor : `${accentColor}80`}
+                fontSize="7" fontFamily="JetBrains Mono, monospace"
+                letterSpacing="0.12em"
+                style={{ pointerEvents: 'none', userSelect: 'none', transition: 'fill 0.18s' }}
+              >
+                {zoneId.replace(/_/g, ' ').toUpperCase()}
+              </text>
+              {zoneItems.length > 0 && badge && (
+                <g style={{ pointerEvents: 'none' }}>
+                  <rect x={badge.x - 14} y={badge.y - 8} width={28} height={14} rx={4}
+                    fill="rgba(8,10,12,0.82)"
+                    stroke={isHover ? accentColor : 'rgba(255,255,255,0.12)'}
+                    strokeWidth="0.8"/>
+                  <text x={badge.x} y={badge.y + 2}
+                    textAnchor="middle" dominantBaseline="middle"
+                    fill={isHover ? accentColor : 'rgba(200,180,140,0.7)'}
+                    fontSize="6.5" fontFamily="JetBrains Mono, monospace"
+                    letterSpacing="0.04em">
+                    {packedN}/{zoneItems.length}
+                  </text>
+                </g>
+              )}
+            </g>
+          );
+        })}
+      </svg>
+    </>
+  );
+}
