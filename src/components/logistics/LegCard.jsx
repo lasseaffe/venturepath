@@ -227,7 +227,7 @@ export default function LegCard({ leg, index, onUpdate, onRemove }) {
             className="w-full py-2 rounded text-[10px] font-mono tracking-widest border transition-colors"
             style={{ borderColor: `${accent}80`, color: accent }}
           >
-            SEARCH {cfg.label}S
+            SEARCH {cfg.label}
           </button>
         </form>
 
