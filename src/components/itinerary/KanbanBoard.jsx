@@ -478,17 +478,17 @@ function DayColumnHeaderImage({ label, tripName, colIndex = 0 }) {
 
   if (loading) {
     return (
-      <div className="w-full animate-pulse" style={{ height: 48, background: '#1a2030' }} />
+      <div className="w-full animate-pulse" style={{ height: 90, background: '#1a2030' }} />
     );
   }
   if (!image?.url) {
     return (
-      <div style={{ width: '100%', height: 48, flexShrink: 0, background: 'linear-gradient(90deg, #111316 0%, #1a1f26 100%)', borderBottom: '1px solid #1e2328' }} />
+      <div style={{ width: '100%', height: 90, flexShrink: 0, background: 'linear-gradient(90deg, #111316 0%, #1a1f26 100%)', borderBottom: '1px solid #1e2328' }} />
     );
   }
 
   return (
-    <div className="relative overflow-hidden shrink-0" style={{ height: 48 }}>
+    <div className="relative overflow-hidden shrink-0" style={{ height: 90 }}>
       <img src={image.url} alt={dest} className="absolute inset-0 w-full h-full object-cover" />
       <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(14,16,18,0.1) 0%, rgba(14,16,18,0.5) 100%)' }} />
       {image.author && <ImageAttribution attribution={image} />}
