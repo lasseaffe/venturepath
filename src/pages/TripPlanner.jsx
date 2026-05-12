@@ -239,25 +239,22 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
                   onPinClick={handleDiscoveryPinClick}
                 />
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                  <VibeCheck destinationId={destinationId} tripName={trip.name} />
-                  <ARGhostTours destinationId={destinationId} center={mapCenter} />
                   <MustSee
                     attractions={attractions}
                     loading={attractionsLoading}
                     selectedId={selectedDiscoveryId}
                     onCategoryChange={setAttractionCategory}
-                    onSelect={id => {
-                      setSelectedDiscoveryId(id);
-                      document.getElementById(`discovery-card-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                    }}
+                    onSelect={handleDiscoveryPinClick}
                   />
                   <LocalFlavor
                     food={food}
                     loading={foodLoading}
                     selectedId={selectedDiscoveryId}
                     onCategoryChange={setFoodCategory}
-                    onSelect={id => setSelectedDiscoveryId(id)}
+                    onSelect={handleDiscoveryPinClick}
                   />
+                  <VibeCheck destinationId={destinationId} tripName={trip.name} />
+                  <ARGhostTours destinationId={destinationId} center={mapCenter} />
                   <BasecampScout destination={trip.destination} />
                 </div>
               </div>
