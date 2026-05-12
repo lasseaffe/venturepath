@@ -6,7 +6,7 @@ import 'leaflet/dist/leaflet.css';
 
 const REFRESH_MS = 30_000;
 
-export default function SafetyPulse({ destinationId = 'default', center = [20.0, 0.0], zoom = 9 }) {
+export default function SafetyPulse({ destinationId = 'default', center = [20.0, 0.0], zoom = 9, onClose }) {
   const [incidents, setIncidents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [lastRefresh, setLastRefresh] = useState(null);
@@ -31,7 +31,7 @@ export default function SafetyPulse({ destinationId = 'default', center = [20.0,
   const { label: statusLabel, ring: statusRing } = SEVERITY_COLORS[statusLevel];
 
   return (
-    <div className="tactical-panel p-5 space-y-4">
+    <div className="p-5 space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
