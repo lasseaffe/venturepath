@@ -43,20 +43,25 @@ export default function TacticalMode({ onExit }) {
     return () => clearInterval(id);
   }, []);
 
-  const activeLeg = legs.find(l => l.status === 'pending') ?? legs[0];
+  // Prefer active/in-progress legs over completed; fall back to first if none match
+  const activeLeg = legs.find(l => l.status === 'active' || l.status === 'pending')
+    ?? legs.find(l => l.status !== 'confirmed')
+    ?? legs[0];
 
   const sosText = [
     `[SOS] VenturePath Emergency Beacon`,
     `Time: ${time.toISOString()}`,
     `Coords: ${coords.lat}, ${coords.lng}`,
-    `Trip: ${trip.name}`,
-    `Active Leg: ${activeLeg?.from} → ${activeLeg?.to}`,
+    `Trip: ${trip?.name ?? 'Unknown expedition'}`,
+    `Active Leg: ${activeLeg?.from?.label ?? activeLeg?.from ?? '?'} → ${activeLeg?.to?.label ?? activeLeg?.to ?? '?'}`,
     `Status: EMERGENCY — REQUIRES ASSISTANCE`,
   ].join('\n');
 
   const handleSOS = () => {
     setSosReady(true);
-    navigator.clipboard?.writeText(sosText).then(() => setSosCopied(true));
+    navigator.clipboard?.writeText(sosText)
+      .then(() => setSosCopied(true))
+      .catch(() => setSosCopied(false));
     if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
   };
 
@@ -80,6 +85,7 @@ export default function TacticalMode({ onExit }) {
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
         <SignalBars strength={4} />
         <span style={{ color: '#F2A900', fontWeight: 'bold', letterSpacing: '0.12em', fontSize: 11 }}>GPS LOCKED</span>
+        <span style={{ fontSize: 8, color: '#666', letterSpacing: '0.06em', background: '#1a1a1a', border: '1px solid #2a2a2a', borderRadius: 2, padding: '1px 5px' }}>CACHED — VERIFY</span>
         <span style={{ color: '#F2A900', fontSize: 20, fontWeight: 'bold', marginLeft: 'auto' }}>
           {time.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
         </span>
@@ -119,9 +125,10 @@ export default function TacticalMode({ onExit }) {
         {sosReady && (
           <div style={{ padding: 12, border: '1px solid #3a3a3a', borderRadius: 4, fontSize: 11, whiteSpace: 'pre-wrap', color: '#F2A900', marginBottom: 10, ...mono }}>
             {sosText}
-            {sosCopied && (
-              <div style={{ marginTop: 8, color: '#4ade80' }}>✓ Copied to clipboard — paste into satellite messenger</div>
-            )}
+            {sosCopied
+              ? <div style={{ marginTop: 8, color: '#4ade80' }}>✓ Copied to clipboard — paste into satellite messenger</div>
+              : <div style={{ marginTop: 8, color: '#F2A900' }}>⚠ Clipboard unavailable — select text above and copy manually</div>
+            }
           </div>
         )}
         <button
@@ -131,7 +138,7 @@ export default function TacticalMode({ onExit }) {
           ⚠ SOS EMERGENCY BEACON
         </button>
         <button
-          onClick={onExit}
+          onClick={() => onExit?.()}
           style={{ width: '100%', marginTop: 8, padding: '8px', background: 'transparent', border: '1px solid #2a2a2a', color: '#555', fontSize: 10, letterSpacing: '0.1em', borderRadius: 4, cursor: 'pointer', ...mono }}
         >
           EXIT TACTICAL MODE
