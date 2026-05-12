@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 const FSQ_KEY = import.meta.env.VITE_FSQ_API_KEY;
 
@@ -24,6 +24,8 @@ export function AddStopFlow({ dayLoopId, homebaseCoords, onAdd, onClose, anchorC
   const [loading, setLoading] = useState(false);
   const debounceRef = useRef(null);
 
+  useEffect(() => () => clearTimeout(debounceRef.current), []);
+
   function handleInput(e) {
     const val = e.target.value;
     setQuery(val);
@@ -32,10 +34,15 @@ export function AddStopFlow({ dayLoopId, homebaseCoords, onAdd, onClose, anchorC
     if (!val.trim()) { setResults([]); return; }
     debounceRef.current = setTimeout(async () => {
       setLoading(true);
-      const coords = anchorCoords ?? homebaseCoords;
-      const res = await searchFoursquare(val, coords);
-      setResults(res);
-      setLoading(false);
+      try {
+        const coords = anchorCoords ?? homebaseCoords;
+        const res = await searchFoursquare(val, coords);
+        setResults(res);
+      } catch {
+        setResults([]);
+      } finally {
+        setLoading(false);
+      }
     }, 350);
   }
 
