@@ -515,7 +515,8 @@ export default function PublicTransport({ destination = '' }) {
       }));
     });
     setChecking(false);
-  }, [legs]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useInterval(runDisruptionCheck, 90_000);
 
@@ -634,8 +635,8 @@ export default function PublicTransport({ destination = '' }) {
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, alignItems: 'center', fontFamily: "'JetBrains Mono', monospace", fontSize: 10 }}>
             {legs.map((leg, i) => {
-              const mc = MODE_CONFIG[mode]?.accent ?? '#2a2f36';
-              const modeIcon = MODE_CONFIG[mode]?.icon ?? '?';
+              const mc = MODE_CONFIG[leg.mode]?.accent ?? '#2a2f36';
+              const modeIcon = MODE_CONFIG[leg.mode]?.icon ?? '?';
               const nextLeg  = legs[i + 1];
               const buffer   = (leg.selectedOption?.arrival && nextLeg?.selectedOption?.departure)
                 ? Math.round((new Date(nextLeg.selectedOption.departure) - new Date(leg.selectedOption.arrival)) / 60000)

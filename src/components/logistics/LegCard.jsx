@@ -52,7 +52,7 @@ function useTransportAutocomplete(query, mode) {
   const timer = useRef(null);
 
   useEffect(() => {
-    if (!query.trim()) { setSuggestions([]); return; }
+    if (!query || !query.trim()) { setSuggestions([]); return; }
     clearTimeout(timer.current);
     timer.current = setTimeout(async () => {
       setSearching(true);
