@@ -14,6 +14,8 @@ export const WAYPOINT_CATEGORIES = {
   resupply:  { color: '#D9C5B2', icon: '🎒', label: 'Resupply' },
   permit:    { color: '#F2C94C', icon: '📋', label: 'Permit check' },
   transfer:  { color: '#D9C5B2', icon: '🔄', label: 'Transfer' },
+  layover:   { color: '#D9C5B2', icon: '⏳', label: 'Layover' },
+  platform:  { color: '#E67E22', icon: '🚉', label: 'Platform' },
 };
 
 const FALLBACK = { color: '#D9C5B2', icon: '•', label: 'Waypoint' };

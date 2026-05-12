@@ -35,4 +35,11 @@ describe('waypointCategories', () => {
   it('returns Sandstone color for transfer category', () => {
     expect(getCategoryStyle('transfer').color).toBe('#D9C5B2');
   });
+
+  it('returns Sandstone color for layover category', () => {
+    expect(getCategoryStyle('layover').color).toBe('#D9C5B2');
+  });
+  it('returns Ember color for platform category', () => {
+    expect(getCategoryStyle('platform').color).toBe('#E67E22');
+  });
 });
