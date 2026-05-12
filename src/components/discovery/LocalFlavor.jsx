@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 
-const CATEGORIES = ['ALL', 'RESTAURANTS', 'CAFÉS', 'BARS', 'MARKETS', 'STREET FOOD']
+const CATEGORIES = ['ALL', 'RESTAURANTS', 'CAFES', 'BARS', 'MARKETS', 'STREET FOOD']
 const CAT_MAP = {
-  ALL: 'all', RESTAURANTS: 'restaurants', 'CAFÉS': 'cafes',
+  ALL: 'all', RESTAURANTS: 'restaurants', CAFES: 'cafes',
   BARS: 'bars', MARKETS: 'markets', 'STREET FOOD': 'street_food'
 }
 const EMOJI_MAP = {
