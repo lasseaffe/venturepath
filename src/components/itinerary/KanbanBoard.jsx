@@ -1,4 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import StopDrawer from './StopDrawer';
 import CulinaryAnchorBlock from './CulinaryAnchorBlock';
 import InspirePanel from '../inspire/InspirePanel';
 import ItineraryMap from './ItineraryMap';
@@ -336,6 +338,7 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
   );
 
   return (
+    <>
     <div data-tour="itinerary" className="flex flex-col gap-3">
 
       {/* ── Destination cover hero ── */}
@@ -426,14 +429,10 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
             onRemoveBlock={removeBlock}
             onInspire={day => setInspireDay(day)}
             activeStopId={activeStopId}
-            expandedId={expandedId}
-            expandedTab={expandedTab}
             onToggleExpand={id => {
               setExpandedId(prev => prev === id ? null : id);
               setExpandedTab('DETAILS');
             }}
-            onPatch={patchBlock}
-            onTabChange={setExpandedTab}
           />
         )
         : (
@@ -451,6 +450,34 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
         onPinClick={id => setActiveStopId(prev => prev === id ? null : id)}
       />
     </div>
+
+    <AnimatePresence>
+      {expandedId && (() => {
+        const expandedBlock = days.flatMap(d => d.blocks).find(b => b.id === expandedId);
+        return expandedBlock ? (
+          <>
+            <motion.div
+              key="backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.18 }}
+              className="fixed inset-0 z-40 bg-black/40 backdrop-blur-[2px]"
+              onClick={() => setExpandedId(null)}
+            />
+            <StopDrawer
+              key="drawer"
+              block={expandedBlock}
+              tripName={tripName}
+              onPatch={patchBlock}
+              onClose={() => setExpandedId(null)}
+              onRemove={removeBlock}
+            />
+          </>
+        ) : null;
+      })()}
+    </AnimatePresence>
+    </>
   );
 }
 
@@ -561,7 +588,7 @@ function KanbanView({
   columnRefs, onDragStart, onDragEnd, onDragOver, onDragLeave, onDrop,
   onAddDay, onRemoveDay, onAutoSort,
   onSetAddingTo, onCancelAdd, onNewDraftChange, onAddBlock, onRemoveBlock,
-  onInspire, activeStopId, expandedId, expandedTab, onToggleExpand, onPatch, onTabChange,
+  onInspire, activeStopId, onToggleExpand,
 }) {
   return (
     <div className="flex gap-4 overflow-x-auto pb-3" style={{ minHeight: '480px' }}>
@@ -683,12 +710,7 @@ function KanbanView({
                     onDragStart={e => onDragStart(e, day.id, block.id)}
                     onDragEnd={onDragEnd}
                     onRemove={() => onRemoveBlock(block.id)}
-                    isExpanded={expandedId === block.id}
                     onToggleExpand={onToggleExpand}
-                    onPatch={onPatch}
-                    expandedTab={expandedTab}
-                    onTabChange={onTabChange}
-                    tripName={tripName}
                   />
                 </div>
               ))}
@@ -1006,7 +1028,7 @@ function BlockCardImage({ title, tripName, visible }) {
   );
 }
 
-function ActivityBlock({ block, isGhost, isActive, onDragStart, onDragEnd, onRemove, isExpanded, onToggleExpand, onPatch, onTabChange, expandedTab, tripName }) {
+function ActivityBlock({ block, isGhost, isActive, onDragStart, onDragEnd, onRemove, onToggleExpand }) {
   const [hovered, setHovered] = useState(false);
   const colors = CATEGORY_COLORS[block.category] ?? CATEGORY_COLORS.default;
 
@@ -1071,7 +1093,7 @@ function ActivityBlock({ block, isGhost, isActive, onDragStart, onDragEnd, onRem
         )}
       </div>
 
-      {hovered && !isGhost && !isExpanded && (
+      {hovered && !isGhost && (
         <div className="flex items-center gap-1 px-2 pb-2" style={{ borderTop: '1px solid #1e2328' }}>
           <button
             onClick={e => { e.stopPropagation(); onRemove(); }}
@@ -1080,17 +1102,6 @@ function ActivityBlock({ block, isGhost, isActive, onDragStart, onDragEnd, onRem
             ✕
           </button>
         </div>
-      )}
-      <BlockCardImage title={block.title} tripName={tripName} visible={hovered || isExpanded} />
-      {isExpanded && (
-        <>
-          <BlockHub
-            block={block}
-            onPatch={patch => onPatch(block.id, patch)}
-            activeTab={expandedTab}
-            onTabChange={onTabChange}
-          />
-        </>
       )}
     </div>
   );
