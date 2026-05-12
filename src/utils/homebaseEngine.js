@@ -72,7 +72,8 @@ function estimateCost(legs) {
 // Returns { [toolKey]: { label, value, apply(dispatch) } }
 // apply() is called when the Pioneer confirms (Semi) or immediately (Full).
 export function buildCascadePreviews(payload) {
-  const { dayLoopId, stop, legs, tripClimate } = payload;
+  // tripClimate available via payload.tripClimate — reserved for climate-aware packing in a future task
+  const { dayLoopId, stop, legs } = payload;
   const cost = estimateCost(legs);
   const items = packingHints(stop.category ?? 'default');
 
@@ -88,49 +89,49 @@ export function buildCascadePreviews(payload) {
     packing: {
       label: '🎒 Packing',
       value: `${items.length} item${items.length !== 1 ? 's' : ''} suggested`,
-      apply: (_dispatch) => {
+      apply: () => {
         // PackingManifest listens to HOMEBASE_STOP_ADDED directly for suggestions
       },
     },
     map: {
       label: '🗺️ Route',
       value: `${payload.totalDistanceKm.toFixed(1)} km loop`,
-      apply: (_dispatch) => {
+      apply: () => {
         // LiveMap re-renders reactively from store.dayLoops — no action needed
       },
     },
     elevation: {
       label: '⛰️ Elevation',
       value: 'Profile updating...',
-      apply: (_dispatch) => {
+      apply: () => {
         // ElevationStrip subscribes to HOMEBASE_STOP_ADDED and fetches independently
       },
     },
     transit: {
       label: '🚌 Transit',
       value: 'Fetching times...',
-      apply: (_dispatch) => {
+      apply: () => {
         // TransitPlanner subscribes to HOMEBASE_STOP_ADDED and fetches independently
       },
     },
     tactical: {
       label: '🛡️ Tactical',
       value: 'Caching area...',
-      apply: (_dispatch) => {
+      apply: () => {
         // TacticalCache prefetch fires via the bus listener (non-blocking)
       },
     },
     squad: {
       label: '👥 Squad',
       value: 'Notifying...',
-      apply: (_dispatch) => {
+      apply: () => {
         // SquadSync broadcasts via Supabase realtime (bus listener)
       },
     },
     ledger: {
       label: '⚖️ Ledger',
       value: 'Checking conflicts...',
-      apply: (_dispatch) => {
+      apply: () => {
         // LedgerWorkbench checks preferences (bus listener)
       },
     },
