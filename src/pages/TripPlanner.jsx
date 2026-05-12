@@ -46,7 +46,14 @@ import { AddStopFlow } from '../components/itinerary/AddStopFlow';
 import { onStopAdded } from '../utils/homebaseEngine';
 import { LegLens } from '../components/legLens/LegLens.jsx';
 import { hydrateLeg } from '../utils/legIntelligence/index.js';
+import GatheringsHub from '../components/gatherings/GatheringsHub';
+import GatheringDetail from '../components/gatherings/GatheringDetail';
+import { useTripGatherings } from '../lib/gatherings/useGatherings';
+import { useAuth } from '../context/AuthContext';
+import { createGathering as apiCreateGathering } from '../lib/gatherings/api';
 import { CampMetaEditor } from '../components/logistics/CampMetaEditor';
+import { emitLegConfirmed, emitCampPitched, emitExpeditionLogged } from '../utils/streakEmitter.js';
+import { emitCrossApp } from '../utils/crossAppEmitter.js';
 
 function TripHeroImage({ destination, heroImageUrl }) {
   const [bleedOpacity, setBleedOpacity] = useState(1);
@@ -354,6 +361,7 @@ function TripHeroImage({ destination, heroImageUrl }) {
 }
 
 export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
+  const { architect } = useAuth();
   const { trip, legs, stays, pois, dayLoops, manifestSettings, cloning,
           addStopToDayLoop, addDayLoop, setTripPlanningMode, dispatch,
           addWaypoint, updateWaypoint, setLegMeta, replaceLegRoute } = useTripStore();
@@ -368,14 +376,20 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
   const discoveryRef     = useRef(null);
   const discoveryFetched = useRef(false);
 
+  // Trip ID: use trip name as stable client-side identifier
+  const tripId = trip?.name ?? null;
+  const { items: tripGatherings, loading: gatheringsLoading, reload: reloadGatherings } = useTripGatherings(tripId);
+  const [openGatheringId, setOpenGatheringId] = useState(null);
+
   const completion = useMemo(() => ({
     transport:     legs.some(l => l.status === 'confirmed'),
     accommodation: stays.length > 0,
     discovery:     pois.length > 0 || attractions.length > 0,
+    gatherings:    tripGatherings.length > 0,
     itinerary:     dayLoops.some(dl => (dl.stopIds?.length ?? 0) > 0),
     logistics:     (manifestSettings?.items?.length ?? 0) > 0,
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }), [legs, stays, pois, attractions, dayLoops, manifestSettings]);
+  }), [legs, stays, pois, attractions, tripGatherings, dayLoops, manifestSettings]);
   const [tacticalMode, setTacticalMode] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -483,13 +497,51 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
     const leg = legs.find(l => (l.waypoints ?? []).some(w => w.id === waypointId));
     if (!leg) return;
     updateWaypoint(leg.id, waypointId, { status: 'confirmed' });
+    emitLegConfirmed({ legId: leg.id });
   }
 
   function handleWaypointBook(waypointId) {
     const leg = legs.find(l => (l.waypoints ?? []).some(w => w.id === waypointId));
     if (!leg) return;
     updateWaypoint(leg.id, waypointId, { status: 'confirmed', bookingRef: `booking-${Date.now()}` });
+    emitLegConfirmed({ legId: leg.id });
   }
+
+  // Phase 5: expedition_logged emission + WC context push on trip name change
+  useEffect(() => {
+    if (!trip?.name) return;
+    emitExpeditionLogged({ tripName: trip.name });
+    const campNights = stays
+      .filter(s => ['camp', 'wild', 'shelter'].includes(s.kind))
+      .map(s => ({
+        date: s.checkin ?? null,
+        firePermitted: s.campMeta?.fireRules?.permitted ?? true,
+        waterTreatRequired: s.campMeta?.waterSource?.treatRequired ?? false,
+      }));
+    const fuelStops = legs.flatMap(l =>
+      (l.legMeta?.fuelPlan?.stops ?? []).map(stop => ({ name: stop.name, coords: stop.coords, legId: l.id }))
+    );
+    emitCrossApp('http://localhost:3002/api/cross-app/expedition-context', {
+      tripName: trip.name,
+      startDate: trip.startDate,
+      endDate: trip.endDate,
+      destination: trip.destination,
+      fuelStops,
+      campNights,
+    });
+  }, [trip?.name]);
+
+  // Phase 5: camp_pitched emission when a new camp/wild/shelter stay is added
+  const prevStayCountRef = useRef(stays.length);
+  useEffect(() => {
+    if (stays.length > prevStayCountRef.current) {
+      const newStay = stays[stays.length - 1];
+      if (newStay && ['camp', 'wild', 'shelter'].includes(newStay.kind)) {
+        emitCampPitched({ stayId: newStay.id });
+      }
+    }
+    prevStayCountRef.current = stays.length;
+  }, [stays.length]);
 
   function handleWaypointDismiss(waypointId) {
     const leg = legs.find(l => (l.waypoints ?? []).some(w => w.id === waypointId));
@@ -651,6 +703,8 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
                     dayLoops={dayLoops}
                     stays={stays}
                     pois={pois}
+                    gatherings={tripGatherings}
+                    onGatheringOpen={setOpenGatheringId}
                   />
                   <AnimatePresence>
                     {activeLegId && (
@@ -691,7 +745,7 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
                   )}
                 </div>
                 <div style={{ flex: 1, overflow: 'hidden' }}>
-                  <TimelinePath />
+                  <TimelinePath gatherings={tripGatherings} />
                 </div>
                 {legLensOpen && activeLegId && (() => {
                   const nextCampStay = stays.find(s => ['camp', 'wild', 'shelter'].includes(s.kind)) ?? null;
@@ -762,6 +816,31 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
                 <BasecampScout destination={trip.destination} />
               </div>
             </div>
+          )}
+
+          {activeTab === 'gatherings' && (
+            <div style={{ padding: '0' }}>
+              <GatheringsHub
+                items={tripGatherings}
+                loading={gatheringsLoading}
+                tripId={tripId}
+                onCreate={async (input) => {
+                  if (!architect?.id) return { error: new Error('Sign in to create Gatherings.') };
+                  const result = await apiCreateGathering(input, { convenerId: architect.id });
+                  if (!result.error) reloadGatherings();
+                  return result;
+                }}
+                onReload={reloadGatherings}
+              />
+            </div>
+          )}
+
+          {openGatheringId && (
+            <GatheringDetail
+              gatheringId={openGatheringId}
+              onClose={() => setOpenGatheringId(null)}
+              onDeleted={() => { setOpenGatheringId(null); reloadGatherings(); }}
+            />
           )}
 
           {activeTab === 'itinerary' && (
