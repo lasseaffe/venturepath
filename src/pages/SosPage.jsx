@@ -136,20 +136,22 @@ export default function SosPage() {
       )}
 
       {/* State: READY */}
-      {phase === STATE.READY && w3wData && (
+      {phase === STATE.READY && (
         <div className="w-full max-w-md space-y-4">
-          {/* what3words display */}
-          <div className="border border-amber-400/40 rounded p-4">
-            <div className="text-[9px] tracking-widest mb-2" style={{ color: '#F2A90066' }}>
-              WHAT3WORDS ADDRESS
+          {/* what3words display — only when API succeeded */}
+          {w3wData && (
+            <div className="border border-amber-400/40 rounded p-4">
+              <div className="text-[9px] tracking-widest mb-2" style={{ color: '#F2A90066' }}>
+                WHAT3WORDS ADDRESS
+              </div>
+              <div className="text-xl font-bold tracking-wide">
+                ///{w3wData.words}
+              </div>
+              <div className="text-[10px] mt-1" style={{ color: '#F2A90066' }}>
+                Near {w3wData.nearestPlace}
+              </div>
             </div>
-            <div className="text-xl font-bold tracking-wide">
-              ///{w3wData.words}
-            </div>
-            <div className="text-[10px] mt-1" style={{ color: '#F2A90066' }}>
-              Near {w3wData.nearestPlace}
-            </div>
-          </div>
+          )}
 
           {/* Coords */}
           <div className="border border-amber-400/30 rounded p-4">
@@ -161,36 +163,36 @@ export default function SosPage() {
             </div>
           </div>
 
-          {/* SOS message — stored in state, rendered into a data attribute for DOM inspection */}
+          {/* SOS message — rendered directly so user can read what they're sending */}
           <div
             className="border border-amber-400/30 rounded p-4"
             data-testid="sos-preview"
-            data-sos-message={sosMsg}
           >
             <div className="text-[9px] tracking-widest mb-2" style={{ color: '#F2A90066' }}>
               SOS MESSAGE READY
             </div>
-            <div className="text-[10px] leading-relaxed" style={{ color: '#F2A900CC' }}>
-              <span>{'[EMERGENCY SOS] VenturePath Tactical'}</span>
-              <br />
-              <span>{'What3Words · GPS Coordinates · Emergency Number'}</span>
-              <br />
-              <span>{'Click COPY SOS MESSAGE to copy full message'}</span>
-            </div>
+            <pre
+              className="text-[10px] leading-relaxed whitespace-pre-wrap break-words"
+              style={{ color: '#F2A900CC', fontFamily: 'inherit' }}
+            >
+              {sosMsg}
+            </pre>
           </div>
 
           {/* Copy button */}
-          <button
-            onClick={handleCopy}
-            className="w-full py-4 border-2 rounded font-bold tracking-widest text-sm transition-colors"
-            style={
-              copied
-                ? { borderColor: '#22c55e', color: '#22c55e', background: '#052e16' }
-                : { borderColor: AMBER, color: NEAR_BLACK, background: AMBER }
-            }
-          >
-            {copied ? '✓ COPIED — PASTE INTO MESSENGER' : '⚠ COPY SOS MESSAGE'}
-          </button>
+          {sosMsg && (
+            <button
+              onClick={handleCopy}
+              className="w-full py-4 border-2 rounded font-bold tracking-widest text-sm transition-colors"
+              style={
+                copied
+                  ? { borderColor: '#22c55e', color: '#22c55e', background: '#052e16' }
+                  : { borderColor: AMBER, color: NEAR_BLACK, background: AMBER }
+              }
+            >
+              {copied ? '✓ COPIED — PASTE INTO MESSENGER' : '⚠ COPY SOS MESSAGE'}
+            </button>
+          )}
 
           <div className="text-[9px] text-center" style={{ color: '#F2A90040' }}>
             Paste into SMS, satellite messenger, or WhatsApp and send to emergency services.

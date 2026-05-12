@@ -42,7 +42,8 @@ describe('SosPage', () => {
   it('shows the what3words address after resolving', async () => {
     render(<SosPage />);
     await waitFor(() => {
-      expect(screen.getByText(/lock\.spout\.radar/)).toBeInTheDocument();
+      // words appear in both the w3w panel and the pre preview — use getAllByText
+      expect(screen.getAllByText(/lock\.spout\.radar/).length).toBeGreaterThan(0);
     });
   });
 
