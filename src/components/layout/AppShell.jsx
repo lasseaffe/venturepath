@@ -5,6 +5,7 @@ import BottomNav from './BottomNav';
 
 export default function AppShell({
   activeItem,
+  activeBottomTab = 'PLAN',
   onBackToDashboard,
   onOpenExpeditions,
   onOpenVault,
@@ -12,6 +13,7 @@ export default function AppShell({
   onOpenProfile,
   onOpenTactical,
   onOpenSettings,
+  onSelectBottomTab,
   children,
 }) {
   return (
@@ -49,7 +51,7 @@ export default function AppShell({
 
           {/* Bottom nav — shown on mobile via CSS class */}
           <div className="bottomnav-mobile">
-            <BottomNav activeBottomTab="PLAN" onTabSelect={() => {}} />
+            <BottomNav activeBottomTab={activeBottomTab} onTabSelect={onSelectBottomTab ?? (() => {})} />
           </div>
         </div>
       </div>
