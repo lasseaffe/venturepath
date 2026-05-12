@@ -11,7 +11,9 @@ const ROW_BASE = {
   display: 'block',
   width: '100%',
   textAlign: 'left',
-  border: 'none',
+  borderTop: 'none',
+  borderRight: 'none',
+  borderBottom: 'none',
   marginBottom: 6,
   transition: 'background 0.15s',
 };
@@ -71,7 +73,7 @@ export default function ActionList({ onNavigate, onEnterTrip, onOpenVault }) {
         sub={overloadedMember ? `⚠ ${overloadedMember.name} overloaded by ${overloadDelta} kg` : 'All Pioneers within limit'}
         subColor={overloadedMember ? '#ef4444' : 'rgba(255,255,255,0.4)'}
         accentColor={overloadedMember ? 'rgba(239,68,68,0.5)' : 'rgba(255,255,255,0.1)'}
-        onClick={onEnterTrip}
+        onClick={() => onNavigate('gear')}
       />
 
       <ActionRow
