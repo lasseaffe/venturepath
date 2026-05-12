@@ -229,6 +229,7 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
 
   useEffect(() => {
     if (!trip?.destination) return;
+    discoveryFetched.current = false;
     const city = trip.destination.split(',')[0].trim();
 
     const observer = new IntersectionObserver(
@@ -280,6 +281,25 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
 
     return () => observer.disconnect();
   }, []);
+
+  // Refetch when category filters change, but only if initial fetch already ran
+  useEffect(() => {
+    if (!discoveryFetched.current || !trip?.destination) return;
+    const city = trip.destination.split(',')[0].trim();
+    setAttractionsLoading(true);
+    searchAttractions(city, attractionCategory)
+      .then(setAttractions)
+      .finally(() => setAttractionsLoading(false));
+  }, [attractionCategory]);
+
+  useEffect(() => {
+    if (!discoveryFetched.current || !trip?.destination) return;
+    const city = trip.destination.split(',')[0].trim();
+    setFoodLoading(true);
+    searchFood(city, foodCategory)
+      .then(setFood)
+      .finally(() => setFoodLoading(false));
+  }, [foodCategory]);
 
   function handleDiscoveryPinClick(id) {
     setSelectedDiscoveryId(id);
