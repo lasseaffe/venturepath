@@ -105,11 +105,24 @@ function FlyToDestination({ destination }) {
 function FlyToStop({ pois, dayLoops, selectedDate }) {
   const map = useMap();
   const prevStopCount = useRef(0);
+  const prevDateRef = useRef(null);
 
   useEffect(() => {
-    if (!selectedDate) return;
+    if (!selectedDate) {
+      prevStopCount.current = 0;
+      return;
+    }
+
     const loop = dayLoops.find(dl => dl.date === selectedDate);
     const count = loop?.stopIds?.length ?? 0;
+
+    // Reset baseline when date changes
+    if (selectedDate !== prevDateRef.current) {
+      prevStopCount.current = count;
+      prevDateRef.current = selectedDate;
+      return;
+    }
+
     if (count > prevStopCount.current && loop?.stopIds?.length > 0) {
       const lastId = loop.stopIds[loop.stopIds.length - 1];
       const poi = pois.find(p => p.id === lastId);
