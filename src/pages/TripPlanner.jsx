@@ -692,17 +692,21 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
                 <div style={{ flex: 1, overflow: 'hidden' }}>
                   <TimelinePath />
                 </div>
-                {legLensOpen && activeLegId && (
-                  <LegLens
-                    leg={legs.find(l => l.id === activeLegId) ?? null}
-                    onVariantSelect={handleVariantSelect}
-                    onWaypointConfirm={handleWaypointConfirm}
-                    onWaypointBook={handleWaypointBook}
-                    onWaypointDismiss={handleWaypointDismiss}
-                    onHydrate={handleLegHydrate}
-                    onClose={() => { setLegLensOpen(false); setActiveLegId(null); }}
-                  />
-                )}
+                {legLensOpen && activeLegId && (() => {
+                  const nextCampStay = stays.find(s => ['camp', 'wild', 'shelter'].includes(s.kind)) ?? null;
+                  return (
+                    <LegLens
+                      leg={legs.find(l => l.id === activeLegId) ?? null}
+                      nextStay={nextCampStay}
+                      onVariantSelect={handleVariantSelect}
+                      onWaypointConfirm={handleWaypointConfirm}
+                      onWaypointBook={handleWaypointBook}
+                      onWaypointDismiss={handleWaypointDismiss}
+                      onHydrate={handleLegHydrate}
+                      onClose={() => { setLegLensOpen(false); setActiveLegId(null); }}
+                    />
+                  );
+                })()}
               </div>
               <GpxPanel />
               <ElevationStrip />

@@ -54,4 +54,16 @@ describe('LegLensCar', () => {
     fireEvent.click(screen.getByText('Toll-free'));
     expect(onVariantSelect).toHaveBeenCalledWith('leg-1', 'toll-free');
   });
+
+  it('renders CampLens when nextStay.kind is wild', () => {
+    const nextStay = { id: 'stay-w1', name: 'Wild Pitch Site', kind: 'wild', campMeta: { bearCountry: true } };
+    render(<LegLensCar leg={legWithMeta} nextStay={nextStay} onVariantSelect={vi.fn()} onWaypointConfirm={vi.fn()} onWaypointBook={vi.fn()} onWaypointDismiss={vi.fn()} onHydrate={vi.fn()} />);
+    expect(screen.getByText(/Wild Pitch Site/)).toBeInTheDocument();
+  });
+
+  it('does NOT render CampLens when nextStay.kind is hotel', () => {
+    const nextStay = { id: 'stay-h1', name: 'Hotel Hafen', kind: 'hotel' };
+    render(<LegLensCar leg={legWithMeta} nextStay={nextStay} onVariantSelect={vi.fn()} onWaypointConfirm={vi.fn()} onWaypointBook={vi.fn()} onWaypointDismiss={vi.fn()} onHydrate={vi.fn()} />);
+    expect(screen.queryByText('Hotel Hafen')).not.toBeInTheDocument();
+  });
 });

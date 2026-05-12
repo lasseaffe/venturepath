@@ -1,9 +1,13 @@
 import { useEffect } from 'react';
 import { RouteVariantPicker } from './RouteVariantPicker.jsx';
 import { WaypointCard } from './WaypointCard.jsx';
+import { CampLens } from './CampLens.jsx';
+
+const CAMP_KINDS = new Set(['camp', 'wild', 'shelter']);
 
 export function LegLensCar({
   leg,
+  nextStay,
   onVariantSelect,
   onWaypointConfirm,
   onWaypointBook,
@@ -19,8 +23,13 @@ export function LegLensCar({
 
   if (!carMeta) {
     return (
-      <div style={{ fontFamily: 'JetBrains Mono, monospace', color: '#D9C5B2', padding: 16 }}>
-        Calculating route intelligence…
+      <div style={{ fontFamily: 'JetBrains Mono, monospace', background: '#0E1012' }}>
+        <div style={{ color: '#D9C5B2', padding: 16 }}>
+          Calculating route intelligence…
+        </div>
+        {nextStay && CAMP_KINDS.has(nextStay.kind) && (
+          <CampLens stay={nextStay} campMeta={nextStay.campMeta ?? {}} />
+        )}
       </div>
     );
   }
@@ -77,6 +86,10 @@ export function LegLensCar({
             ))}
           </div>
         </section>
+      )}
+
+      {nextStay && CAMP_KINDS.has(nextStay.kind) && (
+        <CampLens stay={nextStay} campMeta={nextStay.campMeta ?? {}} />
       )}
     </div>
   );

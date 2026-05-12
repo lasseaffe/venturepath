@@ -26,6 +26,7 @@ function LegLensPlaceholder({ mode }) {
 
 export function LegLens({
   leg,
+  nextStay,
   onVariantSelect,
   onWaypointConfirm,
   onWaypointBook,
@@ -66,6 +67,7 @@ export function LegLens({
       {leg.mode === 'car' ? (
         <LegLensCar
           leg={leg}
+          nextStay={nextStay}
           onVariantSelect={onVariantSelect}
           onWaypointConfirm={onWaypointConfirm}
           onWaypointBook={onWaypointBook}
