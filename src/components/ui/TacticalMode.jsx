@@ -90,7 +90,7 @@ export default function TacticalMode({ onExit }) {
 
       {/* Coordinate strip */}
       <div style={{ background: '#F2A900', color: '#0A0A0A', fontWeight: 'bold', padding: '8px 12px', borderRadius: 3, fontSize: 13, letterSpacing: '0.04em', marginBottom: 12, ...mono }}>
-        −{Math.abs(coords.lat)}° S, {Math.abs(coords.lng)}° W &nbsp; ↗ 042° &nbsp; ▲ 1,240m
+        {coords.lat < 0 ? '−' : '+'}{Math.abs(coords.lat)}° {coords.lat < 0 ? 'S' : 'N'}, {coords.lng < 0 ? '−' : '+'}{Math.abs(coords.lng)}° {coords.lng < 0 ? 'W' : 'E'} &nbsp; ↗ 042° &nbsp; ▲ 1,240m
       </div>
 
       {/* Current objective */}
