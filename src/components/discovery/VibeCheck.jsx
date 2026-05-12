@@ -59,7 +59,7 @@ export default function VibeCheck({ destinationId = 'default', tripName = 'your 
 
       {loading ? (
         <div className="flex items-center gap-2 text-[var(--text-muted)] text-xs font-mono py-4">
-          <span className="animate-pulse">●</span> Scraping social trends…
+          <span className="animate-pulse">●</span> Querying OpenStreetMap…
         </div>
       ) : (
         <>

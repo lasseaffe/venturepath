@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet'
 import { searchAccommodation } from '../../utils/osmEngine.js'
 import 'leaflet/dist/leaflet.css'
@@ -36,20 +36,22 @@ export default function AccommodationSearch({ destination }) {
   const [loading, setLoading]       = useState(false)
   const [activeType, setActiveType] = useState('all')
   const [selectedId, setSelectedId] = useState(null)
+  const hasSearched = useRef(false)
 
-  async function runSearch() {
+  const runSearch = useCallback(async () => {
     if (!destination) return
     setLoading(true)
+    hasSearched.current = true
     const city = destination.split(',')[0].trim()
     const data = await searchAccommodation(city, activeType)
     setResults(data)
     setSelectedId(null)
     setLoading(false)
-  }
+  }, [destination, activeType])
 
   useEffect(() => {
-    if (results.length > 0) runSearch()
-  }, [activeType])
+    if (hasSearched.current) runSearch()
+  }, [activeType, runSearch])
 
   return (
     <div className="bg-[#0E1012] border border-[#1a1d20] rounded p-4 font-mono">
