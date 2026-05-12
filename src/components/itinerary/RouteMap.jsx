@@ -102,7 +102,26 @@ function FlyToDestination({ destination }) {
   return null;
 }
 
-export default function RouteMap({ className = '', style }) {
+function FlyToStop({ pois, dayLoops, selectedDate }) {
+  const map = useMap();
+  const prevStopCount = useRef(0);
+
+  useEffect(() => {
+    if (!selectedDate) return;
+    const loop = dayLoops.find(dl => dl.date === selectedDate);
+    const count = loop?.stopIds?.length ?? 0;
+    if (count > prevStopCount.current && loop?.stopIds?.length > 0) {
+      const lastId = loop.stopIds[loop.stopIds.length - 1];
+      const poi = pois.find(p => p.id === lastId);
+      if (poi?.coords) map.flyTo(poi.coords, 14, { duration: 1 });
+    }
+    prevStopCount.current = count;
+  }, [dayLoops, selectedDate, pois, map]);
+
+  return null;
+}
+
+export default function RouteMap({ className = '', style, selectedDate, dayLoops = [], stays = [], pois = [] }) {
   const { legs, trip } = useTripStore();
   const [selectedLegId, setSelectedLegId] = useState(null);
   const [editorOpen, setEditorOpen] = useState(false);
@@ -113,15 +132,23 @@ export default function RouteMap({ className = '', style }) {
   function openAdd() { setEditingLeg(null); setEditorOpen(true); }
   function openEdit(leg) { setEditingLeg(leg); setEditorOpen(true); }
 
-  const resolvedCoords = legs.map(l => l.coords ?? DEFAULT_COORDS[l.id] ?? null);
+  // Filter legs to the active day's loop if a day is selected
+  const visibleLegs = selectedDate
+    ? legs.filter(l => {
+        const loop = dayLoops.find(dl => dl.date === selectedDate);
+        return loop?.autoLegIds?.includes(l.id) || l.dayLoopId === loop?.id;
+      })
+    : legs;
+
+  const resolvedCoords = visibleLegs.map(l => l.coords ?? DEFAULT_COORDS[l.id] ?? null);
 
   // Build per-leg segments: each segment connects leg[i] → leg[i+1]
   const segments = [];
-  for (let i = 0; i < legs.length - 1; i++) {
+  for (let i = 0; i < visibleLegs.length - 1; i++) {
     const from = resolvedCoords[i];
     const to   = resolvedCoords[i + 1];
     if (!from || !to) continue;
-    const leg = legs[i];
+    const leg = visibleLegs[i];
     const color = MODE_COLOR[leg.mode] ?? DEFAULT_COLOR;
     const pending = leg.status !== 'confirmed';
     const positions = leg.mode === 'flight' ? arcPoints(from, to) : [from, to];
@@ -132,9 +159,9 @@ export default function RouteMap({ className = '', style }) {
   const center = validCoords.length ? validCoords[0] : [-51, -72];
 
   const selectedCoords = (() => {
-    const leg = legs.find(l => l.id === selectedLegId);
+    const leg = visibleLegs.find(l => l.id === selectedLegId);
     if (!leg) return null;
-    const idx = legs.indexOf(leg);
+    const idx = visibleLegs.indexOf(leg);
     return resolvedCoords[idx] ?? null;
   })();
 
@@ -154,7 +181,7 @@ export default function RouteMap({ className = '', style }) {
       {/* Sidebar */}
       <div className="hidden md:block w-44 shrink-0 overflow-y-auto border-r border-[#2a2f36] p-2 space-y-1">
         <div className="label-tag text-[10px] px-1 mb-2">EXPEDITION STOPS</div>
-        {legs.map(l => {
+        {visibleLegs.map(l => {
           const color = MODE_COLOR[l.mode] ?? DEFAULT_COLOR;
           const active = l.id === selectedLegId;
           return (
@@ -252,7 +279,7 @@ export default function RouteMap({ className = '', style }) {
           ))}
 
           {/* Markers */}
-          {legs.map((l, i) => {
+          {visibleLegs.map((l, i) => {
             const pos = resolvedCoords[i];
             if (!pos) return null;
             const color = MODE_COLOR[l.mode] ?? DEFAULT_COLOR;
@@ -306,6 +333,23 @@ export default function RouteMap({ className = '', style }) {
               </Marker>
             );
           })}
+
+          {/* Homebase distance ring for active day */}
+          {selectedDate && (() => {
+            const loop = dayLoops.find(dl => dl.date === selectedDate);
+            const stay = stays.find(s => s.id === loop?.homebaseStayId);
+            if (!stay?.coords) return null;
+            return (
+              <Circle
+                center={stay.coords}
+                radius={5000}
+                pathOptions={{ color: '#5C9A6A', opacity: 0.08, fillOpacity: 0.03, dashArray: '4 6' }}
+              />
+            );
+          })()}
+
+          {/* Fly to newly added stop */}
+          <FlyToStop pois={pois} dayLoops={dayLoops} selectedDate={selectedDate} />
 
           {/* Pulse ring on selected marker */}
           {selectedCoords && (

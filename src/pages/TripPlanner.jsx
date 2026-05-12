@@ -257,7 +257,13 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
     {/* Row 1: Map (70%) + Path timeline (30%) */}
     <div style={{ display: 'flex', gap: 12, alignItems: 'stretch' }}>
       <div style={{ flex: '0 0 70%', position: 'relative', minHeight: 320 }}>
-        <RouteMap style={{ height: 320 }} />
+        <RouteMap
+          style={{ height: 320 }}
+          selectedDate={selectedDate}
+          dayLoops={dayLoops}
+          stays={stays}
+          pois={pois}
+        />
         <AnimatePresence>
           {activeLegId && (
             <LegHud
