@@ -1,116 +1,74 @@
-import { useState, useEffect, useCallback } from 'react';
-import { searchByCategory, searchPlaces, getInspireQuery, FSQ_CATEGORIES } from '../../utils/foursquareEngine';
-import { SwipeDeck } from '../swipe/SwipeDeck';
-import { useSwipePreferences } from '../../hooks/useSwipePreferences';
+import React, { useState } from 'react'
 
-export default function MustSee({ destination = 'Patagonia' }) {
-  const [spots, setSpots] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [inspireLabel, setInspireLabel] = useState(null);
-  const [swipeOpen, setSwipeOpen] = useState(false);
-  const { getAffinityScore } = useSwipePreferences();
+const CATEGORIES = ['ALL', 'HISTORIC', 'CULTURAL', 'NATURAL', 'RELIGION', 'VIEWPOINTS']
+const CAT_MAP = {
+  ALL: 'all', HISTORIC: 'historic', CULTURAL: 'cultural',
+  NATURAL: 'natural', RELIGION: 'religion', VIEWPOINTS: 'viewpoints'
+}
 
-  const load = useCallback(async (query = null) => {
-    setLoading(true);
-    const results = query
-      ? await searchPlaces(query, destination, 6)
-      : await searchByCategory(FSQ_CATEGORIES.attractions, destination, 6);
-    setSpots(results);
-    setLoading(false);
-  }, [destination]);
+export default function MustSee({ attractions = [], loading = false, onCategoryChange, selectedId, onSelect }) {
+  const [activeTab, setActiveTab] = useState('ALL')
 
-  useEffect(() => { load(); }, [load]);
-
-  function handleInspire() {
-    const q = getInspireQuery('discovery');
-    setInspireLabel(q);
-    load(q);
+  function handleTab(tab) {
+    setActiveTab(tab)
+    onCategoryChange?.(CAT_MAP[tab])
   }
 
-  const spotCards = spots
-    .map(s => ({
-      id: s.id,
-      name: s.name,
-      category: s.type ?? 'attraction',
-      rating: s.rating ?? null,
-      tags: [s.type, destination].filter(Boolean),
-      imageUrl: undefined,
-    }))
-    .sort((a, b) => getAffinityScore(b.tags) - getAffinityScore(a.tags));
-
   return (
-    <div className="tactical-panel p-5 space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="label-tag">Must-See — {destination}</h2>
-        <button
-          onClick={handleInspire}
-          className="text-[9px] font-mono px-2.5 py-1 rounded border border-[#E67E22]/40 text-[#E67E22] hover:bg-[#E67E22]/10 transition-colors tracking-widest"
-        >
-          ✦ INSPIRE ME
-        </button>
+    <div className="bg-[#0E1012] border border-[#1a1d20] rounded p-4 font-mono">
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-xs text-[#D9C5B2] uppercase tracking-widest">Must-See</p>
       </div>
 
-      {inspireLabel && (
-        <div className="text-[9px] font-mono text-slate-500 tracking-widest">
-          SHOWING: «{inspireLabel}» NEAR {destination.toUpperCase()}
-        </div>
-      )}
+      <div className="flex gap-2 flex-wrap mb-3">
+        {CATEGORIES.map(c => (
+          <button
+            key={c}
+            onClick={() => handleTab(c)}
+            className={`text-xs px-2 py-1 rounded border transition-colors ${
+              activeTab === c
+                ? 'bg-[#E67E22] border-[#E67E22] text-black'
+                : 'border-[#333] text-[#D9C5B2] hover:border-[#E67E22]'
+            }`}
+          >
+            {c}
+          </button>
+        ))}
+      </div>
 
-      {loading ? (
-        <div className="space-y-3">
-          {[1, 2, 3].map(i => (
-            <div key={i} className="flex gap-3 animate-pulse">
-              <div className="w-6 h-5 rounded bg-[#1a1e22]" />
-              <div className="flex-1 space-y-1.5">
-                <div className="h-4 rounded bg-[#1a1e22] w-2/3" />
-                <div className="h-3 rounded bg-[#1a1e22] w-1/2" />
-              </div>
+      {loading && <p className="text-xs text-[#D9C5B2] animate-pulse">Scanning OpenStreetMap…</p>}
+      {!loading && attractions.length === 0 && (
+        <p className="text-xs text-[#555]">No attractions found for this destination.</p>
+      )}
+      <ul className="space-y-2 max-h-64 overflow-y-auto">
+        {attractions.map(place => (
+          <li
+            key={place.id}
+            id={`discovery-card-${place.id}`}
+            onClick={() => onSelect?.(place.id)}
+            className={`flex items-center gap-3 p-2 rounded cursor-pointer transition-colors ${
+              selectedId === place.id
+                ? 'border-l-2 border-[#E67E22] bg-[#111]'
+                : 'hover:bg-[#111] border-l-2 border-transparent'
+            }`}
+          >
+            <div className="w-8 h-8 bg-[#1a1d20] rounded flex items-center justify-center text-sm">🏛️</div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm text-white truncate">{place.name}</p>
+              <p className="text-xs text-[#D9C5B2]">
+                {place.tags?.historic ?? place.tags?.tourism ?? place.tags?.natural ?? 'Attraction'}
+                {place.tags?.stars ? ` · ${'★'.repeat(parseInt(place.tags.stars))}` : ''}
+              </p>
             </div>
-          ))}
-        </div>
-      ) : spots.length === 0 ? (
-        <div className="py-6 text-center text-[10px] font-mono text-slate-600 tracking-widest">
-          NO RESULTS — TRY INSPIRE ME
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {spots.map((s, idx) => (
-            <div key={s.id} className="flex gap-3 items-start">
-              <span className="text-[#E67E22] font-mono text-sm mt-0.5 shrink-0">
-                {String(idx + 1).padStart(2, '0')}
-              </span>
-              <div>
-                <div className="text-white text-sm font-semibold">{s.name}</div>
-                <div className="text-xs text-slate-400 mt-0.5">
-                  {s.type}
-                  {s.rating && ` · ${'★'.repeat(Math.round(Number(s.rating)))}`}
-                </div>
-                {s.address && (
-                  <div className="text-xs text-slate-500 mt-1 italic">{s.address}</div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {spots.length > 0 && (
-        <button
-          onClick={() => setSwipeOpen(true)}
-          className="w-full mt-2 py-2 rounded-lg text-xs font-mono"
-          style={{ background: 'transparent', color: 'var(--accent)', border: '1px dashed var(--accent)' }}
-        >
-          ⟷ Swipe Results
-        </button>
-      )}
-
-      {swipeOpen && (
-        <SwipeDeck
-          mode="spot"
-          cards={spotCards}
-          onClose={() => setSwipeOpen(false)}
-        />
-      )}
+            <button
+              onClick={e => e.stopPropagation()}
+              className="text-xs text-[#E67E22] border border-[#E67E22] px-2 py-0.5 rounded hover:bg-[#E67E22] hover:text-black transition-colors shrink-0"
+            >
+              + ADD
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
-  );
+  )
 }
