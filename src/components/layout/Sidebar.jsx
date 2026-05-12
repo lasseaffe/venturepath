@@ -123,7 +123,8 @@ export default function Sidebar({
   };
 
   function cycleTheme() {
-    const next = THEMES[(THEMES.indexOf(theme) + 1) % THEMES.length];
+    const currentIdx = Math.max(0, THEMES.indexOf(theme));
+    const next = THEMES[(currentIdx + 1) % THEMES.length];
     setTheme(next);
   }
 
@@ -190,6 +191,7 @@ function NavItem({ icon, label, isActive, activeColor = '#E67E22', onClick }) {
         letterSpacing: '0.06em',
         textAlign: 'left',
         transition: 'background 0.15s, color 0.15s, border-color 0.15s',
+        outline: 'none',
       }}
       onMouseEnter={e => {
         if (!isActive) {
@@ -203,6 +205,8 @@ function NavItem({ icon, label, isActive, activeColor = '#E67E22', onClick }) {
           e.currentTarget.style.color = 'rgba(255,255,255,0.45)';
         }
       }}
+      onFocus={e => { e.currentTarget.style.boxShadow = '0 0 0 2px rgba(230,126,34,0.5)'; }}
+      onBlur={e => { e.currentTarget.style.boxShadow = 'none'; }}
     >
       <span style={{ flexShrink: 0, display: 'flex' }}>{icon}</span>
       <span>{label}</span>
