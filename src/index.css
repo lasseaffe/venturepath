@@ -238,3 +238,16 @@ body {
   flex-direction: column;
   box-sizing: border-box;
 }
+
+/* ── Responsive layout: desktop shows topbar+sidebar, mobile shows bottom nav ── */
+@media (min-width: 768px) {
+  .topbar-desktop { display: block !important; }
+  .sidebar-desktop { display: flex !important; }
+  .bottomnav-mobile { display: none !important; }
+}
+
+@media (max-width: 767px) {
+  .topbar-desktop { display: none !important; }
+  .sidebar-desktop { display: none !important; }
+  .bottomnav-mobile { display: flex !important; }
+}

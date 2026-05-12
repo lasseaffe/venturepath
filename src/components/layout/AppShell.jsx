@@ -1,60 +1,57 @@
+// src/components/layout/AppShell.jsx
+import TopBar from './TopBar';
+import Sidebar from './Sidebar';
 import BottomNav from './BottomNav';
-import PlanSubNav from './PlanSubNav';
-
-const PLAN_TABS = new Set(['OVERVIEW', 'ITINERARY', 'PUBLIC TRANSPORT', 'STAYS', 'LOGISTICS', 'VAULT']);
-
-function getBottomTab(activeTab) {
-  if (activeTab === 'DISCOVERY') return 'DISCOVER';
-  return 'PLAN';
-}
 
 export default function AppShell({
-  activeTab,
-  onTabChange,
-  onOpenProfile,
+  activeItem,
   onBackToDashboard,
-  onOpenChat,
+  onOpenExpeditions,
+  onOpenVault,
   onOpenInspire,
+  onOpenProfile,
   onOpenTactical,
   onOpenSettings,
   children,
 }) {
-  const activeBottomTab = getBottomTab(activeTab);
-
-  function handleBottomTab(id) {
-    if (id === 'RECORD') {
-      onOpenTactical?.();
-      return;
-    }
-    if (id === 'DISCOVER') {
-      onTabChange('DISCOVERY');
-      return;
-    }
-    // PLAN — restore Overview if currently showing Discovery
-    if (activeTab === 'DISCOVERY') {
-      onTabChange('OVERVIEW');
-    }
-  }
-
-  const showPlanSubNav = PLAN_TABS.has(activeTab);
-
   return (
-    <div style={{ display: 'flex', height: '100dvh', overflow: 'hidden', background: 'var(--bg)' }}>
-      {/* Main column */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100dvh', overflow: 'hidden', background: 'var(--bg)' }}>
+      {/* Top bar — hidden on mobile via CSS class */}
+      <div className="topbar-desktop">
+        <TopBar
+          onBackToDashboard={onBackToDashboard}
+          onOpenProfile={onOpenProfile}
+          onOpenSettings={onOpenSettings}
+        />
+      </div>
 
-        {/* Horizontal sub-tabs when in PLAN mode */}
-        {showPlanSubNav && (
-          <PlanSubNav activeTab={activeTab} onTabChange={onTabChange} />
-        )}
+      {/* Body row: sidebar + content */}
+      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+        {/* Sidebar — hidden on mobile via CSS class */}
+        <div className="sidebar-desktop">
+          <Sidebar
+            activeItem={activeItem}
+            onBackToDashboard={onBackToDashboard}
+            onOpenExpeditions={onOpenExpeditions}
+            onOpenVault={onOpenVault}
+            onOpenInspire={onOpenInspire}
+            onOpenProfile={onOpenProfile}
+            onOpenTactical={onOpenTactical}
+            onOpenSettings={onOpenSettings}
+          />
+        </div>
 
-        {/* Scrollable content area */}
-        <main style={{ flex: 1, overflowY: 'auto' }}>
-          {children}
-        </main>
+        {/* Main content column */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
+          <main style={{ flex: 1, overflowY: 'auto' }}>
+            {children}
+          </main>
 
-        {/* Persistent bottom nav */}
-        <BottomNav activeBottomTab={activeBottomTab} onTabSelect={handleBottomTab} />
+          {/* Bottom nav — shown on mobile via CSS class */}
+          <div className="bottomnav-mobile">
+            <BottomNav activeBottomTab="PLAN" onTabSelect={() => {}} />
+          </div>
+        </div>
       </div>
     </div>
   );
