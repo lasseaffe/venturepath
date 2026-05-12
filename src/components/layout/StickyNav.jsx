@@ -16,7 +16,7 @@ export default function StickyNav({ activeSection }) {
   }
 
   return (
-    <div
+    <nav
       style={{
         position: 'sticky',
         top: 0,
@@ -47,16 +47,16 @@ export default function StickyNav({ activeSection }) {
               background: 'none',
               border: 'none',
               borderBottom: isActive ? '2px solid #E67E22' : '2px solid transparent',
-              marginBottom: -1,
+              marginBottom: isActive ? -2 : 0,
               cursor: 'pointer',
               whiteSpace: 'nowrap',
-              transition: 'color 0.15s',
+              transition: 'color 0.15s, border-color 0.15s',
             }}
           >
             {s.label.toUpperCase()}
           </button>
         );
       })}
-    </div>
+    </nav>
   );
 }
