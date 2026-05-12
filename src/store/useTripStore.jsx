@@ -16,11 +16,11 @@ const DEFAULT_TRIP = {
 };
 
 const DEFAULT_LEGS = [
-  { id: 1, from: 'Home Base',        to: 'Gateway City',     mode: 'flight', durationH: 11, distanceKm: 8400, status: 'confirmed' },
-  { id: 2, from: 'Gateway City',     to: 'Trailhead Camp',   mode: 'bus',    durationH: 6,  distanceKm: 320,  status: 'confirmed' },
-  { id: 3, from: 'Trailhead Camp',   to: 'Summit Approach',  mode: 'foot',   durationH: 8,  distanceKm: 22,   status: 'pending'   },
-  { id: 4, from: 'Summit Approach',  to: 'Base Camp Alpha',  mode: 'foot',   durationH: 5,  distanceKm: 12,   status: 'pending'   },
-  { id: 5, from: 'Base Camp Alpha',  to: 'Home Base',        mode: 'flight', durationH: 13, distanceKm: 9100, status: 'pending'   },
+  { id: 1, from: 'Home Base',        to: 'Gateway City',     mode: 'flight', durationH: 11, distanceKm: 8400, status: 'confirmed', waypoints: [] },
+  { id: 2, from: 'Gateway City',     to: 'Trailhead Camp',   mode: 'bus',    durationH: 6,  distanceKm: 320,  status: 'confirmed', waypoints: [] },
+  { id: 3, from: 'Trailhead Camp',   to: 'Summit Approach',  mode: 'foot',   durationH: 8,  distanceKm: 22,   status: 'pending',   waypoints: [] },
+  { id: 4, from: 'Summit Approach',  to: 'Base Camp Alpha',  mode: 'foot',   durationH: 5,  distanceKm: 12,   status: 'pending',   waypoints: [] },
+  { id: 5, from: 'Base Camp Alpha',  to: 'Home Base',        mode: 'flight', durationH: 13, distanceKm: 9100, status: 'pending',   waypoints: [] },
 ];
 
 const DEFAULT_OBJECTIVES = [
@@ -68,7 +68,12 @@ function reducer(state, action) {
     case 'UPDATE_TRIP':
       return { ...state, trip: { ...state.trip, ...action.payload } };
     case 'ADD_LEG': {
-      const leg = { ...action.payload, id: action.payload.id ?? nextLegId++, status: action.payload.status ?? 'pending' };
+      const leg = {
+        ...action.payload,
+        id: action.payload.id ?? nextLegId++,
+        status: action.payload.status ?? 'pending',
+        waypoints: action.payload.waypoints ?? [],
+      };
       return { ...state, legs: [...state.legs, leg] };
     }
     case 'UPDATE_LEG': {
@@ -85,6 +90,22 @@ function reducer(state, action) {
     }
     case 'REMOVE_LEG': {
       const legs = state.legs.filter(l => l.id !== action.payload);
+      return { ...state, legs };
+    }
+    case 'ADD_WAYPOINT': {
+      const { legId, waypoint } = action.payload;
+      const wp = {
+        ...waypoint,
+        id: waypoint.id ?? crypto.randomUUID(),
+        legId,
+        status: waypoint.status ?? 'planned',
+        source: waypoint.source ?? 'user',
+      };
+      const legs = state.legs.map(l =>
+        l.id === legId
+          ? { ...l, waypoints: [...(l.waypoints ?? []), wp] }
+          : l
+      );
       return { ...state, legs };
     }
     case 'CLONE_PATH': {
@@ -109,7 +130,7 @@ function reducer(state, action) {
       return {
         ...initialState,
         trip: e.trip ?? initialState.trip,
-        legs: e.legs ?? [],
+        legs: (e.legs ?? []).map(l => ({ ...l, waypoints: l.waypoints ?? [] })),
         objectives: e.objectives ?? [],
         manifestSettings: e.manifestSettings ?? initialState.manifestSettings,
         stays: e.stays ?? initialState.stays,
@@ -241,7 +262,9 @@ function loadState() {
     // nextLegId must stay above any saved leg ids to avoid collisions
     const maxId = (saved.legs ?? []).reduce((m, l) => Math.max(m, l.id ?? 0), 99);
     if (maxId >= nextLegId) nextLegId = maxId + 1;
-    return { ...initialState, ...saved };
+    const merged = { ...initialState, ...saved };
+    merged.legs = (merged.legs ?? []).map(l => ({ ...l, waypoints: l.waypoints ?? [] }));
+    return merged;
   } catch {
     return initialState;
   }
@@ -279,6 +302,8 @@ export function TripStoreProvider({ children }) {
   const addLeg = (data) => dispatch({ type: 'ADD_LEG', payload: data });
   const updateLeg = (data) => dispatch({ type: 'UPDATE_LEG', payload: data });
   const removeLeg = (id) => dispatch({ type: 'REMOVE_LEG', payload: id });
+  const addWaypoint = (legId, waypoint) =>
+    dispatch({ type: 'ADD_WAYPOINT', payload: { legId, waypoint } });
   const resetTrip = () => dispatch({ type: 'RESET_TRIP' });
   const setRole = (role) => dispatch({ type: 'SET_ROLE', payload: role });
   const updateLegStatus = (id, status) =>
@@ -313,7 +338,7 @@ export function TripStoreProvider({ children }) {
     <TripStoreContext.Provider value={{
       ...state,
       dispatch,    // expose raw dispatch for onStopAdded()
-      clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, resetTrip,
+      clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, addWaypoint, resetTrip,
       setRole, updateLegStatus, loadExpedition, replaceLegs, addStay, removeStay,
       addPoi, removePoi, addAlert, clearAlerts, addBudgetItem,
       addDayLoop, addStopToDayLoop, removeStopFromDayLoop, setAutoLegs,
