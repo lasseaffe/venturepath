@@ -118,6 +118,30 @@ function reducer(state, action) {
           ),
         }
       );
+
+      // Auto-create budget line item when a waypoint is confirmed with a cost
+      const updatedWp = legs
+        .find(l => l.id === legId)
+        ?.waypoints?.find(w => w.id === waypointId);
+      const shouldAddBudget =
+        patch.status === 'confirmed' &&
+        updatedWp?.estCost > 0 &&
+        !state.budget.items.some(i => i.id === waypointId);
+
+      if (shouldAddBudget) {
+        const newItem = {
+          id: waypointId,
+          label: updatedWp.name,
+          amount: updatedWp.estCost,
+          currency: 'EUR',
+          legId,
+          category: updatedWp.category,
+        };
+        const items = [...state.budget.items, newItem];
+        const total = items.reduce((s, i) => s + (i.amount ?? 0), 0);
+        return { ...state, legs, budget: { total, items } };
+      }
+
       return { ...state, legs };
     }
     case 'REMOVE_WAYPOINT': {
