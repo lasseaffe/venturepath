@@ -1,3 +1,4 @@
+// used by onStopAdded() — added to this file in Task 5
 import sentinelBus from './sentinelBus.js';
 import { HOMEBASE_STOP_ADDED } from './sentinelBusEvents.js';
 
@@ -29,6 +30,7 @@ export function buildLegs(dayLoopId, homebaseCoords, stops) {
 
   return points.slice(0, -1).map((from, i) => {
     const to = points[i + 1];
+    const dist = haversineKm(from.coords, to.coords);
     return {
       id: crypto.randomUUID(),
       dayLoopId,
@@ -39,8 +41,8 @@ export function buildLegs(dayLoopId, homebaseCoords, stops) {
       toName: to.name,
       mode: 'foot',
       status: 'pending',
-      distanceKm: parseFloat(haversineKm(from.coords, to.coords).toFixed(2)),
-      durationH: parseFloat((haversineKm(from.coords, to.coords) / 5).toFixed(2)), // ~5 km/h walk
+      distanceKm: parseFloat(dist.toFixed(2)),
+      durationH: parseFloat((dist / 5).toFixed(2)), // ~5 km/h walk
     };
   });
 }
