@@ -31,7 +31,7 @@ import ElevationStrip from '../components/itinerary/ElevationStrip';
 import GpxPanel from '../components/itinerary/GpxPanel';
 import LegHud from '../components/logistics/LegHud';
 import VibeCheck from '../components/discovery/VibeCheck';
-import SafetyPulse from '../components/logistics/SafetyPulse';
+import SafetyTicker from '../components/logistics/SafetyTicker';
 import ARGhostTours from '../components/ar/ARGhostTours';
 import { DESTINATION_CENTERS } from '../utils/destinationEngine';
 import { searchAttractions, searchFood } from '../utils/osmEngine.js';
@@ -158,48 +158,56 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
           {/* Tab content */}
           <div className="p-6">
             {tab === 'OVERVIEW' && (
-              <div className="space-y-4">
-                <div style={{ position: 'relative' }}>
-                  <RouteMap />
-                  <AnimatePresence>
-                    {activeLegId && (
-                      <LegHud
-                        leg={legs.find(l => l.id === activeLegId)}
-                        onClose={() => setActiveLegId(null)}
-                      />
-                    )}
-                  </AnimatePresence>
-                </div>
-                {/* Active leg quick-launch strip */}
-                {legs.length > 0 && (
-                  <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                    {legs.filter(l => l.status === 'confirmed').map(l => (
-                      <button
-                        key={l.id}
-                        onClick={() => setActiveLegId(activeLegId === l.id ? null : l.id)}
-                        style={{
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: 9,
-                          letterSpacing: '0.08em',
-                          padding: '3px 10px',
-                          borderRadius: 2,
-                          border: `1px solid ${activeLegId === l.id ? '#E67E22' : '#2a2f36'}`,
-                          background: activeLegId === l.id ? 'rgba(230,126,34,0.12)' : 'transparent',
-                          color: activeLegId === l.id ? '#E67E22' : '#8A8680',
-                          cursor: 'pointer',
-                        }}
-                      >
-                        {activeLegId === l.id ? '■ STOP' : `▶ LEG ${l.id}`} {l.to}
-                      </button>
-                    ))}
-                  </div>
-                )}
-                <GpxPanel />
-                <ElevationStrip />
-                <TimelinePath />
-                <SafetyPulse destinationId={destinationId} center={mapCenter} zoom={8} />
-              </div>
-            )}
+  <div className="space-y-3">
+    {/* Row 1: Map (70%) + Path timeline (30%) */}
+    <div style={{ display: 'flex', gap: 12, alignItems: 'stretch' }}>
+      <div style={{ flex: '0 0 70%', position: 'relative', minHeight: 320 }}>
+        <RouteMap style={{ height: 320 }} />
+        <AnimatePresence>
+          {activeLegId && (
+            <LegHud
+              leg={legs.find(l => l.id === activeLegId)}
+              onClose={() => setActiveLegId(null)}
+            />
+          )}
+        </AnimatePresence>
+        {/* Leg quick-launch strip */}
+        {legs.length > 0 && (
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 6 }}>
+            {legs.filter(l => l.status === 'confirmed').map(l => (
+              <button
+                key={l.id}
+                onClick={() => setActiveLegId(activeLegId === l.id ? null : l.id)}
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 9, letterSpacing: '0.08em',
+                  padding: '3px 10px', borderRadius: 2,
+                  border: `1px solid ${activeLegId === l.id ? '#E67E22' : '#2a2f36'}`,
+                  background: activeLegId === l.id ? 'rgba(230,126,34,0.12)' : 'transparent',
+                  color: activeLegId === l.id ? '#E67E22' : '#8A8680',
+                  cursor: 'pointer',
+                }}
+              >
+                {activeLegId === l.id ? '■ STOP' : `▶ LEG ${l.id}`} {l.to}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+      {/* Path timeline — right column */}
+      <div style={{ flex: 1, overflow: 'hidden' }}>
+        <TimelinePath />
+      </div>
+    </div>
+
+    {/* Row 2: GPX + Elevation full width */}
+    <GpxPanel />
+    <ElevationStrip />
+
+    {/* Row 3: Safety ticker */}
+    <SafetyTicker destinationId={destinationId} center={mapCenter} zoom={8} />
+  </div>
+)}
 
             {tab === 'ITINERARY' && (
               <div className="space-y-6">

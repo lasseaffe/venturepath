@@ -102,7 +102,7 @@ function FlyToDestination({ destination }) {
   return null;
 }
 
-export default function RouteMap({ className = '' }) {
+export default function RouteMap({ className = '', style }) {
   const { legs, trip } = useTripStore();
   const [selectedLegId, setSelectedLegId] = useState(null);
   const [editorOpen, setEditorOpen] = useState(false);
@@ -150,7 +150,7 @@ export default function RouteMap({ className = '' }) {
       )}
     </AnimatePresence>
 
-    <div className={`tactical-panel flex overflow-hidden ${className}`} style={{ height: 460 }}>
+    <div className={`tactical-panel flex overflow-hidden ${className}`} style={{ height: 460, ...style }}>
       {/* Sidebar */}
       <div className="hidden md:block w-44 shrink-0 overflow-y-auto border-r border-[#2a2f36] p-2 space-y-1">
         <div className="label-tag text-[10px] px-1 mb-2">EXPEDITION STOPS</div>
