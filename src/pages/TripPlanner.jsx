@@ -104,11 +104,16 @@ function TripHeroImage({ destination, heroImageUrl }) {
   }
   function onDrag(e) {
     if (!dragOrigin.current || !heroRef.current) return;
-    const rect = heroRef.current.getBoundingClientRect();
-    const dx = ((e.clientX - dragOrigin.current.mouseX) / rect.width) * 100;
-    const dy = ((e.clientY - dragOrigin.current.mouseY) / rect.height) * 100;
-    const x = Math.max(0, Math.min(100, dragOrigin.current.startX - dx));
-    const y = Math.max(0, Math.min(100, dragOrigin.current.startY - dy));
+    // Edit mode uses 130% img size → 30% overflow in both axes.
+    // Sensitivity = 1:1 with overflow pixels so drag feels direct.
+    const cw = heroRef.current.clientWidth;
+    const ch = heroRef.current.clientHeight || 340;
+    const x = Math.max(0, Math.min(100,
+      dragOrigin.current.startX - ((e.clientX - dragOrigin.current.mouseX) / (cw * 0.3)) * 100
+    ));
+    const y = Math.max(0, Math.min(100,
+      dragOrigin.current.startY - ((e.clientY - dragOrigin.current.mouseY) / (ch * 0.3)) * 100
+    ));
     setDraftPos({ x, y });
   }
   function stopDrag() {
@@ -142,12 +147,20 @@ function TripHeroImage({ destination, heroImageUrl }) {
           src={imgSrc}
           alt={city}
           onMouseDown={startDrag}
-          style={{
+          style={editing ? {
+            // 130% × 130% creates 30% overflow in both axes so objectPosition X can work.
+            // left/top map the 0-100 position range to the 0-30% overflow range.
+            position: 'absolute',
+            width: '130%', height: '130%',
+            objectFit: 'cover',
+            left: `${-(displayPos.x / 100) * 30}%`,
+            top: `${-(displayPos.y / 100) * 30}%`,
+            display: 'block', cursor: 'grab', userSelect: 'none',
+          } : {
             width: '100%', height: '100%', objectFit: 'cover',
             objectPosition: `${displayPos.x}% ${displayPos.y}%`,
-            display: 'block', transition: editing ? 'none' : 'opacity 0.3s ease',
-            cursor: editing ? 'grab' : 'default',
-            userSelect: 'none',
+            display: 'block', transition: 'opacity 0.3s ease',
+            cursor: 'default', userSelect: 'none',
           }}
         />
 
