@@ -100,6 +100,7 @@ export default function SafetyTicker({ destinationId = 'default', center = [20.0
           <>
             {/* Backdrop */}
             <motion.div
+              key="backdrop"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -111,6 +112,7 @@ export default function SafetyTicker({ destinationId = 'default', center = [20.0
             />
             {/* Drawer panel */}
             <motion.div
+              key="drawer"
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
