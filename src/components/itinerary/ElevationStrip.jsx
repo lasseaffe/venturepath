@@ -179,10 +179,7 @@ export default function ElevationStrip() {
               <stop offset="0%" stopColor="#0d1b2a" />
               <stop offset="100%" stopColor="#0E1012" />
             </linearGradient>
-            <linearGradient id="mtnDistGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#1a2535" />
-              <stop offset="100%" stopColor="#0E1012" />
-            </linearGradient>
+
             <linearGradient id="elevGrad" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="#E67E22" stopOpacity="0.28" />
               <stop offset="100%" stopColor="#E67E22" stopOpacity="0.03" />
@@ -195,7 +192,7 @@ export default function ElevationStrip() {
           {/* Layer 2a: distant mountain silhouette */}
           <path
             d={buildSilhouette(SVG_W, SVG_H, destinationSeed + '_far', 0.7)}
-            fill="url(#mtnDistGrad)"
+            fill="#1a2535"
             opacity={0.6}
           />
 
@@ -281,14 +278,17 @@ export default function ElevationStrip() {
         </svg>
       </div>
 
-      {/* X-axis labels */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
-        {['START', '25%', '50%', '75%', 'END'].map(l => (
-          <span key={l} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 8, color: '#484440', letterSpacing: '0.04em' }}>
-            {l}
-          </span>
-        ))}
+      {/* X-axis labels + destination name */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
+        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 8, color: '#484440', letterSpacing: '0.04em' }}>START</span>
+        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 8, color: '#484440', letterSpacing: '0.04em' }}>MID</span>
+        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 8, color: '#484440', letterSpacing: '0.04em' }}>END</span>
       </div>
+      {(legs[legs.length - 1]?.to?.label || trip?.destination) && (
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 7, color: '#8A8680', letterSpacing: '0.06em', marginTop: 2 }}>
+          {(legs[legs.length - 1]?.to?.label || trip?.destination || '').toUpperCase()}
+        </div>
+      )}
 
       {/* Surface legend */}
       <div style={{ display: 'flex', gap: 16, marginTop: 8, flexWrap: 'wrap' }}>
