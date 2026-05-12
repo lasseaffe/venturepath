@@ -1,15 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { fetchVibes, vibesToActivities } from '../../utils/vibeCheckEngine';
+import { fetchVibes } from '../../utils/vibeCheckEngine';
 
-const SOURCE_COLORS = {
-  Instagram: 'text-pink-400',
-  TikTok:    'text-cyan-400',
-  Reddit:    'text-orange-400',
-  Google:    'text-blue-400',
-};
-
-export default function VibeCheck({ destinationId = '', tripName = 'your trip' }) {
+export default function VibeCheck({ destinationId = 'default', tripName = 'your trip' }) {
   const [vibes, setVibes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [generated, setGenerated] = useState(null);
@@ -18,7 +11,6 @@ export default function VibeCheck({ destinationId = '', tripName = 'your trip' }
 
   useEffect(() => {
     setLoading(true);
-    setGenerated(null);
     fetchVibes(destinationId)
       .then(v => {
         setVibes(v);
@@ -39,8 +31,17 @@ export default function VibeCheck({ destinationId = '', tripName = 'your trip' }
   async function generateItinerary() {
     setGenerating(true);
     await new Promise(r => setTimeout(r, 900));
-    const selected = vibes.filter(v => selectedTags.has(v.tag));
-    const activities = vibesToActivities(selected, selected.length);
+    const selectedVibes = vibes.filter(v => selectedTags.has(v.tag));
+    const activities = selectedVibes.flatMap(vibe =>
+      (vibe.results ?? []).slice(0, 3).map(place => ({
+        id: place.id,
+        name: place.name,
+        time: '10:00',
+        duration: '90 min',
+        category: vibe.tag,
+        emoji: vibe.emoji
+      }))
+    );
     setGenerated(activities);
     setGenerating(false);
   }
@@ -51,23 +52,20 @@ export default function VibeCheck({ destinationId = '', tripName = 'your trip' }
       <div className="flex items-center justify-between">
         <div>
           <div className="label-tag">Vibe-Check Itineraries</div>
-          <div className="text-[10px] text-slate-500 font-mono mt-0.5">Trending activities scraped from social media</div>
+          <div className="text-[10px] text-[var(--text-muted)] font-mono mt-0.5">Vibe counts sourced from OpenStreetMap</div>
         </div>
-        <div className="text-[9px] font-mono text-slate-600 text-right">
-          <div>Instagram · TikTok</div>
-          <div>Reddit · Google</div>
-        </div>
+        <span className="text-xs font-mono text-[#D9C5B2]">OSM</span>
       </div>
 
       {loading ? (
-        <div className="flex items-center gap-2 text-slate-500 text-xs font-mono py-4">
+        <div className="flex items-center gap-2 text-[var(--text-muted)] text-xs font-mono py-4">
           <span className="animate-pulse">●</span> Scraping social trends…
         </div>
       ) : (
         <>
           {/* Tag cloud */}
           <div className="space-y-2">
-            <div className="text-[9px] font-mono text-slate-500 tracking-widest">
+            <div className="text-[9px] font-mono text-[var(--text-muted)] tracking-widest">
               TRENDING NOW — click to select for itinerary
             </div>
             <div className="flex flex-wrap gap-2">
@@ -83,14 +81,12 @@ export default function VibeCheck({ destinationId = '', tripName = 'your trip' }
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border font-mono transition-colors ${fontSize} ${
                       isSelected
                         ? 'bg-[#E2725B]/20 border-[#E2725B] text-white'
-                        : 'bg-[#0E1012] border-[#2a2f36] text-slate-400 hover:border-[#E67E22]/50 hover:text-slate-200'
+                        : 'bg-[#0E1012] border-[#2a2f36] text-[var(--text-secondary)] hover:border-[#E67E22]/50 hover:text-[var(--text-primary)]'
                     }`}
                   >
                     <span>{vibe.emoji}</span>
                     <span>{vibe.tag}</span>
-                    <span className={`text-[9px] ${SOURCE_COLORS[vibe.source] ?? 'text-slate-600'}`}>
-                      {vibe.score}
-                    </span>
+                    <span className="text-xs font-mono text-[#D9C5B2]">OSM</span>
                   </motion.button>
                 );
               })}
@@ -111,7 +107,7 @@ export default function VibeCheck({ destinationId = '', tripName = 'your trip' }
               )}
             </button>
             {selectedTags.size === 0 && (
-              <span className="text-[10px] text-slate-600 font-mono">Select at least one vibe</span>
+              <span className="text-[10px] text-[var(--text-muted)] font-mono">Select at least one vibe</span>
             )}
           </div>
 
@@ -134,17 +130,17 @@ export default function VibeCheck({ destinationId = '', tripName = 'your trip' }
                       animate={{ opacity: 1, scale: 1 }}
                       className="bg-[#0E1012] rounded-lg p-3 border border-[#E67E22]/20 flex gap-3 items-start"
                     >
-                      <span className="text-xl shrink-0">{act.icon}</span>
+                      <span className="text-xl shrink-0">{act.emoji}</span>
                       <div className="min-w-0">
-                        <div className="text-white text-xs font-mono font-semibold truncate">{act.title}</div>
-                        <div className="text-[9px] font-mono text-slate-500 mt-0.5">
-                          {act.time} · {act.duration} min · <span className="capitalize">{act.category}</span>
+                        <div className="text-white text-xs font-mono font-semibold truncate">{act.name}</div>
+                        <div className="text-[9px] font-mono text-[var(--text-muted)] mt-0.5">
+                          {act.time} · {act.duration} · <span className="capitalize">{act.category}</span>
                         </div>
                       </div>
                     </motion.div>
                   ))}
                 </div>
-                <div className="text-[10px] text-slate-600 font-mono">
+                <div className="text-[10px] text-[var(--text-muted)] font-mono">
                   ℹ Open the ITINERARY tab → Kanban Board to manually add these activities to your days
                 </div>
               </motion.div>
