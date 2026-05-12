@@ -29,4 +29,29 @@ describe('useTripStore — waypoints', () => {
     expect(wps[0].name).toBe('Shell A8');
     expect(wps[0].legId).toBe(legId);
   });
+
+  it('updateWaypoint patches a waypoint in place', () => {
+    const { result } = renderHook(() => useTripStore(), { wrapper });
+    const legId = result.current.legs[0].id;
+    act(() => result.current.addWaypoint(legId, {
+      category: 'fuel', name: 'Shell A8', coords: [48.1, 11.6], kmFromStart: 42,
+    }));
+    const wpId = result.current.legs.find(l => l.id === legId).waypoints[0].id;
+    act(() => result.current.updateWaypoint(legId, wpId, { status: 'confirmed', estCost: 62 }));
+    const wp = result.current.legs.find(l => l.id === legId).waypoints[0];
+    expect(wp.status).toBe('confirmed');
+    expect(wp.estCost).toBe(62);
+    expect(wp.name).toBe('Shell A8');     // unchanged
+  });
+
+  it('removeWaypoint drops the waypoint', () => {
+    const { result } = renderHook(() => useTripStore(), { wrapper });
+    const legId = result.current.legs[0].id;
+    act(() => result.current.addWaypoint(legId, {
+      category: 'fuel', name: 'Shell A8', coords: [48.1, 11.6], kmFromStart: 42,
+    }));
+    const wpId = result.current.legs.find(l => l.id === legId).waypoints[0].id;
+    act(() => result.current.removeWaypoint(legId, wpId));
+    expect(result.current.legs.find(l => l.id === legId).waypoints).toHaveLength(0);
+  });
 });

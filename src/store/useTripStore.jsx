@@ -108,6 +108,25 @@ function reducer(state, action) {
       );
       return { ...state, legs };
     }
+    case 'UPDATE_WAYPOINT': {
+      const { legId, waypointId, patch } = action.payload;
+      const legs = state.legs.map(l =>
+        l.id !== legId ? l : {
+          ...l,
+          waypoints: (l.waypoints ?? []).map(w =>
+            w.id === waypointId ? { ...w, ...patch } : w
+          ),
+        }
+      );
+      return { ...state, legs };
+    }
+    case 'REMOVE_WAYPOINT': {
+      const { legId, waypointId } = action.payload;
+      const legs = state.legs.map(l =>
+        l.id !== legId ? l : { ...l, waypoints: (l.waypoints ?? []).filter(w => w.id !== waypointId) }
+      );
+      return { ...state, legs };
+    }
     case 'CLONE_PATH': {
       const t = action.payload;
       return {
@@ -304,6 +323,10 @@ export function TripStoreProvider({ children }) {
   const removeLeg = (id) => dispatch({ type: 'REMOVE_LEG', payload: id });
   const addWaypoint = (legId, waypoint) =>
     dispatch({ type: 'ADD_WAYPOINT', payload: { legId, waypoint } });
+  const updateWaypoint = (legId, waypointId, patch) =>
+    dispatch({ type: 'UPDATE_WAYPOINT', payload: { legId, waypointId, patch } });
+  const removeWaypoint = (legId, waypointId) =>
+    dispatch({ type: 'REMOVE_WAYPOINT', payload: { legId, waypointId } });
   const resetTrip = () => dispatch({ type: 'RESET_TRIP' });
   const setRole = (role) => dispatch({ type: 'SET_ROLE', payload: role });
   const updateLegStatus = (id, status) =>
@@ -338,7 +361,7 @@ export function TripStoreProvider({ children }) {
     <TripStoreContext.Provider value={{
       ...state,
       dispatch,    // expose raw dispatch for onStopAdded()
-      clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, addWaypoint, resetTrip,
+      clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, addWaypoint, updateWaypoint, removeWaypoint, resetTrip,
       setRole, updateLegStatus, loadExpedition, replaceLegs, addStay, removeStay,
       addPoi, removePoi, addAlert, clearAlerts, addBudgetItem,
       addDayLoop, addStopToDayLoop, removeStopFromDayLoop, setAutoLegs,
