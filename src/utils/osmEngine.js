@@ -4,6 +4,7 @@ const UA        = 'VenturePath/1.0 (contact@venturepath.app)'
 
 const _cache = new Map()
 
+// Nominatim ToS: max 1 request/second. The module cache prevents repeated geocodes per session.
 export async function geocodeCity(city) {
   const url = `${NOMINATIM}/search?q=${encodeURIComponent(city)}&format=json&limit=1`
   const res = await fetch(url, { headers: { 'User-Agent': UA, 'Accept-Language': 'en' } })
@@ -64,8 +65,12 @@ const FOOD_TAGS = {
 
 async function _cached(key, fn) {
   if (_cache.has(key)) return _cache.get(key)
-  const result = await fn()
-  _cache.set(key, result)
+  const promise = fn()
+  _cache.set(key, promise)
+  const result = await promise
+  if (result === null || (Array.isArray(result) && result.length === 0)) {
+    _cache.delete(key)  // don't cache failures so they can be retried
+  }
   return result
 }
 
@@ -100,7 +105,7 @@ export async function generateVibes(city) {
   const categories = [
     { tag: 'Hiking Trails',  emoji: '🥾', filter: 'route=hiking' },
     { tag: 'Street Food',    emoji: '🍜', filter: 'amenity=fast_food' },
-    { tag: 'Historic Sites', emoji: '🏛️', filter: 'historic=yes' },
+    { tag: 'Historic Sites', emoji: '🏛️', filter: 'historic~"."' },
     { tag: 'Viewpoints',     emoji: '🔭', filter: 'tourism=viewpoint' },
     { tag: 'Cafes',          emoji: '☕', filter: 'amenity=cafe' },
     { tag: 'Night Markets',  emoji: '🌙', filter: 'amenity=marketplace' },

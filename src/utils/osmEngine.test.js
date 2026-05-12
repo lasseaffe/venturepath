@@ -1,12 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { geocodeCity, searchAccommodation, clearCache } from './osmEngine.js'
 
-// Mock fetch globally
 global.fetch = vi.fn()
 
 describe('osmEngine', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    vi.resetModules()
+    clearCache()
   })
 
   it('geocodeCity returns lat/lon/bbox for a valid city', async () => {
@@ -16,7 +16,6 @@ describe('osmEngine', () => {
         { lat: '48.8566', lon: '2.3522', boundingbox: ['48.8155', '48.9022', '2.2242', '2.4699'] }
       ]
     })
-    const { geocodeCity } = await import('./osmEngine.js')
     const result = await geocodeCity('Paris')
     expect(result.lat).toBeCloseTo(48.8566)
     expect(result.lon).toBeCloseTo(2.3522)
@@ -25,20 +24,17 @@ describe('osmEngine', () => {
 
   it('geocodeCity returns null for unknown city', async () => {
     fetch.mockResolvedValueOnce({ ok: true, json: async () => [] })
-    const { geocodeCity } = await import('./osmEngine.js')
     const result = await geocodeCity('xyzunknowncity')
     expect(result).toBeNull()
   })
 
   it('searchAccommodation returns shaped place objects', async () => {
-    // geocode call
     fetch.mockResolvedValueOnce({
       ok: true,
       json: async () => [
         { lat: '48.8566', lon: '2.3522', boundingbox: ['48.8155', '48.9022', '2.2242', '2.4699'] }
       ]
     })
-    // overpass call
     fetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({
@@ -48,7 +44,6 @@ describe('osmEngine', () => {
         ]
       })
     })
-    const { searchAccommodation } = await import('./osmEngine.js')
     const results = await searchAccommodation('Paris', 'all')
     expect(results).toHaveLength(2)
     expect(results[0]).toMatchObject({ id: '1', name: 'Hotel Lumière', lat: 48.86, lon: 2.35 })
