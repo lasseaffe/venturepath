@@ -29,7 +29,7 @@ function useHighResUrl(url) {
   return resolved;
 }
 
-export default function LaunchDashboard({ onEnterTrip, onOpenVault, onOpenProfile, onNavigate }) {
+export default function LaunchDashboard({ onEnterTrip, onOpenVault, onNavigate }) {
   const { theme } = useTheme();
   const { trip } = useTripStore();
   const { image: heroImage } = useDestinationImage(trip.destination, 'city', 0);

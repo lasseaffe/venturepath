@@ -10,8 +10,8 @@ import TripPlanner from './pages/TripPlanner';
 import ArchitectProfile from './components/social/ArchitectProfile';
 import VentureVault from './components/discovery/VentureVault';
 import ExpeditionSelectScreen from './components/trip/ExpeditionSelectScreen';
+import Moodboard from './pages/Moodboard';
 
-// Inner router has access to TripStore context
 function AppRouter() {
   const [view, setView] = useState('dashboard');
   const [activeExpeditionId, setActiveExpeditionId] = useState(null);
@@ -23,8 +23,19 @@ function AppRouter() {
     setView('planner');
   }, []);
 
+  const handleNavigate = useCallback((key) => {
+    if (key === 'select' || key === 'dashboard') {
+      setView(key);
+    } else if (key === 'vault') {
+      setView('vault');
+    } else if (key === 'profile') {
+      setView('profile');
+    } else if (key === 'tactical' || key === 'ar' || key === 'ledger') {
+      setView('select');
+    }
+  }, []);
+
   function handleBackFromPlanner() {
-    // Persist current planner state back to the expedition list
     if (activeExpeditionId) {
       saveExpedition({
         id: activeExpeditionId,
@@ -49,8 +60,13 @@ function AppRouter() {
     return (
       <TripPlanner
         onBackToDashboard={handleBackFromPlanner}
+        onOpenMoodboard={() => setView('moodboard')}
       />
     );
+  }
+
+  if (view === 'moodboard') {
+    return <Moodboard onBackToDashboard={() => setView('dashboard')} />;
   }
 
   if (view === 'profile') {
@@ -78,6 +94,7 @@ function AppRouter() {
       onOpenVault={() => setView('vault')}
       onOpenChat={() => setView('planner')}
       onOpenProfile={() => setView('profile')}
+      onNavigate={handleNavigate}
     />
   );
 }
