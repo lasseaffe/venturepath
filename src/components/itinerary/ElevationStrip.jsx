@@ -117,8 +117,7 @@ export default function ElevationStrip() {
   }, [legs]);
 
   // When no ground-leg data, show a synthetic placeholder from trip.days
-  const { legs: allLegs } = useTripStore();
-  const hasGroundLegs = allLegs.some(l => l.coords && GROUND_MODES.has(l.mode));
+  const hasGroundLegs = legs.some(l => l.coords && GROUND_MODES.has(l.mode));
 
   function handleMouseMove(e) {
     const rect = svgRef.current?.getBoundingClientRect();
@@ -172,7 +171,7 @@ export default function ElevationStrip() {
           ref={svgRef}
           viewBox={`0 0 ${SVG_W} ${SVG_H}`}
           preserveAspectRatio="none"
-          style={{ width: '100%', height: 80, display: 'block' }}
+          style={{ width: '100%', height: SVG_H, display: 'block' }}
         >
           <defs>
             <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
