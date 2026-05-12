@@ -223,11 +223,23 @@ function reducer(state, action) {
     case 'REPLACE_LEGS':
       return { ...state, legs: action.payload };
     case 'ADD_STAY': {
-      const stay = { ...action.payload, id: action.payload.id ?? crypto.randomUUID() };
+      const stay = { ...action.payload, id: action.payload.id ?? crypto.randomUUID(), kind: action.payload.kind ?? 'hotel' };
       return { ...state, stays: [...state.stays, stay] };
     }
     case 'REMOVE_STAY':
       return { ...state, stays: state.stays.filter(s => s.id !== action.payload) };
+    case 'SET_CAMP_META': {
+      const { stayId, campMeta } = action.payload;
+      const stays = state.stays.map(s => s.id === stayId ? { ...s, campMeta } : s);
+      return { ...state, stays };
+    }
+    case 'UPDATE_CAMP_META': {
+      const { stayId, patch } = action.payload;
+      const stays = state.stays.map(s =>
+        s.id === stayId ? { ...s, campMeta: { ...(s.campMeta ?? {}), ...patch } } : s
+      );
+      return { ...state, stays };
+    }
     case 'ADD_POI': {
       const poi = { ...action.payload, id: action.payload.id ?? crypto.randomUUID() };
       return { ...state, pois: [...state.pois, poi] };
@@ -390,6 +402,10 @@ export function TripStoreProvider({ children }) {
 
   const addStay = (data) => dispatch({ type: 'ADD_STAY', payload: data });
   const removeStay = (id) => dispatch({ type: 'REMOVE_STAY', payload: id });
+  const setCampMeta = (stayId, campMeta) =>
+    dispatch({ type: 'SET_CAMP_META', payload: { stayId, campMeta } });
+  const updateCampMeta = (stayId, patch) =>
+    dispatch({ type: 'UPDATE_CAMP_META', payload: { stayId, patch } });
   const addPoi = (data) => dispatch({ type: 'ADD_POI', payload: data });
   const removePoi = (id) => dispatch({ type: 'REMOVE_POI', payload: id });
   const addAlert = (data) => dispatch({ type: 'ADD_ALERT', payload: data });
@@ -417,7 +433,7 @@ export function TripStoreProvider({ children }) {
       ...state,
       dispatch,    // expose raw dispatch for onStopAdded()
       clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, addWaypoint, updateWaypoint, removeWaypoint, setLegMeta, replaceLegRoute, resetTrip,
-      setRole, updateLegStatus, loadExpedition, replaceLegs, addStay, removeStay,
+      setRole, updateLegStatus, loadExpedition, replaceLegs, addStay, removeStay, setCampMeta, updateCampMeta,
       addPoi, removePoi, addAlert, clearAlerts, addBudgetItem,
       addDayLoop, addStopToDayLoop, removeStopFromDayLoop, setAutoLegs,
       setDayLoopMode, removeDayLoop, setTripPlanningMode, setHeroImagePosition,
