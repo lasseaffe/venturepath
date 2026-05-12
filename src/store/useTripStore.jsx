@@ -39,6 +39,10 @@ const initialState = {
   manifestSettings: DEFAULT_MANIFEST_SETTINGS,
   userRole: 'LEADER', // 'LEADER' | 'MEMBER'
   cloning: false,
+  stays: [],   // { id, name, coords, checkin, checkout, price, currency }
+  pois: [],    // { id, name, coords, category, priority }
+  alerts: [],  // { id, type, severity, coords, message }
+  budget: { total: 0, items: [] }, // items: { id, label, amount, currency, legId? }
 };
 
 let nextLegId = 100; // start above seeded leg IDs so there's no collision
@@ -109,6 +113,29 @@ function reducer(state, action) {
     }
     case 'REPLACE_LEGS':
       return { ...state, legs: action.payload };
+    case 'ADD_STAY': {
+      const stay = { ...action.payload, id: action.payload.id ?? crypto.randomUUID() };
+      return { ...state, stays: [...state.stays, stay] };
+    }
+    case 'REMOVE_STAY':
+      return { ...state, stays: state.stays.filter(s => s.id !== action.payload) };
+    case 'ADD_POI': {
+      const poi = { ...action.payload, id: action.payload.id ?? crypto.randomUUID() };
+      return { ...state, pois: [...state.pois, poi] };
+    }
+    case 'REMOVE_POI':
+      return { ...state, pois: state.pois.filter(p => p.id !== action.payload) };
+    case 'ADD_ALERT': {
+      const alert = { ...action.payload, id: action.payload.id ?? crypto.randomUUID() };
+      return { ...state, alerts: [...state.alerts, alert] };
+    }
+    case 'CLEAR_ALERTS':
+      return { ...state, alerts: [] };
+    case 'ADD_BUDGET_ITEM': {
+      const item = { ...action.payload, id: action.payload.id ?? crypto.randomUUID() };
+      const newTotal = state.budget.total + (item.amount ?? 0);
+      return { ...state, budget: { total: newTotal, items: [...state.budget.items, item] } };
+    }
     default:
       return state;
   }
@@ -143,6 +170,10 @@ export function TripStoreProvider({ children }) {
         objectives: state.objectives,
         manifestSettings: state.manifestSettings,
         userRole: state.userRole,
+        stays: state.stays,
+        pois: state.pois,
+        alerts: state.alerts,
+        budget: state.budget,
       }));
     } catch { /* storage full or unavailable */ }
   }, [state]);
@@ -164,8 +195,16 @@ export function TripStoreProvider({ children }) {
     dispatch({ type: 'UPDATE_LEG_STATUS', payload: { id, status } });
   const replaceLegs = (legs) => dispatch({ type: 'REPLACE_LEGS', payload: legs });
 
+  const addStay = (data) => dispatch({ type: 'ADD_STAY', payload: data });
+  const removeStay = (id) => dispatch({ type: 'REMOVE_STAY', payload: id });
+  const addPoi = (data) => dispatch({ type: 'ADD_POI', payload: data });
+  const removePoi = (id) => dispatch({ type: 'REMOVE_POI', payload: id });
+  const addAlert = (data) => dispatch({ type: 'ADD_ALERT', payload: data });
+  const clearAlerts = () => dispatch({ type: 'CLEAR_ALERTS' });
+  const addBudgetItem = (data) => dispatch({ type: 'ADD_BUDGET_ITEM', payload: data });
+
   return (
-    <TripStoreContext.Provider value={{ ...state, clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, resetTrip, setRole, updateLegStatus, loadExpedition, replaceLegs }}>
+    <TripStoreContext.Provider value={{ ...state, clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, resetTrip, setRole, updateLegStatus, loadExpedition, replaceLegs, addStay, removeStay, addPoi, removePoi, addAlert, clearAlerts, addBudgetItem }}>
       {children}
     </TripStoreContext.Provider>
   );
