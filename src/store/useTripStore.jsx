@@ -127,6 +127,13 @@ function reducer(state, action) {
       );
       return { ...state, legs };
     }
+    case 'SET_LEG_META': {
+      const { legId, legMeta } = action.payload;
+      const legs = state.legs.map(l =>
+        l.id === legId ? { ...l, legMeta } : l
+      );
+      return { ...state, legs };
+    }
     case 'CLONE_PATH': {
       const t = action.payload;
       return {
@@ -327,6 +334,8 @@ export function TripStoreProvider({ children }) {
     dispatch({ type: 'UPDATE_WAYPOINT', payload: { legId, waypointId, patch } });
   const removeWaypoint = (legId, waypointId) =>
     dispatch({ type: 'REMOVE_WAYPOINT', payload: { legId, waypointId } });
+  const setLegMeta = (legId, legMeta) =>
+    dispatch({ type: 'SET_LEG_META', payload: { legId, legMeta } });
   const resetTrip = () => dispatch({ type: 'RESET_TRIP' });
   const setRole = (role) => dispatch({ type: 'SET_ROLE', payload: role });
   const updateLegStatus = (id, status) =>
@@ -361,7 +370,7 @@ export function TripStoreProvider({ children }) {
     <TripStoreContext.Provider value={{
       ...state,
       dispatch,    // expose raw dispatch for onStopAdded()
-      clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, addWaypoint, updateWaypoint, removeWaypoint, resetTrip,
+      clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, addWaypoint, updateWaypoint, removeWaypoint, setLegMeta, resetTrip,
       setRole, updateLegStatus, loadExpedition, replaceLegs, addStay, removeStay,
       addPoi, removePoi, addAlert, clearAlerts, addBudgetItem,
       addDayLoop, addStopToDayLoop, removeStopFromDayLoop, setAutoLegs,

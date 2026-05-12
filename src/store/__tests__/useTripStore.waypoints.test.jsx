@@ -54,4 +54,16 @@ describe('useTripStore — waypoints', () => {
     act(() => result.current.removeWaypoint(legId, wpId));
     expect(result.current.legs.find(l => l.id === legId).waypoints).toHaveLength(0);
   });
+
+  it('setLegMeta stores the mode-specific intelligence blob', () => {
+    const { result } = renderHook(() => useTripStore(), { wrapper });
+    const legId = result.current.legs[0].id;
+    const meta = {
+      tolls: { totalEst: 11.5, currency: 'EUR', byCountry: [{ cc: 'AT', amount: 11.5 }] },
+      routeVariants: [],
+      lastHydratedAt: '2026-05-12T10:00:00Z',
+    };
+    act(() => result.current.setLegMeta(legId, meta));
+    expect(result.current.legs.find(l => l.id === legId).legMeta).toEqual(meta);
+  });
 });
