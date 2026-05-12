@@ -1,165 +1,153 @@
-import { useState, useRef, useCallback } from 'react';
-import { searchByCategory, searchPlaces, getInspireQuery, FSQ_CATEGORIES } from '../../utils/foursquareEngine';
-import { useTripStore } from '../../store/useTripStore';
+import React, { useState, useEffect } from 'react'
+import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet'
+import { searchAccommodation } from '../../utils/osmEngine.js'
+import 'leaflet/dist/leaflet.css'
 
-const TYPE_FILTERS = [
-  { label: 'Hotel',     query: 'hotel',        catId: FSQ_CATEGORIES.hotels },
-  { label: 'Hostel',    query: 'hostel',        catId: null },
-  { label: 'Apartment', query: 'apartment stay',catId: null },
-  { label: 'Camping',   query: 'campsite',      catId: null },
-];
+const TILES = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+const ATTR  = '© <a href="https://openstreetmap.org">OpenStreetMap</a> © <a href="https://carto.com">CARTO</a>'
 
-export default function AccommodationSearch() {
-  const { trip } = useTripStore();
-  const destination = trip?.destination ?? '';
-  const [activeType, setActiveType] = useState(TYPE_FILTERS[0]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [searched, setSearched] = useState(false);
-  const [inspireLabel, setInspireLabel] = useState(null);
-  const debounceRef = useRef(null);
+function FitBounds({ pins }) {
+  const map = useMap()
+  useEffect(() => {
+    const valid = pins.filter(p => p.lat && p.lon)
+    if (!valid.length) return
+    const lats = valid.map(p => p.lat)
+    const lons = valid.map(p => p.lon)
+    map.fitBounds(
+      [[Math.min(...lats), Math.min(...lons)], [Math.max(...lats), Math.max(...lons)]],
+      { padding: [32, 32], maxZoom: 16 }
+    )
+  }, [pins, map])
+  return null
+}
 
-  const doSearch = useCallback(async (q, type) => {
-    setLoading(true);
-    setInspireLabel(null);
-    setSearched(true);
-    const near = q || destination;
-    const res = type.catId
-      ? await searchByCategory(type.catId, near, 8)
-      : await searchPlaces(type.query, near, 8);
-    setResults(res);
-    setLoading(false);
-  }, [destination]);
+function PanTo({ selectedId, pins }) {
+  const map = useMap()
+  useEffect(() => {
+    if (!selectedId) return
+    const pin = pins.find(p => p.id === selectedId)
+    if (pin) map.panTo([pin.lat, pin.lon], { animate: true })
+  }, [selectedId, pins, map])
+  return null
+}
 
-  function handleTypeChange(type) {
-    setActiveType(type);
-    doSearch(searchQuery, type);
+export default function AccommodationSearch({ destination }) {
+  const [results, setResults]       = useState([])
+  const [loading, setLoading]       = useState(false)
+  const [activeType, setActiveType] = useState('all')
+  const [selectedId, setSelectedId] = useState(null)
+
+  async function runSearch() {
+    if (!destination) return
+    setLoading(true)
+    const city = destination.split(',')[0].trim()
+    const data = await searchAccommodation(city, activeType)
+    setResults(data)
+    setSelectedId(null)
+    setLoading(false)
   }
 
-  function handleQueryChange(e) {
-    const val = e.target.value;
-    setSearchQuery(val);
-    clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => doSearch(val, activeType), 350);
-  }
-
-  function handleInspire() {
-    const q = getInspireQuery('stay') + ' accommodation';
-    setInspireLabel(q);
-    setLoading(true);
-    setSearched(true);
-    searchPlaces(q, destination, 8).then(res => {
-      setResults(res);
-      setLoading(false);
-    });
-  }
+  useEffect(() => {
+    if (results.length > 0) runSearch()
+  }, [activeType])
 
   return (
-    <div className="tactical-panel p-5 space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="label-tag">Stays{destination ? ` — ${destination}` : ''}</h2>
-        <button
-          onClick={handleInspire}
-          className="text-[9px] font-mono px-2.5 py-1 rounded border border-[#E67E22]/40 text-[#E67E22] hover:bg-[#E67E22]/10 transition-colors tracking-widest"
-        >
-          ✦ INSPIRE ME
-        </button>
-      </div>
+    <div className="bg-[#0E1012] border border-[#1a1d20] rounded p-4 font-mono">
+      <p className="text-xs text-[#D9C5B2] uppercase tracking-widest mb-3">
+        Stays — {destination ?? '—'}
+      </p>
 
-      {/* Type filter */}
-      <div className="flex gap-1.5 flex-wrap">
-        {TYPE_FILTERS.map(t => (
+      <div className="flex gap-2 mb-3 flex-wrap">
+        {['all', 'hotel', 'hostel', 'apartment', 'camp_site'].map(t => (
           <button
-            key={t.label}
-            onClick={() => handleTypeChange(t)}
-            className="text-[9px] font-mono px-2.5 py-1 rounded border transition-colors tracking-widest"
-            style={{
-              background: activeType.label === t.label ? 'rgba(230,126,34,0.15)' : 'transparent',
-              borderColor: activeType.label === t.label ? 'rgba(230,126,34,0.5)' : '#2a2f36',
-              color: activeType.label === t.label ? '#E67E22' : '#64748b',
-            }}
+            key={t}
+            onClick={() => setActiveType(t)}
+            className={`text-xs px-3 py-1 rounded border transition-colors ${
+              activeType === t
+                ? 'bg-[#E67E22] border-[#E67E22] text-black'
+                : 'border-[#333] text-[#D9C5B2] hover:border-[#E67E22]'
+            }`}
           >
-            {t.label.toUpperCase()}
+            {t === 'camp_site' ? 'CAMPING' : t.toUpperCase()}
           </button>
         ))}
       </div>
 
-      {/* Search input */}
-      <div className="flex gap-2">
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={handleQueryChange}
-          placeholder={`Search ${activeType.label.toLowerCase()}s near ${destination || 'city'}…`}
-          className="flex-1 bg-[#0E1012] border border-[#2a2f36] rounded px-3 py-2 text-sm text-white placeholder-slate-600 font-mono focus:outline-none focus:border-[#E67E22]/50"
-        />
-        <button
-          onClick={() => doSearch(searchQuery, activeType)}
-          className="px-3 py-2 rounded border border-[#E67E22]/50 text-[#E67E22] text-[10px] font-mono hover:bg-[#E67E22]/10 transition-colors tracking-widest"
-        >
-          SEARCH
-        </button>
-      </div>
+      <button
+        onClick={runSearch}
+        disabled={loading}
+        className="w-full mb-4 py-2 text-xs font-bold tracking-widest bg-[#E67E22] text-black rounded hover:bg-[#cf6d17] disabled:opacity-50 transition-colors"
+      >
+        {loading ? 'SEARCHING…' : 'SEARCH STAYS'}
+      </button>
 
-      {inspireLabel && (
-        <div className="text-[9px] font-mono text-slate-500 tracking-widest">
-          SHOWING: «{inspireLabel}» NEAR {(destination || 'ANYWHERE').toUpperCase()}
+      {results.length > 0 && (
+        <div className="flex gap-3" style={{ minHeight: 320 }}>
+          <ul className="flex-1 space-y-2 overflow-y-auto pr-1" style={{ maxHeight: 400 }}>
+            {results.map(place => (
+              <li
+                key={place.id}
+                id={`stay-card-${place.id}`}
+                onClick={() => setSelectedId(place.id)}
+                className={`p-2 rounded cursor-pointer transition-colors ${
+                  selectedId === place.id
+                    ? 'border-l-2 border-[#E67E22] bg-[#111]'
+                    : 'hover:bg-[#111] border-l-2 border-transparent'
+                }`}
+              >
+                <p className="text-sm text-white truncate">{place.name}</p>
+                <p className="text-xs text-[#D9C5B2] capitalize">
+                  {place.tags?.tourism ?? 'Accommodation'}
+                  {place.tags?.stars ? ` · ${'★'.repeat(parseInt(place.tags.stars))}` : ''}
+                </p>
+              </li>
+            ))}
+          </ul>
+
+          <div className="rounded overflow-hidden border border-[#1a1d20]" style={{ width: '55%', minHeight: 320 }}>
+            <MapContainer
+              center={[results[0].lat, results[0].lon]}
+              zoom={14}
+              style={{ height: '100%', width: '100%', minHeight: 320 }}
+              zoomControl={false}
+            >
+              <TileLayer url={TILES} attribution={ATTR} />
+              <FitBounds pins={results} />
+              <PanTo selectedId={selectedId} pins={results} />
+              {results.map(place => (
+                <CircleMarker
+                  key={place.id}
+                  center={[place.lat, place.lon]}
+                  radius={selectedId === place.id ? 10 : 7}
+                  pathOptions={{
+                    color: selectedId === place.id ? '#fff' : '#E67E22',
+                    fillColor: '#E67E22',
+                    fillOpacity: 0.9,
+                    weight: selectedId === place.id ? 2 : 1
+                  }}
+                  eventHandlers={{
+                    click: () => {
+                      setSelectedId(place.id)
+                      document.getElementById(`stay-card-${place.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+                    }
+                  }}
+                >
+                  <Popup className="font-mono text-xs">
+                    <strong>{place.name}</strong><br />
+                    {place.tags?.tourism ?? 'Accommodation'}
+                  </Popup>
+                </CircleMarker>
+              ))}
+            </MapContainer>
+          </div>
         </div>
       )}
 
-      {/* Results */}
-      {loading ? (
-        <div className="space-y-2">
-          {[1, 2, 3].map(i => (
-            <div key={i} className="bg-[#0E1012] rounded-lg p-3 flex items-center justify-between gap-3 animate-pulse">
-              <div className="space-y-1.5 flex-1">
-                <div className="h-4 rounded bg-[#1a1e22] w-2/3" />
-                <div className="h-3 rounded bg-[#1a1e22] w-1/3" />
-              </div>
-              <div className="w-14 h-5 rounded bg-[#1a1e22]" />
-            </div>
-          ))}
-        </div>
-      ) : !searched ? (
-        <div className="py-8 text-center text-[10px] font-mono text-slate-600 tracking-widest">
-          SEARCH FOR STAYS OR HIT ✦ INSPIRE ME
-        </div>
-      ) : results.length === 0 ? (
-        <div className="py-8 text-center text-[10px] font-mono text-slate-600 tracking-widest">
-          NO RESULTS — TRY A DIFFERENT QUERY
-        </div>
-      ) : (
-        <div className="space-y-2">
-          {results.map(p => (
-            <div
-              key={p.id}
-              className="bg-[#0E1012] rounded-lg p-3 flex items-center justify-between gap-3 border border-[#1e2328] hover:border-[#E67E22]/30 transition-colors"
-            >
-              <div className="flex-1 min-w-0">
-                <div className="text-white text-sm font-semibold">{p.name}</div>
-                <div className="text-xs text-slate-400 mt-0.5 truncate">{p.address}</div>
-                <div className="flex items-center gap-2 mt-1">
-                  <span className="text-[8px] font-mono text-slate-500">{p.type}</span>
-                  {p.rating && (
-                    <span className="text-[9px] font-mono text-[#E67E22]">★ {p.rating}</span>
-                  )}
-                </div>
-              </div>
-              <div className="flex flex-col items-end gap-1.5 shrink-0">
-                <a
-                  href={`https://www.booking.com/search.html?ss=${encodeURIComponent(p.name + ' ' + destination)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[9px] font-mono px-2 py-0.5 rounded border border-[#2a2f36] text-slate-400 hover:text-[#E67E22] hover:border-[#E67E22]/40 transition-colors tracking-widest"
-                >
-                  BOOKING →
-                </a>
-              </div>
-            </div>
-          ))}
-        </div>
+      {!loading && results.length === 0 && (
+        <p className="text-xs text-[#555] text-center py-4">
+          Search for stays above to see results on map.
+        </p>
       )}
     </div>
-  );
+  )
 }
