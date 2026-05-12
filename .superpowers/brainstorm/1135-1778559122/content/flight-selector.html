@@ -1,0 +1,187 @@
+<h2>Transport Selector — Autocomplete + Flight Selection</h2>
+<p class="subtitle">Two problems: (1) autocomplete dropdown stays open when clicking outside, (2) no way to "select" a flight option to feed it into the planning tools. How should both work?</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#0E1012;border-radius:6px;padding:12px;font-family:'JetBrains Mono',monospace;font-size:9px">
+        <div style="font-size:7px;color:#8A8680;letter-spacing:0.1em;margin-bottom:6px">LEG 1 — PUBLIC TRANSPORT</div>
+        <!-- Mode tabs -->
+        <div style="display:flex;gap:3px;margin-bottom:8px">
+          <div style="background:#E67E22;color:#fff;padding:3px 8px;border-radius:2px;font-size:7px">✈ FLIGHT</div>
+          <div style="background:#1a1f26;color:#8A8680;padding:3px 8px;border-radius:2px;font-size:7px">🚆 TRAIN</div>
+          <div style="background:#1a1f26;color:#8A8680;padding:3px 8px;border-radius:2px;font-size:7px">🚌 BUS</div>
+        </div>
+        <!-- FROM field — closed state -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px">
+          <div>
+            <div style="font-size:6px;color:#555;margin-bottom:2px">FROM</div>
+            <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;padding:5px 7px;color:#fff;font-size:8px">Hamburg Airport</div>
+          </div>
+          <div>
+            <div style="font-size:6px;color:#555;margin-bottom:2px">TO</div>
+            <div style="background:#1a1f26;border:1px solid #E67E22;border-radius:3px;padding:5px 7px;color:#8A8680;font-size:8px;position:relative">
+              Lille|
+              <!-- Dropdown below -->
+              <div style="position:absolute;top:100%;left:0;right:0;background:#1a1f26;border:1px solid #2a2f36;border-radius:0 0 3px 3px;z-index:10;margin-top:1px">
+                <div style="padding:4px 7px;color:#fff;font-size:7px;border-bottom:1px solid #12151a">📍 Lille, France</div>
+                <div style="padding:4px 7px;color:#8A8680;font-size:7px;border-bottom:1px solid #12151a">📍 Lille Airport (LIL)</div>
+                <div style="padding:4px 7px;color:#8A8680;font-size:7px">📍 Lille-Sud, France</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- click-outside indicator -->
+        <div style="font-size:7px;color:#555;margin-bottom:8px;font-style:italic">↑ click outside input → dropdown closes immediately (onBlur)</div>
+        <!-- Flight results — selectable -->
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;padding:6px 8px;display:flex;align-items:center;gap:8px">
+            <div style="flex:1">
+              <div style="font-size:7px;color:#8A8680">Lufthansa · 7h 45m</div>
+              <div style="font-size:9px;color:#fff">HAM → Lille</div>
+            </div>
+            <div style="text-align:right;margin-right:8px">
+              <div style="font-size:10px;color:#fff">$542</div>
+              <div style="font-size:7px;color:#E67E22">120kg CO₂</div>
+            </div>
+            <div style="background:#E67E2222;border:1px solid #E67E22;border-radius:2px;padding:3px 7px;font-size:7px;color:#E67E22;white-space:nowrap">+ SELECT</div>
+          </div>
+          <div style="background:#1a1f26;border:1px solid #E67E22;border-radius:3px;padding:6px 8px;display:flex;align-items:center;gap:8px">
+            <div style="flex:1">
+              <div style="font-size:7px;color:#8A8680">GreenFly · 4h 45m</div>
+              <div style="font-size:9px;color:#fff">HAM → Lille</div>
+            </div>
+            <div style="text-align:right;margin-right:8px">
+              <div style="font-size:10px;color:#fff">$620</div>
+              <div style="font-size:7px;color:#4CAF50">85kg CO₂</div>
+            </div>
+            <div style="background:#E67E22;border-radius:2px;padding:3px 7px;font-size:7px;color:#fff;white-space:nowrap">✓ ADDED</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — onBlur closes dropdown, "+ SELECT" button per result</h3>
+      <p>Autocomplete closes on blur (click-away). Each flight row has an explicit "+ SELECT" button that turns "✓ ADDED" on click and sends the leg data to TripPlanner. Simple, clear affordance.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#0E1012;border-radius:6px;padding:12px;font-family:'JetBrains Mono',monospace;font-size:9px">
+        <div style="font-size:7px;color:#8A8680;letter-spacing:0.1em;margin-bottom:6px">LEG 1 — PUBLIC TRANSPORT</div>
+        <div style="display:flex;gap:3px;margin-bottom:8px">
+          <div style="background:#E67E22;color:#fff;padding:3px 8px;border-radius:2px;font-size:7px">✈ FLIGHT</div>
+          <div style="background:#1a1f26;color:#8A8680;padding:3px 8px;border-radius:2px;font-size:7px">🚆 TRAIN</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px">
+          <div>
+            <div style="font-size:6px;color:#555;margin-bottom:2px">FROM</div>
+            <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;padding:5px 7px;color:#fff;font-size:8px">Hamburg Airport</div>
+          </div>
+          <div>
+            <div style="font-size:6px;color:#555;margin-bottom:2px">TO</div>
+            <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;padding:5px 7px;color:#fff;font-size:8px">Lille</div>
+          </div>
+        </div>
+        <!-- Click-to-select whole row -->
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;padding:6px 8px;display:flex;align-items:center;gap:8px;cursor:pointer">
+            <div style="width:12px;height:12px;border-radius:50%;border:1px solid #2a2f36;flex-shrink:0"></div>
+            <div style="flex:1">
+              <div style="font-size:7px;color:#8A8680">Lufthansa · 7h 45m</div>
+              <div style="font-size:9px;color:#fff">HAM → Lille · $542</div>
+            </div>
+            <div style="font-size:7px;color:#E67E22">120kg CO₂</div>
+          </div>
+          <div style="background:#E67E2211;border:1px solid #E67E22;border-radius:3px;padding:6px 8px;display:flex;align-items:center;gap:8px">
+            <div style="width:12px;height:12px;border-radius:50%;background:#E67E22;flex-shrink:0;display:flex;align-items:center;justify-content:center">
+              <div style="width:5px;height:5px;border-radius:50%;background:#0E1012"></div>
+            </div>
+            <div style="flex:1">
+              <div style="font-size:7px;color:#8A8680">GreenFly · 4h 45m</div>
+              <div style="font-size:9px;color:#fff">HAM → Lille · $620</div>
+            </div>
+            <div style="font-size:7px;color:#4CAF50">85kg CO₂</div>
+          </div>
+          <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;padding:6px 8px;display:flex;align-items:center;gap:8px;cursor:pointer">
+            <div style="width:12px;height:12px;border-radius:50%;border:1px solid #2a2f36;flex-shrink:0"></div>
+            <div style="flex:1">
+              <div style="font-size:7px;color:#8A8680">DirectJet · 2h 15m</div>
+              <div style="font-size:9px;color:#fff">HAM → Lille · $890</div>
+            </div>
+            <div style="font-size:7px;color:#E67E22">210kg CO₂</div>
+          </div>
+        </div>
+        <!-- Add to plan button -->
+        <div style="margin-top:7px;background:#E67E22;border-radius:3px;padding:6px;text-align:center;font-size:8px;color:#fff;letter-spacing:0.08em">→ ADD SELECTED LEG TO PLAN</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Radio-select row, single "Add to Plan" CTA</h3>
+      <p>Click the whole row to select it (radio button style). One "→ ADD SELECTED LEG TO PLAN" button at the bottom commits it. Familiar pattern, prevents accidental adds.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#0E1012;border-radius:6px;padding:12px;font-family:'JetBrains Mono',monospace;font-size:9px">
+        <div style="font-size:7px;color:#8A8680;letter-spacing:0.1em;margin-bottom:6px">LEG 1 — PUBLIC TRANSPORT</div>
+        <div style="display:flex;gap:3px;margin-bottom:8px">
+          <div style="background:#E67E22;color:#fff;padding:3px 8px;border-radius:2px;font-size:7px">✈ FLIGHT</div>
+          <div style="background:#1a1f26;color:#8A8680;padding:3px 8px;border-radius:2px;font-size:7px">🚆 TRAIN</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px">
+          <div>
+            <div style="font-size:6px;color:#555;margin-bottom:2px">FROM</div>
+            <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;padding:5px 7px;color:#fff;font-size:8px">Hamburg Airport</div>
+          </div>
+          <div>
+            <div style="font-size:6px;color:#555;margin-bottom:2px">TO</div>
+            <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;padding:5px 7px;color:#fff;font-size:8px">Lille</div>
+          </div>
+        </div>
+        <!-- Swipeable/expandable cards -->
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;overflow:hidden">
+            <div style="padding:6px 8px;display:flex;align-items:center;gap:8px">
+              <div style="flex:1">
+                <div style="font-size:7px;color:#8A8680">Lufthansa · Economy</div>
+                <div style="font-size:9px;color:#fff">HAM → Lille · 7h 45m</div>
+              </div>
+              <div style="font-size:10px;color:#fff">$542</div>
+            </div>
+          </div>
+          <!-- Expanded/selected card -->
+          <div style="background:#1a1f26;border:1px solid #E67E22;border-radius:3px;overflow:hidden">
+            <div style="padding:6px 8px;display:flex;align-items:center;gap:8px">
+              <div style="flex:1">
+                <div style="font-size:7px;color:#E67E22">GreenFly · Eco ★ SELECTED</div>
+                <div style="font-size:9px;color:#fff">HAM → Lille · 4h 45m</div>
+              </div>
+              <div style="font-size:10px;color:#fff">$620</div>
+            </div>
+            <!-- Expanded detail strip -->
+            <div style="background:#0E1012;padding:6px 8px;display:flex;justify-content:space-between;align-items:center">
+              <div style="font-size:7px;color:#4CAF50">85kg CO₂ · Eco fare</div>
+              <div style="background:#E67E22;border-radius:2px;padding:3px 8px;font-size:7px;color:#fff">→ IMPORT TO PLAN</div>
+            </div>
+          </div>
+          <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;padding:6px 8px;display:flex;align-items:center;gap:8px">
+            <div style="flex:1">
+              <div style="font-size:7px;color:#8A8680">DirectJet · Non-stop</div>
+              <div style="font-size:9px;color:#fff">HAM → Lille · 2h 15m</div>
+            </div>
+            <div style="font-size:10px;color:#fff">$890</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Click expands card, "→ IMPORT TO PLAN" inline</h3>
+      <p>Click a flight row to expand it, revealing detail + an "→ IMPORT TO PLAN" button inline in the expanded state. Only one card expanded at a time. Discovery-style interaction.</p>
+    </div>
+  </div>
+
+</div>

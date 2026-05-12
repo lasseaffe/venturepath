@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bag Zone States — Visual Reference</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Playfair+Display:ital,wght@0,700;1,400&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --midnight: #0E1012;
+    --ember: #E67E22;
+    --ember-dim: #E67E2240;
+    --ember-glow: #E67E2215;
+    --sandstone: #D9C5B2;
+    --border: #1e2530;
+    --canvas-mid: #28343c;
+    --leather-mid: #252018;
+    --interior: #0e1820;
+    --pocket-int: #0c1620;
+  }
+
+  body {
+    background: var(--midnight);
+    color: var(--sandstone);
+    font-family: 'JetBrains Mono', monospace;
+    padding: 32px 24px 48px;
+    min-height: 100vh;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: #fff;
+    margin-bottom: 6px;
+    letter-spacing: 0.01em;
+  }
+
+  .subtitle {
+    font-size: 10px;
+    color: var(--ember);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    opacity: 0.85;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .zone-card {
+    background: #111518;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .zone-card:hover { border-color: var(--ember); }
+
+  .zone-header {
+    padding: 12px 14px 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .zone-name {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ember);
+    font-weight: 600;
+  }
+
+  .anim-tag {
+    font-size: 7.5px;
+    letter-spacing: 0.1em;
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: 1px solid;
+    text-transform: uppercase;
+  }
+  .tag-split { color: #a0c8ff; border-color: #a0c8ff40; background: #a0c8ff08; }
+  .tag-draw  { color: #a0ffb8; border-color: #a0ffb840; background: #a0ffb808; }
+  .tag-expand{ color: #ffd080; border-color: #ffd08040; background: #ffd08008; }
+
+  .states {
+    display: flex;
+    gap: 0;
+  }
+
+  .state {
+    flex: 1;
+    padding: 14px 12px 12px;
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+  .state:last-child { border-right: none; }
+
+  .state-label {
+    font-size: 7px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.45;
+    margin-bottom: 10px;
+  }
+
+  /* SVG zone mockups */
+  .mock-svg {
+    width: 100%;
+    aspect-ratio: 3/1;
+    position: relative;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  /* TOP LID idle */
+  .lid-idle {
+    background: linear-gradient(135deg, #3a3630 0%, #252018 60%, #120e08 100%);
+    border: 1px solid #E67E2230;
+    display: flex; flex-direction: column; align-items: stretch; justify-content: space-around;
+    padding: 6px 10px;
+    gap: 3px;
+  }
+  .lid-stitch { height: 1px; background: repeating-linear-gradient(90deg, #E67E2240 0px, #E67E2240 6px, transparent 6px, transparent 11px); border-radius: 1px; }
+  .lid-strap { height: 8px; background: linear-gradient(90deg, transparent 30%, #3a3630 30%, #252018 50%, #3a3630 70%, transparent 70%); border-radius: 2px; position: relative; }
+  .lid-strap::after { content: ''; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 10px; height: 6px; border: 1px solid #E67E2255; border-radius: 1px; }
+
+  /* TOP LID opened */
+  .lid-open {
+    background: radial-gradient(ellipse at 50% 40%, #1a2830 0%, #0e1820 60%, #080e14 100%);
+    border: 1px solid #E67E2270;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 4px;
+  }
+  .lid-seam { width: 85%; height: 1px; background: #E67E22; opacity: 0.8; box-shadow: 0 0 6px #E67E2260; position: relative; }
+  .lid-dots { display: flex; gap: 7px; }
+  .lid-dot { width: 3px; height: 3px; border-radius: 50%; background: #E67E22; opacity: 0.55; }
+  .lid-glow { width: 70%; height: 2px; background: linear-gradient(90deg, transparent, #E67E2230, transparent); border-radius: 1px; filter: blur(2px); }
+
+  /* MAIN idle */
+  .main-idle {
+    background: linear-gradient(135deg, #28343c 0%, #1e2830 100%);
+    border: 1px solid #E67E2230;
+    display: flex; align-items: stretch; padding: 6px;
+    gap: 6px;
+  }
+  .main-panel { flex: 1; border-right: 1px dashed #E67E2228; }
+  .main-panel:last-child { border-right: none; }
+  .main-hline { height: 1px; background: repeating-linear-gradient(90deg, #E67E2225 0px, #E67E2225 8px, transparent 8px, transparent 14px); margin: auto 0; margin-top: 50%; }
+
+  /* MAIN opened */
+  .main-open {
+    background: radial-gradient(ellipse at 50% 50%, #1a2830 0%, #0e1820 55%, #080e14 100%);
+    border: 1px solid #E67E2270;
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .main-midglow { width: 80%; height: 2px; background: linear-gradient(90deg, transparent, #E67E2225, transparent); border-radius: 1px; filter: blur(3px); }
+  .main-edgeshadow { position: absolute; inset: 0; box-shadow: inset 0 0 12px rgba(0,0,0,0.7); border-radius: 5px; }
+
+  /* FRONT POCKET idle */
+  .fp-idle {
+    background: linear-gradient(135deg, #2e3c44 0%, #1a2428 100%);
+    border: 1px solid #E67E2230;
+    display: flex; align-items: stretch; padding: 0;
+    flex-direction: column;
+  }
+  .fp-zipper-bar { height: 6px; background: #120e08; border-bottom: 1px dashed #E67E2240; display: flex; align-items: center; padding: 0 6px; }
+  .fp-zipper-pull { width: 10px; height: 4px; background: linear-gradient(180deg, #ff9f50, #E67E22); border-radius: 1px; margin: 0 auto; }
+  .fp-quilt { flex: 1; overflow: hidden; position: relative; }
+  .fp-quilt::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(-45deg, transparent, transparent 6px, #E67E2210 6px, #E67E2210 7px);
+  }
+
+  /* FRONT POCKET opened */
+  .fp-open {
+    background: #0c1620;
+    border: 1px solid #E67E2270;
+    display: flex; flex-direction: column;
+  }
+  .fp-open-top { height: 6px; background: linear-gradient(180deg, rgba(0,0,0,0.7), transparent); }
+  .fp-open-interior { flex: 1; background: radial-gradient(ellipse at 50% 30%, #1e2c36 0%, #0c1620 100%); display: flex; align-items: flex-end; padding-bottom: 4px; justify-content: center; }
+  .fp-open-glow { width: 70%; height: 2px; background: linear-gradient(90deg, transparent, #E67E2222, transparent); border-radius: 1px; filter: blur(2px); }
+  .fp-zipper-open { height: 6px; background: #120e08; display: flex; align-items: center; padding: 0 6px; position: relative; }
+  .fp-zipper-line { position: absolute; left: 8px; right: 8px; height: 1px; background: linear-gradient(90deg, #E67E2280, #E67E22); box-shadow: 0 0 4px #E67E2260; }
+  .fp-pull-right { width: 10px; height: 4px; background: linear-gradient(180deg, #ff9f50, #E67E22); border-radius: 1px; margin-left: auto; box-shadow: 0 0 4px #E67E2280; }
+
+  /* SIDE POCKET idle */
+  .sp-idle {
+    background: linear-gradient(135deg, #2e3c44 0%, #1a2428 100%);
+    border: 1px solid #E67E2230;
+    aspect-ratio: 1/2 !important;
+    display: flex; flex-direction: column; align-items: stretch;
+    padding: 4px 6px;
+    gap: 5px;
+    justify-content: center;
+  }
+  .sp-slot { height: 1px; background: repeating-linear-gradient(90deg, #E67E2230 0px, #E67E2230 3px, transparent 3px, transparent 6px); }
+
+  /* SIDE POCKET opened */
+  .sp-open {
+    background: radial-gradient(ellipse at 60% 50%, #1e2c36 0%, #0c1620 100%);
+    border: 1px solid #E67E2270;
+    aspect-ratio: 1/2 !important;
+    display: flex; flex-direction: column; align-items: flex-end;
+    padding: 4px;
+    position: relative;
+  }
+  .sp-edge { width: 2px; background: linear-gradient(180deg, transparent, #E67E2230, transparent); border-radius: 1px; flex: 1; }
+  .sp-open::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 30%; background: linear-gradient(180deg, rgba(0,0,0,0.5), transparent); }
+
+  /* HIP BELT idle */
+  .hb-idle {
+    background: linear-gradient(135deg, #3a3630 0%, #252018 100%);
+    border: 1px solid #E67E2230;
+    aspect-ratio: 6/1 !important;
+    display: flex; flex-direction: column; justify-content: space-around;
+    padding: 3px 8px;
+  }
+  .hb-weave { height: 1px; background: repeating-linear-gradient(90deg, #E67E2222 0px, #E67E2222 8px, transparent 8px, transparent 14px); }
+
+  /* HIP BELT opened */
+  .hb-open {
+    background: radial-gradient(ellipse at 50% 50%, #1c2830 0%, #0a1018 100%);
+    border: 1px solid #E67E2270;
+    aspect-ratio: 6/1 !important;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .hb-glow { width: 75%; height: 2px; background: linear-gradient(90deg, transparent, #E67E2225, transparent); border-radius: 1px; filter: blur(2px); }
+  .hb-open::before { content: ''; position: absolute; inset: 0; box-shadow: inset 0 0 10px rgba(0,0,0,0.7); border-radius: 5px; }
+
+  /* Wide card for hip belt */
+  .wide { grid-column: span 3; }
+  .wide .states { flex-direction: row; }
+  .wide .state { padding: 12px 16px; }
+  .wide .mock-svg { aspect-ratio: 8/1; }
+
+  .legend {
+    display: flex; gap: 20px; align-items: center;
+    padding: 14px 16px;
+    background: #0d1015;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    margin-top: 4px;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.7; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+  .commit-ref {
+    margin-top: 20px;
+    padding: 10px 14px;
+    background: #0d1015;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    font-size: 8.5px;
+    letter-spacing: 0.08em;
+    color: #888;
+    display: flex; gap: 16px; align-items: center;
+  }
+  .commit-hash { color: var(--ember); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<h1>Bag Zone Visual States</h1>
+<p class="subtitle">Idle character + opened interior reveal — per zone</p>
+
+<div class="grid">
+
+  <!-- TOP LID -->
+  <div class="zone-card">
+    <div class="zone-header">
+      <span class="zone-name">Top Lid</span>
+      <span class="anim-tag tag-split">Split Flap</span>
+    </div>
+    <div class="states">
+      <div class="state">
+        <div class="state-label">Idle</div>
+        <div class="mock-svg lid-idle" style="aspect-ratio:4/1">
+          <div class="lid-stitch"></div>
+          <div class="lid-strap"></div>
+          <div class="lid-stitch"></div>
+          <div class="lid-stitch"></div>
+        </div>
+        <div style="margin-top:8px;font-size:7.5px;opacity:0.5;line-height:1.6">
+          Horizontal stitching bands<br>Compression strap shadow<br>Subtle leather tint
+        </div>
+      </div>
+      <div class="state">
+        <div class="state-label">Opened</div>
+        <div class="mock-svg lid-open" style="aspect-ratio:4/1">
+          <div class="lid-glow"></div>
+          <div class="lid-seam"></div>
+          <div class="lid-dots">
+            <div class="lid-dot"></div><div class="lid-dot"></div><div class="lid-dot"></div>
+            <div class="lid-dot"></div><div class="lid-dot"></div><div class="lid-dot"></div>
+            <div class="lid-dot"></div><div class="lid-dot"></div>
+          </div>
+        </div>
+        <div style="margin-top:8px;font-size:7.5px;opacity:0.5;line-height:1.6">
+          Dark interior cavity<br>Zipper seam + 14 tooth dots<br>Warm glow at base
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="zone-card">
+    <div class="zone-header">
+      <span class="zone-name">Main</span>
+      <span class="anim-tag tag-expand">Clip Expand</span>
+    </div>
+    <div class="states">
+      <div class="state">
+        <div class="state-label">Idle</div>
+        <div class="mock-svg main-idle" style="aspect-ratio:4/1">
+          <div class="main-panel"></div>
+          <div class="main-panel" style="position:relative">
+            <div class="main-hline"></div>
+          </div>
+          <div class="main-panel"></div>
+        </div>
+        <div style="margin-top:8px;font-size:7.5px;opacity:0.5;line-height:1.6">
+          Vertical fabric panel seams<br>Horizontal load-line<br>Structural canvas feel
+        </div>
+      </div>
+      <div class="state">
+        <div class="state-label">Opened</div>
+        <div class="mock-svg main-open" style="aspect-ratio:4/1">
+          <div class="main-edgeshadow"></div>
+          <div class="main-midglow"></div>
+        </div>
+        <div style="margin-top:8px;font-size:7.5px;opacity:0.5;line-height:1.6">
+          Cavity expands from midline<br>Deep edge shadow ring<br>Center accent glow seam
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FRONT POCKET -->
+  <div class="zone-card">
+    <div class="zone-header">
+      <span class="zone-name">Front Pocket</span>
+      <span class="anim-tag tag-draw">Draw-On H</span>
+    </div>
+    <div class="states">
+      <div class="state">
+        <div class="state-label">Idle</div>
+        <div class="mock-svg fp-idle" style="aspect-ratio:4/1">
+          <div class="fp-zipper-bar"><div class="fp-zipper-pull"></div></div>
+          <div class="fp-quilt"></div>
+        </div>
+        <div style="margin-top:8px;font-size:7.5px;opacity:0.5;line-height:1.6">
+          Zipper pull centered<br>Diagonal quilting lining<br>Bottom depth shadow
+        </div>
+      </div>
+      <div class="state">
+        <div class="state-label">Opened</div>
+        <div class="mock-svg fp-open" style="aspect-ratio:4/1">
+          <div class="fp-zipper-open">
+            <div class="fp-zipper-line"></div>
+            <div class="fp-pull-right"></div>
+          </div>
+          <div class="fp-open-top"></div>
+          <div class="fp-open-interior"><div class="fp-open-glow"></div></div>
+        </div>
+        <div style="margin-top:8px;font-size:7.5px;opacity:0.5;line-height:1.6">
+          Pull slides right, trace draws<br>Interior pocket reveals below<br>Top cavity shadow + warm glow
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDE POCKET + HIP BELT row -->
+  <div class="zone-card">
+    <div class="zone-header">
+      <span class="zone-name">Side Pocket</span>
+      <span class="anim-tag tag-draw">Draw-On V</span>
+    </div>
+    <div class="states">
+      <div class="state">
+        <div class="state-label">Idle</div>
+        <div class="mock-svg sp-idle" style="aspect-ratio:1/1.8">
+          <div class="sp-slot"></div>
+          <div class="sp-slot"></div>
+          <div class="sp-slot"></div>
+        </div>
+        <div style="margin-top:8px;font-size:7.5px;opacity:0.5;line-height:1.6">
+          Horizontal slot dividers<br>Narrow vertical strip feel<br>Item-stack character
+        </div>
+      </div>
+      <div class="state">
+        <div class="state-label">Opened</div>
+        <div class="mock-svg sp-open" style="aspect-ratio:1/1.8">
+          <div class="sp-edge"></div>
+        </div>
+        <div style="margin-top:8px;font-size:7.5px;opacity:0.5;line-height:1.6">
+          Interior fades in top→down<br>Right-edge accent highlight<br>Pull tab slides to base
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HIP BELT wide -->
+  <div class="zone-card" style="grid-column: span 2">
+    <div class="zone-header">
+      <span class="zone-name">Hip Belt</span>
+      <span class="anim-tag tag-expand">Clip Expand</span>
+    </div>
+    <div class="states">
+      <div class="state">
+        <div class="state-label">Idle</div>
+        <div class="mock-svg hb-idle" style="aspect-ratio:8/1">
+          <div class="hb-weave"></div>
+          <div class="hb-weave"></div>
+          <div class="hb-weave"></div>
+        </div>
+        <div style="margin-top:8px;font-size:7.5px;opacity:0.5;line-height:1.6">
+          Horizontal weave bands · Belt material texture
+        </div>
+      </div>
+      <div class="state">
+        <div class="state-label">Opened</div>
+        <div class="mock-svg hb-open" style="aspect-ratio:8/1">
+          <div class="hb-glow"></div>
+        </div>
+        <div style="margin-top:8px;font-size:7.5px;opacity:0.5;line-height:1.6">
+          Belt-release wipe from center · Deep cavity shadow · Center glow strip
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#a0c8ff30;border:1px solid #a0c8ff60"></div>Split Flap — lid halves translate apart</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#a0ffb830;border:1px solid #a0ffb860"></div>Draw-On — stroke-dashoffset zipper trace</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ffd08030;border:1px solid #ffd08060"></div>Clip Expand — clip-path wipe from midline</div>
+  <div class="legend-item" style="margin-left:auto"><div class="legend-dot" style="background:#E67E2220;border:1px solid #E67E2260"></div>All skins auto-adapt via p.accent</div>
+</div>
+
+<div class="commit-ref">
+  <span>VenturePath · <span class="commit-hash">1f21bde</span></span>
+  <span>src/components/logistics/bag/Bag2D.jsx</span>
+  <span style="margin-left:auto">3 skins × 5 zones × 2 states = 30 visual configurations</span>
+</div>
+
+</body>
+</html>

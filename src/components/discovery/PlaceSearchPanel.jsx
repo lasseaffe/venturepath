@@ -1,6 +1,15 @@
 import { useState, useRef, useCallback } from 'react';
-import { searchPlaces, searchByCategory, getInspireQuery } from '../../utils/foursquareEngine';
-import { POI_CATEGORIES } from '../../utils/poiCategories';
+import { searchPlaces, searchByCategory, getInspireQuery, FSQ_CATEGORIES } from '../../utils/foursquareEngine';
+
+const CATEGORY_PILLS = [
+  { label: 'All',         id: null,                   icon: '🔍' },
+  { label: 'Hotels',      id: FSQ_CATEGORIES.hotels,      icon: '🏨' },
+  { label: 'Restaurants', id: FSQ_CATEGORIES.restaurants, icon: '🍽' },
+  { label: 'Bars',        id: FSQ_CATEGORIES.bars,        icon: '🍸' },
+  { label: 'Attractions', id: FSQ_CATEGORIES.attractions, icon: '🏛' },
+  { label: 'Cafés',       id: FSQ_CATEGORIES.cafes,       icon: '☕' },
+  { label: 'Shopping',    id: FSQ_CATEGORIES.shopping,    icon: '🏪' },
+];
 
 export default function PlaceSearchPanel({ open, nearCity = '', onClose, onAddToItinerary }) {
   const [query, setQuery] = useState('');
@@ -88,7 +97,7 @@ export default function PlaceSearchPanel({ open, nearCity = '', onClose, onAddTo
             </button>
             <button
               onClick={onClose}
-              className="w-6 h-6 flex items-center justify-center rounded border border-[#2a2f36] text-slate-500 hover:text-white hover:border-[#3a3f46] transition-colors text-sm"
+              className="w-6 h-6 flex items-center justify-center rounded border border-[#2a2f36] text-[var(--text-muted)] hover:text-white hover:border-[#3a3f46] transition-colors text-sm"
             >
               ✕
             </button>
@@ -108,30 +117,18 @@ export default function PlaceSearchPanel({ open, nearCity = '', onClose, onAddTo
 
         {/* Category pills */}
         <div className="px-4 py-2 flex gap-1.5 flex-wrap shrink-0" style={{ borderBottom: '1px solid #1e2328' }}>
-          {/* All pill */}
-          <button
-            onClick={() => handleCategory(null)}
-            className="text-[8px] font-mono px-2 py-1 rounded border transition-colors tracking-widest"
-            style={{
-              background: category === null ? 'rgba(230,126,34,0.15)' : 'transparent',
-              borderColor: category === null ? 'rgba(230,126,34,0.5)' : '#1e2328',
-              color: category === null ? '#E67E22' : '#4b5563',
-            }}
-          >
-            🔍 ALL
-          </button>
-          {POI_CATEGORIES.map(cat => (
+          {CATEGORY_PILLS.map(c => (
             <button
-              key={cat.id}
-              onClick={() => handleCategory(cat.id)}
+              key={c.label}
+              onClick={() => handleCategory(c.id)}
               className="text-[8px] font-mono px-2 py-1 rounded border transition-colors tracking-widest"
               style={{
-                background: category === cat.id ? `${cat.color}26` : 'transparent',
-                borderColor: category === cat.id ? `${cat.color}80` : '#1e2328',
-                color: category === cat.id ? cat.color : '#4b5563',
+                background: category === c.id ? 'rgba(230,126,34,0.15)' : 'transparent',
+                borderColor: category === c.id ? 'rgba(230,126,34,0.5)' : '#1e2328',
+                color: category === c.id ? '#E67E22' : '#4b5563',
               }}
             >
-              {cat.icon} {cat.label.toUpperCase()}
+              {c.icon} {c.label.toUpperCase()}
             </button>
           ))}
         </div>
@@ -139,7 +136,7 @@ export default function PlaceSearchPanel({ open, nearCity = '', onClose, onAddTo
         {/* Body */}
         <div className="flex-1 overflow-y-auto px-4 py-3">
           {inspireLabel && (
-            <div className="text-[9px] font-mono text-slate-500 tracking-widest mb-3">
+            <div className="text-[9px] font-mono text-[var(--text-muted)] tracking-widest mb-3">
               SHOWING: «{inspireLabel}» NEAR {(nearCity || 'ANYWHERE').toUpperCase()}
             </div>
           )}
@@ -156,7 +153,7 @@ export default function PlaceSearchPanel({ open, nearCity = '', onClose, onAddTo
           ) : results.length === 0 ? (
             <div className="py-12 text-center">
               <div className="text-2xl mb-3">✦</div>
-              <div className="text-[10px] font-mono text-slate-600 tracking-widest">
+              <div className="text-[10px] font-mono text-[var(--text-muted)] tracking-widest">
                 SEARCH OR HIT INSPIRE ME
               </div>
             </div>
@@ -173,7 +170,7 @@ export default function PlaceSearchPanel({ open, nearCity = '', onClose, onAddTo
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
                       <div className="text-[11px] font-mono font-bold text-white">{p.name}</div>
-                      <div className="text-[10px] text-slate-500 mt-0.5 truncate">{p.address}</div>
+                      <div className="text-[10px] text-[var(--text-muted)] mt-0.5 truncate">{p.address}</div>
                       <div className="flex items-center gap-2 mt-1">
                         <span className="text-[8px] font-mono px-1.5 py-0.5 rounded" style={{ background: 'rgba(230,126,34,0.15)', color: '#E67E22', border: '1px solid rgba(230,126,34,0.3)' }}>
                           {p.type.toUpperCase()}
@@ -186,7 +183,7 @@ export default function PlaceSearchPanel({ open, nearCity = '', onClose, onAddTo
                     {onAddToItinerary && (
                       <button
                         onClick={() => onAddToItinerary(p)}
-                        className="shrink-0 text-[8px] font-mono px-2 py-1 rounded border border-[#2a2f36] text-slate-500 hover:text-[#E67E22] hover:border-[#E67E22]/40 transition-colors tracking-widest opacity-0 group-hover:opacity-100"
+                        className="shrink-0 text-[8px] font-mono px-2 py-1 rounded border border-[#2a2f36] text-[var(--text-muted)] hover:text-[#E67E22] hover:border-[#E67E22]/40 transition-colors tracking-widest opacity-0 group-hover:opacity-100"
                       >
                         + ADD
                       </button>

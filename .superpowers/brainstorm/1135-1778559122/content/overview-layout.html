@@ -1,0 +1,112 @@
+<h2>OVERVIEW Tab — Map + Content Layout</h2>
+<p class="subtitle">Currently: full-width map stacked above elevation, then path timeline below. How should these panels be arranged?</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="display:flex;gap:6px;padding:10px;background:#0E1012;border-radius:6px;font-family:monospace;font-size:10px;color:#8A8680">
+        <!-- Header -->
+        <div style="flex:1;display:flex;flex-direction:column;gap:5px">
+          <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;height:28px;display:flex;align-items:center;padding:0 8px;color:#E67E22;font-size:9px">MY LILLE TRIP &nbsp; <span style="margin-left:auto;background:#E67E22;color:#fff;border-radius:10px;padding:1px 6px;font-size:8px">PLANNING</span></div>
+          <!-- Map (narrower) -->
+          <div style="background:#1C2128;border:1px solid #2a2f36;border-radius:3px;height:130px;display:flex;align-items:center;justify-content:center;color:#3a4450;font-size:9px;position:relative">
+            MAP — 70% width
+            <div style="position:absolute;bottom:4px;left:4px;background:#1a1f26;border:1px solid #E67E22;border-radius:2px;padding:2px 6px;color:#E67E22;font-size:8px">+ ADD STOP</div>
+          </div>
+          <!-- Elevation below map -->
+          <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;height:50px;display:flex;align-items:center;padding:0 8px;color:#E67E22;font-size:8px">
+            ▲ ELEVATION PROFILE (mountain silhouette bg)
+          </div>
+          <!-- Safety mini-card row -->
+          <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;height:36px;display:flex;align-items:center;padding:0 8px;gap:8px;font-size:8px">
+            <span style="color:#E67E22">● ACTIVE ALERT</span>
+            <span style="color:#4CAF50">Trail: clear</span>
+            <span style="color:#FFC107">Weather: 80kph</span>
+            <span style="margin-left:auto;color:#3a4450">Safety Pulse →</span>
+          </div>
+        </div>
+        <!-- Right column: timeline -->
+        <div style="width:90px;background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;padding:6px;display:flex;flex-direction:column;gap:4px">
+          <div style="font-size:8px;color:#8A8680;letter-spacing:0.1em">THE PATH</div>
+          <div style="display:flex;gap:4px;align-items:center"><div style="width:6px;height:6px;border-radius:50%;background:#E67E22"></div><span style="font-size:8px;color:#fff">08:00 Departure</span></div>
+          <div style="width:1px;height:12px;background:#2a2f36;margin-left:2.5px"></div>
+          <div style="display:flex;gap:4px;align-items:center"><div style="width:6px;height:6px;border-radius:50%;background:#2a2f36"></div><span style="font-size:8px;color:#8A8680">12:30 Lille</span></div>
+          <div style="width:1px;height:12px;background:#2a2f36;margin-left:2.5px"></div>
+          <div style="display:flex;gap:4px;align-items:center"><div style="width:6px;height:6px;border-radius:50%;background:#2a2f36"></div><span style="font-size:8px;color:#8A8680">18:00 Hotel</span></div>
+          <div style="width:1px;height:12px;background:#2a2f36;margin-left:2.5px"></div>
+          <div style="display:flex;gap:4px;align-items:center"><div style="width:6px;height:6px;border-radius:50%;background:#2a2f36"></div><span style="font-size:8px;color:#8A8680">20:00 Dinner</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Map + Path side-by-side</h3>
+      <p>Map takes ~70% width, Path timeline panel lives to the right of it. Elevation strip below the map. Safety pulse collapses to a single-row alert ticker. Compact and spatial.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="padding:10px;background:#0E1012;border-radius:6px;font-family:monospace;font-size:10px;color:#8A8680">
+        <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;height:28px;display:flex;align-items:center;padding:0 8px;color:#E67E22;font-size:9px;margin-bottom:5px">MY LILLE TRIP &nbsp; <span style="margin-left:auto;background:#E67E22;color:#fff;border-radius:10px;padding:1px 6px;font-size:8px">PLANNING</span></div>
+        <!-- Two-col: map+elevation left, right sidebar -->
+        <div style="display:flex;gap:5px">
+          <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+            <div style="background:#1C2128;border:1px solid #2a2f36;border-radius:3px;height:110px;display:flex;align-items:center;justify-content:center;color:#3a4450;font-size:9px">MAP</div>
+            <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;height:44px;display:flex;align-items:center;padding:0 8px;color:#E67E22;font-size:8px">▲ ELEVATION + mountain silhouette</div>
+          </div>
+          <!-- Right sidebar with stacked cards -->
+          <div style="width:100px;display:flex;flex-direction:column;gap:4px">
+            <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;padding:5px">
+              <div style="font-size:8px;color:#8A8680;letter-spacing:0.08em;margin-bottom:3px">THE PATH</div>
+              <div style="display:flex;gap:3px;align-items:center;margin-bottom:2px"><div style="width:5px;height:5px;border-radius:50%;background:#E67E22"></div><span style="font-size:7px;color:#fff">08:00 Dep.</span></div>
+              <div style="display:flex;gap:3px;align-items:center;margin-bottom:2px"><div style="width:5px;height:5px;border-radius:50%;background:#2a2f36"></div><span style="font-size:7px;color:#8A8680">12:30 Lille</span></div>
+              <div style="display:flex;gap:3px;align-items:center"><div style="width:5px;height:5px;border-radius:50%;background:#2a2f36"></div><span style="font-size:7px;color:#8A8680">18:00 Hotel</span></div>
+            </div>
+            <div style="background:#1a1f26;border:1px solid rgba(230,126,34,0.3);border-radius:3px;padding:5px">
+              <div style="font-size:7px;color:#E67E22;margin-bottom:2px">● SAFETY PULSE</div>
+              <div style="font-size:7px;color:#FFC107">Weather alert</div>
+              <div style="font-size:7px;color:#4CAF50">Trail: clear</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Bento grid (left map+elev, right stacked cards)</h3>
+      <p>Map+elevation on the left two-thirds. Right sidebar has The Path + Safety Pulse stacked as small cards. Everything visible at once without scrolling. Dashboard-style.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="padding:10px;background:#0E1012;border-radius:6px;font-family:monospace;font-size:10px;color:#8A8680">
+        <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;height:28px;display:flex;align-items:center;padding:0 8px;color:#E67E22;font-size:9px;margin-bottom:5px">MY LILLE TRIP</div>
+        <!-- Full-width map -->
+        <div style="background:#1C2128;border:1px solid #2a2f36;border-radius:3px;height:100px;display:flex;align-items:center;justify-content:center;color:#3a4450;font-size:9px;margin-bottom:4px">MAP (full width, shorter height)</div>
+        <!-- Row of 3 mini-cards below map -->
+        <div style="display:flex;gap:4px">
+          <div style="flex:1;background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;padding:5px">
+            <div style="font-size:7px;color:#8A8680;margin-bottom:3px">ELEVATION</div>
+            <div style="height:30px;background:linear-gradient(180deg,#E67E2222 0%,transparent 100%);border-bottom:1px solid #E67E22;display:flex;align-items:flex-end;padding:2px;font-size:6px;color:#E67E22">▲▲▲▲▲</div>
+          </div>
+          <div style="flex:1;background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;padding:5px">
+            <div style="font-size:7px;color:#8A8680;margin-bottom:3px">THE PATH</div>
+            <div style="font-size:7px;color:#E67E22">08:00 →</div>
+            <div style="font-size:7px;color:#8A8680">12:30 → 18:00</div>
+          </div>
+          <div style="flex:1;background:#1a1f26;border:1px solid rgba(230,126,34,0.25);border-radius:3px;padding:5px">
+            <div style="font-size:7px;color:#E67E22;margin-bottom:3px">● SAFETY</div>
+            <div style="font-size:7px;color:#FFC107">1 alert</div>
+            <div style="font-size:7px;color:#4CAF50">Trail OK</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Map full-width, 3-card strip below</h3>
+      <p>Map stays full-width but shorter. Three equal mini-cards below: Elevation, Path, Safety. Each expandable on click. Cleanest at a glance — but less detail visible at once.</p>
+    </div>
+  </div>
+
+</div>

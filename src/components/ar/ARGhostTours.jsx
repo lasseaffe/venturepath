@@ -5,7 +5,7 @@ import { DESTINATION_POIS } from '../../utils/destinationEngine';
 import { MapContainer, TileLayer, CircleMarker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
-export default function ARGhostTours({ destinationId = 'patagonia', center = [-50.97, -73.0] }) {
+export default function ARGhostTours({ destinationId = 'default', center = [20.0, 0.0] }) {
   const [mode, setMode] = useState('idle'); // idle | requesting | ar | map | denied
   const [cameraError, setCameraError] = useState(false);
   const [nearbyPoi, setNearbyPoi] = useState(null);
@@ -70,10 +70,10 @@ export default function ARGhostTours({ destinationId = 'patagonia', center = [-5
 
   if (mode === 'idle') {
     return (
-      <div className="tactical-panel p-5 space-y-4 col-span-full">
+      <div className="tactical-panel p-5 space-y-4">
         <div>
           <div className="label-tag">AR Ghost Tours</div>
-          <div className="text-[10px] text-slate-500 font-mono mt-0.5">
+          <div className="text-[10px] text-[var(--text-muted)] font-mono mt-0.5">
             Point your camera at historical sites to unlock stories
           </div>
         </div>
@@ -90,7 +90,7 @@ export default function ARGhostTours({ destinationId = 'patagonia', center = [-5
                 <span className="text-xl">{poi.icon}</span>
                 <span className="text-white text-xs font-mono font-semibold">{poi.name}</span>
               </div>
-              <div className="text-[9px] font-mono text-slate-600 line-clamp-2">{poi.historicalNote}</div>
+              <div className="text-[9px] font-mono text-[var(--text-muted)] line-clamp-2">{poi.historicalNote}</div>
               <div className="text-[9px] font-mono text-pink-400">{poi.trendingSnippet.split(':')[0]}</div>
             </div>
           ))}
@@ -105,7 +105,7 @@ export default function ARGhostTours({ destinationId = 'patagonia', center = [-5
           </button>
           <button
             onClick={() => { setMode('map'); }}
-            className="px-5 py-2.5 border border-[#2a2f36] text-slate-400 font-mono text-xs rounded hover:border-[#E67E22]/50 hover:text-slate-200 transition-colors"
+            className="px-5 py-2.5 border border-[#2a2f36] text-[var(--text-secondary)] font-mono text-xs rounded hover:border-[#E67E22]/50 hover:text-[var(--text-primary)] transition-colors"
           >
             🗺 Map View
           </button>
@@ -123,17 +123,17 @@ export default function ARGhostTours({ destinationId = 'patagonia', center = [-5
 
   if (mode === 'requesting') {
     return (
-      <div className="tactical-panel p-10 flex flex-col items-center justify-center gap-3 col-span-full">
+      <div className="tactical-panel p-10 flex flex-col items-center justify-center gap-3">
         <span className="text-3xl animate-pulse">📷</span>
         <div className="text-white font-mono text-sm">Requesting camera access…</div>
-        <div className="text-slate-500 font-mono text-[10px]">Allow camera permission in your browser</div>
+        <div className="text-[var(--text-muted)] font-mono text-[10px]">Allow camera permission in your browser</div>
       </div>
     );
   }
 
   if (mode === 'map') {
     return (
-      <div className="tactical-panel p-5 space-y-4 col-span-full">
+      <div className="tactical-panel p-5 space-y-4">
         <div className="flex items-center justify-between">
           <div>
             <div className="label-tag">AR Ghost Tours — Map View</div>
@@ -141,7 +141,7 @@ export default function ARGhostTours({ destinationId = 'patagonia', center = [-5
               <div className="text-[10px] text-amber-400 font-mono mt-0.5">📍 Camera unavailable — showing map fallback</div>
             )}
           </div>
-          <button onClick={() => setMode('idle')} className="text-slate-500 hover:text-white font-mono text-xs transition-colors">
+          <button onClick={() => setMode('idle')} className="text-[var(--text-muted)] hover:text-white font-mono text-xs transition-colors">
             ✕ CLOSE
           </button>
         </div>
@@ -273,19 +273,19 @@ function PoiOverlay({ poi, onClose, floating = false }) {
               <div className="text-[#E2725B] text-[10px] font-mono tracking-widest">LEGACY OVERLAY</div>
             </div>
           </div>
-          <button onClick={onClose} className="text-slate-500 hover:text-white font-mono text-sm">✕</button>
+          <button onClick={onClose} className="text-[var(--text-muted)] hover:text-white font-mono text-sm">✕</button>
         </div>
 
         <div className="bg-[#0E1012] rounded-lg p-4 border border-[#1e2328] mb-4">
           <div className="text-[9px] font-mono text-[#E67E22] tracking-widest mb-2">HISTORICAL NOTE</div>
-          <p className="text-slate-300 text-xs font-mono leading-relaxed">{poi.historicalNote}</p>
+          <p className="text-[var(--text-secondary)] text-xs font-mono leading-relaxed">{poi.historicalNote}</p>
         </div>
 
         <div className="bg-[#0E1012] rounded-lg p-4 border border-pink-500/20">
           <div className="text-[9px] font-mono text-pink-400 tracking-widest mb-2">TRENDING NOW</div>
-          <p className="text-slate-300 text-xs font-mono leading-relaxed">{poi.trendingSnippet}</p>
+          <p className="text-[var(--text-secondary)] text-xs font-mono leading-relaxed">{poi.trendingSnippet}</p>
           <div className="mt-3 w-full h-24 bg-[#1a1f24] rounded flex items-center justify-center border border-[#2a2f36]">
-            <span className="text-slate-600 text-[10px] font-mono">▶ Trending video placeholder</span>
+            <span className="text-[var(--text-muted)] text-[10px] font-mono">▶ Trending video placeholder</span>
           </div>
         </div>
       </div>

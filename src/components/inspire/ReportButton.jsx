@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 
 const ISSUE_TYPES = [
   { id: 'wrong_location', label: '🗺️ Wrong city / location' },
@@ -67,12 +68,12 @@ export default function ReportButton({
         ⚠
       </button>
 
-      {/* Modal */}
-      {open && (
+      {/* Modal — portal escapes CSS transform containing blocks (framer-motion cards) */}
+      {open && createPortal(
         <div
           onClick={e => { e.stopPropagation(); setOpen(false); }}
           style={{
-            position: 'fixed', inset: 0, zIndex: 100,
+            position: 'fixed', inset: 0, zIndex: 9999,
             background: 'rgba(0,0,0,0.7)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}
@@ -138,7 +139,7 @@ export default function ReportButton({
               rows={2}
               style={{
                 width: '100%', background: '#111316', border: '1px solid #1e2328',
-                borderRadius: 4, color: '#9ca3af', fontSize: 10, fontFamily: 'monospace',
+                borderRadius: 4, color: 'var(--text-secondary)', fontSize: 10, fontFamily: 'monospace',
                 padding: '8px 10px', resize: 'none', outline: 'none',
                 boxSizing: 'border-box', marginBottom: 12,
               }}
@@ -164,7 +165,8 @@ export default function ReportButton({
               {state === 'error'   && '✖ Failed — is the receiver running?'}
             </button>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

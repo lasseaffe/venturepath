@@ -1,8 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useInspireData, matchCity } from '../../hooks/useInspireData';
 import ReportButton from './ReportButton.jsx';
-import { useTrendSignal } from '../../hooks/useTrendSignal';
-import TrendBadge from './TrendBadge';
 
 const CATEGORY_META = {
   landmark:      { label: 'LANDMARK',      dot: '#E67E22' },
@@ -15,12 +13,12 @@ const CATEGORY_META = {
 export default function InspirePanel({ open, dayLabel, onClose, onAddBlock }) {
   const { cities, loading, error } = useInspireData();
   const [selectedCity, setSelectedCity] = useState(null);
-  const { trendMap } = useTrendSignal(cities);
-  const sortedCities = [...cities].sort(
-    (a, b) => (trendMap.get(b.id)?.score ?? 0) - (trendMap.get(a.id)?.score ?? 0),
-  );
 
   const city = selectedCity ?? (open && cities.length ? matchCity(cities, dayLabel) : null);
+
+  useEffect(() => {
+    if (open) setSelectedCity(null);
+  }, [open, dayLabel]);
 
   function handleAddPoi(poi) {
     onAddBlock({
@@ -75,13 +73,8 @@ export default function InspirePanel({ open, dayLabel, onClose, onAddBlock }) {
             <div className="text-[9px] font-mono tracking-[0.2em] text-[#E67E22] uppercase">
               Inspire Me
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 2 }}>
-              <div className="text-[11px] font-mono font-bold text-white tracking-wider uppercase">
-                {loading ? 'Loading…' : city ? `${city.name}, ${city.country}` : dayLabel || 'Explore'}
-              </div>
-              {city && trendMap.has(city.id) && (
-                <TrendBadge score={trendMap.get(city.id).score} label={trendMap.get(city.id).label} />
-              )}
+            <div className="text-[11px] font-mono font-bold text-white tracking-wider mt-0.5 uppercase">
+              {loading ? 'Loading…' : city ? `${city.name}, ${city.country}` : dayLabel || 'Explore'}
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -95,13 +88,13 @@ export default function InspirePanel({ open, dayLabel, onClose, onAddBlock }) {
             <button
               onClick={shuffleCity}
               title="Try another destination"
-              className="text-[9px] font-mono px-2 py-1 rounded border border-[#2a2f36] text-slate-400 hover:text-[#E67E22] hover:border-[#E67E22]/50 transition-colors tracking-widest"
+              className="text-[9px] font-mono px-2 py-1 rounded border border-[#2a2f36] text-[var(--text-secondary)] hover:text-[#E67E22] hover:border-[#E67E22]/50 transition-colors tracking-widest"
             >
               ↺ SHUFFLE
             </button>
             <button
               onClick={onClose}
-              className="w-6 h-6 flex items-center justify-center rounded border border-[#2a2f36] text-slate-500 hover:text-white hover:border-[#3a3f46] transition-colors text-sm"
+              className="w-6 h-6 flex items-center justify-center rounded border border-[#2a2f36] text-[var(--text-muted)] hover:text-white hover:border-[#3a3f46] transition-colors text-sm"
             >
               ✕
             </button>
@@ -112,7 +105,7 @@ export default function InspirePanel({ open, dayLabel, onClose, onAddBlock }) {
         <div className="flex-1 overflow-y-auto">
           {loading && (
             <div className="flex items-center justify-center py-20">
-              <div className="text-[10px] font-mono text-slate-600 tracking-widest animate-pulse">
+              <div className="text-[10px] font-mono text-[var(--text-muted)] tracking-widest animate-pulse">
                 LOADING INTEL…
               </div>
             </div>
@@ -124,7 +117,7 @@ export default function InspirePanel({ open, dayLabel, onClose, onAddBlock }) {
               <div className="text-[10px] font-mono text-red-400 tracking-widest text-center">
                 INTEL UNAVAILABLE
               </div>
-              <div className="text-[9px] font-mono text-slate-600 text-center leading-relaxed">
+              <div className="text-[9px] font-mono text-[var(--text-muted)] text-center leading-relaxed">
                 {error}
               </div>
               <button
@@ -140,10 +133,10 @@ export default function InspirePanel({ open, dayLabel, onClose, onAddBlock }) {
             <div className="flex flex-col gap-0">
               <div className="flex flex-col items-center py-10 gap-3 px-4">
                 <div className="text-2xl opacity-30">✦</div>
-                <div className="text-[10px] font-mono text-slate-500 tracking-widest text-center">
+                <div className="text-[10px] font-mono text-[var(--text-muted)] tracking-widest text-center">
                   NO DATA FOR THIS DESTINATION
                 </div>
-                <div className="text-[9px] font-mono text-slate-600 text-center leading-relaxed max-w-[240px]">
+                <div className="text-[9px] font-mono text-[var(--text-muted)] text-center leading-relaxed max-w-[240px]">
                   {dayLabel
                     ? `"${dayLabel}" isn't in our database yet. Browse curated destinations below or shuffle for inspiration.`
                     : 'Select a city below to explore local intel.'}
@@ -157,21 +150,17 @@ export default function InspirePanel({ open, dayLabel, onClose, onAddBlock }) {
               </div>
               {cities.length > 0 && (
                 <div className="px-4 pb-4">
-                  <div className="text-[8px] font-mono text-slate-600 tracking-widest mb-2 uppercase">
+                  <div className="text-[8px] font-mono text-[var(--text-muted)] tracking-widest mb-2 uppercase">
                     Browse destinations
                   </div>
                   <div className="flex gap-1.5 flex-wrap">
-                    {sortedCities.map(c => (
+                    {cities.map(c => (
                       <button
                         key={c.id}
                         onClick={() => setSelectedCity(c)}
-                        className="text-[8px] font-mono px-2 py-1 rounded border border-[#1e2328] text-[#4b5563] hover:border-[#E67E22]/50 hover:text-[#E67E22] transition-colors tracking-widest uppercase"
-                        style={{ display: 'flex', alignItems: 'center', gap: 4 }}
+                        className="text-[8px] font-mono px-2 py-1 rounded border border-[#1e2328] text-[var(--text-muted)] hover:border-[#E67E22]/50 hover:text-[#E67E22] transition-colors tracking-widest uppercase"
                       >
                         {c.name}
-                        {trendMap.has(c.id) && (
-                          <TrendBadge score={trendMap.get(c.id).score} label={trendMap.get(c.id).label} />
-                        )}
                       </button>
                     ))}
                   </div>
@@ -212,7 +201,7 @@ export default function InspirePanel({ open, dayLabel, onClose, onAddBlock }) {
 
               {/* Description */}
               <div className="px-4 py-3" style={{ borderBottom: '1px solid #1a1e22' }}>
-                <p className="text-[11px] leading-relaxed" style={{ color: '#6b7280' }}>
+                <p className="text-[11px] leading-relaxed" style={{ color: 'var(--text-muted)' }}>
                   {city.description}
                 </p>
               </div>
@@ -220,7 +209,7 @@ export default function InspirePanel({ open, dayLabel, onClose, onAddBlock }) {
               {/* City selector pills */}
               {cities.length > 1 && (
                 <div className="px-4 py-2 flex gap-1.5 flex-wrap" style={{ borderBottom: '1px solid #1a1e22' }}>
-                  {sortedCities.map(c => (
+                  {cities.map(c => (
                     <button
                       key={c.id}
                       onClick={() => setSelectedCity(c)}
@@ -229,13 +218,9 @@ export default function InspirePanel({ open, dayLabel, onClose, onAddBlock }) {
                         background: c.id === city.id ? 'rgba(230,126,34,0.15)' : 'transparent',
                         borderColor: c.id === city.id ? 'rgba(230,126,34,0.5)' : '#1e2328',
                         color: c.id === city.id ? '#E67E22' : '#4b5563',
-                        display: 'flex', alignItems: 'center', gap: 4,
                       }}
                     >
                       {c.name}
-                      {trendMap.has(c.id) && (
-                        <TrendBadge score={trendMap.get(c.id).score} label={trendMap.get(c.id).label} />
-                      )}
                     </button>
                   ))}
                 </div>
@@ -289,11 +274,11 @@ export default function InspirePanel({ open, dayLabel, onClose, onAddBlock }) {
                               />
                             </div>
                           </div>
-                          <p className="text-[10px] mt-1 leading-relaxed" style={{ color: '#4b5563' }}>
+                          <p className="text-[10px] mt-1 leading-relaxed" style={{ color: 'var(--text-muted)' }}>
                             {poi.description}
                           </p>
                           {poi.notes && (
-                            <p className="text-[9px] mt-1.5 leading-relaxed" style={{ color: '#374151' }}>
+                            <p className="text-[9px] mt-1.5 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
                               ★ {poi.notes}
                             </p>
                           )}
@@ -304,7 +289,7 @@ export default function InspirePanel({ open, dayLabel, onClose, onAddBlock }) {
                               </span>
                             )}
                             {poi.duration_min && (
-                              <span className="text-[9px] font-mono" style={{ color: '#374151' }}>
+                              <span className="text-[9px] font-mono" style={{ color: 'var(--text-secondary)' }}>
                                 {poi.duration_min >= 60
                                   ? `${Math.floor(poi.duration_min / 60)}h${poi.duration_min % 60 ? `${poi.duration_min % 60}m` : ''}`
                                   : `${poi.duration_min}m`}

@@ -1,5 +1,4 @@
 import { createContext, useContext, useReducer, useEffect } from 'react';
-import sentinelBus from '../utils/sentinelBus.js';
 
 const STORAGE_KEY = 'vp-trip-store';
 
@@ -33,26 +32,6 @@ const DEFAULT_MANIFEST_SETTINGS = { climate: 'temperate', days: 18, hasChildren:
 
 // ── Reducer ───────────────────────────────────────────────────────────────────
 
-/**
- * @typedef {Object} Ticket
- * @property {string} id - uuid
- * @property {'flight'|'transit'|'accommodation'|'access_pass'|'visa'|'document'} type
- * @property {string} title
- * @property {string} [provider]
- * @property {string} [referenceCode]
- * @property {string} [validFrom]   - ISO string
- * @property {string} [validUntil] - ISO string
- * @property {string} [barcodeData]
- * @property {'qr'|'pdf417'|'aztec'|'code128'} [barcodeType]
- * @property {string} [fileUrl]
- * @property {Object} [rawData]
- * @property {'manual'|'scan'|'email_import'} source
- * @property {boolean} isShared
- * @property {string[]} [sharedWith] - pioneer ids
- * @property {string} [expeditionId]
- * @property {string} createdAt - ISO string
- */
-
 const initialState = {
   trip: DEFAULT_TRIP,
   legs: DEFAULT_LEGS,
@@ -60,15 +39,6 @@ const initialState = {
   manifestSettings: DEFAULT_MANIFEST_SETTINGS,
   userRole: 'LEADER', // 'LEADER' | 'MEMBER'
   cloning: false,
-  journey: null,
-  architect: {
-    insights: [],
-    lastGeneratedAt: null,
-  },
-  vault: { documents: [] },
-  tickets: [],
-  booking: { whatIfScenarios: [] },
-  journeyData: { breadcrumbs: [], gpxImported: false, photos: [] },
 };
 
 let nextLegId = 100; // start above seeded leg IDs so there's no collision
@@ -137,127 +107,8 @@ function reducer(state, action) {
       );
       return { ...state, legs };
     }
-    case 'ADD_PHOTO': {
-      const legs = state.legs.map(l =>
-        l.id === action.payload.legId
-          ? { ...l, photos: [...(l.photos ?? []), action.payload.photo] }
-          : l
-      );
-      return { ...state, legs };
-    }
-    case 'REMOVE_PHOTO': {
-      const legs = state.legs.map(l =>
-        l.id === action.payload.legId
-          ? { ...l, photos: (l.photos ?? []).filter(p => p.id !== action.payload.photoId) }
-          : l
-      );
-      return { ...state, legs };
-    }
-    case 'UPDATE_PHOTO': {
-      const legs = state.legs.map(l =>
-        l.id === action.payload.legId
-          ? {
-              ...l,
-              photos: (l.photos ?? []).map(p =>
-                p.id === action.payload.photoId ? { ...p, ...action.payload.changes } : p
-              ),
-            }
-          : l
-      );
-      return { ...state, legs };
-    }
-    case 'REORDER_PHOTOS': {
-      const legs = state.legs.map(l => {
-        if (l.id !== action.payload.legId) return l;
-        const byId = Object.fromEntries((l.photos ?? []).map(p => [p.id, p]));
-        const photos = action.payload.orderedIds
-          .filter(id => byId[id])
-          .map((id, i) => ({ ...byId[id], order: i }));
-        return { ...l, photos };
-      });
-      return { ...state, legs };
-    }
-    case 'APPEND_OBJECTIVE_ITEM': {
-      // action.payload = { legId: number, item: string }
-      const exists = state.objectives.find(o => o.legId === action.payload.legId);
-      const objectives = exists
-        ? state.objectives.map(o =>
-            o.legId === action.payload.legId
-              ? { ...o, items: [...o.items, action.payload.item] }
-              : o
-          )
-        : [...state.objectives, { legId: action.payload.legId, items: [action.payload.item] }];
-      return { ...state, objectives };
-    }
-    case 'SET_JOURNEY_META':
-      return { ...state, journey: { ...(state.journey ?? {}), ...action.payload } };
-    case 'COMPLETE_EXPEDITION': {
-      return {
-        ...state,
-        trip: { ...state.trip, status: 'AFTER-ACTION' },
-      };
-    }
-    case 'ADD_INSIGHT': {
-      const insight = action.payload;
-      const existing = state.architect.insights.filter(i => i.id !== insight.id);
-      const next = [insight, ...existing].slice(0, 10);
-      return {
-        ...state,
-        architect: { insights: next, lastGeneratedAt: Date.now() },
-      };
-    }
-    case 'DISMISS_INSIGHT': {
-      const { id } = action.payload;
-      return {
-        ...state,
-        architect: {
-          ...state.architect,
-          insights: state.architect.insights.filter(i => i.id !== id),
-        },
-      };
-    }
-    case 'ADD_VAULT_DOCUMENT': {
-      const doc = { ...action.payload, id: `doc_${Date.now()}` };
-      return { ...state, vault: { ...state.vault, documents: [...state.vault.documents, doc] } };
-    }
-    case 'UPDATE_VAULT_DOCUMENT': {
-      const documents = state.vault.documents.map(d =>
-        d.id === action.payload.id ? { ...d, ...action.payload.changes } : d
-      );
-      return { ...state, vault: { ...state.vault, documents } };
-    }
-    case 'ADD_SCENARIO': {
-      const scenario = { ...action.payload, id: `scenario_${Date.now()}` };
-      return { ...state, booking: { ...state.booking, whatIfScenarios: [...state.booking.whatIfScenarios, scenario] } };
-    }
-    case 'SET_JOURNEY_DATA': {
-      return { ...state, journeyData: { ...state.journeyData, ...action.payload } };
-    }
-    case 'ADD_TICKET': {
-      return { ...state, tickets: [...state.tickets, action.payload] };
-    }
-    case 'UPDATE_TICKET': {
-      return {
-        ...state,
-        tickets: state.tickets.map(t =>
-          t.id === action.payload.id ? { ...t, ...action.payload } : t
-        ),
-      };
-    }
-    case 'DELETE_TICKET': {
-      return { ...state, tickets: state.tickets.filter(t => t.id !== action.payload) };
-    }
-    case 'SHARE_TICKET': {
-      // payload: { ticketId, pioneerIds: string[] }
-      return {
-        ...state,
-        tickets: state.tickets.map(t =>
-          t.id === action.payload.ticketId
-            ? { ...t, sharedWith: [...new Set([...(t.sharedWith ?? []), ...action.payload.pioneerIds])], isShared: true }
-            : t
-        ),
-      };
-    }
+    case 'REPLACE_LEGS':
+      return { ...state, legs: action.payload };
     default:
       return state;
   }
@@ -292,25 +143,9 @@ export function TripStoreProvider({ children }) {
         objectives: state.objectives,
         manifestSettings: state.manifestSettings,
         userRole: state.userRole,
-        journey: state.journey,
-        vault: state.vault,
-        tickets: state.tickets,
-        booking: state.booking,
-        journeyData: state.journeyData,
       }));
     } catch { /* storage full or unavailable */ }
   }, [state]);
-
-  useEffect(() => {
-    if (!state.trip.startDate) return;
-    const departureMs = new Date(state.trip.startDate).getTime();
-    const nowMs = Date.now();
-    const hoursUntil = (departureMs - nowMs) / 3_600_000;
-    if (hoursUntil > 0 && hoursUntil <= 24) {
-      const nextLeg = state.legs.find(l => l.status !== 'confirmed') ?? state.legs[0];
-      sentinelBus.emit('DEPARTURE_IMMINENT', { hoursUntil, leg: nextLeg });
-    }
-  }, [state.trip.startDate, state.legs]);
 
   const clonePath = (templateData) => {
     dispatch({ type: 'CLONE_PATH', payload: templateData });
@@ -327,26 +162,10 @@ export function TripStoreProvider({ children }) {
   const setRole = (role) => dispatch({ type: 'SET_ROLE', payload: role });
   const updateLegStatus = (id, status) =>
     dispatch({ type: 'UPDATE_LEG_STATUS', payload: { id, status } });
-  const addPhoto = (legId, photo) => dispatch({ type: 'ADD_PHOTO', payload: { legId, photo } });
-  const removePhoto = (legId, photoId) => dispatch({ type: 'REMOVE_PHOTO', payload: { legId, photoId } });
-  const updatePhoto = (legId, photoId, changes) => dispatch({ type: 'UPDATE_PHOTO', payload: { legId, photoId, changes } });
-  const reorderPhotos = (legId, orderedIds) => dispatch({ type: 'REORDER_PHOTOS', payload: { legId, orderedIds } });
-  const setJourneyMeta = (meta) => dispatch({ type: 'SET_JOURNEY_META', payload: meta });
-  const completeExpedition = () => dispatch({ type: 'COMPLETE_EXPEDITION' });
-  const addInsight = (insight) => dispatch({ type: 'ADD_INSIGHT', payload: insight });
-  const dismissInsight = (id) => dispatch({ type: 'DISMISS_INSIGHT', payload: { id } });
-  const addVaultDocument = (doc) => dispatch({ type: 'ADD_VAULT_DOCUMENT', payload: doc });
-  const updateVaultDocument = (id, changes) => dispatch({ type: 'UPDATE_VAULT_DOCUMENT', payload: { id, changes } });
-  const addScenario = (scenario) => dispatch({ type: 'ADD_SCENARIO', payload: scenario });
-  const setJourneyData = (data) => dispatch({ type: 'SET_JOURNEY_DATA', payload: data });
-  const appendObjectiveItem = (legId, item) => dispatch({ type: 'APPEND_OBJECTIVE_ITEM', payload: { legId, item } });
-  const addTicket = (ticket) => dispatch({ type: 'ADD_TICKET', payload: ticket });
-  const updateTicket = (id, changes) => dispatch({ type: 'UPDATE_TICKET', payload: { id, ...changes } });
-  const deleteTicket = (id) => dispatch({ type: 'DELETE_TICKET', payload: id });
-  const shareTicket = (ticketId, pioneerIds) => dispatch({ type: 'SHARE_TICKET', payload: { ticketId, pioneerIds } });
+  const replaceLegs = (legs) => dispatch({ type: 'REPLACE_LEGS', payload: legs });
 
   return (
-    <TripStoreContext.Provider value={{ ...state, dispatch, clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, resetTrip, setRole, updateLegStatus, loadExpedition, addPhoto, removePhoto, updatePhoto, reorderPhotos, appendObjectiveItem, setJourneyMeta, completeExpedition, addInsight, dismissInsight, addVaultDocument, updateVaultDocument, addScenario, setJourneyData, addTicket, updateTicket, deleteTicket, shareTicket }}>
+    <TripStoreContext.Provider value={{ ...state, clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, resetTrip, setRole, updateLegStatus, loadExpedition, replaceLegs }}>
       {children}
     </TripStoreContext.Provider>
   );

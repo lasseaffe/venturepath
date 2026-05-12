@@ -39,7 +39,7 @@ export default function PhotoStage({ photos, photoIndex, stopLabel }) {
                     background: 'linear-gradient(transparent, rgba(0,0,0,0.8))',
                     color: '#fff',
                     fontSize: 14,
-                    fontFamily: 'Inter, sans-serif',
+                    ,
                   }}
                 >
                   {photo.caption}

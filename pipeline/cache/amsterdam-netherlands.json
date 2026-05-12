@@ -1,0 +1,13 @@
+{
+  "city": "Amsterdam, Netherlands",
+  "slug": "amsterdam-netherlands",
+  "qid": "Q727",
+  "description": "capital and most populous city of the Netherlands",
+  "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Amsterdam_Photo_2020_Copernicus_Sentinel-2.jpg?width=800",
+  "coords": {
+    "lat": 52.36666666666667,
+    "lng": 4.883333333333333
+  },
+  "climate": "temperate",
+  "pois": []
+}

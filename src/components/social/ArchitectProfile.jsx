@@ -49,7 +49,7 @@ export default function ArchitectProfile({ onClose }) {
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 24 }}
-      className="min-h-screen bg-[#0F1115] text-white p-6 pb-20"
+      className="min-h-screen p-6 pb-20" style={{ background: 'var(--bg)', color: 'var(--text-primary)' }}
     >
       {/* Header */}
       <div className="flex items-start justify-between mb-6">
@@ -57,12 +57,12 @@ export default function ArchitectProfile({ onClose }) {
           <div className="label-tag mb-2">Pioneer Profile</div>
           <h1 className="font-editorial text-4xl text-white">Lasse A.</h1>
           <p className="text-[#F2C94C] font-mono text-sm mt-1">Level 14 Elite Architect</p>
-          <p className="text-slate-400 text-sm mt-2 max-w-sm">
+          <p className="text-[var(--text-muted)] text-sm mt-2 max-w-sm">
             Expedition architect specializing in austral wilderness and high-altitude traverses.
           </p>
         </div>
         {onClose && (
-          <button onClick={onClose} className="text-slate-500 hover:text-white font-mono text-sm">
+          <button onClick={onClose} className="text-[var(--text-muted)] hover:text-[var(--text-primary)] font-mono text-sm">
             ✕ CLOSE
           </button>
         )}
@@ -85,8 +85,8 @@ export default function ArchitectProfile({ onClose }) {
         <div className="flex flex-col md:flex-row gap-6 items-start">
           <div>
             <div className="text-4xl font-mono font-bold text-[#F2C94C]">$142.00</div>
-            <div className="text-xs text-slate-400 font-mono mt-1">Available balance</div>
-            <div className="text-xs text-slate-500 font-mono mt-0.5">$34.00 pending escrow</div>
+            <div className="text-xs text-[var(--text-muted)] font-mono mt-1">Available balance</div>
+            <div className="text-xs text-[var(--text-muted)] font-mono mt-0.5">$34.00 pending escrow</div>
             <button
               onClick={() => setWithdrawing(true)}
               className="mt-3 px-4 py-2 bg-[#F2C94C] hover:bg-[#e5b93f] text-[#0F1115] font-mono font-bold text-xs rounded-lg transition-colors"
@@ -112,7 +112,7 @@ export default function ArchitectProfile({ onClose }) {
             <div key={p.id} className="flex items-center justify-between p-3 bg-white/3 rounded-lg border border-white/5">
               <div>
                 <div className="text-white text-sm font-semibold">{p.name}</div>
-                <div className="text-xs text-slate-400 font-mono mt-0.5">
+                <div className="text-xs text-[var(--text-muted)] font-mono mt-0.5">
                   {p.clones} clones · ★ {p.rating} · CVR {p.conversion}
                 </div>
               </div>
@@ -120,7 +120,7 @@ export default function ArchitectProfile({ onClose }) {
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded border border-green-700 text-green-400">
                   {p.status}
                 </span>
-                <button className="text-[10px] font-mono px-2 py-0.5 rounded border border-white/20 text-slate-400 hover:text-white transition-colors">
+                <button className="text-[10px] font-mono px-2 py-0.5 rounded border border-white/20 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">
                   EDIT
                 </button>
               </div>
@@ -144,7 +144,7 @@ export default function ArchitectProfile({ onClose }) {
               className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm ${
                 b.earned
                   ? 'border-[#F2C94C]/40 bg-[#F2C94C]/5 text-white'
-                  : 'border-white/10 text-slate-600 grayscale'
+                  : 'border-white/10 text-[var(--text-muted)] grayscale'
               }`}
               title={b.desc}
             >

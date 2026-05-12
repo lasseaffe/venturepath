@@ -1,0 +1,13 @@
+{
+  "city": "Bangkok, Thailand",
+  "slug": "bangkok-thailand",
+  "qid": "Q1861",
+  "description": "capital of Thailand",
+  "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Temple_of_the_Emerald_of_buddha_or_Wat_Phra_Kaew_(cropped).jpg?width=800",
+  "coords": {
+    "lat": 13.75,
+    "lng": 100.51666666667
+  },
+  "climate": "temperate",
+  "pois": []
+}

@@ -1,0 +1,119 @@
+<h2>Cross-Tool "Import to Plan" Data Flow</h2>
+<p class="subtitle">Every tool (transport, stays, discovery, safety) writes to one shared store. Map, elevation, timeline, and packing all read from it — no manual sync needed.</p>
+
+<div style="margin-bottom:20px">
+  <div style="background:#0E1012;border-radius:6px;padding:16px;font-family:'JetBrains Mono',monospace;font-size:8px">
+
+    <!-- Flow diagram -->
+    <div style="display:grid;grid-template-columns:1fr 40px 1fr 40px 1fr;gap:0;align-items:center;margin-bottom:16px">
+
+      <!-- SOURCE TOOLS -->
+      <div style="display:flex;flex-direction:column;gap:5px">
+        <div style="font-size:6px;color:#555;letter-spacing:0.1em;margin-bottom:3px">SOURCE TOOLS</div>
+        <div style="background:#1a1f26;border:1px solid #E67E22;border-radius:3px;padding:5px 8px;color:#E67E22;font-size:7px">✈ Transport Planner</div>
+        <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;padding:5px 8px;color:#8A8680;font-size:7px">🏨 Stays Search</div>
+        <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;padding:5px 8px;color:#8A8680;font-size:7px">📍 Must-See / Discovery</div>
+        <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;padding:5px 8px;color:#8A8680;font-size:7px">⚠ Safety Pulse</div>
+        <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;padding:5px 8px;color:#8A8680;font-size:7px">🎒 Packing Engine</div>
+        <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;padding:5px 8px;color:#8A8680;font-size:7px">💰 Budget Loom</div>
+      </div>
+
+      <!-- ARROW -->
+      <div style="display:flex;align-items:center;justify-content:center;padding-top:24px">
+        <div style="display:flex;flex-direction:column;gap:8px;align-items:center">
+          <div style="font-size:14px;color:#E67E22">→</div>
+          <div style="font-size:14px;color:#8A8680">→</div>
+          <div style="font-size:14px;color:#8A8680">→</div>
+          <div style="font-size:14px;color:#8A8680">→</div>
+          <div style="font-size:14px;color:#8A8680">→</div>
+          <div style="font-size:14px;color:#8A8680">→</div>
+        </div>
+      </div>
+
+      <!-- STORE -->
+      <div>
+        <div style="font-size:6px;color:#555;letter-spacing:0.1em;margin-bottom:3px">SHARED STORE (Zustand)</div>
+        <div style="background:#12151a;border:1px solid #E67E22;border-radius:4px;padding:10px">
+          <div style="font-size:7px;color:#E67E22;margin-bottom:6px;letter-spacing:0.08em">useTripStore</div>
+          <div style="display:flex;flex-direction:column;gap:3px">
+            <div style="background:#1a1f26;border-radius:2px;padding:3px 6px;font-size:6px;color:#8A8680">legs[ ] — from, to, mode, times, price, CO₂</div>
+            <div style="background:#1a1f26;border-radius:2px;padding:3px 6px;font-size:6px;color:#8A8680">stays[ ] — name, coords, checkin, checkout</div>
+            <div style="background:#1a1f26;border-radius:2px;padding:3px 6px;font-size:6px;color:#8A8680">pois[ ] — name, coords, category, priority</div>
+            <div style="background:#1a1f26;border-radius:2px;padding:3px 6px;font-size:6px;color:#8A8680">alerts[ ] — type, severity, coords</div>
+            <div style="background:#1a1f26;border-radius:2px;padding:3px 6px;font-size:6px;color:#8A8680">budget{ } — total, spent, byLeg</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ARROW -->
+      <div style="display:flex;align-items:center;justify-content:center;padding-top:24px">
+        <div style="display:flex;flex-direction:column;gap:8px;align-items:center">
+          <div style="font-size:14px;color:#E67E22">→</div>
+          <div style="font-size:14px;color:#E67E22">→</div>
+          <div style="font-size:14px;color:#E67E22">→</div>
+          <div style="font-size:14px;color:#E67E22">→</div>
+          <div style="font-size:14px;color:#E67E22">→</div>
+        </div>
+      </div>
+
+      <!-- CONSUMERS -->
+      <div style="display:flex;flex-direction:column;gap:5px">
+        <div style="font-size:6px;color:#555;letter-spacing:0.1em;margin-bottom:3px">LIVE CONSUMERS</div>
+        <div style="background:#1a1f26;border:1px solid #E67E2266;border-radius:3px;padding:5px 8px;color:#E67E22;font-size:7px">🗺 RouteMap — draws legs</div>
+        <div style="background:#1a1f26;border:1px solid #E67E2266;border-radius:3px;padding:5px 8px;color:#E67E22;font-size:7px">▲ ElevationStrip — terrain</div>
+        <div style="background:#1a1f26;border:1px solid #E67E2266;border-radius:3px;padding:5px 8px;color:#E67E22;font-size:7px">⏱ TimelinePath — milestones</div>
+        <div style="background:#1a1f26;border:1px solid #E67E2266;border-radius:3px;padding:5px 8px;color:#E67E22;font-size:7px">🎒 PackingManifest — climate</div>
+        <div style="background:#1a1f26;border:1px solid #E67E2266;border-radius:3px;padding:5px 8px;color:#E67E22;font-size:7px">💰 BudgetLoom — costs</div>
+      </div>
+
+    </div>
+
+    <!-- What "ADD TO PLAN" does -->
+    <div style="border-top:1px solid #1e2530;padding-top:10px;margin-top:4px">
+      <div style="font-size:6px;color:#555;letter-spacing:0.1em;margin-bottom:6px">WHAT "→ ADD TO PLAN" DOES</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+
+        <div style="background:#12151a;border:1px solid #1e2530;border-radius:3px;padding:7px">
+          <div style="font-size:6px;color:#E67E22;margin-bottom:3px">✈ Transport leg added</div>
+          <div style="font-size:6px;color:#8A8680;line-height:1.5">Writes to <span style="color:#fff">legs[]</span><br>Map draws polyline<br>Elevation fetches terrain<br>Timeline adds milestone<br>Budget adds line item</div>
+        </div>
+
+        <div style="background:#12151a;border:1px solid #1e2530;border-radius:3px;padding:7px">
+          <div style="font-size:6px;color:#E67E22;margin-bottom:3px">🏨 Stay added</div>
+          <div style="font-size:6px;color:#8A8680;line-height:1.5">Writes to <span style="color:#fff">stays[]</span><br>Map pins hotel marker<br>Timeline adds checkin/<br>checkout milestones<br>Budget adds cost</div>
+        </div>
+
+        <div style="background:#12151a;border:1px solid #1e2530;border-radius:3px;padding:7px">
+          <div style="font-size:6px;color:#E67E22;margin-bottom:3px">📍 POI saved</div>
+          <div style="font-size:6px;color:#8A8680;line-height:1.5">Writes to <span style="color:#fff">pois[]</span><br>Map shows scout pin<br>Timeline optional slot<br>Packing adds<br>category gear</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Toast feedback -->
+    <div style="margin-top:10px;background:#0d1018;border:1px solid #1e2530;border-radius:3px;padding:7px;display:flex;align-items:center;gap:10px">
+      <div style="font-size:6px;color:#555;letter-spacing:0.08em">USER FEEDBACK ON ADD</div>
+      <div style="background:#E67E2215;border:1px solid #E67E2240;border-radius:2px;padding:3px 8px;font-size:7px;color:#E67E22">✓ GreenFly HAM→LIL added to plan · View on map →</div>
+      <div style="font-size:6px;color:#555;margin-left:auto">toast · 3s · clickable</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="options">
+  <div class="option" data-choice="approve" onclick="toggleSelect(this)">
+    <div class="letter">✓</div>
+    <div class="content">
+      <h3>Looks good — proceed to spec</h3>
+      <p>This data flow covers all tools writing to useTripStore and all consumers reacting. Ready to write the design doc.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="revise" onclick="toggleSelect(this)">
+    <div class="letter">↺</div>
+    <div class="content">
+      <h3>Needs changes</h3>
+      <p>Something about the flow needs adjusting — tell me what in the terminal.</p>
+    </div>
+  </div>
+</div>

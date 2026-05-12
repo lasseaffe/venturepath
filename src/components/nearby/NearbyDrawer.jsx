@@ -4,15 +4,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNearbySearch } from '../../hooks/useNearbySearch';
 import { OTM_CATEGORIES } from '../../utils/otmEngine';
 import NearbyResultCard from './NearbyResultCard';
-import { SwipeDeck } from '../swipe/SwipeDeck';
-import { useSwipePreferences } from '../../hooks/useSwipePreferences';
 
 export default function NearbyDrawer({ anchor: defaultAnchor, onSelectPlace }) {
   const [open, setOpen] = useState(false);
   const [editingAnchor, setEditingAnchor] = useState(false);
   const [anchorInput, setAnchorInput] = useState('');
-  const [swipeOpen, setSwipeOpen] = useState(false);
-  const { getAffinityScore } = useSwipePreferences();
 
   const {
     anchor, setAnchor,
@@ -30,18 +26,6 @@ export default function NearbyDrawer({ anchor: defaultAnchor, onSelectPlace }) {
     if (anchorInput.trim()) setAnchor(anchorInput.trim());
     setEditingAnchor(false);
   }
-
-  const spotCards = (results ?? [])
-    .map(r => ({
-      id: r.id ?? `nearby-${r.name}-${r.address ?? Math.random()}`,
-      name: r.name,
-      category: r.type ?? r.kindLabel ?? category,
-      rating: r.rating ?? null,
-      distanceFromLegKm: undefined,
-      tags: [r.type ?? category, sortBy].filter(Boolean),
-      imageUrl: r.preview ?? undefined,
-    }))
-    .sort((a, b) => getAffinityScore(b.tags) - getAffinityScore(a.tags));
 
   return (
     <div className="mt-2">
@@ -166,24 +150,6 @@ export default function NearbyDrawer({ anchor: defaultAnchor, onSelectPlace }) {
                   />
                 ))}
               </div>
-
-              {results && results.length > 0 && (
-                <button
-                  onClick={() => setSwipeOpen(true)}
-                  className="w-full mt-2 py-2 rounded-lg text-xs font-mono"
-                  style={{ background: 'transparent', color: 'var(--accent)', border: '1px dashed var(--accent)' }}
-                >
-                  ⟷ Swipe Results
-                </button>
-              )}
-
-              {swipeOpen && (
-                <SwipeDeck
-                  mode="spot"
-                  cards={spotCards}
-                  onClose={() => setSwipeOpen(false)}
-                />
-              )}
 
             </div>
           </motion.div>

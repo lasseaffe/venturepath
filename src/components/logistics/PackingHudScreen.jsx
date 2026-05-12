@@ -17,7 +17,8 @@ export default function PackingHudScreen({
   hasChildren = false,
   poiTags = [],
 }) {
-  const destination = useTripStore(s => s.trip?.destination ?? '');
+  const { trip } = useTripStore();
+  const destination = trip?.destination ?? '';
   const [bags, setBags]                   = useState([]);
   const [activeBagId, setActiveBagId]     = useState(null);
   const [showAddModal, setShowAddModal]   = useState(false);

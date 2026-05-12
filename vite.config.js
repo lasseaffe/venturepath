@@ -81,6 +81,32 @@ function apiRoutes() {
         });
       });
 
+      server.middlewares.use('/api/element-reports', async (req, res, next) => {
+        if (req.method !== 'POST') return next();
+        let body = '';
+        req.on('data', chunk => { body += chunk; });
+        req.on('end', async () => {
+          try {
+            const { cityId, cityName, country, issueType, poiId, detail } = JSON.parse(body);
+            if (!cityId || !issueType) {
+              res.statusCode = 400;
+              res.setHeader('Content-Type', 'application/json');
+              return res.end(JSON.stringify({ ok: false, error: 'cityId and issueType are required' }));
+            }
+            const { appendIssue } = await import('./scripts/lib/queue.js');
+            const entry = appendIssue({ cityId, cityName, country, type: issueType, poiId, detail, source: 'user_report' });
+            console.log(`[element-reports] ${issueType} for ${cityName} (${cityId})`);
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ ok: true, id: entry.id }));
+          } catch (err) {
+            console.error('[element-reports]', err.message);
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ ok: false, error: err.message }));
+          }
+        });
+      });
+
       server.middlewares.use('/api/destination-images', async (req, res, next) => {
         if (req.method !== 'GET') return next();
         try {

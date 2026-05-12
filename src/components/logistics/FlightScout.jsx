@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { filterExpeditionFlights } from '../../utils/flightEngine';
 import { fetchDestinations } from '../../utils/destinationEngine';
+import { searchLocations } from '../../utils/geocodeEngine';
 import EmergencyRebook from './EmergencyRebook';
 
 const PRIORITIES = [
@@ -20,12 +21,39 @@ function buildFlights(origin, destination) {
   ];
 }
 
+function useLocationAutocomplete(query) {
+  const [suggestions, setSuggestions] = useState([]);
+  const [searching, setSearching] = useState(false);
+  const timer = useRef(null);
+
+  useEffect(() => {
+    if (!query.trim()) { setSuggestions([]); return; }
+    clearTimeout(timer.current);
+    timer.current = setTimeout(async () => {
+      setSearching(true);
+      try {
+        const results = await searchLocations(query, 5);
+        setSuggestions(results.map(r => ({ id: String(r.id), name: r.name, address: r.address })));
+      } catch {
+        setSuggestions([]);
+      }
+      setSearching(false);
+    }, 350);
+    return () => clearTimeout(timer.current);
+  }, [query]);
+
+  return { suggestions, searching, clear: () => setSuggestions([]) };
+}
+
 export default function FlightScout({ destination = '', budgetLimit = 2000 }) {
   const [priority, setPriority] = useState('CHEAPEST');
   const [showRebook, setShowRebook] = useState(false);
   const [origin, setOrigin] = useState('');
   const [dest, setDest] = useState(destination);
   const [searched, setSearched] = useState(false);
+
+  const fromAC = useLocationAutocomplete(origin);
+  const toAC = useLocationAutocomplete(dest);
 
   const flights = searched
     ? filterExpeditionFlights(buildFlights(origin, dest), priority, budgetLimit)
@@ -62,23 +90,57 @@ export default function FlightScout({ destination = '', budgetLimit = 2000 }) {
         {/* Search form */}
         <form onSubmit={handleSearch} className="space-y-2">
           <div className="grid grid-cols-2 gap-2">
-            <div>
-              <div className="text-[8px] font-mono text-slate-500 tracking-widest mb-1">FROM</div>
+            {/* FROM field */}
+            <div className="relative">
+              <div className="text-[8px] font-mono text-[var(--text-muted)] tracking-widest mb-1">FROM</div>
               <input
                 type="text"
                 value={origin}
                 onChange={e => setOrigin(e.target.value)}
+                onBlur={() => setTimeout(fromAC.clear, 150)}
                 placeholder="City or airport…"
                 className="w-full bg-[#0E1012] border border-[#2a2f36] rounded px-3 py-2 text-sm text-white placeholder-slate-600 font-mono focus:outline-none focus:border-[#E67E22]/50"
               />
+              {fromAC.searching && (
+                <span className="absolute right-2 top-[30px] text-[9px] font-mono text-[var(--text-muted)]">…</span>
+              )}
+              <AnimatePresence>
+                {fromAC.suggestions.length > 0 && (
+                  <motion.ul
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute z-20 w-full mt-0.5 rounded overflow-hidden shadow-lg"
+                    style={{ background: '#141820', border: '1px solid #2a2f36' }}
+                  >
+                    {fromAC.suggestions.map(s => (
+                      <li key={s.id}>
+                        <button
+                          type="button"
+                          onMouseDown={() => { setOrigin(s.name); fromAC.clear(); }}
+                          className="w-full text-left px-3 py-2 text-xs font-mono text-white hover:bg-[#E67E22]/10 transition-colors border-b border-white/5 last:border-0"
+                        >
+                          {s.name}
+                          {s.address !== s.name && (
+                            <span className="block text-[9px] text-[var(--text-muted)] truncate">{s.address}</span>
+                          )}
+                        </button>
+                      </li>
+                    ))}
+                  </motion.ul>
+                )}
+              </AnimatePresence>
             </div>
-            <div>
-              <div className="text-[8px] font-mono text-slate-500 tracking-widest mb-1">TO</div>
+
+            {/* TO field */}
+            <div className="relative">
+              <div className="text-[8px] font-mono text-[var(--text-muted)] tracking-widest mb-1">TO</div>
               <div className="relative">
                 <input
                   type="text"
                   value={dest}
                   onChange={e => setDest(e.target.value)}
+                  onBlur={() => setTimeout(toAC.clear, 150)}
                   placeholder="Destination…"
                   className="w-full bg-[#0E1012] border border-[#2a2f36] rounded px-3 py-2 text-sm text-white placeholder-slate-600 font-mono focus:outline-none focus:border-[#E67E22]/50 pr-8"
                 />
@@ -91,6 +153,35 @@ export default function FlightScout({ destination = '', budgetLimit = 2000 }) {
                   ✦
                 </button>
               </div>
+              {toAC.searching && (
+                <span className="absolute right-8 top-[30px] text-[9px] font-mono text-[var(--text-muted)]">…</span>
+              )}
+              <AnimatePresence>
+                {toAC.suggestions.length > 0 && (
+                  <motion.ul
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute z-20 w-full mt-0.5 rounded overflow-hidden shadow-lg"
+                    style={{ background: '#141820', border: '1px solid #2a2f36' }}
+                  >
+                    {toAC.suggestions.map(s => (
+                      <li key={s.id}>
+                        <button
+                          type="button"
+                          onMouseDown={() => { setDest(s.name); toAC.clear(); }}
+                          className="w-full text-left px-3 py-2 text-xs font-mono text-white hover:bg-[#E67E22]/10 transition-colors border-b border-white/5 last:border-0"
+                        >
+                          {s.name}
+                          {s.address !== s.name && (
+                            <span className="block text-[9px] text-[var(--text-muted)] truncate">{s.address}</span>
+                          )}
+                        </button>
+                      </li>
+                    ))}
+                  </motion.ul>
+                )}
+              </AnimatePresence>
             </div>
           </div>
           <button
@@ -112,7 +203,7 @@ export default function FlightScout({ destination = '', budgetLimit = 2000 }) {
                   className={`flex-1 py-1.5 text-[9px] font-mono tracking-widest rounded border transition-colors ${
                     priority === p.id
                       ? 'bg-[#E67E22] border-[#E67E22] text-[#0E1012] font-bold'
-                      : 'bg-transparent border-[#2a2f36] text-slate-500 hover:border-[#E67E22]/50 hover:text-slate-300'
+                      : 'bg-transparent border-[#2a2f36] text-[var(--text-muted)] hover:border-[#E67E22]/50 hover:text-[var(--text-secondary)]'
                   }`}
                 >
                   {p.icon} {p.label}
@@ -128,16 +219,16 @@ export default function FlightScout({ destination = '', budgetLimit = 2000 }) {
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="text-[10px] font-mono text-slate-500 tracking-widest">{f.airline}</div>
+                      <div className="text-[10px] font-mono text-[var(--text-muted)] tracking-widest">{f.airline}</div>
                       <div className="text-white text-sm font-semibold font-mono mt-0.5">{f.route}</div>
                     </div>
                     <div className="text-right">
                       <div className="text-[#E67E22] text-lg font-mono font-bold">${f.price}</div>
-                      <div className="text-[9px] text-slate-600 font-mono">{f.type}</div>
+                      <div className="text-[9px] text-[var(--text-muted)] font-mono">{f.type}</div>
                     </div>
                   </div>
                   <div className="flex justify-between mt-2">
-                    <span className="text-[10px] font-mono text-slate-600">{f.duration}</span>
+                    <span className="text-[10px] font-mono text-[var(--text-muted)]">{f.duration}</span>
                     <span className={`text-[10px] font-mono ${f.co2 < 100 ? 'text-green-400' : f.co2 < 160 ? 'text-yellow-400' : 'text-red-400'}`}>
                       {f.co2}kg CO₂
                     </span>
@@ -145,7 +236,7 @@ export default function FlightScout({ destination = '', budgetLimit = 2000 }) {
                       href={`https://www.skyscanner.net/transport/flights/${encodeURIComponent(origin)}/${encodeURIComponent(dest)}/`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[9px] font-mono text-slate-500 hover:text-[#E67E22] transition-colors tracking-widest"
+                      className="text-[9px] font-mono text-[var(--text-muted)] hover:text-[#E67E22] transition-colors tracking-widest"
                     >
                       SKYSCANNER →
                     </a>
@@ -159,10 +250,10 @@ export default function FlightScout({ destination = '', budgetLimit = 2000 }) {
         {!searched && (
           <div className="py-8 text-center">
             <div className="text-2xl mb-2">✈</div>
-            <div className="text-[10px] font-mono text-slate-600 tracking-widest">
+            <div className="text-[10px] font-mono text-[var(--text-muted)] tracking-widest">
               ENTER ORIGIN + DESTINATION TO SEARCH
             </div>
-            <div className="text-[9px] font-mono text-slate-700 mt-1">
+            <div className="text-[9px] font-mono text-[var(--text-muted)] mt-1">
               TIP: CLICK ✦ NEXT TO DESTINATION FOR A SURPRISE TRIP
             </div>
           </div>

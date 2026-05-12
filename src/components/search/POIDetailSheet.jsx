@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { fetchStreetImage } from '../../utils/mapillaryEngine';
 import sentinelBus from '../../utils/sentinelBus';
+import ReportButton from '../inspire/ReportButton.jsx';
 
 const ACTION_EVENTS = {
   'Add to Leg':          'LEG_STOP_ADDED',
@@ -72,7 +73,10 @@ export function POIDetailSheet({ poi, actions, onClose }) {
             </h2>
             <span className="label-tag mt-1 inline-block">{poi.category}</span>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-white text-2xl leading-none">×</button>
+          <div className="flex items-center gap-2">
+            <ReportButton cityId={poi.id} cityName={poi.name} country="" poiId={poi.id} small />
+            <button onClick={onClose} className="text-gray-400 hover:text-white text-2xl leading-none">×</button>
+          </div>
         </div>
 
         {imgLoading ? (

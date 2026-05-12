@@ -8,7 +8,7 @@ const TABS = [
   { id: 'REPORTS',  label: 'Reports' },
 ];
 
-export default function SettingsPanel({ open, onClose, onLaunchWizard }) {
+export default function SettingsPanel({ open, onClose, onLaunchWizard, onOpenMoodboard }) {
   const [activeTab, setActiveTab] = useState('DISPLAY');
   const { theme, setTheme } = useTheme();
   const { reset: resetOnboarding } = useOnboardingState('vp-onboarding');
@@ -57,7 +57,7 @@ export default function SettingsPanel({ open, onClose, onLaunchWizard }) {
           </div>
           <button
             onClick={onClose}
-            className="w-7 h-7 flex items-center justify-center rounded border border-[#2a2f36] text-slate-500 hover:text-white hover:border-[#3a3f46] transition-colors text-sm"
+            className="w-7 h-7 flex items-center justify-center rounded border border-[#2a2f36] text-[var(--text-muted)] hover:text-white hover:border-[#3a3f46] transition-colors text-sm"
           >
             ✕
           </button>
@@ -87,7 +87,7 @@ export default function SettingsPanel({ open, onClose, onLaunchWizard }) {
         <div className="flex-1 overflow-y-auto p-5">
           {activeTab === 'DISPLAY' && (
             <div className="flex flex-col gap-4">
-              <div className="text-[9px] font-mono tracking-[0.15em] text-slate-500 uppercase mb-1">
+              <div className="text-[9px] font-mono tracking-[0.15em] text-[var(--text-muted)] uppercase mb-1">
                 Theme
               </div>
 
@@ -100,7 +100,7 @@ export default function SettingsPanel({ open, onClose, onLaunchWizard }) {
                   <div className="text-[11px] font-mono font-bold text-white">
                     Tactical Mode
                   </div>
-                  <div className="text-[9px] font-mono text-slate-500 mt-0.5">
+                  <div className="text-[9px] font-mono text-[var(--text-muted)] mt-0.5">
                     Amber-on-black emergency aesthetic
                   </div>
                 </div>
@@ -117,6 +117,32 @@ export default function SettingsPanel({ open, onClose, onLaunchWizard }) {
                 </button>
               </div>
 
+              {/* Moodboard — living design spec */}
+              <div
+                className="flex items-center justify-between p-4 rounded"
+                style={{ background: '#111316', border: '1px solid #1e2328' }}
+              >
+                <div>
+                  <div className="text-[11px] font-mono font-bold text-white">
+                    Design Moodboard
+                  </div>
+                  <div className="text-[9px] font-mono text-[var(--text-muted)] mt-0.5">
+                    Modern Nomad system · tokens, type, components, voice
+                  </div>
+                </div>
+                <button
+                  onClick={() => onOpenMoodboard?.()}
+                  className="text-[9px] font-mono px-3 py-1.5 rounded border tracking-widest uppercase transition-colors"
+                  style={{
+                    background: 'rgba(230,126,34,0.1)',
+                    borderColor: 'rgba(230,126,34,0.3)',
+                    color: '#E67E22',
+                  }}
+                >
+                  ⊕ Open →
+                </button>
+              </div>
+
               {/* Wizard launcher */}
               <div
                 className="flex items-center justify-between p-4 rounded"
@@ -126,7 +152,7 @@ export default function SettingsPanel({ open, onClose, onLaunchWizard }) {
                   <div className="text-[11px] font-mono font-bold text-white">
                     New Expedition Wizard
                   </div>
-                  <div className="text-[9px] font-mono text-slate-500 mt-0.5">
+                  <div className="text-[9px] font-mono text-[var(--text-muted)] mt-0.5">
                     Architect a new expedition step-by-step
                   </div>
                 </div>

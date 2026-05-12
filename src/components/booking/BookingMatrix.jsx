@@ -61,7 +61,7 @@ export default function BookingMatrix() {
             <span className="text-white">{result.budget ? `€${result.budget}` : '—'}</span>
           </div>
           <div className="border-t border-white/10 pt-3">
-            <p className="text-[#E67E22] mb-1">✈ Flight</p>
+            <p className="text-[#E67E22] mb-1">Flight</p>
             <p className="text-[#D9C5B2]">{result.flight?.carrier ?? '—'}</p>
           </div>
           <div>

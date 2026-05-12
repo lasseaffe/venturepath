@@ -55,7 +55,7 @@ export default function LegGuide({ legs = SAMPLE_LEGS }) {
             className={`shrink-0 px-4 py-3 text-xs font-mono tracking-wide transition-colors border-b-2 ${
               activeLeg === l.id
                 ? 'border-[#E67E22] text-[#E67E22]'
-                : 'border-transparent text-slate-400 hover:text-slate-200'
+                : 'border-transparent text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
             }`}
           >
             LEG {l.id}
@@ -68,7 +68,7 @@ export default function LegGuide({ legs = SAMPLE_LEGS }) {
           {/* Header */}
           <div>
             <h3 className="text-white font-bold text-lg">{leg.title}</h3>
-            <div className="flex gap-4 mt-1 text-xs text-slate-400 font-mono">
+            <div className="flex gap-4 mt-1 text-xs text-[var(--text-secondary)] font-mono">
               <span>📍 {leg.location}</span>
               <span>⏱ {leg.days}d</span>
             </div>
@@ -79,7 +79,7 @@ export default function LegGuide({ legs = SAMPLE_LEGS }) {
             <Section title="Mission Objectives">
               <ul className="space-y-1">
                 {leg.objectives.map((o, i) => (
-                  <li key={i} className="flex gap-2 items-start text-sm text-slate-300">
+                  <li key={i} className="flex gap-2 items-start text-sm text-[var(--text-secondary)]">
                     <span className="text-[#E67E22] mt-0.5">▸</span>
                     {o}
                   </li>
@@ -102,7 +102,7 @@ export default function LegGuide({ legs = SAMPLE_LEGS }) {
 
           {/* Notes */}
           <Section title="Field Notes">
-            <p className="text-sm text-slate-300 italic">{leg.notes}</p>
+            <p className="text-sm text-[var(--text-secondary)] italic">{leg.notes}</p>
           </Section>
 
           {/* Pre-departure checklist */}
@@ -126,7 +126,7 @@ export default function LegGuide({ legs = SAMPLE_LEGS }) {
                     >
                       {checked && <span className="text-white text-[10px]">✓</span>}
                     </div>
-                    <span className={`text-sm transition-colors ${checked ? 'line-through text-slate-500' : 'text-slate-300'}`}>
+                    <span className={`text-sm transition-colors ${checked ? 'line-through text-[var(--text-muted)]' : 'text-[var(--text-secondary)]'}`}>
                       {item}
                     </span>
                   </label>

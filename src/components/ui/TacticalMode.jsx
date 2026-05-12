@@ -45,7 +45,7 @@ export default function TacticalMode({ onExit }) {
   };
 
   return (
-    <div data-tour="tactical" data-beacon="tactical-mode" className="min-h-screen bg-black text-amber-400 font-mono p-4 flex flex-col">
+    <div data-tour="tactical" data-beacon="tactical-mode" className="min-h-screen font-mono p-4 flex flex-col" style={{ background: '#0A0A0A', color: '#F2A900' }}>
       {/* Header */}
       <div className="flex items-center justify-between mb-4 pb-3 border-b border-amber-400/30">
         <div>
@@ -99,7 +99,7 @@ export default function TacticalMode({ onExit }) {
         {sosReady && (
           <div className="p-3 border border-amber-400/50 rounded text-xs whitespace-pre-wrap text-amber-300">
             {sosText}
-            {sosCopied && <div className="mt-2 text-green-400">✓ Copied to clipboard — paste into satellite messenger</div>}
+            {sosCopied && <div className="mt-2" style={{ color: 'var(--status-ok)' }}>✓ Copied to clipboard — paste into satellite messenger</div>}
           </div>
         )}
         <button

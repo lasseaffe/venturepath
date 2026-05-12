@@ -12,6 +12,8 @@ function parseFlickrCdnUrl(src) {
 
 function buildFlickrUrls({ server, id, secret }) {
   const base = `https://live.staticflickr.com/${server}/${id}_${secret}`;
+  // _b = 1024px, reliably available for all Flickr photos
+  // _k = 2048px, only available when owner enables original downloads — upgraded at render time via useHighResUrl
   return { url: `${base}_b.jpg`, thumb: `${base}_m.jpg` };
 }
 

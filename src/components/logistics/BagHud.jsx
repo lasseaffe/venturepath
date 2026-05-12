@@ -35,7 +35,7 @@ export default function BagHud({ bag, bagType, zoneMap, packed, onZoneClick, onZ
 
       {/* Top bar: skin selector + remove button */}
       <div className="flex items-center gap-2 mb-3">
-        <span className="text-[8px] font-mono text-slate-500 tracking-widest">SKIN</span>
+        <span className="text-[8px] font-mono text-[var(--text-muted)] tracking-widest">SKIN</span>
         {SKIN_IDS.map(id => (
           <button
             key={id}
@@ -49,14 +49,14 @@ export default function BagHud({ bag, bagType, zoneMap, packed, onZoneClick, onZ
             }}
           />
         ))}
-        <span className="text-[8px] font-mono text-slate-600 ml-1">{skin.label}</span>
+        <span className="text-[8px] font-mono text-[var(--text-muted)] ml-1">{skin.label}</span>
 
         {destination && (
           <span style={{
             marginLeft: onRemove ? 8 : 'auto',
             fontFamily: 'JetBrains Mono, monospace',
             fontSize: 7,
-            color: '#4b5563',
+            color: 'var(--text-muted)',
             letterSpacing: '0.08em',
             whiteSpace: 'nowrap',
             overflow: 'hidden',
@@ -90,7 +90,7 @@ export default function BagHud({ bag, bagType, zoneMap, packed, onZoneClick, onZ
             className={`text-[9px] font-mono px-2 py-0.5 rounded border transition-colors ${
               viewMode === m.id
                 ? 'border-[#E67E22] text-[#E67E22] bg-[#E67E22]/10'
-                : 'border-[#2a2f36] text-slate-500 hover:border-slate-500'
+                : 'border-[#2a2f36] text-[var(--text-muted)] hover:border-[var(--border-strong,rgba(242,237,232,0.15))]'
             }`}
           >
             {m.label}
@@ -122,7 +122,7 @@ export default function BagHud({ bag, bagType, zoneMap, packed, onZoneClick, onZ
       </div>
 
       {/* Weight summary */}
-      <div className="mt-3 text-[9px] font-mono text-slate-500 text-center">
+      <div className="mt-3 text-[9px] font-mono text-[var(--text-muted)] text-center">
         {stowedWeight.toFixed(2)} kg stowed
         &nbsp;/&nbsp;
         {totalWeight.toFixed(2)} kg total

@@ -1,0 +1,13 @@
+{
+  "city": "Vienna, Austria",
+  "slug": "vienna-austria",
+  "qid": "Q1741",
+  "description": "capital of and state in Austria",
+  "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Wien_katedra_sw_Szczepana_widok_z_wiezy_6.jpg?width=800",
+  "coords": {
+    "lat": 48.208333333333336,
+    "lng": 16.3725
+  },
+  "climate": "temperate",
+  "pois": []
+}

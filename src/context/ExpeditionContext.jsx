@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, useState, useCallback, useEffect } from 'react';
+import { createContext, useContext, useReducer, useCallback, useEffect } from 'react';
 
 const STORAGE_KEY = 'vp-expedition-store';
 const STORE_VERSION = 2; // bump to invalidate stale localStorage
@@ -92,7 +92,6 @@ function loadExpeditionState() {
 
 export function ExpeditionProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, undefined, loadExpeditionState);
-  const [activeSection, setActiveSection] = useState('planner');
 
   useEffect(() => {
     try {
@@ -109,7 +108,7 @@ export function ExpeditionProvider({ children }) {
   const resetLedger = useCallback(() => dispatch({ type: 'RESET' }), []);
 
   return (
-    <ExpeditionContext.Provider value={{ ...state, nominate, vote, removeRejected, moveToPath, removeFromPath, resetLedger, SQUAD, activeSection, setActiveSection }}>
+    <ExpeditionContext.Provider value={{ ...state, nominate, vote, removeRejected, moveToPath, removeFromPath, resetLedger, SQUAD }}>
       {children}
     </ExpeditionContext.Provider>
   );

@@ -6,6 +6,7 @@ import { useTripStore } from '../../store/useTripStore';
 import StopEditor from '../trip/StopEditor';
 import { geocodeLocation } from '../../utils/geocodeEngine';
 import NearbyMapOverlay from '../nearby/NearbyMapOverlay';
+import ScoutPinsLayer from '../map/ScoutPinsLayer';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -22,7 +23,7 @@ const MODE_COLOR = {
 };
 const DEFAULT_COLOR = '#E67E22';
 
-const MODE_ICON = { flight: '✈', bus: '🚌', foot: '🥾', boat: '⛵' };
+const MODE_ICON = { flight: 'AIR', bus: 'BUS', foot: 'FOOT', boat: 'SEA' };
 
 // Static coordinates for the default Operation Patagonia legs
 const DEFAULT_COORDS = {
@@ -107,6 +108,7 @@ export default function RouteMap({ className = '' }) {
   const [editorOpen, setEditorOpen] = useState(false);
   const [editingLeg, setEditingLeg] = useState(null); // null = add mode
   const [nearbyAnchorLeg, setNearbyAnchorLeg] = useState(null);
+  const [scoutPinsVisible, setScoutPinsVisible] = useState(true);
 
   function openAdd() { setEditingLeg(null); setEditorOpen(true); }
   function openEdit(leg) { setEditingLeg(leg); setEditorOpen(true); }
@@ -172,9 +174,9 @@ export default function RouteMap({ className = '' }) {
                 {l.id}
               </span>
               <div className="min-w-0">
-                <div className="text-slate-200 truncate">{l.to}</div>
-                <div className="text-slate-500 text-[10px] mt-0.5">
-                  {MODE_ICON[l.mode] ?? '📍'} {l.durationH}h
+                <div className="text-[var(--text-primary)] truncate">{l.to}</div>
+                <div className="text-[var(--text-muted)] text-[10px] mt-0.5">
+                  <span className="font-mono text-[8px] tracking-widest">{MODE_ICON[l.mode] ?? 'LEG'}</span> {l.durationH}h
                 </div>
                 <div
                   className="text-[9px] mt-0.5 font-mono"
@@ -200,16 +202,16 @@ export default function RouteMap({ className = '' }) {
         <div className="pt-3 border-t border-[#2a2f36] space-y-1">
           <div className="label-tag text-[10px] px-1 mb-1">MODE</div>
           {Object.entries(MODE_COLOR).map(([mode, color]) => (
-            <div key={mode} className="flex items-center gap-1.5 px-1 text-[10px] font-mono text-slate-400">
+            <div key={mode} className="flex items-center gap-1.5 px-1 text-[10px] font-mono text-[var(--text-secondary)]">
               <span className="w-3 h-0.5 rounded" style={{ background: color, display: 'inline-block' }} />
               {mode}
             </div>
           ))}
           <div className="pt-1 border-t border-[#2a2f36] space-y-0.5">
-            <div className="flex items-center gap-1.5 px-1 text-[10px] font-mono text-slate-400">
+            <div className="flex items-center gap-1.5 px-1 text-[10px] font-mono text-[var(--text-secondary)]">
               <span className="w-3 h-px" style={{ background: '#aaa', display: 'inline-block' }} /> confirmed
             </div>
-            <div className="flex items-center gap-1.5 px-1 text-[10px] font-mono text-slate-400">
+            <div className="flex items-center gap-1.5 px-1 text-[10px] font-mono text-[var(--text-secondary)]">
               <span className="w-3" style={{ display: 'inline-block', borderTop: '1px dashed #aaa' }} /> pending
             </div>
           </div>
@@ -265,7 +267,7 @@ export default function RouteMap({ className = '' }) {
                 <Popup>
                   <div style={{ fontFamily: 'monospace', fontSize: 12, minWidth: 150 }}>
                     <div style={{ fontWeight: 700, color: '#E67E22', marginBottom: 4 }}>
-                      {MODE_ICON[l.mode] ?? '📍'} {l.to}
+                      <span className="font-mono text-[8px] tracking-widest">{MODE_ICON[l.mode] ?? 'LEG'}</span> {l.to}
                     </div>
                     <div style={{ color: '#ccc' }}>{l.from} → {l.to}</div>
                     <div style={{ color: '#888', marginTop: 4 }}>
@@ -297,7 +299,7 @@ export default function RouteMap({ className = '' }) {
                         width: '100%',
                       }}
                     >
-                      🧭 Find nearby
+                      Find nearby
                     </button>
                   </div>
                 </Popup>
@@ -319,7 +321,34 @@ export default function RouteMap({ className = '' }) {
               onClose={() => setNearbyAnchorLeg(null)}
             />
           )}
+          <ScoutPinsLayer destination={trip?.destination} visible={scoutPinsVisible} />
         </MapContainer>
+
+        {/* Scout Pins toggle */}
+        <button
+          onClick={() => setScoutPinsVisible(v => !v)}
+          style={{
+            position: 'absolute',
+            bottom: 12,
+            left: 12,
+            zIndex: 800,
+            background: scoutPinsVisible ? 'rgba(230,126,34,0.15)' : 'rgba(14,16,18,0.85)',
+            border: `1px solid ${scoutPinsVisible ? '#E67E22' : '#2a2f36'}`,
+            color: scoutPinsVisible ? '#E67E22' : '#8A8680',
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 9,
+            letterSpacing: '0.08em',
+            padding: '4px 10px',
+            borderRadius: 2,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6,
+          }}
+        >
+          <span style={{ width: 8, height: 8, borderRadius: '50%', background: scoutPinsVisible ? '#E67E22' : '#484440', display: 'inline-block' }} />
+          SCOUT PINS
+        </button>
       </div>
     </div>
     </>

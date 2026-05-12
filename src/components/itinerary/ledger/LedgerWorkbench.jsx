@@ -115,7 +115,13 @@ function LedgerCard({ item, zone, onVote }) {
               className="w-full h-full object-cover"
             />
           ) : (
-            <div className="w-full h-full bg-white/5 flex items-center justify-center text-slate-600 text-xl">📍</div>
+            <div className="w-full h-full flex flex-col items-center justify-center gap-1"
+              style={{ background: 'rgba(230,126,34,0.06)', border: '1px solid rgba(230,126,34,0.15)', borderRadius: '8px' }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(230,126,34,0.4)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m8 3 4 8 5-5 5 15H2L8 3z"/>
+              </svg>
+              <span className="font-mono" style={{ fontSize: '7px', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(230,126,34,0.3)' }}>PHOTO</span>
+            </div>
           )}
           {!item.thumb && scraped?.author && (
             <ImageAttribution attribution={scraped} />
@@ -136,9 +142,9 @@ function LedgerCard({ item, zone, onVote }) {
         </div>
         <div className="flex-1 min-w-0">
           <div className="text-white text-sm font-semibold truncate">{item.name}</div>
-          <div className="text-xs text-slate-400 font-mono mt-0.5">{item.type}</div>
+          <div className="text-xs text-[var(--text-secondary)] font-mono mt-0.5">{item.type}</div>
           {zone === 'pool' && (
-            <div className="text-[10px] text-slate-500 font-mono mt-1">
+            <div className="text-[10px] text-[var(--text-muted)] font-mono mt-1">
               {ups} vote{ups !== 1 ? 's' : ''}
             </div>
           )}
@@ -199,7 +205,7 @@ function DropZone({ id, title, items, zone, onVote, isOver }) {
           ))}
         </AnimatePresence>
         {items.length === 0 && (
-          <div className="text-center text-slate-600 text-xs font-mono py-8">
+          <div className="text-center text-[var(--text-muted)] text-xs font-mono py-8">
             {zone === 'pool' ? 'Use "+ Nominate a spot" below to add ideas' : 'Drag confirmed items here, or vote ↑ to confirm from pool'}
           </div>
         )}
@@ -317,7 +323,7 @@ function AddToPoolForm({ onAdd, destination, onOpenInspire }) {
             placeholder="Spot name…"
             className="flex-1 text-sm bg-transparent text-white outline-none"
           />
-          {loading && <span className="text-[10px] text-slate-500 font-mono shrink-0">…</span>}
+          {loading && <span className="text-[10px] text-[var(--text-muted)] font-mono shrink-0">…</span>}
         </div>
 
         {/* Dropdown suggestions */}
@@ -333,11 +339,11 @@ function AddToPoolForm({ onAdd, destination, onOpenInspire }) {
                 {place.thumb ? (
                   <img src={place.thumb} alt="" className="w-8 h-8 rounded object-cover shrink-0" />
                 ) : (
-                  <div className="w-8 h-8 rounded bg-white/5 shrink-0 flex items-center justify-center text-slate-600 text-xs">📍</div>
+                  <div className="w-8 h-8 rounded bg-white/5 shrink-0 flex items-center justify-center font-mono text-[8px] tracking-widest" style={{ color: "var(--text-muted)" }}>IMG</div>
                 )}
                 <div className="flex-1 min-w-0">
                   <div className="text-white text-xs font-semibold truncate">{place.name}</div>
-                  <div className="text-[10px] text-slate-500 font-mono truncate">{place.type}{place.rating ? ` · ★ ${place.rating}` : ''}</div>
+                  <div className="text-[10px] text-[var(--text-muted)] font-mono truncate">{place.type}{place.rating ? ` · ★ ${place.rating}` : ''}</div>
                 </div>
               </button>
             ))}
@@ -348,7 +354,7 @@ function AddToPoolForm({ onAdd, destination, onOpenInspire }) {
       <select
         value={type}
         onChange={e => setType(e.target.value)}
-        className="w-full px-2 py-1.5 rounded text-sm bg-[#0E1012] border border-white/10 text-slate-300 outline-none"
+        className="w-full px-2 py-1.5 rounded text-sm bg-[#0E1012] border border-white/10 text-[var(--text-secondary)] outline-none"
       >
         {SPOT_TYPES.map(t => <option key={t}>{t}</option>)}
       </select>
@@ -357,7 +363,7 @@ function AddToPoolForm({ onAdd, destination, onOpenInspire }) {
         <button
           type="button"
           onClick={() => { setOpen(false); setSugs([]); setSelected(null); setName(''); }}
-          className="flex-1 py-1 text-xs rounded border border-white/10 text-slate-400"
+          className="flex-1 py-1 text-xs rounded border border-white/10 text-[var(--text-secondary)]"
         >
           Cancel
         </button>
@@ -422,11 +428,11 @@ export default function LedgerWorkbench() {
       {/* Header */}
       <div className="flex items-center justify-between mb-1">
         <h2 className="label-tag">Expedition Ledger</h2>
-        <span className="text-[10px] font-mono text-slate-500">
+        <span className="text-[10px] font-mono text-[var(--text-muted)]">
           {activePath.length} confirmed · {pool.length} pending
         </span>
       </div>
-      <p className="text-xs text-slate-500 mb-4 leading-relaxed">
+      <p className="text-xs text-[var(--text-muted)] mb-4 leading-relaxed">
         Nominate spots your squad might visit. Vote ↑ or ↓ — majority vote confirms a spot and moves it to{' '}
         <span className="text-[#F2C94C] font-mono">The Active Path</span>. Drag confirmed items across to lock them in.
       </p>
@@ -467,7 +473,7 @@ export default function LedgerWorkbench() {
           {activeItem && (
             <div className="glass-panel p-3 border border-[#F2C94C]/60 shadow-xl">
               <div className="text-white text-sm font-semibold">{activeItem.name}</div>
-              <div className="text-xs text-slate-400 font-mono">{activeItem.type}</div>
+              <div className="text-xs text-[var(--text-secondary)] font-mono">{activeItem.type}</div>
             </div>
           )}
         </DragOverlay>

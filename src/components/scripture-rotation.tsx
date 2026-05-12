@@ -13,59 +13,59 @@ const SLIDES = [
     quote: "\u201cHe is not here: for he is risen, as he said.\u201d",
     ref: "Matthew 28:6",
     label: "Easter · Resurrection",
-    accent: "#E8C49A",
+    accent: "#D4AF37",
   },
   {
     id: "resurrection-life",
     type: "svg",
-    bg: "linear-gradient(160deg, #1E3A2A 0%, #2D5A3A 100%)",
+    bg: "linear-gradient(160deg, #1A0D4A 0%, #2D1B69 100%)",
     photo: null,
     quote: "\u201cI am the resurrection, and the life: he that believeth in me, though he were dead, yet shall he live.\u201d",
     ref: "John 11:25",
     label: "Christ · Life Eternal",
-    accent: "#9BB89A",
+    accent: "#D4AF37",
     svgType: "cross",
   },
   {
     id: "atonement",
     type: "photo",
-    bg: "linear-gradient(160deg, #2A1A0A 0%, #3A2A1A 100%)",
+    bg: "linear-gradient(160deg, #1A0D4A 0%, #2D1B69 100%)",
     photo: "https://images.unsplash.com/photo-1490750580177-83e5f0f40ddb?auto=format&fit=crop&w=900&q=75",
     quote: "\u201cFor God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.\u201d",
     ref: "John 3:16",
     label: "Atonement · God\u2019s Love",
-    accent: "#E8B49A",
+    accent: "#D4AF37",
   },
   {
     id: "mosiah",
     type: "svg",
-    bg: "linear-gradient(160deg, #1A1A2A 0%, #2A2A4A 100%)",
+    bg: "linear-gradient(160deg, #16103A 0%, #231855 100%)",
     photo: null,
     quote: "\u201cAnd he shall go forth, suffering pains and afflictions and temptations of every kind; and this that the word might be fulfilled which saith he will take upon him the pains and the sicknesses of his people.\u201d",
     ref: "Alma 7:11",
     label: "Book of Mormon · Alma",
-    accent: "#A8C4E8",
+    accent: "#EDE8F8",
     svgType: "dove",
   },
   {
     id: "dc19",
     type: "photo",
-    bg: "linear-gradient(160deg, #0A1A0A 0%, #1A3020 100%)",
+    bg: "linear-gradient(160deg, #1A0D4A 0%, #2D1B69 100%)",
     photo: "https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=900&q=75",
     quote: "\u201cFor, behold, I, God, have suffered these things for all, that they might not suffer if they would repent.\u201d",
     ref: "Doctrine & Covenants 19:16",
     label: "D&C · The Lord Speaks",
-    accent: "#9BB89A",
+    accent: "#D4AF37",
   },
   {
     id: "peace",
     type: "svg",
-    bg: "linear-gradient(160deg, #3A2A1A 0%, #5A4030 100%)",
+    bg: "linear-gradient(160deg, #2D1B69 0%, #4A2D8A 100%)",
     photo: null,
     quote: "\u201cPeace I leave with you, my peace I give unto you: not as the world giveth, give I unto you. Let not your heart be troubled, neither let it be afraid.\u201d",
     ref: "John 14:27",
     label: "Easter · Peace",
-    accent: "#E8C49A",
+    accent: "#D4AF37",
     svgType: "sun",
   },
 ];
@@ -160,24 +160,24 @@ export function ScriptureRotation() {
   const slide = SLIDES[current];
 
   return (
-    <section className="py-16 px-4" style={{ background: "linear-gradient(180deg, #1E3320 0%, #2D4A2D 100%)" }}>
+    <section className="py-16 px-4" style={{ background: "linear-gradient(180deg, #1A0D4A 0%, #2D1B69 100%)" }}>
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-3 mb-8">
           <div
             className="p-2 rounded-lg"
-            style={{ background: "rgba(155,184,154,0.15)" }}
+            style={{ background: "rgba(212,175,55,0.15)" }}
           >
-            <BookOpen size={16} style={{ color: "#9BB89A" }} />
+            <BookOpen size={16} style={{ color: "#D4AF37" }} />
           </div>
           <div>
             <p
               className="text-xs font-semibold uppercase tracking-widest"
-              style={{ color: "#9BB89A" }}
+              style={{ color: "#D4AF37" }}
             >
               Scripture of the Season
             </p>
-            <p className="text-xs mt-0.5" style={{ color: "#4A6A4A" }}>
+            <p className="text-xs mt-0.5" style={{ color: "#8B7EC0" }}>
               Easter 2026 · The Resurrection and Atonement of Jesus Christ
             </p>
           </div>
@@ -217,7 +217,7 @@ export function ScriptureRotation() {
                 className="absolute inset-0"
                 style={{
                   background:
-                    "linear-gradient(to right, rgba(20,30,20,0.9) 0%, rgba(20,30,20,0.5) 50%, rgba(20,30,20,0.3) 100%)",
+                    "linear-gradient(to right, rgba(26,13,74,0.92) 0%, rgba(26,13,74,0.55) 50%, rgba(26,13,74,0.3) 100%)",
                 }}
               />
             </div>
@@ -225,7 +225,7 @@ export function ScriptureRotation() {
 
           {/* SVG visual — right side */}
           {slide.type === "svg" && (
-            <div className="absolute right-0 top-0 bottom-0 w-48 opacity-70">
+            <div className="absolute right-0 top-0 bottom-0 w-48 opacity-70 pointer-events-none">
               {slide.svgType === "cross" && <CrossSvg accent={(slide as { accent: string }).accent} />}
               {slide.svgType === "dove" && <DoveSvg accent={(slide as { accent: string }).accent} />}
               {slide.svgType === "sun" && <SunSvg accent={(slide as { accent: string }).accent} />}
@@ -260,7 +260,7 @@ export function ScriptureRotation() {
             {/* Quote */}
             <blockquote
               className="text-lg md:text-xl font-medium italic leading-relaxed mb-4"
-              style={{ color: "#F5F0E8", textShadow: "0 1px 8px rgba(0,0,0,0.4)" }}
+              style={{ color: "#F5F0FF", textShadow: "0 1px 8px rgba(0,0,0,0.4)" }}
             >
               {slide.quote}
             </blockquote>

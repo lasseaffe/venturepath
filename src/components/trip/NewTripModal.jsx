@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+;
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTripStore } from '../../store/useTripStore';
 import { filterDestinations } from '../../utils/destinationEngine';
@@ -17,6 +18,7 @@ export default function NewTripModal({ onClose, onCreated, initialData = null, e
   const [climate, setClimate] = useState(initialData?.climate ?? 'temperate');
   const [suggestions, setSuggestions] = useState([]);
   const [searching, setSearching] = useState(false);
+  const [showQuickCreate, setShowQuickCreate] = useState(false);
   const debounce = useRef(null);
 
   // Auto-derive trip name from destination if not manually set
@@ -113,6 +115,26 @@ export default function NewTripModal({ onClose, onCreated, initialData = null, e
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          {/* Wizard entry split */}
+          {!isEdit && !showQuickCreate && (
+            <div className="flex gap-3 mb-6 p-4 bg-[#0E1012] rounded-lg border border-white/5">
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex-1 py-3 px-4 bg-[#E67E22] text-[#0E1012] font-mono font-semibold rounded hover:bg-[#d4711f] transition-colors text-sm"
+              >
+                ✦ Plan with Guide
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowQuickCreate(true)}
+                className="flex-1 py-3 px-4 border border-white/20 text-[#D9C5B2] font-mono rounded hover:border-white/40 transition-colors text-sm"
+              >
+                Quick Create
+              </button>
+            </div>
+          )}
+
           {/* Destination */}
           <div className="relative">
             <label className="label-tag block mb-1.5">Destination</label>

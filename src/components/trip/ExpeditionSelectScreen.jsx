@@ -112,10 +112,21 @@ function TrashIcon() {
   );
 }
 
+const CLIMATE_GLOW = {
+  tropical:  'rgba(52,211,153,0.22)',
+  alpine:    'rgba(96,165,250,0.22)',
+  desert:    'rgba(251,146,60,0.26)',
+  arctic:    'rgba(147,197,253,0.22)',
+  temperate: 'rgba(167,243,208,0.18)',
+};
+
 function ExpeditionCard({ exp, i, tripType, Icon, onLoad, onEdit, onDelete }) {
   const destination = exp.trip?.destination ?? '';
+  const climate     = exp.trip?.climate ?? '';
+  const country     = destination.includes(',') ? destination.split(',').slice(-1)[0].trim() : '';
   const { image: destImage, loading: imgLoading } = useDestinationImage(destination, 'city', 0);
   const [imgError, setImgError] = useState(false);
+  const glowColor = CLIMATE_GLOW[climate] ?? 'rgba(230,126,34,0.14)';
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -127,6 +138,7 @@ function ExpeditionCard({ exp, i, tripType, Icon, onLoad, onEdit, onDelete }) {
       style={{
         border: '1px solid var(--border)',
         background: 'var(--surface)',
+        boxShadow: `0 0 0 1px ${glowColor}, 0 4px 24px ${glowColor}`,
       }}
       whileHover={{ y: -3, transition: { duration: 0.2 } }}
     >
@@ -183,43 +195,51 @@ function ExpeditionCard({ exp, i, tripType, Icon, onLoad, onEdit, onDelete }) {
           </span>
         </div>
 
-        {/* Action buttons top-right */}
-        <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          <button
-            onClick={e => onEdit(exp, e)}
-            title="Edit expedition details"
-            className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
-            style={{
-              background: 'rgba(14,16,18,0.72)',
-              color: 'var(--text-secondary)',
-              border: '1px solid rgba(255,255,255,0.12)',
-              backdropFilter: 'blur(8px)',
-            }}
-          >
-            <PencilIcon />
-          </button>
-          <button
-            onClick={e => onDelete(exp.id, e)}
-            title="Delete expedition"
-            className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
-            style={{
-              background: 'rgba(14,16,18,0.72)',
-              color: 'var(--status-alert)',
-              border: '1px solid rgba(255,255,255,0.12)',
-              backdropFilter: 'blur(8px)',
-            }}
-          >
-            <TrashIcon />
-          </button>
+        {/* Action buttons top-right: edit/delete (hover-only) + report (always visible) */}
+        <div className="absolute top-2 right-2 flex gap-1 items-center" style={{ zIndex: 15 }}>
+          <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <button
+              onClick={e => onEdit(exp, e)}
+              title="Edit expedition details"
+              className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
+              style={{
+                background: 'rgba(14,16,18,0.72)',
+                color: 'var(--text-secondary)',
+                border: '1px solid rgba(255,255,255,0.12)',
+                backdropFilter: 'blur(8px)',
+              }}
+            >
+              <PencilIcon />
+            </button>
+            <button
+              onClick={e => onDelete(exp.id, e)}
+              title="Delete expedition"
+              className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
+              style={{
+                background: 'rgba(14,16,18,0.72)',
+                color: 'var(--status-alert)',
+                border: '1px solid rgba(255,255,255,0.12)',
+                backdropFilter: 'blur(8px)',
+              }}
+            >
+              <TrashIcon />
+            </button>
+          </div>
+          {destImage?.url && (
+            <ReportButton
+              cityId={exp.trip?.destination ?? ''}
+              cityName={exp.trip?.destination ?? ''}
+              country=""
+              imageUrl={destImage.url}
+              imageAttribution={destImage}
+            />
+          )}
         </div>
 
         {/* Destination name overlaid on bottom of hero */}
         <div className="absolute bottom-0 left-0 right-0 px-4 pb-3" style={{ zIndex: 5 }}>
-          <p
-            className="text-xs font-mono tracking-widest uppercase"
-            style={{ color: 'rgba(255,255,255,0.55)', letterSpacing: '0.12em', fontSize: '0.6rem' }}
-          >
-            {exp.trip?.destination ?? '—'}
+          <p style={{ fontFamily: 'Playfair Display, serif', fontSize: 16, fontWeight: 700, color: '#fff', textShadow: '0 1px 8px rgba(0,0,0,0.9)', lineHeight: 1.2, margin: 0 }}>
+            {destination || '—'}
           </p>
         </div>
 
@@ -228,19 +248,6 @@ function ExpeditionCard({ exp, i, tripType, Icon, onLoad, onEdit, onDelete }) {
           <ImageAttribution attribution={destImage} />
         )}
 
-        {/* Report image button */}
-        {destImage?.url && (
-          <div className="absolute top-2 left-2" style={{ zIndex: 15 }}>
-            <ReportButton
-              cityId={exp.trip?.destination ?? ''}
-              cityName={exp.trip?.destination ?? ''}
-              country=""
-              small
-              imageUrl={destImage.url}
-              imageAttribution={destImage}
-            />
-          </div>
-        )}
       </div>
 
       {/* Card body */}
@@ -253,6 +260,12 @@ function ExpeditionCard({ exp, i, tripType, Icon, onLoad, onEdit, onDelete }) {
         </h2>
 
         <div className="mt-2 flex flex-wrap items-center gap-1.5 text-xs" style={{ color: 'var(--text-muted)', fontFamily: 'JetBrains Mono, monospace', fontSize: '0.68rem' }}>
+          {country && (
+            <span style={{ display: 'inline-block', background: 'rgba(230,126,34,0.12)', border: '1px solid rgba(230,126,34,0.3)', borderRadius: 3, padding: '1px 7px', fontSize: 9, fontFamily: 'JetBrains Mono, monospace', color: '#E67E22', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+              {country}
+            </span>
+          )}
+          {country && <span style={{ opacity: 0.4 }}>·</span>}
           <span>{exp.trip?.days ?? 0}d</span>
           <span style={{ opacity: 0.4 }}>·</span>
           <span>{formatDate(exp.trip?.startDate)}</span>

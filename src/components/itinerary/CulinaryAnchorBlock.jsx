@@ -54,24 +54,23 @@ export default function CulinaryAnchorBlock({ recipe, destination, onDismiss }) 
     <div
       className="rounded border overflow-hidden"
       style={{
-        background: 'rgba(34,197,94,0.06)',
-        borderColor: 'rgba(34,197,94,0.35)',
+        background: 'rgba(230,126,34,0.06)',
+        borderColor: 'rgba(230,126,34,0.35)',
       }}
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b" style={{ borderColor: 'rgba(34,197,94,0.2)' }}>
+      <div className="flex items-center justify-between px-4 py-3 border-b" style={{ borderColor: 'rgba(230,126,34,0.2)' }}>
         <div className="flex items-center gap-3">
-          <span className="text-lg">🍳</span>
           <div>
             <div className="flex items-center gap-2">
               <span
                 className="text-[9px] font-mono tracking-[0.15em] uppercase px-1.5 py-0.5 rounded"
-                style={{ background: 'rgba(34,197,94,0.15)', color: '#4ADE80' }}
+                style={{ background: 'rgba(230,126,34,0.15)', color: '#E67E22' }}
               >
                 Culinary Anchor
               </span>
               {recipe.cuisine_type && (
-                <span className="text-[9px] font-mono text-slate-500 uppercase tracking-wide">
+                <span className="text-[9px] font-mono text-[var(--text-muted)] uppercase tracking-wide">
                   {recipe.cuisine_type}
                 </span>
               )}
@@ -84,14 +83,14 @@ export default function CulinaryAnchorBlock({ recipe, destination, onDismiss }) 
         <div className="flex items-center gap-2">
           <button
             onClick={() => setCollapsed(c => !c)}
-            className="text-slate-500 hover:text-slate-300 transition-colors font-mono text-xs"
+            className="text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors font-mono text-xs"
           >
             {collapsed ? '▼ expand' : '▲ collapse'}
           </button>
           {onDismiss && (
             <button
               onClick={onDismiss}
-              className="text-slate-600 hover:text-red-400 transition-colors text-xs font-mono"
+              className="text-[var(--text-muted)] hover:text-red-400 transition-colors text-xs font-mono"
               title="Remove"
             >
               ✕
@@ -103,23 +102,23 @@ export default function CulinaryAnchorBlock({ recipe, destination, onDismiss }) 
       {!collapsed && (
         <div className="p-4 space-y-4">
           {/* Meta row */}
-          <div className="flex flex-wrap gap-4 text-xs font-mono text-slate-400">
+          <div className="flex flex-wrap gap-4 text-xs font-mono text-[var(--text-secondary)]">
             {totalTime > 0 && (
-              <span>⏱ {totalTime} min total</span>
+              <span>{totalTime} MIN</span>
             )}
             {recipe.calories && (
-              <span>🔥 {recipe.calories} kcal</span>
+              <span>{recipe.calories} KCAL</span>
             )}
             {destination && (
-              <span>📍 {destination}</span>
+              <span style={{ textTransform: 'uppercase', letterSpacing: '0.05em' }}>{destination}</span>
             )}
-            <span style={{ color: '#4ADE80' }}>
+            <span style={{ color: '#E67E22' }}>
               {hints.region} region
             </span>
           </div>
 
           {recipe.description && (
-            <p className="text-xs text-slate-400 italic leading-relaxed">
+            <p className="text-xs text-[var(--text-secondary)] italic leading-relaxed">
               {recipe.description}
             </p>
           )}
@@ -129,11 +128,11 @@ export default function CulinaryAnchorBlock({ recipe, destination, onDismiss }) 
             <div className="space-y-2">
               <div
                 className="text-[10px] font-mono tracking-[0.15em] uppercase"
-                style={{ color: '#4ADE80' }}
+                style={{ color: '#E67E22' }}
               >
                 Shopping List
                 {ingredients.length > 0 && (
-                  <span className="ml-2 text-slate-600 normal-case tracking-normal">
+                  <span className="ml-2 text-[var(--text-muted)] normal-case tracking-normal">
                     {checkedCount}/{ingredients.length} sourced
                   </span>
                 )}
@@ -147,8 +146,8 @@ export default function CulinaryAnchorBlock({ recipe, destination, onDismiss }) 
                         onClick={() => toggleItem(item)}
                         className="w-3.5 h-3.5 rounded-sm border flex items-center justify-center shrink-0 transition-colors"
                         style={{
-                          background: checked ? '#22C55E' : 'transparent',
-                          borderColor: checked ? '#22C55E' : 'rgba(34,197,94,0.35)',
+                          background: checked ? '#E67E22' : 'transparent',
+                          borderColor: checked ? '#E67E22' : 'rgba(230,126,34,0.35)',
                         }}
                       >
                         {checked && <span className="text-black text-[8px] font-bold">✓</span>}
@@ -169,14 +168,14 @@ export default function CulinaryAnchorBlock({ recipe, destination, onDismiss }) 
             <div className="space-y-2">
               <div
                 className="text-[10px] font-mono tracking-[0.15em] uppercase"
-                style={{ color: '#4ADE80' }}
+                style={{ color: '#E67E22' }}
               >
                 Local Sourcing Tips
               </div>
               <ul className="space-y-1.5">
                 {hints.swaps.map((swap, i) => (
-                  <li key={i} className="flex items-start gap-2 text-xs font-mono text-slate-300">
-                    <span style={{ color: '#22C55E' }} className="mt-0.5 shrink-0">▸</span>
+                  <li key={i} className="flex items-start gap-2 text-xs font-mono text-[var(--text-secondary)]">
+                    <span style={{ color: '#E67E22' }} className="mt-0.5 shrink-0">▸</span>
                     {swap}
                   </li>
                 ))}
@@ -187,7 +186,7 @@ export default function CulinaryAnchorBlock({ recipe, destination, onDismiss }) 
                     <span
                       key={tag}
                       className="text-[9px] px-1.5 py-0.5 rounded font-mono"
-                      style={{ background: 'rgba(34,197,94,0.1)', color: '#4ADE80' }}
+                      style={{ background: 'rgba(230,126,34,0.1)', color: '#E67E22' }}
                     >
                       {tag}
                     </span>
@@ -199,13 +198,13 @@ export default function CulinaryAnchorBlock({ recipe, destination, onDismiss }) 
 
           {/* Source link */}
           {recipe.source_url && (
-            <div className="pt-2 border-t" style={{ borderColor: 'rgba(34,197,94,0.15)' }}>
+            <div className="pt-2 border-t" style={{ borderColor: 'rgba(230,126,34,0.15)' }}>
               <a
                 href={recipe.source_url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xs font-mono hover:underline"
-                style={{ color: 'rgba(34,197,94,0.7)' }}
+                style={{ color: 'rgba(230,126,34,0.7)' }}
               >
                 ↗ Full recipe: {recipe.source_name ?? recipe.source_url}
               </a>

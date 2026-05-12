@@ -15,6 +15,7 @@ import { fileURLToPath } from 'url';
 import { readQueue, updateIssue, archiveResolved } from './lib/queue.js';
 import { fetchCity, otmGeocode, otmPois, otmDetail, poiFromOtm, slugify, OTM_KEY } from './lib/city-fetcher.js';
 import { wikiSummary } from './lib/city-fetcher.js';
+import { chromium } from 'playwright';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_FILE = path.join(__dirname, '..', 'public', 'data', 'inspire_all.json');
@@ -109,14 +110,15 @@ async function fixMissingImage(issue, db) {
   const city = db.cities.find(c => c.id === issue.cityId);
   if (!city) throw new Error(`City ${issue.cityId} not in DB`);
 
+  // Level 1: Wikipedia API
   const wiki = await wikiSummary(city.name);
   const img = wiki?.originalimage?.source ?? wiki?.thumbnail?.source ?? '';
   if (img) {
     city.image_url = img;
-    return `Set image from Wikipedia: ${img.slice(0, 60)}…`;
+    return `Set image from Wikipedia API: ${img.slice(0, 60)}…`;
   }
 
-  // Try Wikimedia Commons search
+  // Level 2: Wikimedia Commons search
   const res = await fetch(
     `https://commons.wikimedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(city.name + ' city')}&srnamespace=6&srlimit=3&format=json`
   );
@@ -131,7 +133,55 @@ async function fixMissingImage(issue, db) {
     const url = pages[0]?.imageinfo?.[0]?.url;
     if (url) { city.image_url = url; return `Set image from Wikimedia Commons`; }
   }
-  throw new Error('No image found from Wikipedia or Wikimedia Commons');
+
+  // Level 3: Playwright — render the Wikipedia page, extract OG image or infobox photo
+  const wikiUrl = `https://en.wikipedia.org/wiki/${encodeURIComponent(city.name.replace(/ /g, '_'))}`;
+  const playwrightImg = await extractImageWithPlaywright(wikiUrl, city.name);
+  if (playwrightImg) {
+    city.image_url = playwrightImg;
+    return `Set image via Playwright from Wikipedia page: ${playwrightImg.slice(0, 60)}…`;
+  }
+
+  throw new Error('No image found via Wikipedia API, Wikimedia Commons, or Playwright');
+}
+
+async function extractImageWithPlaywright(sourceUrl, cityName) {
+  const browser = await chromium.launch({ headless: true });
+  const page = await browser.newPage();
+
+  try {
+    await page.goto(sourceUrl, { waitUntil: 'domcontentloaded', timeout: 20000 });
+
+    // Try OG image first
+    const ogImage = await page
+      .locator("meta[property='og:image']")
+      .first()
+      .getAttribute('content')
+      .catch(() => null);
+    if (ogImage && !ogImage.includes('Wikipedia-logo')) return ogImage;
+
+    // Try Wikipedia infobox image
+    const infoboxSrc = await page
+      .locator('.infobox img, .thumb img, .gallery img')
+      .first()
+      .getAttribute('src')
+      .catch(() => null);
+    if (infoboxSrc) {
+      return infoboxSrc.startsWith('http')
+        ? infoboxSrc
+        : `https:${infoboxSrc}`;
+    }
+
+    // Screenshot fallback — save to public/data/city-images/
+    const imagesDir = path.join(__dirname, '..', 'public', 'data', 'city-images');
+    fs.mkdirSync(imagesDir, { recursive: true });
+    const screenshotPath = path.join(imagesDir, `${cityName.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.jpg`);
+    await page.setViewportSize({ width: 1200, height: 800 });
+    await page.screenshot({ path: screenshotPath, type: 'jpeg', quality: 85 });
+    return `/data/city-images/${path.basename(screenshotPath)}`;
+  } finally {
+    await browser.close();
+  }
 }
 
 async function fixMissingPois(issue, db) {

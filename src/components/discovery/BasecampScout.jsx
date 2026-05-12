@@ -38,7 +38,7 @@ export default function BasecampScout({ destination = 'Patagonia' }) {
       </div>
 
       {inspireLabel && (
-        <div className="text-[9px] font-mono text-slate-500 tracking-widest">
+        <div className="text-[9px] font-mono text-[var(--text-muted)] tracking-widest">
           SHOWING: «{inspireLabel}» NEAR {destination.toUpperCase()}
         </div>
       )}
@@ -56,7 +56,7 @@ export default function BasecampScout({ destination = 'Patagonia' }) {
           ))}
         </div>
       ) : places.length === 0 ? (
-        <div className="py-6 text-center text-[10px] font-mono text-slate-600 tracking-widest">
+        <div className="py-6 text-center text-[10px] font-mono text-[var(--text-muted)] tracking-widest">
           NO RESULTS — TRY INSPIRE ME
         </div>
       ) : (
@@ -65,7 +65,7 @@ export default function BasecampScout({ destination = 'Patagonia' }) {
             <div key={p.id} className="bg-[#0E1012] rounded-lg p-3 flex items-center justify-between gap-3 border border-[#1e2328] hover:border-[#E67E22]/30 transition-colors">
               <div>
                 <div className="text-white text-sm font-semibold">{p.name}</div>
-                <div className="flex gap-2 mt-1 text-xs text-slate-400 font-mono flex-wrap">
+                <div className="flex gap-2 mt-1 text-xs text-[var(--text-secondary)] font-mono flex-wrap">
                   <span>{p.type}</span>
                   {p.address && <><span>·</span><span className="truncate max-w-[160px]">{p.address}</span></>}
                 </div>
@@ -78,7 +78,7 @@ export default function BasecampScout({ destination = 'Patagonia' }) {
                   href={`https://www.booking.com/search.html?ss=${encodeURIComponent(p.name + ' ' + destination)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[9px] font-mono px-2 py-0.5 rounded border border-[#2a2f36] text-slate-400 hover:text-[#E67E22] hover:border-[#E67E22]/40 transition-colors tracking-widest"
+                  className="text-[9px] font-mono px-2 py-0.5 rounded border border-[#2a2f36] text-[var(--text-secondary)] hover:text-[#E67E22] hover:border-[#E67E22]/40 transition-colors tracking-widest"
                 >
                   BOOK →
                 </a>

@@ -6,7 +6,7 @@ import 'leaflet/dist/leaflet.css';
 
 const REFRESH_MS = 30_000;
 
-export default function SafetyPulse({ destinationId = 'default', center = [-51.6, -72.7], zoom = 9 }) {
+export default function SafetyPulse({ destinationId = 'default', center = [20.0, 0.0], zoom = 9 }) {
   const [incidents, setIncidents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [lastRefresh, setLastRefresh] = useState(null);
@@ -36,7 +36,7 @@ export default function SafetyPulse({ destinationId = 'default', center = [-51.6
       <div className="flex items-center justify-between">
         <div>
           <div className="label-tag">Safety Pulse</div>
-          <div className="text-[10px] text-slate-500 font-mono mt-0.5">
+          <div className="text-[10px] text-[var(--text-muted)] font-mono mt-0.5">
             Real-time local incident monitoring
           </div>
         </div>
@@ -45,7 +45,7 @@ export default function SafetyPulse({ destinationId = 'default', center = [-51.6
             className="w-2 h-2 rounded-full"
             style={{ backgroundColor: SEVERITY_COLORS[statusLevel].hex }}
           />
-          <span className="text-[9px] font-mono text-slate-300 tracking-widest">{statusLabel.toUpperCase()}</span>
+          <span className="text-[9px] font-mono text-[var(--text-secondary)] tracking-widest">{statusLabel.toUpperCase()}</span>
         </div>
       </div>
 
@@ -88,16 +88,16 @@ export default function SafetyPulse({ destinationId = 'default', center = [-51.6
 
       {loading && (
         <div className="h-48 bg-[#0E1012] rounded-lg border border-[#1e2328] flex items-center justify-center">
-          <span className="text-slate-600 font-mono text-xs animate-pulse">Loading incident data…</span>
+          <span className="text-[var(--text-muted)] font-mono text-xs animate-pulse">Loading incident data…</span>
         </div>
       )}
 
       {/* Alert ticker */}
       <div className="space-y-1.5">
         <div className="flex items-center justify-between">
-          <div className="text-[9px] font-mono text-slate-500 tracking-widest">INCIDENT FEED</div>
+          <div className="text-[9px] font-mono text-[var(--text-muted)] tracking-widest">INCIDENT FEED</div>
           {lastRefresh && (
-            <div className="text-[9px] font-mono text-slate-600">Last updated {lastRefresh}</div>
+            <div className="text-[9px] font-mono text-[var(--text-muted)]">Last updated {lastRefresh}</div>
           )}
         </div>
         <AnimatePresence>
@@ -114,10 +114,10 @@ export default function SafetyPulse({ destinationId = 'default', center = [-51.6
               />
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-mono text-slate-300 font-semibold">{inc.type}</span>
-                  <span className="text-[9px] font-mono text-slate-600">{inc.timestamp}</span>
+                  <span className="text-[10px] font-mono text-[var(--text-secondary)] font-semibold">{inc.type}</span>
+                  <span className="text-[9px] font-mono text-[var(--text-muted)]">{inc.timestamp}</span>
                 </div>
-                <div className="text-[10px] font-mono text-slate-500 mt-0.5 leading-relaxed">{inc.description}</div>
+                <div className="text-[10px] font-mono text-[var(--text-muted)] mt-0.5 leading-relaxed">{inc.description}</div>
               </div>
             </motion.div>
           ))}
@@ -126,7 +126,7 @@ export default function SafetyPulse({ destinationId = 'default', center = [-51.6
 
       <button
         onClick={() => { setLoading(true); load(); }}
-        className="w-full py-2 border border-dashed border-[#2a2f36] text-slate-600 text-[10px] font-mono hover:text-slate-400 hover:border-[#E67E22]/30 rounded transition-colors"
+        className="w-full py-2 border border-dashed border-[#2a2f36] text-[var(--text-muted)] text-[10px] font-mono hover:text-[var(--text-secondary)] hover:border-[#E67E22]/30 rounded transition-colors"
       >
         ↻ REFRESH NOW
       </button>

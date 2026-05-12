@@ -1,0 +1,13 @@
+{
+  "city": "Barcelona, Spain",
+  "slug": "barcelona-spain",
+  "qid": "Q1492",
+  "description": "city in Catalonia, Spain",
+  "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Aerial_view_of_La_Sagrada_Familia%2C_Barcelona%2C_Spain_(51227006134).jpg?width=800",
+  "coords": {
+    "lat": 41.3825,
+    "lng": 2.1769444444444
+  },
+  "climate": "temperate",
+  "pois": []
+}

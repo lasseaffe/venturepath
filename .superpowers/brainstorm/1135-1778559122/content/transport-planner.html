@@ -1,0 +1,165 @@
+<h2>Transport Planner — Full Redesign</h2>
+<p class="subtitle">Destination-first flow, location-aware origin, rich filters. Designed for every planning need.</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">
+
+  <!-- LEFT: The full panel design -->
+  <div class="mockup">
+    <div class="mockup-header">Full Transport Panel</div>
+    <div class="mockup-body" style="background:#0E1012;padding:12px;font-family:'JetBrains Mono',monospace;font-size:9px">
+
+      <!-- Mode tabs -->
+      <div style="display:flex;gap:3px;margin-bottom:10px">
+        <div style="background:#E67E22;color:#fff;padding:3px 8px;border-radius:2px;font-size:7px">✈ FLIGHT</div>
+        <div style="background:#1a1f26;color:#8A8680;padding:3px 8px;border-radius:2px;font-size:7px">🚆 TRAIN</div>
+        <div style="background:#1a1f26;color:#8A8680;padding:3px 8px;border-radius:2px;font-size:7px">🚌 BUS</div>
+        <div style="background:#1a1f26;color:#8A8680;padding:3px 8px;border-radius:2px;font-size:7px">🚢 FERRY</div>
+        <div style="background:#1a1f26;color:#8A8680;padding:3px 8px;border-radius:2px;font-size:7px">🚗 DRIVE</div>
+      </div>
+
+      <!-- TO first -->
+      <div style="margin-bottom:5px">
+        <div style="font-size:6px;color:#555;letter-spacing:0.1em;margin-bottom:2px">TO — DESTINATION</div>
+        <div style="background:#1a1f26;border:1px solid #E67E22;border-radius:3px;padding:6px 8px;color:#fff;font-size:9px">Lille, France</div>
+      </div>
+
+      <!-- FROM second — location-aware -->
+      <div style="margin-bottom:8px;position:relative">
+        <div style="font-size:6px;color:#555;letter-spacing:0.1em;margin-bottom:2px">FROM — ORIGIN <span style="color:#E67E22">● USING YOUR LOCATION</span></div>
+        <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;padding:6px 8px;color:#fff;font-size:9px;display:flex;align-items:center;gap:6px">
+          <span>Hamburg Airport (HAM)</span>
+          <span style="margin-left:auto;color:#4CAF50;font-size:7px">↻ nearest</span>
+        </div>
+        <!-- Suggestion note -->
+        <div style="font-size:6px;color:#555;margin-top:2px;padding-left:2px">Auto-suggested from your GPS · tap to change</div>
+      </div>
+
+      <!-- FILTER ROW -->
+      <div style="background:#12151a;border:1px solid #1e2530;border-radius:3px;padding:7px 8px;margin-bottom:8px">
+        <div style="font-size:6px;color:#555;letter-spacing:0.1em;margin-bottom:5px">FILTERS</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:5px">
+          <div>
+            <div style="font-size:6px;color:#555;margin-bottom:2px">LEAVE BY</div>
+            <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:2px;padding:4px 6px;color:#8A8680;font-size:7px">Any time ▾</div>
+          </div>
+          <div>
+            <div style="font-size:6px;color:#555;margin-bottom:2px">ARRIVE BY</div>
+            <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:2px;padding:4px 6px;color:#8A8680;font-size:7px">Any time ▾</div>
+          </div>
+          <div>
+            <div style="font-size:6px;color:#555;margin-bottom:2px">MAX PRICE</div>
+            <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:2px;padding:4px 6px;color:#8A8680;font-size:7px">No limit ▾</div>
+          </div>
+          <div>
+            <div style="font-size:6px;color:#555;margin-bottom:2px">SORT BY</div>
+            <div style="background:#1a1f26;border:1px solid #E67E22;border-radius:2px;padding:4px 6px;color:#E67E22;font-size:7px">Cheapest ▾</div>
+          </div>
+        </div>
+        <!-- Tag filters -->
+        <div style="display:flex;gap:3px;flex-wrap:wrap">
+          <div style="background:#E67E2222;border:1px solid #E67E2244;border-radius:10px;padding:2px 7px;font-size:6px;color:#E67E22">● Direct only</div>
+          <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:10px;padding:2px 7px;font-size:6px;color:#8A8680">Eco priority</div>
+          <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:10px;padding:2px 7px;font-size:6px;color:#8A8680">Flexible ticket</div>
+          <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:10px;padding:2px 7px;font-size:6px;color:#8A8680">Cabin baggage</div>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div style="font-size:6px;color:#555;letter-spacing:0.08em;margin-bottom:5px">4 RESULTS · sorted by price</div>
+      <div style="display:flex;flex-direction:column;gap:3px">
+
+        <!-- Unselected -->
+        <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;padding:6px 8px;display:flex;align-items:center;gap:8px;cursor:pointer">
+          <div style="width:11px;height:11px;border-radius:50%;border:1px solid #2a2f36;flex-shrink:0"></div>
+          <div style="flex:1">
+            <div style="font-size:6px;color:#8A8680">Lufthansa · Economy · 7h 45m · 1 stop</div>
+            <div style="font-size:9px;color:#fff">HAM → LIL</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:10px;color:#fff">$542</div>
+            <div style="font-size:6px;color:#E67E22">120kg CO₂</div>
+          </div>
+        </div>
+
+        <!-- Selected + expanded -->
+        <div style="background:#E67E2208;border:1px solid #E67E22;border-radius:3px;overflow:hidden">
+          <div style="padding:6px 8px;display:flex;align-items:center;gap:8px">
+            <div style="width:11px;height:11px;border-radius:50%;background:#E67E22;flex-shrink:0;display:flex;align-items:center;justify-content:center">
+              <div style="width:4px;height:4px;border-radius:50%;background:#0E1012"></div>
+            </div>
+            <div style="flex:1">
+              <div style="font-size:6px;color:#E67E22">GreenFly · Eco · 4h 45m · Direct ★ SELECTED</div>
+              <div style="font-size:9px;color:#fff">HAM → LIL</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:10px;color:#fff">$620</div>
+              <div style="font-size:6px;color:#4CAF50">85kg CO₂</div>
+            </div>
+          </div>
+          <!-- Expanded detail -->
+          <div style="background:#0d1018;padding:6px 8px;border-top:1px solid #1e2530">
+            <div style="display:flex;gap:12px;font-size:6px;color:#8A8680;margin-bottom:4px">
+              <span>Departs <span style="color:#fff">08:15</span></span>
+              <span>Arrives <span style="color:#fff">13:00</span></span>
+              <span>Flexible <span style="color:#4CAF50">✓</span></span>
+              <span>Baggage <span style="color:#4CAF50">1 cabin</span></span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="font-size:6px;color:#555">Saves 35kg vs cheapest option</div>
+              <div style="background:#E67E22;border-radius:2px;padding:4px 10px;font-size:7px;color:#fff;letter-spacing:0.06em">→ ADD TO PLAN</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Unselected -->
+        <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;padding:6px 8px;display:flex;align-items:center;gap:8px;cursor:pointer">
+          <div style="width:11px;height:11px;border-radius:50%;border:1px solid #2a2f36;flex-shrink:0"></div>
+          <div style="flex:1">
+            <div style="font-size:6px;color:#8A8680">DirectJet · Non-stop · 2h 15m</div>
+            <div style="font-size:9px;color:#fff">HAM → LIL</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:10px;color:#fff">$890</div>
+            <div style="font-size:6px;color:#E67E22">210kg CO₂</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Annotation breakdown -->
+  <div>
+    <h3 style="margin-bottom:12px">Design decisions</h3>
+
+    <div class="section">
+      <div class="label">1 — Destination first</div>
+      <p>TO field on top. User commits to where they're going before filling origin — mirrors how people actually plan. FROM auto-populates from GPS as nearest airport/station.</p>
+    </div>
+
+    <div class="section">
+      <div class="label">2 — Location-aware origin</div>
+      <p>GPS resolves nearest hub (airport, train station, ferry terminal) based on active mode. Shows "● USING YOUR LOCATION" indicator. One tap to override if wrong.</p>
+    </div>
+
+    <div class="section">
+      <div class="label">3 — Filters: structured + tag</div>
+      <p>4 grid dropdowns for Leave By, Arrive By, Max Price, Sort By. Tag pills below for quick boolean toggles: Direct only, Eco priority, Flexible ticket, Cabin baggage only. Filters live-update results.</p>
+    </div>
+
+    <div class="section">
+      <div class="label">4 — Radio-select + expand</div>
+      <p>Click row → selects it (radio dot fills). Selected row expands to show departure/arrival times, baggage, flexibility, CO₂ delta vs cheapest. "→ ADD TO PLAN" appears only in expanded state.</p>
+    </div>
+
+    <div class="section">
+      <div class="label">5 — ADD TO PLAN feeds RouteMap</div>
+      <p>Adding a leg writes to useTripStore (from, to, mode, times, price). RouteMap, ElevationStrip, and TimelinePath all read from the same store — they update automatically.</p>
+    </div>
+
+    <div class="section">
+      <div class="label">6 — Mode tabs carry filters</div>
+      <p>Each mode (Flight/Train/Bus/Ferry/Drive) shows mode-appropriate filters. Drive shows toll roads toggle + fuel type. Ferry shows cabin class. Train shows rail pass option.</p>
+    </div>
+  </div>
+</div>

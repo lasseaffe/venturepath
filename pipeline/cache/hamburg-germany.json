@@ -1,0 +1,13 @@
+{
+  "city": "Hamburg, Germany",
+  "slug": "hamburg-germany",
+  "qid": "Q1055",
+  "description": "city and state in the North of Germany",
+  "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Hamburg_view_St._Nikolai.jpg?width=800",
+  "coords": {
+    "lat": 53.55,
+    "lng": 10
+  },
+  "climate": "temperate",
+  "pois": []
+}

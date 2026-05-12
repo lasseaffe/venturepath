@@ -44,7 +44,7 @@ export default function VehicleSearch({ onSelectVehicle, distanceKm = 320 }) {
       {/* Search */}
       <div className="relative">
         <div className="flex items-center bg-[#0E1012] border border-[#2a2f36] rounded focus-within:border-[#E67E22]/60 transition-colors">
-          <span className="pl-3 text-slate-600 text-sm">⌕</span>
+          <span className="pl-3 text-[var(--text-muted)] text-sm">⌕</span>
           <input
             type="text"
             placeholder="Search vehicle model…"
@@ -64,7 +64,7 @@ export default function VehicleSearch({ onSelectVehicle, distanceKm = 320 }) {
               >
                 <div>
                   <div className="text-xs text-white font-mono">{v.name}</div>
-                  <div className="text-[9px] text-slate-600 font-mono tracking-widest mt-0.5">
+                  <div className="text-[9px] text-[var(--text-muted)] font-mono tracking-widest mt-0.5">
                     {v.type} · {v.range}mi range
                   </div>
                 </div>
@@ -81,19 +81,19 @@ export default function VehicleSearch({ onSelectVehicle, distanceKm = 320 }) {
           <div className="text-[10px] font-mono text-[#E67E22] tracking-widest">{selected.name}</div>
           <div className="grid grid-cols-2 gap-2 text-xs font-mono">
             <div>
-              <div className="text-slate-600 text-[9px] tracking-widest">FUEL COST</div>
+              <div className="text-[var(--text-muted)] text-[9px] tracking-widest">FUEL COST</div>
               <div className="text-white mt-0.5">{formatExpeditionCost(logistics.cost)}</div>
             </div>
             <div>
-              <div className="text-slate-600 text-[9px] tracking-widest">QUANTITY</div>
+              <div className="text-[var(--text-muted)] text-[9px] tracking-widest">QUANTITY</div>
               <div className="text-white mt-0.5">{logistics.quantity} {logistics.units}</div>
             </div>
             <div>
-              <div className="text-slate-600 text-[9px] tracking-widest">DISTANCE</div>
+              <div className="text-[var(--text-muted)] text-[9px] tracking-widest">DISTANCE</div>
               <div className="text-white mt-0.5">{logistics.miles} mi</div>
             </div>
             <div>
-              <div className="text-slate-600 text-[9px] tracking-widest">REFUEL</div>
+              <div className="text-[var(--text-muted)] text-[9px] tracking-widest">REFUEL</div>
               <div className={`mt-0.5 ${logistics.needsRefuel ? 'text-yellow-400' : 'text-green-400'}`}>
                 {logistics.needsRefuel ? 'Required' : 'Not needed'}
               </div>

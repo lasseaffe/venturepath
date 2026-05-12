@@ -1,5 +1,57 @@
 # VenturePath — CHANGELOG
 
+## [Unreleased] — 2026-05-11 — Task 9: PublicTransport — 90s Polling, Cascade Detection, Buffer Display
+
+### PublicTransport Component (Task 9)
+- **`src/components/logistics/PublicTransport.jsx`** — Multi-leg route orchestration with real-time disruption awareness:
+  - `useInterval(callback, delayMs)` — Custom hook for 90-second automatic polling of all confirmed legs
+  - `runDisruptionCheck()` — Async callback that:
+    - Filters to legs with `selectedOption?.tripId` (confirmed bookings only)
+    - Calls `fetchAlerts(leg)` per DB-Rest leg to fetch live disruption data
+    - Runs `checkCascade(withDisruption)` to propagate cascade risk to sibling legs based on arrival/departure buffer windows
+    - Updates both `leg.disruption` (type/severity/delayMinutes/message) and `leg.cascadeRisk` per leg
+    - Displays checking spinner ('⟳ CHECKING…') during fetch cycle
+  - Route Summary redesigned:
+    - Shows per-leg nodes: `from → [mode icon] → to` with mode-specific color (#E67E22 flight, #4a9eff train, #22a060 bus, #a855f7 tram)
+    - Inline buffer time display: `+{minutes}m` between consecutive legs
+    - Cascade risk indicators: Amber (#fbbf24) warning when sibling leg cascade detected; Red (#f87171) "MISSED ✕" when buffer is negative
+    - Renders only when route has at least one city/leg
+  - Button group: "+ ADD LEG" (flex-1) + "⚡ CHECK ROUTE" (manual trigger) for instant disruption polling
+  - All leg updates flow through updateLeg callback, preserving LegCard integration
+- Tests: 257 passing (2 pre-existing @xmldom/xmldom unrelated failures)
+
+## [Unreleased] — 2026-05-11 — Task 2: transitEngine — Stop Resolution + Schedule Search
+
+### transitEngine Module (Task 2)
+- **`src/utils/transitEngine.js`** — New public transport utility module for DB-Rest API integration:
+  - `resolveStop(lat, lng)` — Resolves nearest Hafas transit stop to coordinates; returns { id, name, location } or null
+  - `searchConnections(fromId, toId, isoDate, mode)` — Fetches up to 3 journey options (train/bus/tram); filters by mode via product params
+  - Returns normalized connection objects: carrier (line name or 'Walk'), departure, arrival, duration (human-readable format), price, co2 estimate, platform, realtime flag (tripId || departureDelay || currentTripPosition), tripId, and hafas stop IDs
+  - `realtime: true` when DB provides live delay data or position updates; enables real-time UI indicators
+  - Error handling: returns empty array on network failure; null on no results
+  - Helper functions: `minsToHuman()` for human-readable durations, `co2ForMode()` for rough (duration-based) carbon footprint estimates per transport type
+- **`src/utils/transitEngine.test.js`** — TDD-driven test suite (4 tests, all passing):
+  - resolveStop: returns stop object with id/name, handles empty results gracefully
+  - searchConnections: normalizes DB-Rest journeys to connection objects, handles network errors, extracts carrier/departure/arrival/realtime/tripId correctly
+  - Mocked fetch calls to prevent external API hits during testing
+- Public transport leg scheduling now pluggable into TripPlanner and TacticalMode route builders
+
+## [Unreleased] — 2026-05-11 — Task 5: ActivityBlock Hover Reveal + ReportButton
+
+### ActivityBlock Card Hover & Expand Reveal (Task 5)
+- **`src/components/itinerary/KanbanBoard.jsx`** — ActivityBlock component updated:
+  - BlockCardImage now accepts `visible={hovered || isExpanded}` prop and renders unconditionally outside the isExpanded wrapper; triggers reveal animation on hover or expand
+  - Card header right side wrapped in flex div; ReportButton conditionally rendered when `hovered && !isGhost`
+  - ReportButton receives cityId (block.id), cityName (block.title), country (""), and small prop
+  - Two distinct reveal behaviors: hover shows ReportButton only; expand shows both BlockCardImage and BlockHub content
+
+## [Unreleased] — 2026-05-10 — Code Quality Fixes
+
+### Test Infrastructure & Documentation
+- **`vitest.config.js`** — Changed test environment from 'jsdom' to 'node' to fix geocodeEngine tests; removed dependency on jsdom package
+- **`src/utils/geocodeEngine.js`** — Added inline comment on searchLocations fetch URL documenting limit/filter trade-off: "fetch limit results; class filter may return fewer if some are non-travel OSM types"
+- All 4 geocodeEngine utility tests pass: filterByAllowedClass checks (allowlist matching, removal, empty class pass-through, empty array)
+
 ## [Unreleased] — 2026-05-10 — Sentinel Triggers, Architect AI, After-Action
 
 ### SwipeDeck Card Types & Components (Tasks 2–5)
@@ -282,3 +334,26 @@
 - VAULT tab: VaultHub document library accessible from TripPlanner
 - BOOKING tab: BookingMatrix mission-goal search accessible from TripPlanner
 - Journey view: GpxImporter + JourneySlideshow + JourneyMap3D integrated into Journey tab
+
+## 2026-05-11 — Disruption-Aware Multi-Modal Transport Builder
+
+### New files
+- src/utils/transitEngine.js — DB-Rest stop resolution + journey search (train/bus/tram)
+- src/utils/disruptionEngine.js — GTFS-RT alert fetch + cascade detection across consecutive legs
+- src/utils/alternativeEngine.js — Rome2rio primary with DB-Rest journeys fallback
+
+### Modified files
+- src/utils/geocodeEngine.js — coordinate dedup in searchByFilter (3dp lat/lng), added searchBusStops + searchTramStops
+- src/components/logistics/LegCard.jsx — MODE_CONFIG lookup, 4 mode buttons (flight/train/bus/tram), real DB-Rest schedule fetch, LIVE badge, selectedOption confirmation, disruption status bar, simulate all 4 modes
+- src/components/logistics/EmergencyRebook.jsx — all-mode redesign: MODE_META, live alternatives from alternativeEngine, cascade banner, 45/60s countdown, squad voting preserved
+- src/components/logistics/PublicTransport.jsx — useInterval 90s disruption polling, cascade detection + propagation, inline buffer time indicators, CHECK ROUTE button
+
+### Env vars
+- VITE_ROME2RIO_KEY added to .env.local (placeholder — get from rome2rio.com/developers, 1000 req/day free tier)
+- DB-Rest + Nominatim remain keyless
+
+### Test coverage
+- geocodeEngine: 7 tests (dedup, bus/tram search, filterByAllowedClass)
+- transitEngine: 4 tests (resolveStop, searchConnections)
+- disruptionEngine: 9 tests (fetchAlerts, checkCascade + cascade propagation)
+- alternativeEngine: 3 tests (Rome2rio success, 429 fallback, both-fail empty)

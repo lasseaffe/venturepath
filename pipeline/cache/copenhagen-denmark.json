@@ -1,0 +1,13 @@
+{
+  "city": "Copenhagen, Denmark",
+  "slug": "copenhagen-denmark",
+  "qid": "Q1748",
+  "description": "capital and largest city of Denmark",
+  "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Copenhagen_-_view_from_Christiansborg_castle.jpg?width=800",
+  "coords": {
+    "lat": 55.676111111111,
+    "lng": 12.568888888889
+  },
+  "climate": "temperate",
+  "pois": []
+}

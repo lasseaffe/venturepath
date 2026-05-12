@@ -62,13 +62,13 @@ export default function BentoPacker({ coords, climate: climateProp, days = 7, ha
       <div className="flex items-center justify-between">
         <div>
           <div className="label-tag">Bento Packer</div>
-          <div className="text-[10px] text-slate-500 font-mono mt-0.5">
+          <div className="text-[10px] text-[var(--text-muted)] font-mono mt-0.5">
             Climate: <span className="text-[#E67E22]">{resolvedClimate}</span>
-            {loadingWeather && <span className="text-slate-600 ml-2">fetching weather…</span>}
+            {loadingWeather && <span className="text-[var(--text-muted)] ml-2">fetching weather…</span>}
           </div>
         </div>
         <div className="text-right">
-          <div className="text-[10px] font-mono text-slate-500">{checkedCount}/{totalItems} packed</div>
+          <div className="text-[10px] font-mono text-[var(--text-muted)]">{checkedCount}/{totalItems} packed</div>
           <div className="w-24 h-1.5 bg-[#1a1f24] rounded-full mt-1 overflow-hidden">
             <motion.div
               className="h-full bg-[#E2725B] rounded-full"
@@ -85,7 +85,7 @@ export default function BentoPacker({ coords, climate: climateProp, days = 7, ha
           {forecast.slice(0, 5).map((d, i) => (
             <div key={i} className="shrink-0 text-center bg-[#0E1012] rounded px-3 py-2 border border-[#1e2328] min-w-[64px]">
               <div className="text-lg">{d.icon}</div>
-              <div className="text-[9px] font-mono text-slate-500 mt-1">{d.date.split(',')[0]}</div>
+              <div className="text-[9px] font-mono text-[var(--text-muted)] mt-1">{d.date.split(',')[0]}</div>
               <div className="text-[10px] font-mono text-white">{d.tempC}°C</div>
             </div>
           ))}
@@ -94,7 +94,7 @@ export default function BentoPacker({ coords, climate: climateProp, days = 7, ha
 
       {/* POI tag toggles */}
       <div className="space-y-1.5">
-        <div className="text-[9px] font-mono text-slate-500 tracking-widest">TRIP ACTIVITIES</div>
+        <div className="text-[9px] font-mono text-[var(--text-muted)] tracking-widest">TRIP ACTIVITIES</div>
         <div className="flex flex-wrap gap-1.5">
           {AVAILABLE_TAGS.map(tag => (
             <button
@@ -103,7 +103,7 @@ export default function BentoPacker({ coords, climate: climateProp, days = 7, ha
               className={`px-2.5 py-1 text-[10px] font-mono rounded border transition-colors ${
                 activeTags.includes(tag)
                   ? 'bg-[#E2725B]/20 border-[#E2725B] text-[#E2725B]'
-                  : 'bg-transparent border-[#2a2f36] text-slate-500 hover:border-[#E67E22]/50 hover:text-slate-300'
+                  : 'bg-transparent border-[#2a2f36] text-[var(--text-muted)] hover:border-[#E67E22]/50 hover:text-[var(--text-secondary)]'
               }`}
             >
               {tag}
@@ -131,7 +131,7 @@ export default function BentoPacker({ coords, climate: climateProp, days = 7, ha
             >
               <div className="flex items-center gap-1.5 mb-2">
                 <span className="text-base">{CATEGORY_ICONS[category] ?? '📦'}</span>
-                <span className="text-[9px] font-mono text-slate-400 tracking-widest leading-tight">{category.toUpperCase()}</span>
+                <span className="text-[9px] font-mono text-[var(--text-secondary)] tracking-widest leading-tight">{category.toUpperCase()}</span>
                 {allChecked && <span className="ml-auto text-[#E2725B] text-xs">✓</span>}
               </div>
               <div className="space-y-1.5">
@@ -144,7 +144,7 @@ export default function BentoPacker({ coords, climate: climateProp, days = 7, ha
                       className="mt-0.5 accent-[#E2725B] shrink-0"
                     />
                     <span className={`text-[10px] font-mono leading-tight transition-colors ${
-                      checked[item.id] ? 'text-slate-600 line-through' : item.critical ? 'text-white' : 'text-slate-400'
+                      checked[item.id] ? 'text-[var(--text-muted)] line-through' : item.critical ? 'text-white' : 'text-[var(--text-secondary)]'
                     }`}>
                       {item.label}
                       {item.critical && !checked[item.id] && (
@@ -154,7 +154,7 @@ export default function BentoPacker({ coords, climate: climateProp, days = 7, ha
                   </label>
                 ))}
               </div>
-              <div className="mt-2 text-[9px] font-mono text-slate-600">
+              <div className="mt-2 text-[9px] font-mono text-[var(--text-muted)]">
                 {catItems.filter(i => checked[i.id]).length}/{catItems.length}
               </div>
             </motion.div>

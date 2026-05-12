@@ -118,7 +118,7 @@ export default function PioneerChat({ onClose }) {
                 key={s}
                 onClick={() => setStream(s)}
                 className={`px-3 py-1 text-[10px] font-mono tracking-widest border-b-2 transition-colors ${
-                  stream === s ? 'border-[#E67E22] text-[#E67E22]' : 'border-transparent text-slate-500'
+                  stream === s ? 'border-[#E67E22] text-[#E67E22]' : 'border-transparent text-[var(--text-muted)]'
                 }`}
               >
                 {s}
@@ -131,7 +131,7 @@ export default function PioneerChat({ onClose }) {
             <span key={m.name} title={m.name} className="text-base">{m.avatar}</span>
           ))}
           {onClose && (
-            <button onClick={onClose} className="ml-2 text-slate-500 hover:text-white text-sm">✕</button>
+            <button onClick={onClose} className="ml-2 text-[var(--text-muted)] hover:text-white text-sm">✕</button>
           )}
         </div>
       </div>
@@ -147,7 +147,7 @@ export default function PioneerChat({ onClose }) {
               className={msg.type === 'log' ? 'text-center' : ''}
             >
               {msg.type === 'log' && (
-                <div className="text-[10px] font-mono text-slate-600 italic">{msg.text}</div>
+                <div className="text-[10px] font-mono text-[var(--text-muted)] italic">{msg.text}</div>
               )}
               {msg.type === 'chat' && (
                 <div className={`flex gap-2 ${msg.from === 'lead' ? 'flex-row-reverse' : ''}`}>
@@ -165,10 +165,10 @@ export default function PioneerChat({ onClose }) {
                         text={msg.text}
                         speed={38}
                         cursorColor="#E67E22"
-                        className="text-sm text-slate-200"
+                        className="text-sm text-[var(--text-primary)]"
                       />
                     ) : (
-                      <div className="text-sm text-slate-200">{msg.text}</div>
+                      <div className="text-sm text-[var(--text-primary)]">{msg.text}</div>
                     )}
                   </div>
                 </div>
@@ -176,7 +176,7 @@ export default function PioneerChat({ onClose }) {
               {msg.type === 'status' && (
                 <div className="glass-panel p-3 border border-[#F2C94C]/30">
                   <div className="label-tag text-[#F2C94C] mb-2">⚡ AI Scout Status Brief</div>
-                  <pre className="text-xs font-mono text-slate-300 whitespace-pre-wrap">
+                  <pre className="text-xs font-mono text-[var(--text-secondary)] whitespace-pre-wrap">
                     <TypewriterText
                       text={msg.text}
                       speed={38}
@@ -209,7 +209,7 @@ export default function PioneerChat({ onClose }) {
                         text={msg.text}
                         speed={38}
                         cursorColor="#F2C94C"
-                        className="text-sm text-slate-200"
+                        className="text-sm text-[var(--text-primary)]"
                       />
                     </div>
                     {msg.action && (

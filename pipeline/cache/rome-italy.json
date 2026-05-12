@@ -1,0 +1,13 @@
+{
+  "city": "Rome, Italy",
+  "slug": "rome-italy",
+  "qid": "Q220",
+  "description": "capital and largest city of Italy",
+  "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Rome_Skyline_(8012016319).jpg?width=800",
+  "coords": {
+    "lat": 41.893055555556,
+    "lng": 12.482777777778
+  },
+  "climate": "temperate",
+  "pois": []
+}

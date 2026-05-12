@@ -1,5 +1,12 @@
-import { useState } from 'react';
-import Sidebar from './Sidebar';
+import BottomNav from './BottomNav';
+import PlanSubNav from './PlanSubNav';
+
+const PLAN_TABS = new Set(['OVERVIEW', 'ITINERARY', 'PUBLIC TRANSPORT', 'STAYS', 'LOGISTICS', 'VAULT']);
+
+function getBottomTab(activeTab) {
+  if (activeTab === 'DISCOVERY') return 'DISCOVER';
+  return 'PLAN';
+}
 
 export default function AppShell({
   activeTab,
@@ -9,71 +16,46 @@ export default function AppShell({
   onOpenChat,
   onOpenInspire,
   onOpenTactical,
+  onOpenSettings,
   children,
 }) {
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const activeBottomTab = getBottomTab(activeTab);
 
-  function closeDrawer() { setDrawerOpen(false); }
+  function handleBottomTab(id) {
+    if (id === 'RECORD') {
+      onOpenTactical?.();
+      return;
+    }
+    if (id === 'DISCOVER') {
+      onTabChange('DISCOVERY');
+      return;
+    }
+    // PLAN — restore Overview if currently showing Discovery
+    if (activeTab === 'DISCOVERY') {
+      onTabChange('OVERVIEW');
+    }
+  }
+
+  const showPlanSubNav = PLAN_TABS.has(activeTab);
 
   return (
-    <div className="flex h-dvh" style={{ background: 'var(--bg)' }}>
+    <div style={{ display: 'flex', height: '100dvh', overflow: 'hidden', background: 'var(--bg)' }}>
+      {/* Main column */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
 
-      {/* Mobile backdrop */}
-      {drawerOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/50 md:hidden"
-          onClick={closeDrawer}
-        />
-      )}
+        {/* Horizontal sub-tabs when in PLAN mode */}
+        {showPlanSubNav && (
+          <PlanSubNav activeTab={activeTab} onTabChange={onTabChange} />
+        )}
 
-      {/* Sidebar — always in DOM; transformed off-screen on mobile when closed */}
-      <div
-        className={[
-          'fixed inset-y-0 left-0 z-50 md:static md:z-auto md:translate-x-0',
-          'transition-transform duration-200 ease-in-out shrink-0',
-          drawerOpen ? 'translate-x-0' : '-translate-x-full',
-        ].join(' ')}
-      >
-        <Sidebar
-          activeTab={activeTab}
-          onTabChange={(tab) => { onTabChange(tab); closeDrawer(); }}
-          onOpenProfile={() => { onOpenProfile?.(); closeDrawer(); }}
-          onBackToDashboard={() => { onBackToDashboard?.(); closeDrawer(); }}
-          onOpenChat={() => { onOpenChat?.(); closeDrawer(); }}
-          onOpenInspire={onOpenInspire}
-          onOpenTactical={() => { onOpenTactical?.(); closeDrawer(); }}
-        />
+        {/* Scrollable content area */}
+        <main style={{ flex: 1, overflowY: 'auto' }}>
+          {children}
+        </main>
+
+        {/* Persistent bottom nav */}
+        <BottomNav activeBottomTab={activeBottomTab} onTabSelect={handleBottomTab} />
       </div>
-
-      {/* Main content */}
-      <main className="flex-1 overflow-auto flex flex-col min-w-0">
-        {/* Mobile top bar */}
-        <div
-          className="md:hidden flex items-center gap-3 px-4 py-3 border-b shrink-0"
-          style={{ background: 'var(--nav-bg)', borderColor: 'rgba(255,255,255,0.15)' }}
-        >
-          <button
-            onClick={() => setDrawerOpen(true)}
-            className="w-10 h-10 flex items-center justify-center rounded-lg"
-            style={{ color: 'var(--nav-text)' }}
-            aria-label="Open navigation"
-          >
-            <svg width="20" height="20" fill="none" viewBox="0 0 20 20">
-              <rect x="2" y="5" width="16" height="1.8" rx="0.9" fill="currentColor" />
-              <rect x="2" y="9.1" width="16" height="1.8" rx="0.9" fill="currentColor" />
-              <rect x="2" y="13.2" width="16" height="1.8" rx="0.9" fill="currentColor" />
-            </svg>
-          </button>
-          <span
-            className="font-semibold text-sm tracking-wide"
-            style={{ color: 'var(--nav-text)' }}
-          >
-            VenturePath
-          </span>
-        </div>
-
-        {children}
-      </main>
     </div>
   );
 }

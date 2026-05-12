@@ -16,7 +16,7 @@ export default function TrendBadge({ score, label }) {
         whiteSpace: 'nowrap',
       }}
     >
-      🔥 TRENDING
+      ↑ TRENDING
     </span>
   );
 }

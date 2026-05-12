@@ -1,0 +1,138 @@
+<h2>Transport Planner — Filter Row Compact</h2>
+<p class="subtitle">All filter controls in a single compact row.</p>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start">
+
+  <div class="mockup">
+    <div class="mockup-header">Full Transport Panel</div>
+    <div class="mockup-body" style="background:#0E1012;padding:12px;font-family:'JetBrains Mono',monospace;font-size:9px">
+
+      <!-- Mode tabs -->
+      <div style="display:flex;gap:3px;margin-bottom:10px">
+        <div style="background:#E67E22;color:#fff;padding:3px 8px;border-radius:2px;font-size:7px">✈ FLIGHT</div>
+        <div style="background:#1a1f26;color:#8A8680;padding:3px 8px;border-radius:2px;font-size:7px">🚆 TRAIN</div>
+        <div style="background:#1a1f26;color:#8A8680;padding:3px 8px;border-radius:2px;font-size:7px">🚌 BUS</div>
+        <div style="background:#1a1f26;color:#8A8680;padding:3px 8px;border-radius:2px;font-size:7px">🚢 FERRY</div>
+        <div style="background:#1a1f26;color:#8A8680;padding:3px 8px;border-radius:2px;font-size:7px">🚗 DRIVE</div>
+      </div>
+
+      <!-- TO first -->
+      <div style="margin-bottom:5px">
+        <div style="font-size:6px;color:#555;letter-spacing:0.1em;margin-bottom:2px">TO — DESTINATION</div>
+        <div style="background:#1a1f26;border:1px solid #E67E22;border-radius:3px;padding:6px 8px;color:#fff;font-size:9px">Lille, France</div>
+      </div>
+
+      <!-- FROM second -->
+      <div style="margin-bottom:8px">
+        <div style="font-size:6px;color:#555;letter-spacing:0.1em;margin-bottom:2px">FROM — ORIGIN <span style="color:#E67E22">● USING YOUR LOCATION</span></div>
+        <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;padding:6px 8px;color:#fff;font-size:9px;display:flex;align-items:center;gap:6px">
+          <span>Hamburg Airport (HAM)</span>
+          <span style="margin-left:auto;color:#4CAF50;font-size:7px">↻ nearest</span>
+        </div>
+      </div>
+
+      <!-- FILTER ROW — single line -->
+      <div style="display:flex;align-items:center;gap:4px;margin-bottom:8px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:1px">
+        <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:2px;padding:3px 7px;font-size:7px;color:#8A8680;white-space:nowrap;flex-shrink:0">Leave ▾</div>
+        <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:2px;padding:3px 7px;font-size:7px;color:#8A8680;white-space:nowrap;flex-shrink:0">Arrive ▾</div>
+        <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:2px;padding:3px 7px;font-size:7px;color:#8A8680;white-space:nowrap;flex-shrink:0">Price ▾</div>
+        <div style="background:#1a1f26;border:1px solid #E67E22;border-radius:2px;padding:3px 7px;font-size:7px;color:#E67E22;white-space:nowrap;flex-shrink:0">Cheapest ▾</div>
+        <div style="width:1px;height:14px;background:#2a2f36;flex-shrink:0"></div>
+        <div style="background:#E67E2218;border:1px solid #E67E2240;border-radius:10px;padding:2px 7px;font-size:6px;color:#E67E22;white-space:nowrap;flex-shrink:0">Direct</div>
+        <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:10px;padding:2px 7px;font-size:6px;color:#8A8680;white-space:nowrap;flex-shrink:0">Eco</div>
+        <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:10px;padding:2px 7px;font-size:6px;color:#8A8680;white-space:nowrap;flex-shrink:0">Flexible</div>
+        <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:10px;padding:2px 7px;font-size:6px;color:#8A8680;white-space:nowrap;flex-shrink:0">Cabin bag</div>
+      </div>
+
+      <!-- Results -->
+      <div style="font-size:6px;color:#555;letter-spacing:0.08em;margin-bottom:5px">4 RESULTS · sorted by price</div>
+      <div style="display:flex;flex-direction:column;gap:3px">
+
+        <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;padding:6px 8px;display:flex;align-items:center;gap:8px">
+          <div style="width:11px;height:11px;border-radius:50%;border:1px solid #2a2f36;flex-shrink:0"></div>
+          <div style="flex:1">
+            <div style="font-size:6px;color:#8A8680">Lufthansa · Economy · 7h 45m · 1 stop</div>
+            <div style="font-size:9px;color:#fff">HAM → LIL</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:10px;color:#fff">$542</div>
+            <div style="font-size:6px;color:#E67E22">120kg CO₂</div>
+          </div>
+        </div>
+
+        <!-- Selected + expanded -->
+        <div style="background:#E67E2208;border:1px solid #E67E22;border-radius:3px;overflow:hidden">
+          <div style="padding:6px 8px;display:flex;align-items:center;gap:8px">
+            <div style="width:11px;height:11px;border-radius:50%;background:#E67E22;flex-shrink:0;display:flex;align-items:center;justify-content:center">
+              <div style="width:4px;height:4px;border-radius:50%;background:#0E1012"></div>
+            </div>
+            <div style="flex:1">
+              <div style="font-size:6px;color:#E67E22">GreenFly · Eco · 4h 45m · Direct ★ SELECTED</div>
+              <div style="font-size:9px;color:#fff">HAM → LIL</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:10px;color:#fff">$620</div>
+              <div style="font-size:6px;color:#4CAF50">85kg CO₂</div>
+            </div>
+          </div>
+          <div style="background:#0d1018;padding:6px 8px;border-top:1px solid #1e2530">
+            <div style="display:flex;gap:12px;font-size:6px;color:#8A8680;margin-bottom:4px">
+              <span>Departs <span style="color:#fff">08:15</span></span>
+              <span>Arrives <span style="color:#fff">13:00</span></span>
+              <span>Flexible <span style="color:#4CAF50">✓</span></span>
+              <span>Baggage <span style="color:#4CAF50">1 cabin</span></span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="font-size:6px;color:#555">Saves 35kg CO₂ vs cheapest</div>
+              <div style="background:#E67E22;border-radius:2px;padding:4px 10px;font-size:7px;color:#fff;letter-spacing:0.06em">→ ADD TO PLAN</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:#1a1f26;border:1px solid #2a2f36;border-radius:3px;padding:6px 8px;display:flex;align-items:center;gap:8px">
+          <div style="width:11px;height:11px;border-radius:50%;border:1px solid #2a2f36;flex-shrink:0"></div>
+          <div style="flex:1">
+            <div style="font-size:6px;color:#8A8680">DirectJet · Non-stop · 2h 15m</div>
+            <div style="font-size:9px;color:#fff">HAM → LIL</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:10px;color:#fff">$890</div>
+            <div style="font-size:6px;color:#E67E22">210kg CO₂</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: annotations -->
+  <div>
+    <h3 style="margin-bottom:12px">Filter row breakdown</h3>
+
+    <div class="section">
+      <div class="label">Dropdowns (left group)</div>
+      <p>Leave, Arrive, Price, Sort — 4 compact pill-dropdowns in a row. Labels shortened to fit. Active filter highlighted in Ember. Open on click, close on blur or selection.</p>
+    </div>
+
+    <div class="section">
+      <div class="label">Divider</div>
+      <p>A 1px vertical rule separates the dropdown filters from the toggle pills — two distinct input types, visually grouped.</p>
+    </div>
+
+    <div class="section">
+      <div class="label">Toggle pills (right group)</div>
+      <p>Direct, Eco, Flexible, Cabin bag — boolean toggles. Active = Ember fill + border. Inactive = muted. Click to toggle on/off. Results filter live.</p>
+    </div>
+
+    <div class="section">
+      <div class="label">Overflow</div>
+      <p>Row scrolls horizontally on narrow screens — no wrapping, no second line. Single row always.</p>
+    </div>
+
+    <div class="section">
+      <div class="label">Mode-specific pills</div>
+      <p>Drive mode swaps pills for: Tolls, Fuel type, EV only. Ferry: Cabin class, Vehicle. Train: Rail pass, 1st class. Same row, different set.</p>
+    </div>
+  </div>
+
+</div>

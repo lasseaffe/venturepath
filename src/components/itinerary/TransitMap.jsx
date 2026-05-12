@@ -40,7 +40,7 @@ export default function TransitMap({ legs: legsProp }) {
     <div className="tactical-panel p-5 space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="label-tag">Transit Map</h2>
-        <div className="flex gap-4 text-xs text-slate-400 font-mono">
+        <div className="flex gap-4 text-xs text-[var(--text-secondary)] font-mono">
           <span>{totalKm.toLocaleString()} km</span>
           <span>{totalH}h total</span>
         </div>
@@ -78,7 +78,7 @@ export default function TransitMap({ legs: legsProp }) {
                       {leg.status}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2 mt-1 text-xs text-slate-400">
+                  <div className="flex items-center gap-2 mt-1 text-xs text-[var(--text-secondary)]">
                     <span style={{ color: cfg.color }}>{cfg.icon}</span>
                     <span>{cfg.label}</span>
                     <span>·</span>

@@ -8,6 +8,7 @@ import {
   Building2,
   HeartHandshake,
 } from "lucide-react";
+import { GospelSystemDiagram } from "@/components/illustrations/gospel-system-diagram";
 
 const tools = [
   {
@@ -94,6 +95,14 @@ export function EcosystemSection() {
             HolyFlex is not just one tool — it&apos;s a growing family of AI companions
             built for every stage of Latter-day Saint life.
           </p>
+        </div>
+
+        {/* System diagram — instructional overview */}
+        <div
+          className="mb-10 rounded-2xl overflow-hidden border"
+          style={{ borderColor: "#DDE8DD", background: "#FEFCF7" }}
+        >
+          <GospelSystemDiagram width="100%" />
         </div>
 
         {/* Grid */}

@@ -1,0 +1,146 @@
+<h2>Elevation Profile — Visual Treatment</h2>
+<p class="subtitle">Currently just a line chart on a flat dark background. Which visual style fits VenturePath best?</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#0E1012;border-radius:6px;padding:12px;font-family:'JetBrains Mono',monospace">
+        <div style="font-size:8px;color:#8A8680;letter-spacing:0.1em;margin-bottom:6px">ELEVATION PROFILE</div>
+        <div style="position:relative;height:72px;overflow:hidden;border-radius:3px">
+          <!-- Mountain silhouette background -->
+          <svg viewBox="0 0 400 72" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%">
+            <!-- sky gradient -->
+            <defs>
+              <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#0d1b2a"/>
+                <stop offset="100%" stop-color="#0E1012"/>
+              </linearGradient>
+              <linearGradient id="mountain" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#1a2535"/>
+                <stop offset="100%" stop-color="#0E1012"/>
+              </linearGradient>
+              <linearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#E67E22" stop-opacity="0.35"/>
+                <stop offset="100%" stop-color="#E67E22" stop-opacity="0.03"/>
+              </linearGradient>
+            </defs>
+            <rect width="400" height="72" fill="url(#sky)"/>
+            <!-- distant mountains silhouette -->
+            <path d="M0,72 L0,45 L40,28 L80,38 L130,15 L180,30 L230,10 L280,25 L330,18 L370,32 L400,22 L400,72 Z" fill="url(#mountain)" opacity="0.6"/>
+            <!-- near mountains darker -->
+            <path d="M0,72 L0,55 L50,42 L100,50 L160,30 L210,45 L260,28 L310,40 L360,32 L400,42 L400,72 Z" fill="#1a1f26" opacity="0.8"/>
+            <!-- elevation line -->
+            <path d="M0,60 C50,58 80,50 130,35 C180,20 220,15 270,20 C310,24 350,30 400,28" stroke="#E67E22" stroke-width="1.5" fill="none"/>
+            <!-- fill under line -->
+            <path d="M0,60 C50,58 80,50 130,35 C180,20 220,15 270,20 C310,24 350,30 400,28 L400,72 L0,72 Z" fill="url(#fill)"/>
+            <!-- hover dot -->
+            <circle cx="220" cy="15" r="3" fill="#E67E22"/>
+            <line x1="220" y1="15" x2="220" y2="72" stroke="#E67E22" stroke-width="0.5" stroke-dasharray="2,2" opacity="0.5"/>
+          </svg>
+          <!-- Overlay label -->
+          <div style="position:absolute;top:4px;right:6px;font-size:7px;color:#E67E22;opacity:0.7">2,340m</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:7px;color:#8A8680">
+          <span>Hamburg</span><span>+127km</span><span>Lille</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Mountain silhouette backdrop</h3>
+      <p>Layered mountain ridgelines as a dark background illustration behind the elevation curve. Ember (#E67E22) fill under the line. Feels like a real terrain card.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#0E1012;border-radius:6px;padding:12px;font-family:'JetBrains Mono',monospace">
+        <div style="font-size:8px;color:#8A8680;letter-spacing:0.1em;margin-bottom:6px">ELEVATION PROFILE</div>
+        <div style="position:relative;height:72px;overflow:hidden;border-radius:3px;background:#0d1218">
+          <svg viewBox="0 0 400 72" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%">
+            <defs>
+              <linearGradient id="fill2" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#E67E22" stop-opacity="0.5"/>
+                <stop offset="100%" stop-color="#E67E22" stop-opacity="0.02"/>
+              </linearGradient>
+            </defs>
+            <!-- Grid lines -->
+            <line x1="0" y1="18" x2="400" y2="18" stroke="#1a2530" stroke-width="0.5"/>
+            <line x1="0" y1="36" x2="400" y2="36" stroke="#1a2530" stroke-width="0.5"/>
+            <line x1="0" y1="54" x2="400" y2="54" stroke="#1a2530" stroke-width="0.5"/>
+            <line x1="100" y1="0" x2="100" y2="72" stroke="#1a2530" stroke-width="0.5"/>
+            <line x1="200" y1="0" x2="200" y2="72" stroke="#1a2530" stroke-width="0.5"/>
+            <line x1="300" y1="0" x2="300" y2="72" stroke="#1a2530" stroke-width="0.5"/>
+            <!-- Surface bands -->
+            <rect x="0" y="0" width="80" height="72" fill="#E67E22" opacity="0.04"/>
+            <rect x="80" y="0" width="240" height="72" fill="#64dc82" opacity="0.03"/>
+            <rect x="320" y="0" width="80" height="72" fill="#64a0ff" opacity="0.04"/>
+            <!-- Line -->
+            <path d="M0,60 C50,58 80,50 130,35 C180,20 220,15 270,20 C310,24 350,30 400,28" stroke="#E67E22" stroke-width="2" fill="none"/>
+            <path d="M0,60 C50,58 80,50 130,35 C180,20 220,15 270,20 C310,24 350,30 400,28 L400,72 L0,72 Z" fill="url(#fill2)"/>
+            <!-- Mode change markers -->
+            <line x1="80" y1="0" x2="80" y2="72" stroke="#E67E22" stroke-width="0.5" opacity="0.3"/>
+            <line x1="320" y1="0" x2="320" y2="72" stroke="#64a0ff" stroke-width="0.5" opacity="0.3"/>
+          </svg>
+          <!-- Legend -->
+          <div style="position:absolute;bottom:3px;right:4px;display:flex;gap:6px;font-size:6px">
+            <span style="color:#E67E22">■ flight</span>
+            <span style="color:#64dc82">■ foot</span>
+            <span style="color:#64a0ff">■ train</span>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:7px;color:#8A8680">
+          <span>0km</span><span>127km</span><span>254km</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Color-banded by transport mode</h3>
+      <p>Background bands show which transport mode covers each segment. Grid lines for readability. Mode-change dividers. Clean, data-forward, no illustration.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#0E1012;border-radius:6px;padding:12px;font-family:'JetBrains Mono',monospace">
+        <div style="font-size:8px;color:#8A8680;letter-spacing:0.1em;margin-bottom:6px">ELEVATION PROFILE</div>
+        <div style="position:relative;height:72px;overflow:hidden;border-radius:3px">
+          <svg viewBox="0 0 400 72" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%">
+            <defs>
+              <linearGradient id="sky3" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#0d1b2a"/>
+                <stop offset="100%" stop-color="#0E1012"/>
+              </linearGradient>
+              <linearGradient id="mtn3" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#1e2d40"/>
+                <stop offset="100%" stop-color="#0E1012"/>
+              </linearGradient>
+              <linearGradient id="fill3" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#E67E22" stop-opacity="0.4"/>
+                <stop offset="100%" stop-color="#E67E22" stop-opacity="0.03"/>
+              </linearGradient>
+            </defs>
+            <rect width="400" height="72" fill="url(#sky3)"/>
+            <!-- Silhouette -->
+            <path d="M0,72 L0,48 L40,32 L80,40 L130,18 L180,33 L230,12 L280,28 L330,20 L370,35 L400,25 L400,72 Z" fill="url(#mtn3)"/>
+            <!-- Mode bands on top of silhouette -->
+            <rect x="0" y="0" width="80" height="72" fill="#E67E22" opacity="0.06"/>
+            <rect x="80" y="0" width="240" height="72" fill="#64dc82" opacity="0.04"/>
+            <rect x="320" y="0" width="80" height="72" fill="#64a0ff" opacity="0.05"/>
+            <!-- Line -->
+            <path d="M0,60 C50,58 80,50 130,35 C180,20 220,15 270,20 C310,24 350,30 400,28" stroke="#E67E22" stroke-width="1.5" fill="none"/>
+            <path d="M0,60 C50,58 80,50 130,35 C180,20 220,15 270,20 C310,24 350,30 400,28 L400,72 L0,72 Z" fill="url(#fill3)"/>
+          </svg>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:7px;color:#8A8680">
+          <span>Hamburg</span><span>+127km</span><span>Lille</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Both: silhouette + mode bands</h3>
+      <p>Combines A and B — mountain silhouette as illustration layer with subtle transport-mode tinting on top. Richest visual, still readable. Best of both worlds.</p>
+    </div>
+  </div>
+
+</div>

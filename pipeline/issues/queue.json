@@ -4335,5 +4335,47 @@
     "reportedAt": "2026-05-09T23:15:57.911Z",
     "resolvedAt": null,
     "llmFix": null
+  },
+  {
+    "id": "88d82682-ef83-4fda-9110-59e9dab16a8f",
+    "cityId": "Scout Day",
+    "cityName": "Scout Day",
+    "country": "",
+    "type": "missing_image",
+    "poiId": null,
+    "detail": "",
+    "source": "user_report",
+    "status": "pending",
+    "reportedAt": "2026-05-11T17:57:30.404Z",
+    "resolvedAt": null,
+    "llmFix": null
+  },
+  {
+    "id": "b217a64b-cf1b-464d-a880-ed9539438d86",
+    "cityId": "Transfer & Trailhead",
+    "cityName": "Transfer & Trailhead",
+    "country": "",
+    "type": "missing_image",
+    "poiId": null,
+    "detail": "",
+    "source": "user_report",
+    "status": "pending",
+    "reportedAt": "2026-05-11T17:57:33.513Z",
+    "resolvedAt": null,
+    "llmFix": null
+  },
+  {
+    "id": "15284522-39c4-42b5-ad21-9f63dcc95f5d",
+    "cityId": "Scout Day",
+    "cityName": "Scout Day",
+    "country": "",
+    "type": "missing_image",
+    "poiId": null,
+    "detail": "",
+    "source": "user_report",
+    "status": "pending",
+    "reportedAt": "2026-05-12T02:30:38.770Z",
+    "resolvedAt": null,
+    "llmFix": null
   }
 ]

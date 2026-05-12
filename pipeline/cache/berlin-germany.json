@@ -1,0 +1,13 @@
+{
+  "city": "Berlin, Germany",
+  "slug": "berlin-germany",
+  "qid": "Q64",
+  "description": "federated state, capital and largest city of Germany",
+  "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Cityscape_Berlin.jpg?width=800",
+  "coords": {
+    "lat": 52.516666666667,
+    "lng": 13.383333333333
+  },
+  "climate": "temperate",
+  "pois": []
+}

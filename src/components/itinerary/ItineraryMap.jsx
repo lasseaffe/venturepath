@@ -103,7 +103,7 @@ export default function ItineraryMap({ days, coords, activeStopId, onPinClick, p
     <div style={{ marginTop: '16px', position: 'relative', isolation: 'isolate', overflow: 'hidden' }}>
       <div
         className="label-tag mb-2"
-        style={{ color: '#4b5563', fontSize: '10px', fontFamily: 'monospace', letterSpacing: '0.1em' }}
+        style={{ color: 'var(--text-muted)', fontSize: '10px', fontFamily: 'monospace', letterSpacing: '0.1em' }}
       >
         STOP MAP
       </div>
@@ -122,7 +122,7 @@ export default function ItineraryMap({ days, coords, activeStopId, onPinClick, p
             style={{
               position: 'absolute', inset: 0, display: 'flex',
               alignItems: 'center', justifyContent: 'center',
-              color: '#374151', fontFamily: 'monospace', fontSize: '11px',
+              color: 'var(--text-secondary)', fontFamily: 'monospace', fontSize: '11px',
               letterSpacing: '0.1em', zIndex: 1000, pointerEvents: 'none',
             }}
           >
@@ -163,8 +163,8 @@ export default function ItineraryMap({ days, coords, activeStopId, onPinClick, p
                 <Popup>
                   <div style={{ fontFamily: 'monospace', fontSize: '12px', color: '#0d1b2a', minWidth: '120px' }}>
                     <div style={{ fontWeight: 700 }}>{block.icon} {block.title}</div>
-                    {block.time && <div style={{ color: '#6b7280', marginTop: '2px' }}>{block.time}</div>}
-                    {block.notes && <div style={{ color: '#6b7280', marginTop: '2px' }}>{block.notes}</div>}
+                    {block.time && <div style={{ color: 'var(--text-muted)', marginTop: '2px' }}>{block.time}</div>}
+                    {block.notes && <div style={{ color: 'var(--text-muted)', marginTop: '2px' }}>{block.notes}</div>}
                   </div>
                 </Popup>
               </Marker>

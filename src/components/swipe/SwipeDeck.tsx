@@ -180,7 +180,7 @@ export function SwipeDeck({ mode, cards, onClose }: SwipeDeckProps) {
         <p className="text-xs uppercase tracking-widest" style={{ color: '#D9C5B2', fontFamily: 'JetBrains Mono, monospace' }}>
           {mode === 'expedition' ? 'Swipe Expeditions' : mode === 'filtered' ? 'Swipe Results' : 'Swipe Spots'}
         </p>
-        <button onClick={onClose} className="text-sm" style={{ color: '#E67E22', fontFamily: 'Inter, sans-serif' }}>✕ Close</button>
+        <button onClick={onClose} className="text-sm" style={{ color: '#E67E22',  }}>✕ Close</button>
       </div>
 
       {/* Deck area */}
@@ -191,10 +191,10 @@ export function SwipeDeck({ mode, cards, onClose }: SwipeDeckProps) {
             <p className="text-lg font-bold text-center" style={{ color: '#fff', fontFamily: 'Playfair Display, serif' }}>
               No Pioneers have charted this territory yet
             </p>
-            <p className="text-sm text-center" style={{ color: '#D9C5B2', fontFamily: 'Inter, sans-serif' }}>
+            <p className="text-sm text-center" style={{ color: '#D9C5B2',  }}>
               Try broadening your filters to discover more Expeditions
             </p>
-            <button onClick={onClose} className="mt-4 px-6 py-2 rounded-full text-sm font-semibold" style={{ background: '#E67E22', color: '#0E1012', fontFamily: 'Inter, sans-serif' }}>
+            <button onClick={onClose} className="mt-4 px-6 py-2 rounded-full text-sm font-semibold" style={{ background: '#E67E22', color: '#0E1012',  }}>
               Broaden Filters
             </button>
           </div>

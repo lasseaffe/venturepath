@@ -2,6 +2,26 @@
 
 // Mock POIs per destination for AR Ghost Tours
 export const DESTINATION_POIS = {
+  hamburg: [
+    {
+      id: 'poi_hh1', name: 'Elbphilharmonie', coords: { lat: 53.5413, lng: 9.9842 },
+      historicalNote: 'Built on a 1963 cocoa warehouse, the Elbphilharmonie opened in 2017 after a 16-year construction saga. Its wave-shaped roof holds 2,100 concert seats and a free public plaza 37 metres above the Elbe.',
+      trendingSnippet: '🎶 Instagram: Plaza sunset shots have generated 8.4M posts this year.',
+      icon: '🎶',
+    },
+    {
+      id: 'poi_hh2', name: 'Speicherstadt Warehouse District', coords: { lat: 53.5435, lng: 9.9947 },
+      historicalNote: 'Built between 1885 and 1927 on oak piles in the Elbe, Speicherstadt was the world\'s largest warehouse complex. UNESCO World Heritage since 2015, it now houses museums, design studios, and carpet traders.',
+      trendingSnippet: '📸 TikTok: Red-brick canal reflections dominate Hamburg travel content — 3.1M views this month.',
+      icon: '🏛',
+    },
+    {
+      id: 'poi_hh3', name: 'Miniatur Wunderland', coords: { lat: 53.5436, lng: 9.9930 },
+      historicalNote: 'Opened in 2001 with 800m of track, Wunderland now spans 1,545m across 16 sections representing Europe, America, and Scandinavia. The model Hamburg airport simulates day and night cycles every 15 minutes.',
+      trendingSnippet: '🚂 Reddit: Voted #1 indoor attraction in Germany four years running.',
+      icon: '🚂',
+    },
+  ],
   patagonia: [
     {
       id: 'poi_p1', name: 'Mirador Las Torres', coords: { lat: -50.9423, lng: -72.8998 },
@@ -36,6 +56,15 @@ export const DESTINATION_POIS = {
       icon: '⛪',
     },
   ],
+};
+
+export const DESTINATION_CENTERS = {
+  hamburg:   [53.5511, 9.9937],
+  patagonia: [-50.97, -73.0],
+  svalbard:  [78.22, 15.64],
+  namib:     [-24.0, 15.5],
+  amazon:    [-3.5, -62.2],
+  karakorum: [36.8, 74.8],
 };
 
 const DESTINATIONS = [

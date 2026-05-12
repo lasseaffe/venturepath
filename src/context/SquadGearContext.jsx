@@ -1,5 +1,4 @@
-import { createContext, useContext, useReducer, useCallback, useEffect } from 'react';
-import sentinelBus from '../utils/sentinelBus.js';
+import { createContext, useContext, useReducer, useCallback } from 'react';
 
 // ── Dummy squad members & shared gear ─────────────────────────────────────────
 
@@ -50,16 +49,6 @@ export function SquadGearProvider({ children }) {
   );
 
   const overEncumbered = state.members.filter(m => weights[m.id] > m.maxKg);
-
-  useEffect(() => {
-    overEncumbered.forEach(m => {
-      sentinelBus.emit('SQUAD_WEIGHT_CHANGED', {
-        memberId: m.id,
-        newKg: weights[m.id],
-        overLimit: true,
-      });
-    });
-  }, [JSON.stringify(overEncumbered), JSON.stringify(weights)]);
 
   return (
     <SquadGearContext.Provider value={{ ...state, weights, overEncumbered, reassign, resetGear }}>

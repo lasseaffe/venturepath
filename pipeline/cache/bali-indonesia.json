@@ -1,0 +1,13 @@
+{
+  "city": "Bali, Indonesia",
+  "slug": "bali-indonesia",
+  "qid": "Q3125978",
+  "description": "province of Indonesia",
+  "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Bali_panorama.jpg?width=800",
+  "coords": {
+    "lat": -8.5,
+    "lng": 115
+  },
+  "climate": "temperate",
+  "pois": []
+}

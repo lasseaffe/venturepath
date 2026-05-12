@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Direction 2 — National Geographic × Field Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=JetBrains+Mono:wght@300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --midnight: #12100E;
+    --surface: #1A1714;
+    --surface-raised: #221E18;
+    --ember: #E67E22;
+    --ember-warm: #D4691A;
+    --ember-dim: rgba(230,126,34,0.12);
+    --ember-rule: rgba(230,126,34,0.35);
+    --text: #F0E8DC;
+    --text-muted: #9A8870;
+    --text-subtle: #5C5040;
+    --rule: rgba(240,232,220,0.08);
+    --sandstone: #D9C5B2;
+    --ochre: #C4962A;
+  }
+
+  body {
+    background: var(--midnight);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  nav {
+    padding: 18px 52px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    border-bottom: 2px solid var(--ember);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 900;
+    font-style: italic;
+    font-size: 20px;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  .nav-links {
+    display: flex;
+    gap: 24px;
+    list-style: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-subtle);
+    flex: 1;
+    justify-content: center;
+  }
+  .nav-links .active { color: var(--ember); }
+  .nav-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--midnight);
+    background: var(--ember);
+    padding: 4px 10px;
+    font-weight: 500;
+  }
+
+  /* ── HERO: map + featured pro-path ── */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    min-height: 420px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero-map {
+    background: var(--surface);
+    position: relative;
+    overflow: hidden;
+    padding: 40px 52px;
+    border-right: 1px solid var(--rule);
+  }
+  /* Stylised map background — dots + route line */
+  .map-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle, rgba(217,197,178,0.06) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  .route-line {
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    width: 80%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--ember) 20%, var(--ochre) 60%, transparent);
+    transform: translateY(-50%) rotate(-8deg);
+    opacity: 0.6;
+  }
+  .route-dots {
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%) rotate(-8deg);
+  }
+  .route-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--ember);
+    border: 2px solid var(--midnight);
+    position: relative;
+  }
+  .route-dot.start { background: var(--ochre); width: 12px; height: 12px; }
+
+  .map-content {
+    position: relative;
+    z-index: 1;
+  }
+  .map-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 12px;
+    display: block;
+  }
+  .map-expedition-name {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 900;
+    font-style: italic;
+    font-size: 52px;
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+  .map-route-text {
+    font-size: 13px;
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+  }
+  .leg-chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .leg-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border: 1px solid var(--ember-rule);
+    color: var(--text-muted);
+  }
+  .leg-chip.active { border-color: var(--ember); color: var(--ember); }
+
+  /* Featured pro-path panel */
+  .hero-panel {
+    padding: 40px 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .panel-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ochre);
+    margin-bottom: 16px;
+    display: block;
+  }
+  .panel-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: 32px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  .panel-route {
+    font-size: 12px;
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+  .panel-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--rule);
+    margin-bottom: 20px;
+  }
+  .stat-cell {
+    background: var(--midnight);
+    padding: 12px 14px;
+  }
+  .stat-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--ember);
+    line-height: 1;
+    margin-bottom: 3px;
+  }
+  .stat-key {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-subtle);
+  }
+  .panel-cta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ember);
+    border-bottom: 1px solid var(--ember-rule);
+    padding-bottom: 2px;
+    cursor: pointer;
+    display: inline-block;
+  }
+
+  /* ── VAULT ROW ── */
+  .vault-row {
+    padding: 28px 52px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .vault-row-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .vault-row-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-subtle);
+  }
+  .vault-row-line { flex: 1; height: 1px; background: var(--rule); }
+
+  .path-row {
+    display: grid;
+    grid-template-columns: 1fr 80px 80px 80px 100px;
+    align-items: baseline;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--rule);
+    gap: 16px;
+  }
+  .path-row:last-child { border-bottom: none; }
+  .path-row-name {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+  }
+  .path-row-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+  }
+  .path-row-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border: 1px solid var(--ember-rule);
+    color: var(--ember);
+    display: inline-block;
+    text-align: right;
+    justify-self: end;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">VenturePath</span>
+  <ul class="nav-links">
+    <li class="active">Vault</li>
+    <li>Expedition</li>
+    <li>Squad</li>
+    <li>Tactical</li>
+  </ul>
+  <span class="nav-badge">14 days out</span>
+</nav>
+
+<section class="hero">
+  <div class="hero-map">
+    <div class="map-grid"></div>
+    <div class="route-line"></div>
+    <div class="route-dots">
+      <div class="route-dot start"></div>
+      <div class="route-dot"></div>
+      <div class="route-dot"></div>
+      <div class="route-dot active" style="background: var(--ochre)"></div>
+      <div class="route-dot"></div>
+    </div>
+    <div class="map-content">
+      <span class="map-eyebrow">Active expedition</span>
+      <h1 class="map-expedition-name">Iceland<br>Ring Road</h1>
+      <p class="map-route-text">Reykjavík → Akureyri → Jökulsárlón → back · 12 days</p>
+      <div class="leg-chips">
+        <span class="leg-chip active">Leg 1 · Reykjavík</span>
+        <span class="leg-chip active">Leg 2 · Snæfellsnes</span>
+        <span class="leg-chip active">Leg 3 · Akureyri</span>
+        <span class="leg-chip">Leg 4 · Mývatn</span>
+        <span class="leg-chip">Leg 5 · Jökulsárlón</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-panel">
+    <div>
+      <span class="panel-label">Featured Pro-Path</span>
+      <h2 class="panel-title">Annapurna Circuit</h2>
+      <p class="panel-route">Besisahar → Thorong La → Pokhara, Nepal · 14 days</p>
+      <div class="panel-stats">
+        <div class="stat-cell"><div class="stat-val">8</div><div class="stat-key">Legs</div></div>
+        <div class="stat-cell"><div class="stat-val">4.8</div><div class="stat-key">Difficulty</div></div>
+        <div class="stat-cell"><div class="stat-val">124</div><div class="stat-key">Clones</div></div>
+        <div class="stat-cell"><div class="stat-val">4.9★</div><div class="stat-key">Rating</div></div>
+      </div>
+    </div>
+    <span class="panel-cta">Clone this Pro-Path →</span>
+  </div>
+</section>
+
+<div class="vault-row">
+  <div class="vault-row-header">
+    <span class="vault-row-title">More Pro-Paths</span>
+    <div class="vault-row-line"></div>
+    <span class="vault-row-title" style="cursor:pointer; color: var(--ember)">Browse all 247 →</span>
+  </div>
+  <div class="path-row">
+    <span class="path-row-name">Pacific Coast Highway</span>
+    <span class="path-row-meta">10 days</span>
+    <span class="path-row-meta">6 Legs</span>
+    <span class="path-row-meta">89 clones</span>
+    <span class="path-row-tag">Road</span>
+  </div>
+  <div class="path-row">
+    <span class="path-row-name">Loire Valley Châteaux</span>
+    <span class="path-row-meta">21 days</span>
+    <span class="path-row-meta">11 Legs</span>
+    <span class="path-row-meta">52 clones</span>
+    <span class="path-row-tag">Cycling</span>
+  </div>
+  <div class="path-row">
+    <span class="path-row-name">Patagonia W Circuit</span>
+    <span class="path-row-meta">7 days</span>
+    <span class="path-row-meta">4 Legs</span>
+    <span class="path-row-meta">71 clones</span>
+    <span class="path-row-tag">Trekking</span>
+  </div>
+</div>
+
+</body>
+</html>

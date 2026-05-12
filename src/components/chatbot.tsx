@@ -133,13 +133,12 @@ export function Chatbot() {
         />
       </button>
 
-      {/* Chat panel — full-screen on mobile, anchored panel on desktop */}
+      {/* Chat panel */}
       {open && (
         <div
-          className="fixed z-50 flex flex-col overflow-hidden shadow-2xl
-            inset-0
-            sm:inset-auto sm:bottom-6 sm:right-6 sm:w-[360px] sm:rounded-3xl sm:h-[min(520px,90dvh)]"
+          className="fixed bottom-6 right-6 z-50 w-[360px] max-w-[calc(100vw-24px)] rounded-3xl shadow-2xl overflow-hidden flex flex-col"
           style={{
+            height: "520px",
             background: "#FEFCF7",
             border: "1px solid #DDE8DD",
           }}
@@ -171,10 +170,9 @@ export function Chatbot() {
             </div>
             <button
               onClick={() => setOpen(false)}
-              className="w-11 h-11 flex items-center justify-center rounded-lg transition-colors hover:bg-white/10"
-              aria-label="Close chat"
+              className="p-1.5 rounded-lg transition-colors hover:bg-white/10"
             >
-              <X size={18} className="text-white/70" />
+              <X size={16} className="text-white/70" />
             </button>
           </div>
 
@@ -298,7 +296,7 @@ export function Chatbot() {
               <button
                 onClick={() => send(input)}
                 disabled={!input.trim() || streaming}
-                className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 disabled:opacity-40 transition-all hover:scale-105 active:scale-95"
+                className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 disabled:opacity-40 transition-all hover:scale-105"
                 style={{ background: "#4A7A4A" }}
               >
                 {streaming ? (

@@ -81,7 +81,7 @@ function DraggableItem({ item, packed, onToggle, highlighted }) {
       <span
         onClick={handleToggle}
         className={`text-sm flex-1 transition-colors cursor-pointer ${
-          packed[item.id] ? 'line-through text-slate-600' : 'text-slate-300'
+          packed[item.id] ? 'line-through text-[var(--text-muted)]' : 'text-[var(--text-secondary)]'
         }`}
       >
         {item.label}
@@ -89,7 +89,7 @@ function DraggableItem({ item, packed, onToggle, highlighted }) {
           <span className="ml-2 text-[9px] text-red-400 font-mono">CRITICAL</span>
         )}
       </span>
-      <span className="text-xs text-slate-600 font-mono">{item.weight ?? 0}kg</span>
+      <span className="text-xs text-[var(--text-muted)] font-mono">{item.weight ?? 0}kg</span>
     </div>
   );
 }
@@ -184,7 +184,7 @@ export default function PackingChecklist({
               {mode === 'category' ? 'BY CAT' : 'BY ZONE'}
             </button>
           ))}
-          <span className="text-[10px] font-mono text-slate-400">
+          <span className="text-[10px] font-mono text-[var(--text-secondary)]">
             {packedCount}/{items.length} · {pct}%
           </span>
         </div>
@@ -266,8 +266,8 @@ export default function PackingChecklist({
                 } : {}}
               >
                 <span className="label-tag text-left group-hover:text-white transition-colors">{cat}</span>
-                <span className="text-slate-500 text-[10px] font-mono">{catPacked}/{catItems.length}</span>
-                <span className="ml-auto text-slate-600 text-[10px] font-mono">{isCollapsed ? '▸' : '▾'}</span>
+                <span className="text-[var(--text-muted)] text-[10px] font-mono">{catPacked}/{catItems.length}</span>
+                <span className="ml-auto text-[var(--text-muted)] text-[10px] font-mono">{isCollapsed ? '▸' : '▾'}</span>
               </button>
               {!isCollapsed && (
                 <div className="space-y-1">

@@ -37,7 +37,7 @@ export default function PackingEngine() {
       {/* Pending */}
       {pending.length > 0 && (
         <div className="space-y-1.5">
-          <div className="text-[9px] font-mono text-slate-600 tracking-widest">PENDING STOWAGE</div>
+          <div className="text-[9px] font-mono text-[var(--text-muted)] tracking-widest">PENDING STOWAGE</div>
           {pending.map(item => (
             <div
               key={item.id}
@@ -65,16 +65,16 @@ export default function PackingEngine() {
       {/* Stowed */}
       {stowed.length > 0 && (
         <div className="space-y-1.5">
-          <div className="text-[9px] font-mono text-slate-600 tracking-widest">STOWED GEAR</div>
+          <div className="text-[9px] font-mono text-[var(--text-muted)] tracking-widest">STOWED GEAR</div>
           {stowed.map(item => (
             <div
               key={item.id}
               className="flex items-center justify-between bg-[#0E1012] rounded px-3 py-2 border border-[#1e2328] opacity-40"
             >
-              <div className="text-sm text-slate-500 font-mono line-through">{item.name}</div>
+              <div className="text-sm text-[var(--text-muted)] font-mono line-through">{item.name}</div>
               <button
                 onClick={() => toggle(item.id)}
-                className="text-[9px] font-mono text-slate-600 hover:text-slate-400 transition-colors tracking-widest"
+                className="text-[9px] font-mono text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors tracking-widest"
               >
                 UNDO
               </button>

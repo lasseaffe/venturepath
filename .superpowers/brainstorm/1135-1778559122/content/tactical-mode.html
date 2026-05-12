@@ -1,0 +1,139 @@
+<h2>Tactical Mode — Visual Redesign</h2>
+<p class="subtitle">Currently feels like a raw terminal. Same offline-first data, but more visually compelling. Still uses Tactical Amber on near-black — just designed, not dumped.</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#0A0A0A;border-radius:6px;padding:12px;font-family:'JetBrains Mono',monospace;max-width:320px;margin:0 auto">
+        <!-- Header bar -->
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div>
+            <div style="font-size:7px;color:#F2A900;letter-spacing:0.15em">TACTICAL MODE — OFFLINE</div>
+            <div style="font-size:22px;color:#F2A900;font-weight:bold;letter-spacing:0.05em">6:04:40</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:7px;color:#555;letter-spacing:0.1em">DATA FRESHNESS</div>
+            <div style="font-size:11px;color:#F2A900">14 min ago</div>
+          </div>
+        </div>
+        <!-- Position card with map-pin icon feel -->
+        <div style="background:#111;border:1px solid #F2A90033;border-radius:4px;padding:8px;margin-bottom:6px">
+          <div style="font-size:7px;color:#555;letter-spacing:0.1em;margin-bottom:4px">▲ POSITION</div>
+          <div style="font-size:14px;color:#F2A900;margin-bottom:3px">−50.9423° S, 73.4068° W</div>
+          <div style="display:flex;gap:12px;font-size:8px;color:#888">
+            <span>HDG <span style="color:#F2A900">042°</span></span>
+            <span>ALT <span style="color:#F2A900">1,240m</span></span>
+            <span>GPS <span style="color:#4CAF50">●</span> LOCKED</span>
+          </div>
+        </div>
+        <!-- Objective + Squad side by side -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
+          <div style="background:#111;border:1px solid #2a2a2a;border-radius:4px;padding:8px">
+            <div style="font-size:7px;color:#555;letter-spacing:0.1em;margin-bottom:4px">OBJECTIVE</div>
+            <div style="font-size:9px;color:#888">No active leg</div>
+          </div>
+          <div style="background:#111;border:1px solid #2a2a2a;border-radius:4px;padding:8px">
+            <div style="font-size:7px;color:#555;letter-spacing:0.1em;margin-bottom:4px">SQUAD COMMS</div>
+            <div style="font-size:7px;color:#F2A900;margin-bottom:2px">Scout: River crossing…</div>
+            <div style="font-size:7px;color:#888">Lead: Summit bid…</div>
+          </div>
+        </div>
+        <!-- SOS button -->
+        <div style="background:#7B1A1A;border:1px solid #C0392B;border-radius:4px;padding:8px;text-align:center;font-size:10px;color:#fff;letter-spacing:0.1em">⚠ SOS EMERGENCY BEACON</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Structured cards, same amber palette</h3>
+      <p>Breaks the monolithic terminal into distinct bordered cards per data group. Objective + Squad comms side-by-side. Still JetBrains Mono + Tactical Amber — just organized, not dumped.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#0A0A0A;border-radius:6px;padding:12px;font-family:'JetBrains Mono',monospace;max-width:320px;margin:0 auto">
+        <!-- Status ring at top -->
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <div style="position:relative;width:52px;height:52px;flex-shrink:0">
+            <svg viewBox="0 0 52 52" style="width:52px;height:52px">
+              <circle cx="26" cy="26" r="22" fill="none" stroke="#1a1a1a" stroke-width="4"/>
+              <circle cx="26" cy="26" r="22" fill="none" stroke="#F2A900" stroke-width="4" stroke-dasharray="100 38" stroke-linecap="round" transform="rotate(-90 26 26)"/>
+            </svg>
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;color:#F2A900">GPS</div>
+          </div>
+          <div>
+            <div style="font-size:7px;color:#555;letter-spacing:0.12em">TACTICAL — OFFLINE</div>
+            <div style="font-size:20px;color:#F2A900;font-weight:bold">6:04:40</div>
+            <div style="font-size:7px;color:#888">Data: 14 min ago</div>
+          </div>
+        </div>
+        <!-- Coordinate display with compass -->
+        <div style="background:#111;border-left:3px solid #F2A900;border-radius:0 4px 4px 0;padding:8px;margin-bottom:6px">
+          <div style="font-size:13px;color:#F2A900;margin-bottom:3px">−50.9423° S  73.4068° W</div>
+          <div style="display:flex;gap:10px;font-size:8px;color:#666">
+            <span>↗ 042°</span><span>▲ 1,240m</span><span style="color:#4CAF50">● GPS LOCKED</span>
+          </div>
+        </div>
+        <!-- Squad comms scrollable -->
+        <div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:4px;padding:7px;margin-bottom:6px">
+          <div style="font-size:7px;color:#555;letter-spacing:0.1em;margin-bottom:5px">SQUAD COMMS — CACHED</div>
+          <div style="font-size:7px;color:#F2A900;padding:3px 0;border-bottom:1px solid #1a1a1a">│ Scout: River crossing waist-deep 07:30</div>
+          <div style="font-size:7px;color:#888;padding:3px 0">│ Lead: Summit bid confirmed 05:00</div>
+        </div>
+        <div style="background:#7B1A1A;border:1px solid #C0392B;border-radius:4px;padding:7px;text-align:center;font-size:10px;color:#fff;letter-spacing:0.1em">⚠ SOS EMERGENCY BEACON</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — GPS ring + left-accent borders</h3>
+      <p>Circular GPS status ring up top adds visual interest without color bloat. Position block uses an amber left-border accent instead of a full card. More spatial, less boxy.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#0A0A0A;border-radius:6px;padding:12px;font-family:'JetBrains Mono',monospace;max-width:320px;margin:0 auto">
+        <!-- Header with signal bars -->
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div>
+            <div style="display:flex;align-items:center;gap:5px;margin-bottom:2px">
+              <div style="display:flex;gap:1px;align-items:flex-end">
+                <div style="width:3px;height:4px;background:#F2A900"></div>
+                <div style="width:3px;height:6px;background:#F2A900"></div>
+                <div style="width:3px;height:9px;background:#F2A900"></div>
+                <div style="width:3px;height:12px;background:#F2A900"></div>
+              </div>
+              <div style="font-size:7px;color:#F2A900;letter-spacing:0.1em">GPS LOCKED</div>
+            </div>
+            <div style="font-size:20px;color:#F2A900;font-weight:bold">6:04:40 AM</div>
+          </div>
+          <div style="background:#1a1a1a;border-radius:3px;padding:4px 7px;text-align:center">
+            <div style="font-size:7px;color:#555">FRESHNESS</div>
+            <div style="font-size:10px;color:#F2A900">14m ago</div>
+          </div>
+        </div>
+        <!-- Coordinate ticker tape style -->
+        <div style="background:#F2A900;padding:5px 8px;border-radius:3px;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:10px;color:#0A0A0A;font-weight:bold">−50.9423° S, 73.4068° W</div>
+          <div style="font-size:7px;color:#0A0A0A;opacity:0.7">1,240m ↗042°</div>
+        </div>
+        <!-- Objective -->
+        <div style="margin-bottom:6px">
+          <div style="font-size:7px;color:#555;letter-spacing:0.1em;margin-bottom:2px">CURRENT OBJECTIVE</div>
+          <div style="font-size:9px;color:#888;padding-left:8px;border-left:2px solid #2a2a2a">No active leg</div>
+        </div>
+        <!-- Comms -->
+        <div style="margin-bottom:7px">
+          <div style="font-size:7px;color:#555;letter-spacing:0.1em;margin-bottom:3px">SQUAD COMMS — CACHED</div>
+          <div style="font-size:7px;color:#F2A900;padding:2px 0">│ Scout: River crossing waist-deep 07:30</div>
+          <div style="font-size:7px;color:#888;padding:2px 0">│ Lead: Summit bid confirmed 05:00</div>
+        </div>
+        <div style="background:#7B1A1A;border:1px solid #C0392B;border-radius:4px;padding:7px;text-align:center;font-size:10px;color:#fff;letter-spacing:0.1em">⚠ SOS EMERGENCY BEACON</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Signal bars + amber coordinate strip</h3>
+      <p>Signal-bar icon for GPS status. Coordinates rendered as a full-width inverted amber strip — high-contrast, impossible to miss. Feels like a real field device HUD.</p>
+    </div>
+  </div>
+
+</div>

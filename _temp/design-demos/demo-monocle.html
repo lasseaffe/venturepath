@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Direction 1 — Monocle × Expedition Brief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=JetBrains+Mono:wght@300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --midnight: #0E1012;
+    --surface: #141618;
+    --surface-raised: #1C1E22;
+    --ember: #E67E22;
+    --ember-dim: rgba(230,126,34,0.15);
+    --ember-rule: rgba(230,126,34,0.3);
+    --text: #EDE8DF;
+    --text-muted: #9A9288;
+    --text-subtle: #5A5550;
+    --rule: rgba(237,232,223,0.08);
+    --sandstone: #D9C5B2;
+  }
+
+  body {
+    background: var(--midnight);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── NAV ── */
+  nav {
+    padding: 16px 48px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 32px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-subtle);
+    justify-content: center;
+  }
+  .nav-links .active { color: var(--ember); }
+  .nav-right {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ember);
+    cursor: pointer;
+  }
+
+  /* ── VAULT HERO ── */
+  .vault-header {
+    padding: 44px 48px 32px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--rule);
+  }
+  .vault-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-subtle);
+    margin-bottom: 10px;
+    display: block;
+  }
+  .vault-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 900;
+    font-style: italic;
+    font-size: 56px;
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    color: var(--text);
+  }
+  .vault-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--text-subtle);
+    text-align: right;
+    line-height: 1.8;
+  }
+  .vault-meta span { color: var(--ember); }
+
+  /* ── PRO-PATH GRID ── */
+  .vault-grid {
+    padding: 32px 48px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 1px;
+    background: var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .pro-path-card {
+    background: var(--midnight);
+    padding: 28px 28px;
+  }
+  .pro-path-card.featured {
+    background: var(--surface);
+  }
+  .path-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 12px;
+    display: block;
+  }
+  .path-name {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: 26px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .path-name.large { font-size: 36px; }
+  .path-route {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    font-style: italic;
+  }
+  .path-stats {
+    display: flex;
+    gap: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--text-subtle);
+    border-top: 1px solid var(--rule);
+    padding-top: 12px;
+    margin-top: 12px;
+  }
+  .path-stats span { color: var(--sandstone); }
+  .path-architect {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--text-subtle);
+    margin-top: 8px;
+  }
+
+  /* ── EXPEDITION STATUS ── */
+  .expedition-strip {
+    padding: 24px 48px;
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 48px;
+    align-items: center;
+    background: var(--surface);
+    border-bottom: 1px solid var(--rule);
+  }
+  .expedition-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-subtle);
+    margin-bottom: 8px;
+    display: block;
+  }
+  .expedition-name {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: 28px;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .expedition-route {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+  .expedition-data {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1px;
+    background: var(--rule);
+  }
+  .data-cell {
+    background: var(--midnight);
+    padding: 14px 16px;
+    text-align: center;
+  }
+  .data-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--ember);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .data-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-subtle);
+  }
+
+  /* ── BOTTOM STRIP ── */
+  .bottom-strip {
+    padding: 20px 48px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    border-top: 1px solid var(--rule);
+  }
+  .strip-item {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: var(--text-subtle);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .strip-item span { color: var(--text-muted); }
+  .strip-cta {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ember);
+    border-bottom: 1px solid var(--ember-rule);
+    padding-bottom: 1px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">VenturePath</span>
+  <ul class="nav-links">
+    <li class="active">VentureVault</li>
+    <li>My Expedition</li>
+    <li>Squad</li>
+    <li>Tactical</li>
+  </ul>
+  <span class="nav-right">+ New Expedition</span>
+</nav>
+
+<div class="vault-header">
+  <div>
+    <span class="vault-label">VentureVault · Curated Pro-Paths</span>
+    <h1 class="vault-title">Discover<br>your next<br>expedition.</h1>
+  </div>
+  <div class="vault-meta">
+    <div><span>247</span> Pro-Paths available</div>
+    <div><span>38</span> Architects publishing</div>
+    <div style="margin-top: 8px; color: var(--ember); cursor: pointer; border-bottom: 1px solid var(--ember-rule); display: inline-block;">Browse all →</div>
+  </div>
+</div>
+
+<div class="vault-grid">
+  <div class="pro-path-card featured">
+    <span class="path-tag">Featured · Trekking · 14 days</span>
+    <div class="path-name large">Annapurna<br>Circuit</div>
+    <p class="path-route">Besisahar → Thorong La Pass → Pokhara, Nepal</p>
+    <div class="path-stats">
+      <span><span>8</span> Legs</span>
+      <span><span>4.8</span> Difficulty</span>
+      <span><span>124</span> Clones</span>
+      <span><span>4.9★</span> Rating</span>
+    </div>
+    <div class="path-architect">By Architect <span style="color: var(--sandstone)">Marcus R.</span></div>
+  </div>
+  <div class="pro-path-card">
+    <span class="path-tag">Road · 10 days</span>
+    <div class="path-name">Pacific Coast Highway</div>
+    <p class="path-route">San Francisco → Los Angeles via Highway 1</p>
+    <div class="path-stats">
+      <span><span>6</span> Legs</span>
+      <span><span>2.1</span> Difficulty</span>
+      <span><span>89</span> Clones</span>
+    </div>
+    <div class="path-architect">By <span style="color: var(--sandstone)">Elena V.</span></div>
+  </div>
+  <div class="pro-path-card">
+    <span class="path-tag">Cycling · 21 days</span>
+    <div class="path-name">Loire Valley Châteaux</div>
+    <p class="path-route">Nantes → Orléans, France</p>
+    <div class="path-stats">
+      <span><span>11</span> Legs</span>
+      <span><span>3.2</span> Difficulty</span>
+      <span><span>52</span> Clones</span>
+    </div>
+    <div class="path-architect">By <span style="color: var(--sandstone)">Theo K.</span></div>
+  </div>
+</div>
+
+<div class="expedition-strip">
+  <div>
+    <span class="expedition-label">Your active expedition</span>
+    <div class="expedition-name">Iceland Ring Road</div>
+    <p class="expedition-route">Reykjavík → Akureyri → Jökulsárlón → Reykjavík · 12 days · Squad of 3</p>
+  </div>
+  <div class="expedition-data">
+    <div class="data-cell">
+      <div class="data-value">14</div>
+      <div class="data-label">Days out</div>
+    </div>
+    <div class="data-cell">
+      <div class="data-value">3/3</div>
+      <div class="data-label">Squad ready</div>
+    </div>
+    <div class="data-cell">
+      <div class="data-value">5/7</div>
+      <div class="data-label">Legs locked</div>
+    </div>
+  </div>
+</div>
+
+<div class="bottom-strip">
+  <div class="strip-item">LEDGER WORKBENCH · <span>2 votes pending</span></div>
+  <div class="strip-item">PACKING · <span>18.4 kg / 20 kg</span></div>
+  <div class="strip-item">TACTICAL · <span>Ready for offline</span></div>
+  <span class="strip-cta">Open expedition →</span>
+</div>
+
+</body>
+</html>
