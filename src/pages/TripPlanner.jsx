@@ -220,7 +220,7 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
 
             {tab === 'STAYS' && (
               <div className="max-w-2xl space-y-4">
-                <AccommodationSearch />
+                <AccommodationSearch destination={trip.destination} />
               </div>
             )}
 
@@ -253,7 +253,7 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
                     onCategoryChange={setFoodCategory}
                     onSelect={handleDiscoveryPinClick}
                   />
-                  <VibeCheck destinationId={destinationId} tripName={trip.name} />
+                  <VibeCheck destinationId={trip.destination?.split(',')[0].trim() ?? destinationId} tripName={trip.name} />
                   <ARGhostTours destinationId={destinationId} center={mapCenter} />
                   <BasecampScout destination={trip.destination} />
                 </div>
