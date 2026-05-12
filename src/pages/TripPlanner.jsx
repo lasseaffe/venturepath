@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import NewTripModal from '../components/trip/NewTripModal';
 import { useTripStore } from '../store/useTripStore';
@@ -26,14 +26,22 @@ import PioneerChat from '../components/social/PioneerChat';
 import ArchitectProfile from '../components/social/ArchitectProfile';
 import BudgetLoom from '../components/itinerary/BudgetLoom';
 import BentoPacker from '../components/logistics/BentoPacker';
+import ElevationStrip from '../components/itinerary/ElevationStrip';
+import GpxPanel from '../components/itinerary/GpxPanel';
+import LegHud from '../components/logistics/LegHud';
 import VibeCheck from '../components/discovery/VibeCheck';
 import SafetyPulse from '../components/logistics/SafetyPulse';
 import ARGhostTours from '../components/ar/ARGhostTours';
+import { DESTINATION_CENTERS } from '../utils/destinationEngine';
+import { searchAttractions, searchFood } from '../utils/osmEngine.js';
+import DiscoveryMap from '../components/discovery/DiscoveryMap.jsx';
 import InspirePanel from '../components/inspire/InspirePanel';
 import SettingsPanel from '../components/settings/SettingsPanel';
 
-export default function TripPlanner({ onBackToDashboard }) {
+export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
   const { trip, legs, manifestSettings, cloning } = useTripStore();
+  const destinationId = trip.destination?.split(',')[0].toLowerCase().replace(/[^a-z]/g, '') ?? 'default';
+  const mapCenter = DESTINATION_CENTERS[destinationId] ?? DESTINATION_CENTERS.patagonia;
   const { theme } = useTheme();
   const labels = useLabels();
   const [launched, setLaunched] = useState(false);
@@ -44,6 +52,37 @@ export default function TripPlanner({ onBackToDashboard }) {
   const [editTripOpen, setEditTripOpen] = useState(false);
   const [inspireOpen, setInspireOpen]   = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [activeLegId, setActiveLegId] = useState(null);
+  const [attractions, setAttractions]               = useState([]);
+  const [food, setFood]                             = useState([]);
+  const [attractionsLoading, setAttractionsLoading] = useState(false);
+  const [foodLoading, setFoodLoading]               = useState(false);
+  const [attractionCategory, setAttractionCategory] = useState('all');
+  const [foodCategory, setFoodCategory]             = useState('all');
+  const [selectedDiscoveryId, setSelectedDiscoveryId] = useState(null);
+
+  useEffect(() => {
+    if (tab !== 'DISCOVERY' || !trip?.destination) return;
+    const city = trip.destination.split(',')[0].trim();
+    setAttractionsLoading(true);
+    searchAttractions(city, attractionCategory)
+      .then(setAttractions)
+      .finally(() => setAttractionsLoading(false));
+  }, [tab, trip?.destination, attractionCategory]);
+
+  useEffect(() => {
+    if (tab !== 'DISCOVERY' || !trip?.destination) return;
+    const city = trip.destination.split(',')[0].trim();
+    setFoodLoading(true);
+    searchFood(city, foodCategory)
+      .then(setFood)
+      .finally(() => setFoodLoading(false));
+  }, [tab, trip?.destination, foodCategory]);
+
+  function handleDiscoveryPinClick(id) {
+    setSelectedDiscoveryId(id);
+    document.getElementById(`discovery-card-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
 
   if (tacticalMode) {
     return <TacticalMode onExit={() => setTacticalMode(false)} />;
@@ -119,9 +158,45 @@ export default function TripPlanner({ onBackToDashboard }) {
           <div className="p-6">
             {tab === 'OVERVIEW' && (
               <div className="space-y-4">
-                <RouteMap />
+                <div style={{ position: 'relative' }}>
+                  <RouteMap />
+                  <AnimatePresence>
+                    {activeLegId && (
+                      <LegHud
+                        leg={legs.find(l => l.id === activeLegId)}
+                        onClose={() => setActiveLegId(null)}
+                      />
+                    )}
+                  </AnimatePresence>
+                </div>
+                {/* Active leg quick-launch strip */}
+                {legs.length > 0 && (
+                  <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                    {legs.filter(l => l.status === 'confirmed').map(l => (
+                      <button
+                        key={l.id}
+                        onClick={() => setActiveLegId(activeLegId === l.id ? null : l.id)}
+                        style={{
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: 9,
+                          letterSpacing: '0.08em',
+                          padding: '3px 10px',
+                          borderRadius: 2,
+                          border: `1px solid ${activeLegId === l.id ? '#E67E22' : '#2a2f36'}`,
+                          background: activeLegId === l.id ? 'rgba(230,126,34,0.12)' : 'transparent',
+                          color: activeLegId === l.id ? '#E67E22' : '#8A8680',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        {activeLegId === l.id ? '■ STOP' : `▶ LEG ${l.id}`} {l.to}
+                      </button>
+                    ))}
+                  </div>
+                )}
+                <GpxPanel />
+                <ElevationStrip />
                 <TimelinePath />
-                <SafetyPulse destinationId="patagonia" center={[-51.6, -72.7]} zoom={8} />
+                <SafetyPulse destinationId={destinationId} center={mapCenter} zoom={8} />
               </div>
             )}
 
@@ -156,12 +231,35 @@ export default function TripPlanner({ onBackToDashboard }) {
             )}
 
             {tab === 'DISCOVERY' && (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                <VibeCheck destinationId="patagonia" tripName={trip.name} />
-                <ARGhostTours destinationId="patagonia" center={[-50.97, -73.0]} />
-                <MustSee destination={trip.destination} />
-                <LocalFlavor destination={trip.destination} />
-                <BasecampScout destination={trip.destination} />
+              <div className="space-y-4">
+                <DiscoveryMap
+                  attractionPins={attractions}
+                  foodPins={food}
+                  selectedId={selectedDiscoveryId}
+                  onPinClick={handleDiscoveryPinClick}
+                />
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                  <VibeCheck destinationId={destinationId} tripName={trip.name} />
+                  <ARGhostTours destinationId={destinationId} center={mapCenter} />
+                  <MustSee
+                    attractions={attractions}
+                    loading={attractionsLoading}
+                    selectedId={selectedDiscoveryId}
+                    onCategoryChange={setAttractionCategory}
+                    onSelect={id => {
+                      setSelectedDiscoveryId(id);
+                      document.getElementById(`discovery-card-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }}
+                  />
+                  <LocalFlavor
+                    food={food}
+                    loading={foodLoading}
+                    selectedId={selectedDiscoveryId}
+                    onCategoryChange={setFoodCategory}
+                    onSelect={id => setSelectedDiscoveryId(id)}
+                  />
+                  <BasecampScout destination={trip.destination} />
+                </div>
               </div>
             )}
 
@@ -200,6 +298,10 @@ export default function TripPlanner({ onBackToDashboard }) {
         onLaunchWizard={() => {
           setSettingsOpen(false);
           window.location.assign('/expedition/new/welcome');
+        }}
+        onOpenMoodboard={() => {
+          setSettingsOpen(false);
+          onOpenMoodboard?.();
         }}
       />
     </>
