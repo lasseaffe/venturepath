@@ -53,6 +53,7 @@
   --status-alert:   #C03030;
   --radius-card:    0px;       /* No rounded corners — editorial precision */
   --shadow-card:    none;
+  --font-mono:      'JetBrains Mono', ui-monospace, monospace;
 }
 
 /* ─── Day Mode (warm sandstone light) ─── */
@@ -73,6 +74,7 @@
   --status-alert:   #B03030;
   --radius-card:    4px;
   --shadow-card:    0 1px 3px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+  --font-mono:      'JetBrains Mono', ui-monospace, monospace;
 }
 
 /* ─── Tactical (dark) ─── */
@@ -93,6 +95,7 @@
   --status-alert:   #ff6b6b;
   --radius-card:    4px;
   --shadow-card:    none;
+  --font-mono:      'JetBrains Mono', ui-monospace, monospace;
 }
 
 @layer components {

@@ -86,7 +86,7 @@ export function CalendarStrip({ trip, dayLoops, stays, selectedDate, onSelectDat
             >
               <span style={{ fontSize: '0.48rem', color: active ? 'var(--accent)' : 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>{wd}</span>
               <span style={{ fontSize: '0.72rem', fontWeight: 700, color: active ? 'var(--accent)' : 'var(--text-primary)' }}>{dd}</span>
-              {hb && !active && <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#5C9A6A' }} />}
+              {hb && !active && <span style={{ width: 4, height: 4, borderRadius: '50%', background: 'var(--status-ok)' }} />}
               {count > 0 && (
                 <span style={{ fontSize: '0.45rem', color: 'var(--accent)', opacity: active ? 1 : 0.7 }}>
                   {count} {count === 1 ? 'stop' : 'stops'}
