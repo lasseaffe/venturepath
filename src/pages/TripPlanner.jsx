@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import StickyNav from '../components/layout/StickyNav';
 import ToastContainer from '../components/ui/Toast';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -44,6 +44,8 @@ import { DayLoopPanel } from '../components/itinerary/DayLoopPanel';
 import { CascadeConfirmSheet } from '../components/itinerary/CascadeConfirmSheet';
 import { AddStopFlow } from '../components/itinerary/AddStopFlow';
 import { onStopAdded } from '../utils/homebaseEngine';
+import { LegLens } from '../components/legLens/LegLens.jsx';
+import { hydrateLeg } from '../utils/legIntelligence/index.js';
 
 function TripHeroImage({ destination, heroImageUrl }) {
   const [bleedOpacity, setBleedOpacity] = useState(1);
@@ -352,21 +354,27 @@ function TripHeroImage({ destination, heroImageUrl }) {
 
 export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
   const { trip, legs, stays, pois, dayLoops, manifestSettings, cloning,
-          addStopToDayLoop, addDayLoop, setTripPlanningMode, dispatch } = useTripStore();
+          addStopToDayLoop, addDayLoop, setTripPlanningMode, dispatch,
+          addWaypoint, updateWaypoint, setLegMeta, replaceLegRoute } = useTripStore();
   const destinationId = trip.destination?.split(',')[0].toLowerCase().replace(/[^a-z]/g, '') ?? 'default';
   const mapCenter = DESTINATION_CENTERS[destinationId] ?? DESTINATION_CENTERS.default;
   const { theme } = useTheme();
   const labels = useLabels();
   const [launched, setLaunched] = useState(false);
-  const [activeSection, setActiveSection] = useState('section-overview');
-  const overviewRef   = useRef(null);
-  const itineraryRef  = useRef(null);
-  const logisticsRef  = useRef(null);
-  const staysRef      = useRef(null);
-  const transportRef  = useRef(null);
-  const vaultRef      = useRef(null);
-  const discoveryRef  = useRef(null);
+  const [activeTab, setActiveTab] = useState(
+    () => localStorage.getItem('vp_last_tab') ?? 'transport'
+  );
+  const discoveryRef     = useRef(null);
   const discoveryFetched = useRef(false);
+
+  const completion = useMemo(() => ({
+    transport:     legs.some(l => l.status === 'confirmed'),
+    accommodation: stays.length > 0,
+    discovery:     pois.length > 0 || attractions.length > 0,
+    itinerary:     dayLoops.some(dl => (dl.stopIds?.length ?? 0) > 0),
+    logistics:     (manifestSettings?.items?.length ?? 0) > 0,
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }), [legs, stays, pois, attractions, dayLoops, manifestSettings]);
   const [tacticalMode, setTacticalMode] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -374,6 +382,7 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
   const [inspireOpen, setInspireOpen]   = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [activeLegId, setActiveLegId] = useState(null);
+  const [legLensOpen, setLegLensOpen] = useState(false);
   const [attractions, setAttractions]               = useState([]);
   const [food, setFood]                             = useState([]);
   const [attractionsLoading, setAttractionsLoading] = useState(false);
@@ -405,60 +414,27 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
     });
   }, [stays, dayLoops, addDayLoop]);
 
+  // Persist active tab across refreshes
   useEffect(() => {
-    if (!trip?.destination) return;
-    discoveryFetched.current = false;
+    localStorage.setItem('vp_last_tab', activeTab);
+  }, [activeTab]);
+
+  // Lazy-fetch discovery data when the Discovery tab becomes active
+  useEffect(() => {
+    if (activeTab !== 'discovery' || !trip?.destination) return;
+    if (discoveryFetched.current) return;
+    discoveryFetched.current = true;
     const city = trip.destination.split(',')[0].trim();
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !discoveryFetched.current) {
-          discoveryFetched.current = true;
-          setAttractionsLoading(true);
-          searchAttractions(city, attractionCategory)
-            .then(setAttractions)
-            .finally(() => setAttractionsLoading(false));
-          setFoodLoading(true);
-          searchFood(city, foodCategory)
-            .then(setFood)
-            .finally(() => setFoodLoading(false));
-        }
-      },
-      { threshold: 0.05 }
-    );
-
-    if (discoveryRef.current) observer.observe(discoveryRef.current);
-    return () => observer.disconnect();
-  }, [trip?.destination]);
-
-  useEffect(() => {
-    const sections = [
-      { ref: overviewRef,   id: 'section-overview' },
-      { ref: itineraryRef,  id: 'section-itinerary' },
-      { ref: logisticsRef,  id: 'section-logistics' },
-      { ref: staysRef,      id: 'section-stays' },
-      { ref: transportRef,  id: 'section-transport' },
-      { ref: discoveryRef,  id: 'section-discovery' },
-      { ref: vaultRef,      id: 'section-vault' },
-    ];
-
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      { threshold: 0.2, rootMargin: '-48px 0px 0px 0px' }
-    );
-
-    sections.forEach(({ ref }) => {
-      if (ref.current) observer.observe(ref.current);
-    });
-
-    return () => observer.disconnect();
-  }, []);
+    setAttractionsLoading(true);
+    searchAttractions(city, attractionCategory)
+      .then(setAttractions)
+      .finally(() => setAttractionsLoading(false));
+    setFoodLoading(true);
+    searchFood(city, foodCategory)
+      .then(setFood)
+      .finally(() => setFoodLoading(false));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab, trip?.destination]);
 
   // Refetch when category filters change, but only if initial fetch already ran
   useEffect(() => {
@@ -484,6 +460,42 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
     document.getElementById(`discovery-card-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
+  async function handleLegHydrate(legId) {
+    const leg = legs.find(l => l.id === legId);
+    if (!leg) return;
+    const { legMeta, waypoints: wps } = await hydrateLeg(leg);
+    if (legMeta) setLegMeta(legId, legMeta);
+    wps.forEach(wp => addWaypoint(legId, wp));
+  }
+
+  function handleVariantSelect(legId, variant) {
+    const leg = legs.find(l => l.id === legId);
+    if (!leg?.legMeta?.routeVariants) return;
+    const chosen = leg.legMeta.routeVariants.find(v => v.variant === variant);
+    if (!chosen) return;
+    // Update activeVariant in legMeta and replace route
+    setLegMeta(legId, { ...leg.legMeta, activeVariant: variant });
+    replaceLegRoute(legId, { durationH: chosen.durationH, distanceKm: chosen.distanceKm });
+  }
+
+  function handleWaypointConfirm(waypointId) {
+    const leg = legs.find(l => (l.waypoints ?? []).some(w => w.id === waypointId));
+    if (!leg) return;
+    updateWaypoint(leg.id, waypointId, { status: 'confirmed' });
+  }
+
+  function handleWaypointBook(waypointId) {
+    const leg = legs.find(l => (l.waypoints ?? []).some(w => w.id === waypointId));
+    if (!leg) return;
+    updateWaypoint(leg.id, waypointId, { status: 'confirmed', bookingRef: `booking-${Date.now()}` });
+  }
+
+  function handleWaypointDismiss(waypointId) {
+    const leg = legs.find(l => (l.waypoints ?? []).some(w => w.id === waypointId));
+    if (!leg) return;
+    updateWaypoint(leg.id, waypointId, { status: 'skipped' });
+  }
+
   if (tacticalMode) {
     return <TacticalMode onExit={() => setTacticalMode(false)} />;
   }
@@ -498,19 +510,20 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
 
       <div className={`transition-opacity duration-700 ${launched ? 'opacity-100' : 'opacity-0'}`}>
         <AppShell
-          activeItem="onOpenExpeditions"
-          activeSection={activeSection}
-          onBackToDashboard={onBackToDashboard}
-          onOpenExpeditions={onBackToDashboard}
-          onOpenVault={() => {}}
-          onOpenProfile={() => setProfileOpen(true)}
-          onOpenInspire={() => setInspireOpen(true)}
-          onOpenTactical={() => setTacticalMode(true)}
-          onOpenSettings={() => setSettingsOpen(true)}
+          activeView="select"
+          onNavigate={key => {
+            if (key === 'dashboard' || key === 'select') onBackToDashboard();
+            if (key === 'profile')  setProfileOpen(true);
+            if (key === 'inspire')  setInspireOpen(true);
+            if (key === 'tactical') setTacticalMode(true);
+            if (key === 'settings') setSettingsOpen(true);
+          }}
         >
           {/* Destination hero image — scroll-driven bleed fade */}
           <TripHeroImage destination={trip.destination} heroImageUrl={trip.heroImageUrl} />
-          <StickyNav activeSection={activeSection} />
+
+          {/* Journey stepper — replaces old 7-section scroll nav */}
+          <StickyNav activeTab={activeTab} onTabChange={setActiveTab} completion={completion} />
 
           {/* Trip header bar */}
           <header
@@ -616,7 +629,7 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
             </div>
           </div>
 
-          {/* CalendarStrip — always visible */}
+          {/* CalendarStrip — persistent above all tabs */}
           <CalendarStrip
             trip={trip}
             dayLoops={dayLoops}
@@ -625,9 +638,10 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
             onSelectDate={setSelectedDate}
           />
 
-          {/* Scrollable sections — all always rendered */}
-          <section id="section-overview" ref={overviewRef} style={{ scrollMarginTop: 48, padding: '24px 24px 0' }}>
-            <div className="space-y-3">
+          {/* ── Tab panels — only active tab renders ── */}
+
+          {activeTab === 'transport' && (
+            <div className="space-y-4" style={{ padding: '24px 24px 0' }}>
               <div style={{ display: 'flex', gap: 12, alignItems: 'stretch' }}>
                 <div style={{ flex: '0 0 70%', position: 'relative', minHeight: 320 }}>
                   <RouteMap
@@ -650,7 +664,15 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
                       {legs.filter(l => l.status === 'confirmed').map(l => (
                         <button
                           key={l.id}
-                          onClick={() => setActiveLegId(activeLegId === l.id ? null : l.id)}
+                          onClick={() => {
+                            if (activeLegId === l.id) {
+                              setActiveLegId(null);
+                              setLegLensOpen(false);
+                            } else {
+                              setActiveLegId(l.id);
+                              setLegLensOpen(true);
+                            }
+                          }}
                           style={{
                             fontFamily: "'JetBrains Mono', monospace",
                             fontSize: 9, letterSpacing: '0.08em',
@@ -670,15 +692,64 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
                 <div style={{ flex: 1, overflow: 'hidden' }}>
                   <TimelinePath />
                 </div>
+                {legLensOpen && activeLegId && (
+                  <LegLens
+                    leg={legs.find(l => l.id === activeLegId) ?? null}
+                    onVariantSelect={handleVariantSelect}
+                    onWaypointConfirm={handleWaypointConfirm}
+                    onWaypointBook={handleWaypointBook}
+                    onWaypointDismiss={handleWaypointDismiss}
+                    onHydrate={handleLegHydrate}
+                    onClose={() => { setLegLensOpen(false); setActiveLegId(null); }}
+                  />
+                )}
               </div>
               <GpxPanel />
               <ElevationStrip />
               <SafetyTicker destinationId={destinationId} center={mapCenter} zoom={8} />
+              <PublicTransport destination={trip.destination} />
             </div>
-          </section>
+          )}
 
-          <section id="section-itinerary" ref={itineraryRef} style={{ scrollMarginTop: 48, padding: '24px 24px 0' }}>
-            <div className="space-y-6">
+          {activeTab === 'accommodation' && (
+            <div className="max-w-2xl space-y-4" style={{ padding: '24px 24px 0' }}>
+              <AccommodationSearch destination={trip.destination} />
+            </div>
+          )}
+
+          {activeTab === 'discovery' && (
+            <div ref={discoveryRef} className="space-y-4" style={{ padding: '24px 24px 0' }}>
+              <DiscoveryMap
+                attractionPins={attractions}
+                foodPins={food}
+                selectedId={selectedDiscoveryId}
+                onPinClick={handleDiscoveryPinClick}
+                destinationKey={destinationId}
+              />
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                <MustSee
+                  attractions={attractions}
+                  loading={attractionsLoading}
+                  selectedId={selectedDiscoveryId}
+                  onCategoryChange={setAttractionCategory}
+                  onSelect={handleDiscoveryPinClick}
+                />
+                <LocalFlavor
+                  food={food}
+                  loading={foodLoading}
+                  selectedId={selectedDiscoveryId}
+                  onCategoryChange={setFoodCategory}
+                  onSelect={handleDiscoveryPinClick}
+                />
+                <VibeCheck destinationId={trip.destination?.split(',')[0].trim() ?? destinationId} tripName={trip.name} />
+                <ARGhostTours destinationId={destinationId} center={mapCenter} />
+                <BasecampScout destination={trip.destination} />
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'itinerary' && (
+            <div className="space-y-6" style={{ padding: '24px 24px 0' }}>
               {selectedDate ? (() => {
                 const dayLoop = dayLoops.find(dl => dl.date === selectedDate);
                 const stay    = stays.find(s => s.id === dayLoop?.homebaseStayId);
@@ -734,64 +805,15 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
                 <div className="lg:col-span-2"><TransitMap /></div>
                 <div className="lg:col-span-3"><LegGuide /></div>
               </div>
+            </div>
+          )}
+
+          {activeTab === 'logistics' && (
+            <div className="space-y-4" style={{ padding: '24px 24px 0' }}>
+              <PackingManifest climate={manifestSettings.climate} days={manifestSettings.days} />
               <BudgetLoom />
             </div>
-          </section>
-
-          <section id="section-logistics" ref={logisticsRef} style={{ scrollMarginTop: 48, padding: '24px 24px 0' }}>
-            <div className="space-y-4">
-              <PackingManifest climate={manifestSettings.climate} days={manifestSettings.days} />
-            </div>
-          </section>
-
-          <section id="section-stays" ref={staysRef} style={{ scrollMarginTop: 48, padding: '24px 24px 0' }}>
-            <div className="max-w-2xl space-y-4">
-              <AccommodationSearch destination={trip.destination} />
-            </div>
-          </section>
-
-          <section id="section-transport" ref={transportRef} style={{ scrollMarginTop: 48, padding: '24px 24px 0' }}>
-            <div className="max-w-2xl space-y-4">
-              <PublicTransport destination={trip.destination} />
-            </div>
-          </section>
-
-          <section id="section-discovery" ref={discoveryRef} style={{ scrollMarginTop: 48, padding: '24px 24px 0' }}>
-            <div className="space-y-4">
-              <DiscoveryMap
-                attractionPins={attractions}
-                foodPins={food}
-                selectedId={selectedDiscoveryId}
-                onPinClick={handleDiscoveryPinClick}
-                destinationKey={destinationId}
-              />
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                <MustSee
-                  attractions={attractions}
-                  loading={attractionsLoading}
-                  selectedId={selectedDiscoveryId}
-                  onCategoryChange={setAttractionCategory}
-                  onSelect={handleDiscoveryPinClick}
-                />
-                <LocalFlavor
-                  food={food}
-                  loading={foodLoading}
-                  selectedId={selectedDiscoveryId}
-                  onCategoryChange={setFoodCategory}
-                  onSelect={handleDiscoveryPinClick}
-                />
-                <VibeCheck destinationId={trip.destination?.split(',')[0].trim() ?? destinationId} tripName={trip.name} />
-                <ARGhostTours destinationId={destinationId} center={mapCenter} />
-                <BasecampScout destination={trip.destination} />
-              </div>
-            </div>
-          </section>
-
-          <section id="section-vault" ref={vaultRef} style={{ scrollMarginTop: 48, padding: '24px' }}>
-            <VentureVault onCloneComplete={() => {
-              document.getElementById('section-overview')?.scrollIntoView({ behavior: 'smooth' });
-            }} />
-          </section>
+          )}
         </AppShell>
       </div>
 
