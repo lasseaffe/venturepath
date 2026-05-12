@@ -1,5 +1,10 @@
 import { LegLensCar } from './LegLensCar.jsx';
 import { LegLensFoot } from './LegLensFoot.jsx';
+import { LegLensFlight } from './LegLensFlight.jsx';
+import { LegLensTrain } from './LegLensTrain.jsx';
+import { LegLensBus } from './LegLensBus.jsx';
+import { LegLensFerry } from './LegLensFerry.jsx';
+import { LegLensBoat } from './LegLensBoat.jsx';
 
 const MODE_LABELS = {
   car: 'Drive',
@@ -77,6 +82,16 @@ export function LegLens({
         />
       ) : leg.mode === 'foot' ? (
         <LegLensFoot leg={leg} onHydrate={onHydrate} />
+      ) : leg.mode === 'flight' ? (
+        <LegLensFlight leg={leg} onHydrate={onHydrate} />
+      ) : leg.mode === 'train' ? (
+        <LegLensTrain leg={leg} onHydrate={onHydrate} />
+      ) : leg.mode === 'bus' ? (
+        <LegLensBus leg={leg} onHydrate={onHydrate} />
+      ) : leg.mode === 'ferry' ? (
+        <LegLensFerry leg={leg} onHydrate={onHydrate} />
+      ) : leg.mode === 'boat' ? (
+        <LegLensBoat leg={leg} onHydrate={onHydrate} />
       ) : (
         <LegLensPlaceholder mode={leg.mode} />
       )}
