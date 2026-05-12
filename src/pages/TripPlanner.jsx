@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ToastContainer from '../components/ui/Toast';
 import { AnimatePresence, motion } from 'framer-motion';
 import NewTripModal from '../components/trip/NewTripModal';
@@ -38,9 +38,15 @@ import { searchAttractions, searchFood } from '../utils/osmEngine.js';
 import DiscoveryMap from '../components/discovery/DiscoveryMap.jsx';
 import InspirePanel from '../components/inspire/InspirePanel';
 import SettingsPanel from '../components/settings/SettingsPanel';
+import { CalendarStrip } from '../components/layout/CalendarStrip';
+import { DayLoopPanel } from '../components/itinerary/DayLoopPanel';
+import { CascadeConfirmSheet } from '../components/itinerary/CascadeConfirmSheet';
+import { AddStopFlow } from '../components/itinerary/AddStopFlow';
+import { onStopAdded } from '../utils/homebaseEngine';
 
 export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
-  const { trip, legs, manifestSettings, cloning } = useTripStore();
+  const { trip, legs, stays, pois, dayLoops, manifestSettings, cloning,
+          addStopToDayLoop, addDayLoop, setTripPlanningMode, dispatch } = useTripStore();
   const destinationId = trip.destination?.split(',')[0].toLowerCase().replace(/[^a-z]/g, '') ?? 'default';
   const mapCenter = DESTINATION_CENTERS[destinationId] ?? DESTINATION_CENTERS.patagonia;
   const { theme } = useTheme();
@@ -61,6 +67,29 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
   const [attractionCategory, setAttractionCategory] = useState('all');
   const [foodCategory, setFoodCategory]             = useState('all');
   const [selectedDiscoveryId, setSelectedDiscoveryId] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [pendingPreviews, setPendingPreviews] = useState(null);
+  const [showAddStop, setShowAddStop] = useState(false);
+
+  // Auto-create DayLoops when a Stay with valid checkin/checkout is added
+  const seenStayIds = useRef(new Set());
+  useEffect(() => {
+    stays.forEach(stay => {
+      if (seenStayIds.current.has(stay.id)) return;
+      seenStayIds.current.add(stay.id);
+      if (!stay.checkin || !stay.checkout) return;
+      const checkin = new Date(stay.checkin);
+      const checkout = new Date(stay.checkout);
+      if (isNaN(checkin) || isNaN(checkout) || checkin >= checkout) return;
+      for (let d = new Date(checkin); d < checkout; d.setDate(d.getDate() + 1)) {
+        const date = d.toISOString().slice(0, 10);
+        const alreadyExists = dayLoops.some(dl => dl.date === date && dl.homebaseStayId === stay.id);
+        if (!alreadyExists) {
+          addDayLoop({ date, homebaseStayId: stay.id });
+        }
+      }
+    });
+  }, [stays, dayLoops, addDayLoop]);
 
   useEffect(() => {
     if (tab !== 'DISCOVERY' || !trip?.destination) return;
@@ -132,6 +161,33 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
               >
                 {trip.status}
               </span>
+              {/* Planning mode switcher */}
+              <div style={{ display: 'flex', border: '1px solid rgba(242,237,232,0.1)', borderRadius: 2, overflow: 'hidden', marginLeft: 8 }}>
+                {['manual', 'semi', 'full'].map(mode => (
+                  <button
+                    key={mode}
+                    onClick={() => setTripPlanningMode(mode)}
+                    style={{
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '0.52rem',
+                      padding: '4px 10px',
+                      letterSpacing: '0.08em',
+                      textTransform: 'uppercase',
+                      cursor: 'pointer',
+                      border: 'none',
+                      background: trip.planningMode === mode
+                        ? mode === 'full' ? 'rgba(92,154,106,0.15)' : mode === 'semi' ? 'rgba(230,126,34,0.15)' : '#181A1C'
+                        : 'transparent',
+                      color: trip.planningMode === mode
+                        ? mode === 'full' ? '#5C9A6A' : mode === 'semi' ? 'var(--accent)' : '#8A8680'
+                        : '#484440',
+                      borderRight: mode !== 'full' ? '1px solid rgba(242,237,232,0.07)' : 'none',
+                    }}
+                  >
+                    {mode === 'semi' ? 'Semi ●' : mode.charAt(0).toUpperCase() + mode.slice(1)}
+                  </button>
+                ))}
+              </div>
             </div>
           </header>
 
@@ -153,7 +209,46 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
             <Stat label="Return"    value={trip.endDate} />
             <Stat label="Duration"  value={`${trip.days} days`} />
             <Stat label="Climate"   value={trip.climate} />
+
+            {/* XA-1 + XA-2: Cross-app links to What's Cooking */}
+            <div className="ml-auto flex items-center gap-2 flex-wrap">
+              {trip.destination && (() => {
+                const city = trip.destination.split(',')[0].trim();
+                const WC = import.meta.env.VITE_WC_URL || 'http://localhost:3002';
+                return (<>
+                  <a
+                    href={`${WC}/discover?cuisine=${encodeURIComponent(city)}`}
+                    target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 text-[10px] font-mono px-3 py-1 rounded border transition-colors hover:bg-[#E67E22]/10"
+                    style={{ borderColor: 'rgba(230,126,34,0.3)', color: '#D9C5B2' }}
+                    title="Explore local cuisine at destination in What's Cooking"
+                  >
+                    🍜 Explore {city} recipes
+                  </a>
+                  {trip.startDate && trip.endDate && (
+                    <a
+                      href={`${WC}/plans/new?from=${trip.startDate}&to=${trip.endDate}&destination=${encodeURIComponent(city)}`}
+                      target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 text-[10px] font-mono px-3 py-1 rounded border transition-colors hover:bg-[#E67E22]/10"
+                      style={{ borderColor: 'rgba(230,126,34,0.3)', color: '#D9C5B2' }}
+                      title="Plan meals for this expedition in What's Cooking"
+                    >
+                      📅 Plan meals for trip
+                    </a>
+                  )}
+                </>);
+              })()}
+            </div>
           </div>
+
+          {/* CalendarStrip — always visible */}
+          <CalendarStrip
+            trip={trip}
+            dayLoops={dayLoops}
+            stays={stays}
+            selectedDate={selectedDate}
+            onSelectDate={setSelectedDate}
+          />
 
           {/* Tab content */}
           <div className="p-6">
@@ -211,6 +306,64 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
 
             {tab === 'ITINERARY' && (
               <div className="space-y-6">
+                {/* DayLoopPanel: shown when a CalendarStrip date is selected */}
+                {selectedDate ? (() => {
+                  const dayLoop = dayLoops.find(dl => dl.date === selectedDate);
+                  const stay    = stays.find(s => s.id === dayLoop?.homebaseStayId);
+                  const dayPois = (dayLoop?.stopIds ?? []).map(id => pois.find(p => p.id === id)).filter(Boolean);
+                  return dayLoop ? (
+                    <div>
+                      <DayLoopPanel
+                        dayLoop={dayLoop}
+                        stay={stay}
+                        pois={dayPois}
+                        onAddStop={() => setShowAddStop(true)}
+                      />
+                      {showAddStop && (
+                        <div style={{ padding: 8 }}>
+                          <AddStopFlow
+                            dayLoopId={dayLoop.id}
+                            homebaseCoords={stay?.coords ?? [0, 0]}
+                            onAdd={(stop) => {
+                              addStopToDayLoop(dayLoop.id, stop);
+                              const updatedStops = [...dayPois, stop];
+                              const effectiveMode = dayLoop.planningMode ?? trip.planningMode ?? 'semi';
+                              const result = onStopAdded({
+                                dayLoop,
+                                stop,
+                                homebaseCoords: stay?.coords ?? [0, 0],
+                                allStops: updatedStops,
+                                mode: effectiveMode,
+                                dispatch,
+                              });
+                              if (effectiveMode === 'semi' && result?.previews) {
+                                setPendingPreviews({ previews: result.previews, stopName: stop.name });
+                              }
+                              setShowAddStop(false);
+                            }}
+                            onClose={() => setShowAddStop(false)}
+                          />
+                        </div>
+                      )}
+                      {pendingPreviews && (
+                        <div style={{ padding: 8 }}>
+                          <CascadeConfirmSheet
+                            previews={pendingPreviews.previews}
+                            stopName={pendingPreviews.stopName}
+                            onApply={() => setPendingPreviews(null)}
+                            onDiscard={() => setPendingPreviews(null)}
+                            dispatch={dispatch}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', color: 'var(--text-muted)', padding: 12 }}>
+                      No day loop for {selectedDate}. Add a Stay with check-in/check-out dates covering this night first.
+                    </p>
+                  );
+                })() : null}
+
                 <LedgerWorkbench />
                 <KanbanBoard tripName={trip.name} destination={trip.destination} />
                 <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
