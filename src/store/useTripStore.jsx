@@ -65,7 +65,7 @@ function reducer(state, action) {
     case 'UPDATE_TRIP':
       return { ...state, trip: { ...state.trip, ...action.payload } };
     case 'ADD_LEG': {
-      const leg = { ...action.payload, id: nextLegId++, status: 'pending' };
+      const leg = { ...action.payload, id: action.payload.id ?? nextLegId++, status: action.payload.status ?? 'pending' };
       return { ...state, legs: [...state.legs, leg] };
     }
     case 'UPDATE_LEG': {
