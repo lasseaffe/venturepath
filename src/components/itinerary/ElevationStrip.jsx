@@ -8,6 +8,15 @@ const SURFACE = {
   flight: { color: '#3B82F6', label: 'AIR' },
   boat:   { color: '#3B82F6', label: 'WATER' },
 };
+
+const MODE_BAND = {
+  flight: { color: '#E67E22', opacity: 0.06 },
+  foot:   { color: '#64dc82', opacity: 0.04 },
+  bus:    { color: '#64a0ff', opacity: 0.05 },
+  train:  { color: '#64a0ff', opacity: 0.05 },
+  boat:   { color: '#64a0ff', opacity: 0.05 },
+  drive:  { color: '#D9C5B2', opacity: 0.04 },
+};
 const DEFAULT_SURFACE = { color: '#D9C5B2', label: 'PAVED' };
 
 const GROUND_MODES = new Set(['foot', 'bus']);
@@ -33,8 +42,41 @@ function normalize(values, height) {
 const SVG_W = 600;
 const SVG_H = 80;
 
+// Deterministic RNG seeded by destination string
+function seededRng(seed) {
+  let s = typeof seed === 'string'
+    ? seed.split('').reduce((a, c) => a + c.charCodeAt(0), 0)
+    : seed;
+  return () => { s = (s * 1664525 + 1013904223) & 0xffffffff; return (s >>> 0) / 0xffffffff; };
+}
+
+// Build SVG mountain silhouette path for given viewbox width/height
+function buildSilhouette(w, h, seed, peakHeightRatio = 0.65) {
+  const rng = seededRng(seed);
+  const peakCount = 7;
+  const peaks = Array.from({ length: peakCount }, (_, i) => ({
+    x: (i / (peakCount - 1)) * w,
+    y: h - rng() * h * peakHeightRatio - h * 0.1,
+  }));
+  const pts = [{ x: 0, y: h }, ...peaks, { x: w, y: h }];
+  let d = `M${pts[0].x},${pts[0].y}`;
+  for (let i = 1; i < pts.length - 1; i++) {
+    const prev = pts[i - 1];
+    const curr = pts[i];
+    const next = pts[i + 1];
+    const cpx1 = prev.x + (curr.x - prev.x) * 0.5;
+    const cpy1 = prev.y;
+    const cpx2 = curr.x - (next.x - curr.x) * 0.2;
+    const cpy2 = curr.y;
+    d += ` C${cpx1},${cpy1} ${cpx2},${cpy2} ${curr.x},${curr.y}`;
+  }
+  d += ` L${pts[pts.length - 1].x},${pts[pts.length - 1].y} Z`;
+  return d;
+}
+
 export default function ElevationStrip() {
-  const { legs } = useTripStore();
+  const { legs, trip } = useTripStore();
+  const destinationSeed = trip?.destination ?? 'default';
   const [profile, setProfile] = useState(null); // { points, segments }
   const [hoverX, setHoverX] = useState(null);
   const svgRef = useRef(null);
@@ -133,11 +175,53 @@ export default function ElevationStrip() {
           style={{ width: '100%', height: 80, display: 'block' }}
         >
           <defs>
+            <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#0d1b2a" />
+              <stop offset="100%" stopColor="#0E1012" />
+            </linearGradient>
+            <linearGradient id="mtnDistGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#1a2535" />
+              <stop offset="100%" stopColor="#0E1012" />
+            </linearGradient>
             <linearGradient id="elevGrad" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="#E67E22" stopOpacity="0.28" />
               <stop offset="100%" stopColor="#E67E22" stopOpacity="0.03" />
             </linearGradient>
           </defs>
+
+          {/* Layer 1: sky */}
+          <rect x={0} y={0} width={SVG_W} height={SVG_H} fill="url(#skyGrad)" />
+
+          {/* Layer 2a: distant mountain silhouette */}
+          <path
+            d={buildSilhouette(SVG_W, SVG_H, destinationSeed + '_far', 0.7)}
+            fill="url(#mtnDistGrad)"
+            opacity={0.6}
+          />
+
+          {/* Layer 2b: near mountain silhouette */}
+          <path
+            d={buildSilhouette(SVG_W, SVG_H, destinationSeed + '_near', 0.45)}
+            fill="#1a1f26"
+            opacity={0.8}
+          />
+
+          {/* Layer 3: transport-mode tint bands — only when profile available */}
+          {profile && profile.segmentMeta.map((seg, i) => {
+            const band = MODE_BAND[seg.mode];
+            if (!band) return null;
+            const x1 = profile.pts[seg.startIdx]?.x ?? 0;
+            const x2 = profile.pts[seg.endIdx]?.x ?? SVG_W;
+            return (
+              <rect
+                key={`band-${i}`}
+                x={x1} y={0}
+                width={x2 - x1} height={SVG_H}
+                fill={band.color}
+                opacity={band.opacity}
+              />
+            );
+          })}
 
           {profile ? (
             <>
