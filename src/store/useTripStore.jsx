@@ -12,6 +12,7 @@ const DEFAULT_TRIP = {
   days: 18,
   climate: 'temperate',
   status: 'PLANNING',
+  planningMode: 'semi',
 };
 
 const DEFAULT_LEGS = [
@@ -39,10 +40,11 @@ const initialState = {
   manifestSettings: DEFAULT_MANIFEST_SETTINGS,
   userRole: 'LEADER', // 'LEADER' | 'MEMBER'
   cloning: false,
-  stays: [],   // { id, name, coords, checkin, checkout, price, currency }
-  pois: [],    // { id, name, coords, category, priority }
-  alerts: [],  // { id, type, severity, coords, message }
+  stays: [],     // { id, name, coords, checkin, checkout, price, currency }
+  pois: [],      // { id, name, coords, category, priority }
+  alerts: [],    // { id, type, severity, coords, message }
   budget: { total: 0, items: [] }, // items: { id, label, amount, currency, legId? }
+  dayLoops: [],  // { id, date, homebaseStayId, stopIds, autoLegIds, label, planningMode }
 };
 
 let nextLegId = 100; // start above seeded leg IDs so there's no collision
@@ -70,7 +72,15 @@ function reducer(state, action) {
     }
     case 'UPDATE_LEG': {
       const legs = state.legs.map(l => l.id === action.payload.id ? { ...l, ...action.payload } : l);
-      return { ...state, legs };
+      // Climate cascade: if any leg carries a climate field, derive dominant climate for PackingEngine
+      const climates = legs.map(l => l.climate).filter(Boolean);
+      const dominant = climates.length > 0
+        ? climates.sort((a, b) => climates.filter(c => c === b).length - climates.filter(c => c === a).length)[0]
+        : state.manifestSettings.climate;
+      const manifestSettings = climates.length > 0
+        ? { ...state.manifestSettings, climate: dominant }
+        : state.manifestSettings;
+      return { ...state, legs, manifestSettings };
     }
     case 'REMOVE_LEG': {
       const legs = state.legs.filter(l => l.id !== action.payload);
@@ -84,7 +94,8 @@ function reducer(state, action) {
         trip: { ...DEFAULT_TRIP, ...t.destinationMetadata },
         legs: t.legs ?? DEFAULT_LEGS,
         objectives: t.objectives ?? DEFAULT_OBJECTIVES,
-        manifestSettings: t.manifestSettings ?? DEFAULT_MANIFEST_SETTINGS,
+        manifestSettings: t.manifest_settings ?? t.manifestSettings ?? DEFAULT_MANIFEST_SETTINGS,
+        budget: t.budget ?? initialState.budget,
       };
     }
     case 'CLONE_COMPLETE':
@@ -103,6 +114,7 @@ function reducer(state, action) {
         pois: e.pois ?? initialState.pois,
         alerts: e.alerts ?? initialState.alerts,
         budget: e.budget ?? initialState.budget,
+        dayLoops: e.dayLoops ?? [],
       };
     }
     case 'RESET_TRIP':
@@ -141,6 +153,69 @@ function reducer(state, action) {
       const total = items.reduce((s, i) => s + (i.amount ?? 0), 0);
       return { ...state, budget: { total, items } };
     }
+    case 'ADD_DAY_LOOP': {
+      const loop = {
+        stopIds: [],
+        autoLegIds: [],
+        label: null,
+        planningMode: state.trip.planningMode,
+        ...action.payload,
+        id: action.payload.id ?? crypto.randomUUID(),
+      };
+      return { ...state, dayLoops: [...state.dayLoops, loop] };
+    }
+    case 'ADD_STOP_TO_DAY_LOOP': {
+      const { dayLoopId, stop } = action.payload;
+      const poi = { ...stop, id: stop.id ?? crypto.randomUUID() };
+      const dayLoops = state.dayLoops.map(dl =>
+        dl.id === dayLoopId
+          ? { ...dl, stopIds: [...dl.stopIds, poi.id] }
+          : dl
+      );
+      const pois = state.pois.find(p => p.id === poi.id)
+        ? state.pois
+        : [...state.pois, poi];
+      return { ...state, dayLoops, pois };
+    }
+    case 'REMOVE_STOP_FROM_DAY_LOOP': {
+      const { dayLoopId, stopId } = action.payload;
+      const dayLoops = state.dayLoops.map(dl =>
+        dl.id === dayLoopId
+          ? { ...dl, stopIds: dl.stopIds.filter(id => id !== stopId) }
+          : dl
+      );
+      return { ...state, dayLoops };
+    }
+    case 'SET_AUTO_LEGS': {
+      const { dayLoopId, legs } = action.payload;
+      const oldAutoIds = state.dayLoops.find(dl => dl.id === dayLoopId)?.autoLegIds ?? [];
+      const filteredLegs = state.legs.filter(l => !oldAutoIds.includes(l.id));
+      const newLegs = [...filteredLegs, ...legs];
+      const dayLoops = state.dayLoops.map(dl =>
+        dl.id === dayLoopId
+          ? { ...dl, autoLegIds: legs.map(l => l.id) }
+          : dl
+      );
+      return { ...state, legs: newLegs, dayLoops };
+    }
+    case 'SET_DAY_LOOP_MODE': {
+      const { dayLoopId, mode } = action.payload;
+      const dayLoops = state.dayLoops.map(dl =>
+        dl.id === dayLoopId ? { ...dl, planningMode: mode } : dl
+      );
+      return { ...state, dayLoops };
+    }
+    case 'REMOVE_DAY_LOOP': {
+      const loop = state.dayLoops.find(dl => dl.id === action.payload);
+      const autoIds = loop?.autoLegIds ?? [];
+      return {
+        ...state,
+        dayLoops: state.dayLoops.filter(dl => dl.id !== action.payload),
+        legs: state.legs.filter(l => !autoIds.includes(l.id)),
+      };
+    }
+    case 'SET_TRIP_PLANNING_MODE':
+      return { ...state, trip: { ...state.trip, planningMode: action.payload } };
     default:
       return state;
   }
@@ -179,6 +254,7 @@ export function TripStoreProvider({ children }) {
         pois: state.pois,
         alerts: state.alerts,
         budget: state.budget,
+        dayLoops: state.dayLoops,
       }));
     } catch { /* storage full or unavailable */ }
   }, [state]);
@@ -208,8 +284,29 @@ export function TripStoreProvider({ children }) {
   const clearAlerts = () => dispatch({ type: 'CLEAR_ALERTS' });
   const addBudgetItem = (data) => dispatch({ type: 'ADD_BUDGET_ITEM', payload: data });
 
+  const addDayLoop = (data) => dispatch({ type: 'ADD_DAY_LOOP', payload: data });
+  const addStopToDayLoop = (dayLoopId, stop) =>
+    dispatch({ type: 'ADD_STOP_TO_DAY_LOOP', payload: { dayLoopId, stop } });
+  const removeStopFromDayLoop = (dayLoopId, stopId) =>
+    dispatch({ type: 'REMOVE_STOP_FROM_DAY_LOOP', payload: { dayLoopId, stopId } });
+  const setAutoLegs = (dayLoopId, legs) =>
+    dispatch({ type: 'SET_AUTO_LEGS', payload: { dayLoopId, legs } });
+  const setDayLoopMode = (dayLoopId, mode) =>
+    dispatch({ type: 'SET_DAY_LOOP_MODE', payload: { dayLoopId, mode } });
+  const removeDayLoop = (id) => dispatch({ type: 'REMOVE_DAY_LOOP', payload: id });
+  const setTripPlanningMode = (mode) =>
+    dispatch({ type: 'SET_TRIP_PLANNING_MODE', payload: mode });
+
   return (
-    <TripStoreContext.Provider value={{ ...state, clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, resetTrip, setRole, updateLegStatus, loadExpedition, replaceLegs, addStay, removeStay, addPoi, removePoi, addAlert, clearAlerts, addBudgetItem }}>
+    <TripStoreContext.Provider value={{
+      ...state,
+      dispatch,    // expose raw dispatch for onStopAdded()
+      clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, resetTrip,
+      setRole, updateLegStatus, loadExpedition, replaceLegs, addStay, removeStay,
+      addPoi, removePoi, addAlert, clearAlerts, addBudgetItem,
+      addDayLoop, addStopToDayLoop, removeStopFromDayLoop, setAutoLegs,
+      setDayLoopMode, removeDayLoop, setTripPlanningMode,
+    }}>
       {children}
     </TripStoreContext.Provider>
   );
