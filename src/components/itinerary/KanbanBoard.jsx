@@ -439,6 +439,10 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
           <TimelineView
             days={days}
             onRemoveBlock={removeBlock}
+            onToggleExpand={id => {
+              setExpandedId(prev => prev === id ? null : id);
+              setExpandedTab('DETAILS');
+            }}
           />
         )
       }
@@ -759,7 +763,7 @@ function KanbanView({
 
 // ── Timeline view ─────────────────────────────────────────────────────────────
 
-function TimelineView({ days, onRemoveBlock }) {
+function TimelineView({ days, onRemoveBlock, onToggleExpand }) {
   // Build ruler hours
   const hours = [];
   for (let h = DAY_START_H; h <= DAY_END_H; h++) hours.push(h);
@@ -879,6 +883,7 @@ function TimelineView({ days, onRemoveBlock }) {
                         height={height}
                         colors={colors}
                         onRemove={() => onRemoveBlock(block.id)}
+                        onToggleExpand={onToggleExpand}
                       />
                     );
                   })}
@@ -935,7 +940,7 @@ function NowLine() {
 
 // ── Timeline block ────────────────────────────────────────────────────────────
 
-function TimelineBlock({ block, top, height, colors, onRemove }) {
+function TimelineBlock({ block, top, height, colors, onRemove, onToggleExpand }) {
   const [hovered, setHovered] = useState(false);
 
   return (
@@ -951,6 +956,7 @@ function TimelineBlock({ block, top, height, colors, onRemove }) {
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onClick={() => onToggleExpand?.(block.id)}
     >
       <div className="flex items-start gap-1 px-1.5 pt-1 h-full">
         {/* Left accent bar */}
