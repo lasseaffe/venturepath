@@ -8,6 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "test": "vitest",
     "pipeline": "node pipeline/run.js",
     "seed:vault": "node pipeline/seedCurated.js",
     "moodboard:check": "node scripts/check-moodboard-drift.mjs"
