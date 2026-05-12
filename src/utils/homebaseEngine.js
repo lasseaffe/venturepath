@@ -137,3 +137,45 @@ export function buildCascadePreviews(payload) {
     },
   };
 }
+
+// ── onStopAdded ───────────────────────────────────────────────────────────────
+// Called by AddStopFlow after addStopToDayLoop() has updated the store.
+// { dayLoop, stop, homebaseCoords, allStops, mode, dispatch }
+//   mode: effective planning mode (dayLoop.planningMode ?? trip.planningMode)
+//   allStops: resolved POI objects for all stopIds in the dayLoop
+//   dispatch: the store dispatch function
+export function onStopAdded({ dayLoop, stop, homebaseCoords, allStops, mode, dispatch }) {
+  const legs = buildLegs(dayLoop.id, homebaseCoords, allStops);
+  const totalDistanceKm = legs.reduce((s, l) => s + l.distanceKm, 0);
+
+  const payload = {
+    dayLoopId: dayLoop.id,
+    dayLoop,
+    stop,
+    legs,
+    homebaseCoords,
+    totalDistanceKm,
+    mode,
+  };
+
+  if (mode === 'manual') {
+    // Emit event so tools can observe, but do not build legs or cascade
+    sentinelBus.emit(HOMEBASE_STOP_ADDED, { ...payload, legs: [] });
+    return { previews: null, legs: [] };
+  }
+
+  // Build legs and commit them to the store in both semi and full modes
+  dispatch({ type: 'SET_AUTO_LEGS', payload: { dayLoopId: dayLoop.id, legs } });
+
+  sentinelBus.emit(HOMEBASE_STOP_ADDED, payload);
+
+  const previews = buildCascadePreviews(payload);
+
+  if (mode === 'full') {
+    // Apply all cascades immediately
+    Object.values(previews).forEach(p => p.apply(dispatch));
+  }
+
+  // In semi mode, return previews for CascadeConfirmSheet to render
+  return { previews, legs };
+}
