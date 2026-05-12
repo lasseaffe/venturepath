@@ -19,4 +19,20 @@ describe('waypointCategories', () => {
     expect(s).toBeTruthy();
     expect(typeof s.color).toBe('string');
   });
+
+  it('returns Spruce color for water category', () => {
+    expect(getCategoryStyle('water').color).toBe('#3A6B5C');
+  });
+
+  it('returns Sandstone color for resupply category', () => {
+    expect(getCategoryStyle('resupply').color).toBe('#D9C5B2');
+  });
+
+  it('returns Golden Hour color for permit category', () => {
+    expect(getCategoryStyle('permit').color).toBe('#F2C94C');
+  });
+
+  it('returns Sandstone color for transfer category', () => {
+    expect(getCategoryStyle('transfer').color).toBe('#D9C5B2');
+  });
 });

@@ -10,6 +10,10 @@ export const WAYPOINT_CATEGORIES = {
   border:    { color: '#F2A900', icon: '🛂', label: 'Border' },
   hazard:    { color: '#dc2626', icon: '⚠',  label: 'Hazard' },
   emergency: { color: '#dc2626', icon: '🆘', label: 'Emergency' },
+  water:     { color: '#3A6B5C', icon: '💧', label: 'Water source' },
+  resupply:  { color: '#D9C5B2', icon: '🎒', label: 'Resupply' },
+  permit:    { color: '#F2C94C', icon: '📋', label: 'Permit check' },
+  transfer:  { color: '#D9C5B2', icon: '🔄', label: 'Transfer' },
 };
 
 const FALLBACK = { color: '#D9C5B2', icon: '•', label: 'Waypoint' };
