@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import ToastContainer from '../components/ui/Toast';
 import { AnimatePresence, motion } from 'framer-motion';
 import NewTripModal from '../components/trip/NewTripModal';
 import { useTripStore } from '../store/useTripStore';
@@ -301,6 +302,7 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
           onOpenMoodboard?.();
         }}
       />
+      <ToastContainer />
     </>
   );
 }
