@@ -7,6 +7,7 @@ import StopEditor from '../trip/StopEditor';
 import { geocodeLocation } from '../../utils/geocodeEngine';
 import NearbyMapOverlay from '../nearby/NearbyMapOverlay';
 import ScoutPinsLayer from '../map/ScoutPinsLayer';
+import GatheringPinpointLayer from '../gatherings/GatheringPinpointLayer';
 import { getCategoryStyle } from '../../utils/legIntelligence/waypointCategories.js';
 
 delete L.Icon.Default.prototype._getIconUrl;
@@ -150,7 +151,7 @@ function FlyToStop({ pois, dayLoops, selectedDate }) {
   return null;
 }
 
-export default function RouteMap({ className = '', style, selectedDate, dayLoops = [], stays = [], pois = [] }) {
+export default function RouteMap({ className = '', style, selectedDate, dayLoops = [], stays = [], pois = [], gatherings = [], onGatheringOpen }) {
   const { legs, trip } = useTripStore();
   const [selectedLegId, setSelectedLegId] = useState(null);
   const [editorOpen, setEditorOpen] = useState(false);
@@ -435,6 +436,7 @@ export default function RouteMap({ className = '', style, selectedDate, dayLoops
             />
           )}
           <ScoutPinsLayer destination={trip?.destination} visible={scoutPinsVisible} />
+          <GatheringPinpointLayer gatherings={gatherings} onOpen={onGatheringOpen} />
         </MapContainer>
 
         {/* Scout Pins toggle */}

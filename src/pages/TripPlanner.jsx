@@ -905,7 +905,7 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
 
           {activeTab === 'logistics' && (
             <div className="space-y-4" style={{ padding: '24px 24px 0' }}>
-              <PackingManifest climate={manifestSettings.climate} days={manifestSettings.days} />
+              <PackingManifest climate={manifestSettings.climate} days={manifestSettings.days} gatherings={tripGatherings} />
               <BudgetLoom />
             </div>
           )}

@@ -1,23 +1,12 @@
 // src/components/dashboard/LaunchDashboard.jsx
-import { useTheme } from '../../context/ThemeContext';
-import CommandRail from './CommandRail';
+import AppShell from '../layout/AppShell';
 import ExpeditionPanel from './ExpeditionPanel';
 import ActionList from './ActionList';
 
 export default function LaunchDashboard({ onEnterTrip, onOpenVault, onNavigate }) {
-  const { theme } = useTheme();
-
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: theme === 'tactical' ? '#0A0A0A' : '#0E1012',
-      color: '#fff',
-      display: 'flex',
-    }}>
-      <CommandRail currentView="dashboard" onNavigate={onNavigate} />
-
-      {/* Content area — offset by CommandRail (64px collapsed) */}
-      <div style={{ marginLeft: 64, flex: 1, display: 'flex', minHeight: '100vh' }}>
+    <AppShell activeView="dashboard" onNavigate={onNavigate}>
+      <div style={{ display: 'flex', minHeight: '100%', color: '#fff' }}>
         <ExpeditionPanel />
         <ActionList
           onNavigate={onNavigate}
@@ -25,6 +14,6 @@ export default function LaunchDashboard({ onEnterTrip, onOpenVault, onNavigate }
           onOpenVault={onOpenVault}
         />
       </div>
-    </div>
+    </AppShell>
   );
 }
