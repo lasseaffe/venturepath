@@ -1,4 +1,5 @@
 import { LegLensCar } from './LegLensCar.jsx';
+import { LegLensFoot } from './LegLensFoot.jsx';
 
 const MODE_LABELS = {
   car: 'Drive',
@@ -74,6 +75,8 @@ export function LegLens({
           onWaypointDismiss={onWaypointDismiss}
           onHydrate={onHydrate}
         />
+      ) : leg.mode === 'foot' ? (
+        <LegLensFoot leg={leg} onHydrate={onHydrate} />
       ) : (
         <LegLensPlaceholder mode={leg.mode} />
       )}
