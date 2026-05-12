@@ -45,6 +45,7 @@ const initialState = {
   alerts: [],    // { id, type, severity, coords, message }
   budget: { total: 0, items: [] }, // items: { id, label, amount, currency, legId? }
   dayLoops: [],  // { id, date, homebaseStayId, stopIds, autoLegIds, label, planningMode }
+  heroImagePositions: {},  // { [imageUrl]: { x: number, y: number } }
 };
 
 let nextLegId = 100; // start above seeded leg IDs so there's no collision
@@ -219,6 +220,10 @@ function reducer(state, action) {
     }
     case 'SET_TRIP_PLANNING_MODE':
       return { ...state, trip: { ...state.trip, planningMode: action.payload } };
+    case 'SET_HERO_IMAGE_POSITION': {
+      const { url, x, y } = action.payload;
+      return { ...state, heroImagePositions: { ...state.heroImagePositions, [url]: { x, y } } };
+    }
     default:
       return state;
   }
@@ -258,6 +263,7 @@ export function TripStoreProvider({ children }) {
         alerts: state.alerts,
         budget: state.budget,
         dayLoops: state.dayLoops,
+        heroImagePositions: state.heroImagePositions,
       }));
     } catch { /* storage full or unavailable */ }
   }, [state]);
@@ -300,6 +306,9 @@ export function TripStoreProvider({ children }) {
   const setTripPlanningMode = (mode) =>
     dispatch({ type: 'SET_TRIP_PLANNING_MODE', payload: mode });
 
+  const setHeroImagePosition = (url, x, y) =>
+    dispatch({ type: 'SET_HERO_IMAGE_POSITION', payload: { url, x, y } });
+
   return (
     <TripStoreContext.Provider value={{
       ...state,
@@ -308,7 +317,7 @@ export function TripStoreProvider({ children }) {
       setRole, updateLegStatus, loadExpedition, replaceLegs, addStay, removeStay,
       addPoi, removePoi, addAlert, clearAlerts, addBudgetItem,
       addDayLoop, addStopToDayLoop, removeStopFromDayLoop, setAutoLegs,
-      setDayLoopMode, removeDayLoop, setTripPlanningMode,
+      setDayLoopMode, removeDayLoop, setTripPlanningMode, setHeroImagePosition,
     }}>
       {children}
     </TripStoreContext.Provider>
