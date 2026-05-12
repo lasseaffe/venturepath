@@ -6,10 +6,12 @@ import { resolveStop, searchConnections } from '../../utils/transitEngine';
 import EmergencyRebook from './EmergencyRebook';
 
 const MODE_CONFIG = {
-  flight: { label: 'FLIGHT', icon: '✈',  accent: '#E67E22', simulate: '⚠ SIMULATE CANCELLATION', placeholder: 'Airport…'  },
-  train:  { label: 'TRAIN',  icon: '🚂', accent: '#4a9eff', simulate: '⚠ SIMULATE DISRUPTION',  placeholder: 'Station…'  },
-  bus:    { label: 'BUS',    icon: '🚌', accent: '#22a060', simulate: '⚠ SIMULATE DISRUPTION',  placeholder: 'Bus stop…' },
-  tram:   { label: 'TRAM',   icon: '🚃', accent: '#a855f7', simulate: '⚠ SIMULATE DISRUPTION',  placeholder: 'Tram stop…' },
+  flight: { label: 'FLIGHT', icon: '✈',  accent: '#E67E22', simulate: '⚠ SIMULATE CANCELLATION', placeholder: 'Airport…'        },
+  train:  { label: 'TRAIN',  icon: '🚂', accent: '#4a9eff', simulate: '⚠ SIMULATE DISRUPTION',  placeholder: 'Station…'        },
+  bus:    { label: 'BUS',    icon: '🚌', accent: '#22a060', simulate: '⚠ SIMULATE DISRUPTION',  placeholder: 'Bus stop…'       },
+  ferry:  { label: 'FERRY',  icon: '⛴',  accent: '#0ea5e9', simulate: '⚠ SIMULATE DISRUPTION',  placeholder: 'Port or terminal…' },
+  drive:  { label: 'DRIVE',  icon: '🚗', accent: '#D9C5B2', simulate: '⚠ SIMULATE DISRUPTION',  placeholder: 'City or address…'  },
+  tram:   { label: 'TRAM',   icon: '🚃', accent: '#a855f7', simulate: '⚠ SIMULATE DISRUPTION',  placeholder: 'Tram stop…'      },
 };
 
 const FLIGHT_PRIORITIES = [
@@ -74,14 +76,33 @@ function useTransportAutocomplete(query, mode) {
 }
 
 function AutocompleteField({ label, value, field, ac, mode, onUpdate, legId }) {
+  const [highlighted, setHighlighted] = useState(-1);
+
+  function handleKeyDown(e) {
+    if (!ac.suggestions.length) return;
+    if (e.key === 'ArrowDown') { e.preventDefault(); setHighlighted(h => Math.min(h + 1, ac.suggestions.length - 1)); }
+    if (e.key === 'ArrowUp')   { e.preventDefault(); setHighlighted(h => Math.max(h - 1, 0)); }
+    if (e.key === 'Enter' && highlighted >= 0) {
+      e.preventDefault();
+      const s = ac.suggestions[highlighted];
+      const snap = s.transportType === 'flight' ? 'flight' : s.transportType === 'train' ? 'train' : mode;
+      const coordKey = field === 'from' ? 'fromCoords' : 'toCoords';
+      onUpdate(legId, { [field]: s.name, [coordKey]: s.coords ?? null, ...(snap !== mode ? { mode: snap } : {}) });
+      ac.clear();
+      setHighlighted(-1);
+    }
+    if (e.key === 'Escape') { ac.clear(); setHighlighted(-1); }
+  }
+
   return (
     <div className="relative">
       <div className="text-[8px] font-mono text-[var(--text-muted)] tracking-widest mb-1">{label}</div>
       <input
         type="text"
         value={value}
-        onChange={e => onUpdate(legId, { [field]: e.target.value, searched: false })}
-        onBlur={() => setTimeout(ac.clear, 150)}
+        onChange={e => { onUpdate(legId, { [field]: e.target.value, searched: false }); setHighlighted(-1); }}
+        onBlur={() => setTimeout(() => { ac.clear(); setHighlighted(-1); }, 150)}
+        onKeyDown={handleKeyDown}
         placeholder={MODE_CONFIG[mode]?.placeholder ?? 'Stop…'}
         className="w-full bg-[#0E1012] border border-[#2a2f36] rounded px-3 py-2 text-sm text-white placeholder-slate-600 font-mono focus:outline-none"
       />
@@ -94,10 +115,10 @@ function AutocompleteField({ label, value, field, ac, mode, onUpdate, legId }) {
             initial={{ opacity: 0, y: -4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="absolute z-20 w-full mt-0.5 rounded overflow-hidden shadow-lg"
-            style={{ background: '#141820', border: '1px solid #2a2f36' }}
+            className="absolute z-20 w-full mt-0.5 rounded shadow-lg"
+            style={{ background: '#141820', border: '1px solid #2a2f36', maxHeight: 160, overflowY: 'auto' }}
           >
-            {ac.suggestions.map(s => (
+            {ac.suggestions.map((s, i) => (
               <li key={s.id}>
                 <button
                   type="button"
@@ -112,8 +133,10 @@ function AutocompleteField({ label, value, field, ac, mode, onUpdate, legId }) {
                       ...(snap !== mode ? { mode: snap } : {}),
                     });
                     ac.clear();
+                    setHighlighted(-1);
                   }}
-                  className="w-full text-left px-3 py-2 text-xs font-mono text-white hover:bg-white/5 transition-colors border-b border-white/5 last:border-0"
+                  className="w-full text-left px-3 py-2 text-xs font-mono text-white transition-colors border-b border-white/5 last:border-0"
+                  style={{ background: i === highlighted ? 'rgba(255,255,255,0.07)' : 'transparent' }}
                 >
                   <span className="mr-1.5">
                     {MODE_CONFIG[s.transportType]?.icon ?? ''}
@@ -304,9 +327,9 @@ export default function LegCard({ leg, index, onUpdate, onRemove }) {
           }}
           className="space-y-2"
         >
-          <div className="grid grid-cols-2 gap-2">
-            <AutocompleteField label="FROM" value={from} field="from" ac={fromAC} mode={mode} onUpdate={onUpdate} legId={id} />
-            <AutocompleteField label="TO"   value={to}   field="to"   ac={toAC}   mode={mode} onUpdate={onUpdate} legId={id} />
+          <div className="flex flex-col gap-2">
+            <AutocompleteField label="TO — DESTINATION" value={to}   field="to"   ac={toAC}   mode={mode} onUpdate={onUpdate} legId={id} />
+            <AutocompleteField label="FROM — ORIGIN"    value={from} field="from" ac={fromAC} mode={mode} onUpdate={onUpdate} legId={id} />
           </div>
           <button
             type="submit"
