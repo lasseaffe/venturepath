@@ -134,6 +134,26 @@ function reducer(state, action) {
       );
       return { ...state, legs };
     }
+    case 'REPLACE_LEG_ROUTE': {
+      const { legId, route } = action.payload;
+      const legs = state.legs.map(l => {
+        if (l.id !== legId) return l;
+        return {
+          ...l,
+          coords: route.polyline ?? l.coords,
+          durationH: route.durationH ?? l.durationH,
+          distanceKm: route.distanceKm ?? l.distanceKm,
+          waypoints: (route.waypoints ?? []).map(w => ({
+            ...w,
+            id: w.id ?? crypto.randomUUID(),
+            legId,
+            status: w.status ?? 'planned',
+            source: w.source ?? 'auto',
+          })),
+        };
+      });
+      return { ...state, legs };
+    }
     case 'CLONE_PATH': {
       const t = action.payload;
       return {
@@ -336,6 +356,8 @@ export function TripStoreProvider({ children }) {
     dispatch({ type: 'REMOVE_WAYPOINT', payload: { legId, waypointId } });
   const setLegMeta = (legId, legMeta) =>
     dispatch({ type: 'SET_LEG_META', payload: { legId, legMeta } });
+  const replaceLegRoute = (legId, route) =>
+    dispatch({ type: 'REPLACE_LEG_ROUTE', payload: { legId, route } });
   const resetTrip = () => dispatch({ type: 'RESET_TRIP' });
   const setRole = (role) => dispatch({ type: 'SET_ROLE', payload: role });
   const updateLegStatus = (id, status) =>
@@ -370,7 +392,7 @@ export function TripStoreProvider({ children }) {
     <TripStoreContext.Provider value={{
       ...state,
       dispatch,    // expose raw dispatch for onStopAdded()
-      clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, addWaypoint, updateWaypoint, removeWaypoint, setLegMeta, resetTrip,
+      clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, addWaypoint, updateWaypoint, removeWaypoint, setLegMeta, replaceLegRoute, resetTrip,
       setRole, updateLegStatus, loadExpedition, replaceLegs, addStay, removeStay,
       addPoi, removePoi, addAlert, clearAlerts, addBudgetItem,
       addDayLoop, addStopToDayLoop, removeStopFromDayLoop, setAutoLegs,

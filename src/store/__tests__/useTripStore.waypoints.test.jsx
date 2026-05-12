@@ -66,4 +66,30 @@ describe('useTripStore — waypoints', () => {
     act(() => result.current.setLegMeta(legId, meta));
     expect(result.current.legs.find(l => l.id === legId).legMeta).toEqual(meta);
   });
+
+  it('replaceLegRoute swaps polyline, waypoints, duration, and distance atomically', () => {
+    const { result } = renderHook(() => useTripStore(), { wrapper });
+    const legId = result.current.legs[0].id;
+    // seed an existing waypoint that should be replaced
+    act(() => result.current.addWaypoint(legId, {
+      category: 'fuel', name: 'old', coords: [0,0], kmFromStart: 1,
+    }));
+    const newRoute = {
+      polyline: [[48.1, 11.6], [48.2, 11.7]],
+      waypoints: [
+        { category: 'toll', name: 'A8 gantry', coords: [48.15, 11.65], kmFromStart: 8, estCost: 11.5, source: 'auto' },
+      ],
+      durationH: 1.7,
+      distanceKm: 145,
+    };
+    act(() => result.current.replaceLegRoute(legId, newRoute));
+    const leg = result.current.legs.find(l => l.id === legId);
+    expect(leg.coords).toEqual(newRoute.polyline);
+    expect(leg.durationH).toBe(1.7);
+    expect(leg.distanceKm).toBe(145);
+    expect(leg.waypoints).toHaveLength(1);
+    expect(leg.waypoints[0].name).toBe('A8 gantry');
+    expect(leg.waypoints[0].id).toBeTruthy();
+    expect(leg.waypoints[0].legId).toBe(legId);
+  });
 });
