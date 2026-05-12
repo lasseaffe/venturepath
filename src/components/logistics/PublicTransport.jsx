@@ -276,6 +276,7 @@ function LegSection({ leg, index, mode, onAddToPlan, onRemove }) {
   const [filters,       setFilters]      = useState({ toggles: [] });
   const [selectedResult, setSelectedResult] = useState(null);
   const [searched,      setSearched]     = useState(false);
+  const [fromHighlighted, setFromHighlighted] = useState(-1);
 
   const toAC   = useTransportAutocomplete(to,   mode);
   const fromAC = useTransportAutocomplete(usingLocation ? '' : from, mode);
@@ -357,9 +358,17 @@ function LegSection({ leg, index, mode, onAddToPlan, onRemove }) {
                 setFrom(e.target.value);
                 setUsingLocation(false);
                 setSearched(false);
+                setFromHighlighted(-1);
               }}
               onFocus={() => { if (usingLocation) setUsingLocation(false); }}
-              onBlur={() => setTimeout(fromAC.clear, 150)}
+              onBlur={() => { setTimeout(() => { fromAC.clear(); setFromHighlighted(-1); }, 150); }}
+              onKeyDown={e => {
+                if (!fromAC.suggestions.length) return;
+                if (e.key === 'ArrowDown') { e.preventDefault(); setFromHighlighted(h => Math.min(h + 1, fromAC.suggestions.length - 1)); }
+                if (e.key === 'ArrowUp')   { e.preventDefault(); setFromHighlighted(h => Math.max(h - 1, 0)); }
+                if (e.key === 'Enter' && fromHighlighted >= 0) { e.preventDefault(); setFrom(fromAC.suggestions[fromHighlighted].name); fromAC.clear(); setFromHighlighted(-1); setUsingLocation(false); }
+                if (e.key === 'Escape') { fromAC.clear(); setFromHighlighted(-1); }
+              }}
               style={{
                 width: '100%', background: '#0E1012', border: '1px solid #2a2f36',
                 borderRadius: 4, padding: '8px 36px 8px 10px',
@@ -389,7 +398,7 @@ function LegSection({ leg, index, mode, onAddToPlan, onRemove }) {
               borderRadius: 4, maxHeight: 160, overflowY: 'auto',
               padding: 0, listStyle: 'none',
             }}>
-              {fromAC.suggestions.map(s => (
+              {fromAC.suggestions.map((s, i) => (
                 <li key={s.id}>
                   <button
                     type="button"
@@ -397,10 +406,12 @@ function LegSection({ leg, index, mode, onAddToPlan, onRemove }) {
                       setFrom(s.name);
                       fromAC.clear();
                       setUsingLocation(false);
+                      setFromHighlighted(-1);
                     }}
                     style={{
                       width: '100%', textAlign: 'left', padding: '8px 12px',
-                      background: 'none', border: 'none',
+                      background: i === fromHighlighted ? 'rgba(255,255,255,0.07)' : 'none',
+                      border: 'none',
                       borderBottom: '1px solid rgba(255,255,255,0.04)',
                       color: '#fff', fontFamily: "'JetBrains Mono', monospace",
                       fontSize: 11, cursor: 'pointer',
