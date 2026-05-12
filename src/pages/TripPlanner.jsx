@@ -187,6 +187,7 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
   const staysRef      = useRef(null);
   const transportRef  = useRef(null);
   const vaultRef      = useRef(null);
+  const discoveryRef  = useRef(null);
   const discoveryFetched = useRef(false);
   const [tacticalMode, setTacticalMode] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
@@ -247,18 +248,19 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
       { threshold: 0.05 }
     );
 
-    if (vaultRef.current) observer.observe(vaultRef.current);
+    if (discoveryRef.current) observer.observe(discoveryRef.current);
     return () => observer.disconnect();
   }, [trip?.destination]);
 
   useEffect(() => {
     const sections = [
-      { ref: overviewRef,  id: 'section-overview' },
-      { ref: itineraryRef, id: 'section-itinerary' },
-      { ref: logisticsRef, id: 'section-logistics' },
-      { ref: staysRef,     id: 'section-stays' },
-      { ref: transportRef, id: 'section-transport' },
-      { ref: vaultRef,     id: 'section-vault' },
+      { ref: overviewRef,   id: 'section-overview' },
+      { ref: itineraryRef,  id: 'section-itinerary' },
+      { ref: logisticsRef,  id: 'section-logistics' },
+      { ref: staysRef,      id: 'section-stays' },
+      { ref: transportRef,  id: 'section-transport' },
+      { ref: discoveryRef,  id: 'section-discovery' },
+      { ref: vaultRef,      id: 'section-vault' },
     ];
 
     const observer = new IntersectionObserver(
@@ -553,6 +555,36 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
           <section id="section-transport" ref={transportRef} style={{ scrollMarginTop: 48, padding: '24px 24px 0' }}>
             <div className="max-w-2xl space-y-4">
               <PublicTransport destination={trip.destination} />
+            </div>
+          </section>
+
+          <section id="section-discovery" ref={discoveryRef} style={{ scrollMarginTop: 48, padding: '24px 24px 0' }}>
+            <div className="space-y-4">
+              <DiscoveryMap
+                attractionPins={attractions}
+                foodPins={food}
+                selectedId={selectedDiscoveryId}
+                onPinClick={handleDiscoveryPinClick}
+              />
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                <MustSee
+                  attractions={attractions}
+                  loading={attractionsLoading}
+                  selectedId={selectedDiscoveryId}
+                  onCategoryChange={setAttractionCategory}
+                  onSelect={handleDiscoveryPinClick}
+                />
+                <LocalFlavor
+                  food={food}
+                  loading={foodLoading}
+                  selectedId={selectedDiscoveryId}
+                  onCategoryChange={setFoodCategory}
+                  onSelect={handleDiscoveryPinClick}
+                />
+                <VibeCheck destinationId={trip.destination?.split(',')[0].trim() ?? destinationId} tripName={trip.name} />
+                <ARGhostTours destinationId={destinationId} center={mapCenter} />
+                <BasecampScout destination={trip.destination} />
+              </div>
             </div>
           </section>
 

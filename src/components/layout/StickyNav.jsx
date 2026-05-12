@@ -8,6 +8,7 @@ const SECTIONS = [
   { id: 'section-logistics',  label: 'LOGISTICS' },
   { id: 'section-stays',      label: 'STAYS' },
   { id: 'section-transport',  label: 'TRANSPORT' },
+  { id: 'section-discovery',  label: 'Discovery' },
   { id: 'section-vault',      label: 'VAULT' },
 ];
 
