@@ -34,7 +34,7 @@ import LegHud from '../components/logistics/LegHud';
 import VibeCheck from '../components/discovery/VibeCheck';
 import SafetyTicker from '../components/logistics/SafetyTicker';
 import ARGhostTours from '../components/ar/ARGhostTours';
-import { DESTINATION_CENTERS, DESTINATION_HEROES } from '../utils/destinationEngine';
+import { DESTINATION_CENTERS, DESTINATION_HEROES, normalizeHero } from '../utils/destinationEngine';
 import { searchAttractions, searchFood } from '../utils/osmEngine.js';
 import DiscoveryMap from '../components/discovery/DiscoveryMap.jsx';
 import InspirePanel from '../components/inspire/InspirePanel';
@@ -49,15 +49,35 @@ function TripHeroImage({ destination, heroImageUrl }) {
   const [bleedOpacity, setBleedOpacity] = useState(1);
   const [imgIndex, setImgIndex] = useState(0);
   const [hovered, setHovered] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [draftPos, setDraftPos] = useState(null);
+  const [searching, setSearching] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const heroRef = useRef(null);
+  const dragOrigin = useRef(null);
+
+  const { heroImagePositions, setHeroImagePosition } = useTripStore();
 
   const city = destination?.split(',')[0]?.trim() ?? '';
   const key = destination?.split(',')[0]?.trim().toLowerCase().replace(/[^a-z]/g, '') ?? '';
   const candidates = heroImageUrl
-    ? [heroImageUrl]
-    : (DESTINATION_HEROES[key] ?? DESTINATION_HEROES.default);
+    ? [normalizeHero(heroImageUrl)]
+    : (DESTINATION_HEROES[key] ?? DESTINATION_HEROES.default).map(normalizeHero);
   const total = candidates.length;
-  const imgSrc = candidates[imgIndex];
+  const imgSrc = candidates[imgIndex].url;
+  const savedPos = heroImagePositions[imgSrc] ?? { x: 50, y: 40 };
+  const displayPos = draftPos ?? savedPos;
+
+  // Photo picker filter
+  const allPhotos = (DESTINATION_HEROES[key] ?? DESTINATION_HEROES.default).map(normalizeHero);
+  const pickerResults = searchQuery.trim() === ''
+    ? allPhotos
+    : allPhotos.filter(p => {
+        const q = searchQuery.toLowerCase();
+        return p.tags.some(t => t.includes(q))
+          || p.credit.toLowerCase().includes(q)
+          || p.source.includes(q);
+      });
 
   useEffect(() => {
     const main = heroRef.current?.closest('main');
@@ -71,13 +91,30 @@ function TripHeroImage({ destination, heroImageUrl }) {
     return () => main.removeEventListener('scroll', onScroll);
   }, []);
 
-  function prev(e) {
-    e.stopPropagation();
-    setImgIndex(i => (i - 1 + total) % total);
+  function prev(e) { e.stopPropagation(); setImgIndex(i => (i - 1 + total) % total); }
+  function next(e) { e.stopPropagation(); setImgIndex(i => (i + 1) % total); }
+
+  function startDrag(e) {
+    if (!editing) return;
+    e.preventDefault();
+    const pos = draftPos ?? savedPos;
+    dragOrigin.current = { mouseX: e.clientX, mouseY: e.clientY, startX: pos.x, startY: pos.y };
+    window.addEventListener('mousemove', onDrag);
+    window.addEventListener('mouseup', stopDrag);
   }
-  function next(e) {
-    e.stopPropagation();
-    setImgIndex(i => (i + 1) % total);
+  function onDrag(e) {
+    if (!dragOrigin.current || !heroRef.current) return;
+    const rect = heroRef.current.getBoundingClientRect();
+    const dx = ((e.clientX - dragOrigin.current.mouseX) / rect.width) * 100;
+    const dy = ((e.clientY - dragOrigin.current.mouseY) / rect.height) * 100;
+    const x = Math.max(0, Math.min(100, dragOrigin.current.startX - dx));
+    const y = Math.max(0, Math.min(100, dragOrigin.current.startY - dy));
+    setDraftPos({ x, y });
+  }
+  function stopDrag() {
+    dragOrigin.current = null;
+    window.removeEventListener('mousemove', onDrag);
+    window.removeEventListener('mouseup', stopDrag);
   }
 
   const chevronBase = {
@@ -88,87 +125,215 @@ function TripHeroImage({ destination, heroImageUrl }) {
     border: '1px solid rgba(217,197,178,0.18)',
     color: '#D9C5B2', cursor: 'pointer',
     transition: 'opacity 0.18s ease, background 0.15s ease',
-    opacity: hovered ? 1 : 0,
+    opacity: hovered && !editing ? 1 : 0,
     zIndex: 10,
   };
 
   return (
-    <div
-      ref={heroRef}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{ position: 'relative', height: 340, overflow: 'hidden', flexShrink: 0 }}
-    >
-      <img
-        key={imgSrc}
-        src={imgSrc}
-        alt={city}
-        style={{
-          width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 40%',
-          display: 'block', transition: 'opacity 0.3s ease',
-        }}
-      />
+    <>
+      <div
+        ref={heroRef}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        style={{ position: 'relative', height: 340, overflow: 'hidden', flexShrink: 0 }}
+      >
+        <img
+          key={imgSrc}
+          src={imgSrc}
+          alt={city}
+          onMouseDown={startDrag}
+          style={{
+            width: '100%', height: '100%', objectFit: 'cover',
+            objectPosition: `${displayPos.x}% ${displayPos.y}%`,
+            display: 'block', transition: editing ? 'none' : 'opacity 0.3s ease',
+            cursor: editing ? 'grab' : 'default',
+            userSelect: 'none',
+          }}
+        />
 
-      {/* Scroll-driven bottom bleed */}
-      <div style={{
-        position: 'absolute', inset: 0,
-        background: 'linear-gradient(to bottom, transparent 30%, var(--bg) 100%)',
-        opacity: bleedOpacity, transition: 'opacity 0.08s linear', pointerEvents: 'none',
-      }} />
-
-      {/* Chevron — previous */}
-      {total > 1 && (
-        <button onClick={prev} style={{ ...chevronBase, left: 14 }} aria-label="Previous photo">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-      )}
-
-      {/* Chevron — next */}
-      {total > 1 && (
-        <button onClick={next} style={{ ...chevronBase, right: 14 }} aria-label="Next photo">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-      )}
-
-      {/* Dot indicators */}
-      {total > 1 && (
+        {/* Scroll-driven bottom bleed */}
         <div style={{
-          position: 'absolute', bottom: 14, right: 20,
-          display: 'flex', gap: 5, alignItems: 'center',
-          opacity: bleedOpacity * (hovered ? 1 : 0.55),
-          transition: 'opacity 0.18s ease',
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(to bottom, transparent 30%, var(--bg) 100%)',
+          opacity: bleedOpacity, transition: 'opacity 0.08s linear', pointerEvents: 'none',
+        }} />
+
+        {/* Edit mode dashed border */}
+        {editing && (
+          <div style={{
+            position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 11,
+            border: '2px dashed rgba(230,126,34,0.7)', boxSizing: 'border-box',
+          }} />
+        )}
+
+        {/* Pencil — enter edit mode */}
+        {!editing && (
+          <button
+            onClick={e => { e.stopPropagation(); setDraftPos(savedPos); setEditing(true); }}
+            aria-label="Adjust image position"
+            style={{
+              position: 'absolute', top: 10, right: 10, zIndex: 12,
+              width: 30, height: 30, borderRadius: 7,
+              background: 'rgba(14,16,18,0.65)', backdropFilter: 'blur(6px)',
+              border: '1px solid rgba(217,197,178,0.2)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', opacity: hovered ? 1 : 0,
+              transition: 'opacity 0.18s ease', color: '#D9C5B2',
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M9.5 2.5l2 2L4 12H2v-2L9.5 2.5z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+        )}
+
+        {/* Chevron — previous */}
+        {total > 1 && (
+          <button onClick={prev} style={{ ...chevronBase, left: 14 }} aria-label="Previous photo">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+        )}
+
+        {/* Chevron — next */}
+        {total > 1 && (
+          <button onClick={next} style={{ ...chevronBase, right: 14 }} aria-label="Next photo">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+        )}
+
+        {/* Dot indicators */}
+        {total > 1 && !editing && (
+          <div style={{
+            position: 'absolute', bottom: 14, right: 20,
+            display: 'flex', gap: 5, alignItems: 'center',
+            opacity: bleedOpacity * (hovered ? 1 : 0.55),
+            transition: 'opacity 0.18s ease',
+          }}>
+            {candidates.map((photo, i) => (
+              <button
+                key={i}
+                onClick={e => { e.stopPropagation(); setImgIndex(i); }}
+                aria-label={photo.credit ? `Photo by ${photo.credit}` : `Photo ${i + 1}`}
+                style={{
+                  width: i === imgIndex ? 18 : 6, height: 6,
+                  borderRadius: 3, border: 'none', padding: 0, cursor: 'pointer',
+                  background: i === imgIndex ? '#E67E22' : 'rgba(217,197,178,0.45)',
+                  transition: 'width 0.2s ease, background 0.2s ease',
+                }}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Destination label */}
+        <div style={{
+          position: 'absolute', bottom: 16, left: 20,
+          fontFamily: "'JetBrains Mono', monospace",
+          fontSize: '0.6rem', letterSpacing: '0.14em', textTransform: 'uppercase',
+          color: 'rgba(217,197,178,0.7)',
+          opacity: bleedOpacity, transition: 'opacity 0.08s linear',
         }}>
-          {candidates.map((_, i) => (
+          {city}
+        </div>
+      </div>
+
+      {/* Edit toolbar */}
+      {editing && (
+        <div style={{
+          display: 'flex', gap: 8, padding: '8px 14px',
+          background: 'rgba(14,16,18,0.95)', borderBottom: '1px solid rgba(217,197,178,0.1)',
+          alignItems: 'center',
+        }}>
+          <button
+            onClick={() => { setEditing(false); setDraftPos(null); setSearching(false); }}
+            style={{ background: 'transparent', border: '1px solid rgba(217,197,178,0.2)', borderRadius: 6, padding: '4px 12px', color: '#888', cursor: 'pointer', fontSize: '0.72rem', fontFamily: "'JetBrains Mono', monospace", letterSpacing: '.04em' }}
+          >
+            Cancel
+          </button>
+          <div style={{ flex: 1 }} />
+          {allPhotos.length >= 2 && (
             <button
-              key={i}
-              onClick={e => { e.stopPropagation(); setImgIndex(i); }}
-              aria-label={`Photo ${i + 1}`}
-              style={{
-                width: i === imgIndex ? 18 : 6, height: 6,
-                borderRadius: 3, border: 'none', padding: 0, cursor: 'pointer',
-                background: i === imgIndex ? '#E67E22' : 'rgba(217,197,178,0.45)',
-                transition: 'width 0.2s ease, background 0.2s ease',
-              }}
-            />
-          ))}
+              onClick={() => { setSearchQuery(city.toLowerCase()); setSearching(s => !s); }}
+              style={{ background: 'transparent', border: '1px solid #E67E22', borderRadius: 6, padding: '4px 12px', color: '#E67E22', cursor: 'pointer', fontSize: '0.72rem', fontFamily: "'JetBrains Mono', monospace", letterSpacing: '.04em' }}
+            >
+              🔍 Change photo
+            </button>
+          )}
+          <button
+            onClick={() => {
+              const p = draftPos ?? savedPos;
+              setHeroImagePosition(imgSrc, p.x, p.y);
+              setEditing(false);
+              setDraftPos(null);
+              setSearching(false);
+            }}
+            style={{ background: '#E67E22', border: 'none', borderRadius: 6, padding: '4px 14px', color: '#fff', cursor: 'pointer', fontSize: '0.72rem', fontFamily: "'JetBrains Mono', monospace", letterSpacing: '.04em', fontWeight: 600 }}
+          >
+            Save
+          </button>
         </div>
       )}
 
-      {/* Destination label */}
-      <div style={{
-        position: 'absolute', bottom: 16, left: 20,
-        fontFamily: "'JetBrains Mono', monospace",
-        fontSize: '0.6rem', letterSpacing: '0.14em', textTransform: 'uppercase',
-        color: 'rgba(217,197,178,0.7)',
-        opacity: bleedOpacity, transition: 'opacity 0.08s linear',
-      }}>
-        {city}
-      </div>
-    </div>
+      {/* Photo picker panel */}
+      {editing && searching && (
+        <div style={{ background: 'rgba(10,9,8,0.97)', borderBottom: '1px solid rgba(217,197,178,0.08)' }}>
+          <div style={{ display: 'flex', gap: 8, padding: '8px 14px 6px' }}>
+            <input
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder={`Search ${city} photos…`}
+              style={{
+                flex: 1, background: '#1c1a17', border: '1px solid rgba(217,197,178,0.15)',
+                borderRadius: 6, padding: '5px 10px', color: '#D9C5B2',
+                fontFamily: "'JetBrains Mono', monospace", fontSize: '0.72rem', outline: 'none',
+              }}
+            />
+          </div>
+          <div style={{ display: 'flex', gap: 8, padding: '0 14px 10px', overflowX: 'auto' }}>
+            {pickerResults.length === 0 && (
+              <span style={{ color: '#555', fontSize: '0.7rem', fontFamily: "'JetBrains Mono', monospace", padding: '8px 0' }}>
+                No photos match "{searchQuery}"
+              </span>
+            )}
+            {pickerResults.map((photo, i) => (
+              <div
+                key={photo.url}
+                onClick={() => {
+                  const idx = candidates.findIndex(c => c.url === photo.url);
+                  if (idx >= 0) setImgIndex(idx);
+                  setDraftPos({ x: 50, y: 40 });
+                  setSearching(false);
+                }}
+                style={{ position: 'relative', flexShrink: 0, cursor: 'pointer' }}
+              >
+                <img
+                  src={`${photo.url.split('?')[0]}?auto=compress&cs=tinysrgb&w=200&h=120&fit=crop`}
+                  alt={photo.credit || `Photo ${i + 1}`}
+                  style={{
+                    width: 90, height: 58, objectFit: 'cover', borderRadius: 5, display: 'block',
+                    border: photo.url === imgSrc ? '2px solid #E67E22' : '2px solid transparent',
+                    transition: 'border-color 0.15s ease',
+                  }}
+                />
+                <span style={{
+                  position: 'absolute', bottom: 3, left: 3,
+                  background: 'rgba(0,0,0,0.65)', borderRadius: 3,
+                  padding: '1px 4px', fontSize: '0.55rem',
+                  fontFamily: "'JetBrains Mono', monospace", color: '#D9C5B2',
+                  letterSpacing: '.04em', textTransform: 'uppercase',
+                }}>
+                  {photo.source}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -176,7 +341,7 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
   const { trip, legs, stays, pois, dayLoops, manifestSettings, cloning,
           addStopToDayLoop, addDayLoop, setTripPlanningMode, dispatch } = useTripStore();
   const destinationId = trip.destination?.split(',')[0].toLowerCase().replace(/[^a-z]/g, '') ?? 'default';
-  const mapCenter = DESTINATION_CENTERS[destinationId] ?? DESTINATION_CENTERS.patagonia;
+  const mapCenter = DESTINATION_CENTERS[destinationId] ?? DESTINATION_CENTERS.default;
   const { theme } = useTheme();
   const labels = useLabels();
   const [launched, setLaunched] = useState(false);
@@ -585,6 +750,7 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
                 foodPins={food}
                 selectedId={selectedDiscoveryId}
                 onPinClick={handleDiscoveryPinClick}
+                destinationKey={destinationId}
               />
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                 <MustSee
