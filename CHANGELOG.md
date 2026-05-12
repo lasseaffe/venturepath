@@ -1,5 +1,14 @@
 # VenturePath — CHANGELOG
 
+## [Unreleased] — 2026-05-12 — Fix: AppShell BottomNav Props
+
+### AppShell Component (Fix)
+- **`src/components/layout/AppShell.jsx`** — Made BottomNav configurable:
+  - Added `activeBottomTab` prop (default: 'PLAN') and `onSelectBottomTab` handler to AppShell signature
+  - Replaced hardcoded `activeBottomTab="PLAN"` and `onTabSelect={() => {}}` with dynamic prop passing
+  - Allows parent components to control BottomNav state instead of hardcoding it
+  - Git: 35754ca
+
 ## [Unreleased] — 2026-05-11 — Task 9: PublicTransport — 90s Polling, Cascade Detection, Buffer Display
 
 ### PublicTransport Component (Task 9)
