@@ -24,19 +24,22 @@ async function _overpass(bbox, tagFilter, limit = 30) {
   })
   if (!res.ok) return []
   const data = await res.json()
-  return (data.elements ?? []).map(el => ({
-    id:   String(el.id),
-    name: el.tags?.name ?? el.tags?.['name:en'] ?? 'Unnamed',
-    lat:  el.lat,
-    lon:  el.lon,
-    tags: el.tags ?? {}
-  })).filter(p => p.lat && p.lon && p.name !== 'Unnamed')
+  return (data.elements ?? [])
+    .filter(el => el.lat && el.lon && (el.tags?.name || el.tags?.['name:en']))
+    .map(el => ({
+      id:   String(el.id),
+      name: el.tags.name ?? el.tags['name:en'],
+      lat:  el.lat,
+      lon:  el.lon,
+      tags: el.tags
+    }))
 }
 
 const ACCOM_TAGS = {
   hotel:     'tourism=hotel',
   hostel:    'tourism=hostel',
   apartment: 'tourism=apartment',
+  camp_site: 'tourism=camp_site',
   camping:   'tourism=camp_site',
   all:       'tourism~"hotel|hostel|apartment|camp_site"'
 }
@@ -67,7 +70,7 @@ async function _cached(key, fn) {
 }
 
 export async function searchAccommodation(city, type = 'all') {
-  return _cached(`accom:${city}:${type}`, async () => {
+  return _cached(`a:${city}:${type}`, async () => {
     const geo = await geocodeCity(city)
     if (!geo) return []
     return _overpass(geo.bbox, ACCOM_TAGS[type] ?? ACCOM_TAGS.all, 40)
@@ -75,7 +78,7 @@ export async function searchAccommodation(city, type = 'all') {
 }
 
 export async function searchAttractions(city, category = 'all') {
-  return _cached(`attr:${city}:${category}`, async () => {
+  return _cached(`t:${city}:${category}`, async () => {
     const geo = await geocodeCity(city)
     if (!geo) return []
     return _overpass(geo.bbox, ATTRACTION_TAGS[category] ?? ATTRACTION_TAGS.all, 40)
@@ -83,7 +86,7 @@ export async function searchAttractions(city, category = 'all') {
 }
 
 export async function searchFood(city, category = 'all') {
-  return _cached(`food:${city}:${category}`, async () => {
+  return _cached(`f:${city}:${category}`, async () => {
     const geo = await geocodeCity(city)
     if (!geo) return []
     return _overpass(geo.bbox, FOOD_TAGS[category] ?? FOOD_TAGS.all, 40)
