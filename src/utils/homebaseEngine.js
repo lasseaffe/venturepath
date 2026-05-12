@@ -46,3 +46,93 @@ export function buildLegs(dayLoopId, homebaseCoords, stops) {
     };
   });
 }
+
+// ── Packing suggestions by POI category ──────────────────────────────────────
+const PACKING_HINTS = {
+  museum:     ['Comfortable shoes', 'Water bottle'],
+  beach:      ['Sunscreen', 'Towel', 'Swimwear'],
+  hiking:     ['Trail shoes', 'Rain jacket', 'Snacks'],
+  park:       ['Sunscreen', 'Comfortable shoes'],
+  restaurant: ['Smart casual top'],
+  bar:        ['Smart casual top'],
+  district:   ['Comfortable shoes', 'Camera'],
+  default:    ['Comfortable shoes'],
+};
+
+function packingHints(category) {
+  return PACKING_HINTS[category] ?? PACKING_HINTS.default;
+}
+
+// Transit cost estimate: €0.30/km, min €1.50 per leg
+function estimateCost(legs) {
+  return legs.reduce((sum, l) => sum + Math.max(1.5, l.distanceKm * 0.3), 0);
+}
+
+// ── buildCascadePreviews ──────────────────────────────────────────────────────
+// Returns { [toolKey]: { label, value, apply(dispatch) } }
+// apply() is called when the Pioneer confirms (Semi) or immediately (Full).
+export function buildCascadePreviews(payload) {
+  const { dayLoopId, stop, legs, tripClimate } = payload;
+  const cost = estimateCost(legs);
+  const items = packingHints(stop.category ?? 'default');
+
+  return {
+    budget: {
+      label: '💰 Budget',
+      value: `+€${cost.toFixed(2)}`,
+      apply: (dispatch) => dispatch({
+        type: 'ADD_BUDGET_ITEM',
+        payload: { label: `Transit · ${stop.name}`, amount: cost, currency: 'EUR', dayLoopId },
+      }),
+    },
+    packing: {
+      label: '🎒 Packing',
+      value: `${items.length} item${items.length !== 1 ? 's' : ''} suggested`,
+      apply: (_dispatch) => {
+        // PackingManifest listens to HOMEBASE_STOP_ADDED directly for suggestions
+      },
+    },
+    map: {
+      label: '🗺️ Route',
+      value: `${payload.totalDistanceKm.toFixed(1)} km loop`,
+      apply: (_dispatch) => {
+        // LiveMap re-renders reactively from store.dayLoops — no action needed
+      },
+    },
+    elevation: {
+      label: '⛰️ Elevation',
+      value: 'Profile updating...',
+      apply: (_dispatch) => {
+        // ElevationStrip subscribes to HOMEBASE_STOP_ADDED and fetches independently
+      },
+    },
+    transit: {
+      label: '🚌 Transit',
+      value: 'Fetching times...',
+      apply: (_dispatch) => {
+        // TransitPlanner subscribes to HOMEBASE_STOP_ADDED and fetches independently
+      },
+    },
+    tactical: {
+      label: '🛡️ Tactical',
+      value: 'Caching area...',
+      apply: (_dispatch) => {
+        // TacticalCache prefetch fires via the bus listener (non-blocking)
+      },
+    },
+    squad: {
+      label: '👥 Squad',
+      value: 'Notifying...',
+      apply: (_dispatch) => {
+        // SquadSync broadcasts via Supabase realtime (bus listener)
+      },
+    },
+    ledger: {
+      label: '⚖️ Ledger',
+      value: 'Checking conflicts...',
+      apply: (_dispatch) => {
+        // LedgerWorkbench checks preferences (bus listener)
+      },
+    },
+  };
+}

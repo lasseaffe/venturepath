@@ -1,4 +1,4 @@
-import { buildLegs } from '../homebaseEngine';
+import { buildLegs, buildCascadePreviews } from '../homebaseEngine';
 
 const homebaseCoords = [53.5488, 9.9872]; // Hamburg Speicherstadt
 
@@ -43,5 +43,41 @@ describe('buildLegs', () => {
     const legs = buildLegs('loop-1', homebaseCoords, stops);
     const ids = legs.map(l => l.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+});
+
+const mockPayload = {
+  dayLoopId: 'loop-1',
+  dayLoop: { id: 'loop-1', date: '2026-05-16', homebaseStayId: 'stay-1', stopIds: ['poi-1'] },
+  stop: { id: 'poi-1', name: 'Kunsthalle', coords: [53.5607, 10.0006], category: 'museum' },
+  legs: [
+    { id: 'leg-1', distanceKm: 1.4, mode: 'foot', source: 'homebase-engine' },
+    { id: 'leg-2', distanceKm: 1.4, mode: 'foot', source: 'homebase-engine' },
+  ],
+  homebaseCoords: [53.5488, 9.9872],
+  totalDistanceKm: 2.8,
+  tripClimate: 'temperate',
+};
+
+describe('buildCascadePreviews', () => {
+  it('returns a preview object for each of the 8 tools', () => {
+    const previews = buildCascadePreviews(mockPayload);
+    const keys = ['budget', 'packing', 'map', 'elevation', 'transit', 'tactical', 'squad', 'ledger'];
+    keys.forEach(k => {
+      expect(previews[k]).toBeDefined();
+      expect(typeof previews[k].label).toBe('string');
+      expect(typeof previews[k].value).toBe('string');
+      expect(typeof previews[k].apply).toBe('function');
+    });
+  });
+
+  it('budget preview includes a positive cost estimate', () => {
+    const previews = buildCascadePreviews(mockPayload);
+    expect(previews.budget.value).toMatch(/€/);
+  });
+
+  it('packing preview includes item suggestions for museum category', () => {
+    const previews = buildCascadePreviews(mockPayload);
+    expect(previews.packing.value).toMatch(/item/);
   });
 });
