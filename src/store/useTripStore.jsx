@@ -46,6 +46,7 @@ const initialState = {
   budget: { total: 0, items: [] }, // items: { id, label, amount, currency, legId? }
   dayLoops: [],  // { id, date, homebaseStayId, stopIds, autoLegIds, label, planningMode }
   heroImagePositions: {},  // { [imageUrl]: { x: number, y: number } }
+  vault: [],     // { id, name, mimeType, data: base64, uploadedAt }
 };
 
 let nextLegId = 100; // start above seeded leg IDs so there's no collision
@@ -208,6 +209,7 @@ function reducer(state, action) {
         alerts: e.alerts ?? initialState.alerts,
         budget: e.budget ?? initialState.budget,
         dayLoops: e.dayLoops ?? [],
+        vault: e.vault ?? [],
       };
     }
     case 'RESET_TRIP':
@@ -228,6 +230,14 @@ function reducer(state, action) {
     }
     case 'REMOVE_STAY':
       return { ...state, stays: state.stays.filter(s => s.id !== action.payload) };
+    case 'ADD_VAULT_FILE': {
+      const file = {
+        ...action.payload,
+        id: action.payload.id ?? crypto.randomUUID(),
+        uploadedAt: action.payload.uploadedAt ?? new Date().toISOString(),
+      };
+      return { ...state, vault: [...state.vault, file] };
+    }
     case 'SET_CAMP_META': {
       const { stayId, campMeta } = action.payload;
       const stays = state.stays.map(s => s.id === stayId ? { ...s, campMeta } : s);
@@ -428,6 +438,8 @@ export function TripStoreProvider({ children }) {
   const setHeroImagePosition = (url, x, y) =>
     dispatch({ type: 'SET_HERO_IMAGE_POSITION', payload: { url, x, y } });
 
+  const addVaultFile = (payload) => dispatch({ type: 'ADD_VAULT_FILE', payload });
+
   return (
     <TripStoreContext.Provider value={{
       ...state,
@@ -437,6 +449,7 @@ export function TripStoreProvider({ children }) {
       addPoi, removePoi, addAlert, clearAlerts, addBudgetItem,
       addDayLoop, addStopToDayLoop, removeStopFromDayLoop, setAutoLegs,
       setDayLoopMode, removeDayLoop, setTripPlanningMode, setHeroImagePosition,
+      addVaultFile,
     }}>
       {children}
     </TripStoreContext.Provider>
