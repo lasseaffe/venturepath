@@ -46,6 +46,7 @@ import { AddStopFlow } from '../components/itinerary/AddStopFlow';
 import { onStopAdded } from '../utils/homebaseEngine';
 import { LegLens } from '../components/legLens/LegLens.jsx';
 import { hydrateLeg } from '../utils/legIntelligence/index.js';
+import { CampMetaEditor } from '../components/logistics/CampMetaEditor';
 
 function TripHeroImage({ destination, heroImageUrl }) {
   const [bleedOpacity, setBleedOpacity] = useState(1);
@@ -718,6 +719,17 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
           {activeTab === 'accommodation' && (
             <div className="max-w-2xl space-y-4" style={{ padding: '24px 24px 0' }}>
               <AccommodationSearch destination={trip.destination} />
+              {stays.filter(s => ['camp','wild','shelter'].includes(s.kind)).length > 0 && (
+                <div>
+                  <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.6rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 8 }}>
+                    Camp Configuration
+                  </div>
+                  {stays
+                    .filter(s => ['camp','wild','shelter'].includes(s.kind))
+                    .map(s => <CampMetaEditor key={s.id} stay={s} />)
+                  }
+                </div>
+              )}
             </div>
           )}
 
