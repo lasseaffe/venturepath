@@ -11,6 +11,7 @@ import { useInspireData, matchCity } from '../../hooks/useInspireData';
 import { useDestinationImage } from '../../hooks/useDestinationImage';
 import ImageAttribution from '../ui/ImageAttribution';
 import ReportButton from '../inspire/ReportButton';
+import { CATEGORY_COLORS } from './itineraryConstants';
 
 const LEDGER_DND_KEY = 'application/vp-ledger-item';
 
@@ -64,16 +65,6 @@ const SEED_DAYS = [
     blocks: [],
   },
 ];
-
-const CATEGORY_COLORS = {
-  transport:     { bg: 'rgba(59,130,246,0.14)',  border: 'rgba(59,130,246,0.4)',  text: '#60A5FA', dot: '#3B82F6' },
-  logistics:     { bg: 'rgba(234,179,8,0.1)',    border: 'rgba(234,179,8,0.35)', text: '#FBBF24', dot: '#EAB308' },
-  food:          { bg: 'rgba(34,197,94,0.1)',    border: 'rgba(34,197,94,0.35)', text: '#4ADE80', dot: '#22C55E' },
-  activity:      { bg: 'rgba(230,126,34,0.12)', border: 'rgba(230,126,34,0.4)', text: '#E67E22', dot: '#E67E22' },
-  rest:          { bg: 'rgba(148,163,184,0.08)', border: 'rgba(148,163,184,0.2)', text: '#94A3B8', dot: '#64748B' },
-  accommodation: { bg: 'rgba(167,139,250,0.1)', border: 'rgba(167,139,250,0.35)', text: '#A78BFA', dot: '#7C3AED' },
-  default:       { bg: 'rgba(148,163,184,0.08)', border: 'rgba(148,163,184,0.2)', text: '#94A3B8', dot: '#64748B' },
-};
 
 function makeId() {
   return 'b' + Math.random().toString(36).slice(2, 9);
@@ -375,7 +366,7 @@ export default function KanbanBoard({ initialDays = SEED_DAYS, tripName = 'Opera
           </div>
           <button
             onClick={addDay}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-mono border border-dashed border-[#2a2f36] text-slate-400 hover:border-[#E67E22] hover:text-[#E67E22] rounded transition-colors tracking-widest"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-mono border border-dashed border-[#2a2f36] text-[var(--text-secondary)] hover:border-[#E67E22] hover:text-[#E67E22] rounded transition-colors tracking-widest"
           >
             + ADD DAY
           </button>
@@ -478,7 +469,7 @@ function DayColumnHeaderImage({ label, tripName, colIndex = 0 }) {
 
   if (loading) {
     return (
-      <div className="w-full animate-pulse" style={{ height: 90, background: '#1a2030' }} />
+      <div className="w-full animate-pulse" style={{ height: 90, background: 'var(--surface)' }} />
     );
   }
   if (!image?.url) {
@@ -583,7 +574,7 @@ function KanbanView({
             className="shrink-0 flex flex-col rounded-lg overflow-hidden transition-all duration-150"
             style={{
               width: '262px',
-              background: '#111316',
+              background: 'var(--surface)',
               border: `1px solid ${isTarget ? '#E67E22' : '#1e2328'}`,
               boxShadow: isTarget ? '0 0 0 1px rgba(230,126,34,0.4), 0 4px 20px rgba(230,126,34,0.1)' : 'none',
             }}
@@ -630,10 +621,10 @@ function KanbanView({
             <DayColumnHeaderImage label={day.label} tripName={tripName} colIndex={colIndex} />
 
             {/* Action strip */}
-            <div className="flex items-center gap-1 px-2 py-1.5 shrink-0" style={{ borderBottom: '1px solid #1a1e23', background: '#0c0e10' }}>
+            <div className="flex items-center gap-1 px-2 py-1.5 shrink-0" style={{ borderBottom: '1px solid #1a1e23', background: 'var(--bg)' }}>
               <button
                 onClick={() => onAutoSort(day.id)}
-                className="text-[9px] font-mono px-2 py-1 rounded border border-[#1e2328] text-slate-500 hover:text-slate-300 hover:border-[#2a2f36] transition-colors tracking-widest"
+                className="text-[9px] font-mono px-2 py-1 rounded border border-[#1e2328] text-[var(--text-muted)] hover:text-[var(--text-secondary)] hover:border-[#2a2f36] transition-colors tracking-widest"
               >
                 SORT
               </button>
@@ -656,7 +647,7 @@ function KanbanView({
               {days.length > 1 && (
                 <button
                   onClick={() => onRemoveDay(day.id)}
-                  className="text-[9px] font-mono px-2 py-1 rounded border border-transparent text-slate-600 hover:text-red-400 hover:border-red-800/40 transition-colors tracking-widest ml-auto"
+                  className="text-[9px] font-mono px-2 py-1 rounded border border-transparent text-[var(--text-muted)] hover:text-red-400 hover:border-red-800/40 transition-colors tracking-widest ml-auto"
                 >
                   DEL
                 </button>
@@ -675,7 +666,7 @@ function KanbanView({
               {day.blocks.length === 0 && !isTarget && (
                 <div
                   className="flex flex-col items-center justify-center gap-2 py-10 rounded border border-dashed text-center"
-                  style={{ borderColor: '#1e2328', color: '#374151' }}
+                  style={{ borderColor: '#1e2328', color: 'var(--text-secondary)' }}
                 >
                   <span className="text-2xl opacity-30">◻</span>
                   <p className="text-[10px] font-mono tracking-widest">EMPTY SLOT</p>
@@ -731,7 +722,7 @@ function KanbanView({
       <div className="shrink-0 flex items-start pt-10">
         <button
           onClick={onAddDay}
-          className="flex flex-col items-center gap-3 px-8 py-6 rounded-lg border border-dashed border-[#1e2328] text-slate-600 hover:border-[#E67E22]/50 hover:text-[#E67E22]/70 transition-all"
+          className="flex flex-col items-center gap-3 px-8 py-6 rounded-lg border border-dashed border-[#1e2328] text-[var(--text-muted)] hover:border-[#E67E22]/50 hover:text-[#E67E22]/70 transition-all"
           style={{ width: '140px' }}
         >
           <div className="w-8 h-8 border border-dashed border-current rotate-45 flex items-center justify-center">
@@ -815,7 +806,7 @@ function TimelineView({ days, onRemoveBlock }) {
                   className="relative rounded-b-lg"
                   style={{
                     height: `${TIMELINE_H}px`,
-                    background: '#0d0f11',
+                    background: 'var(--bg)',
                     border: '1px solid #1e2328',
                     overflow: 'hidden',
                   }}
@@ -875,7 +866,7 @@ function TimelineView({ days, onRemoveBlock }) {
                 {untimed.length > 0 && (
                   <div
                     className="mt-2 rounded-lg p-2 flex flex-col gap-1"
-                    style={{ background: '#111316', border: '1px solid #1e2328' }}
+                    style={{ background: 'var(--surface)', border: '1px solid #1e2328' }}
                   >
                     <div className="label-tag text-[8px] mb-1">UNSCHEDULED</div>
                     {untimed.map(block => {
@@ -951,7 +942,7 @@ function TimelineBlock({ block, top, height, colors, onRemove }) {
             {hovered && (
               <button
                 onClick={e => { e.stopPropagation(); onRemove(); }}
-                className="text-[8px] text-slate-600 hover:text-red-400 transition-colors shrink-0"
+                className="text-[8px] text-[var(--text-muted)] hover:text-red-400 transition-colors shrink-0"
               >
                 ✕
               </button>
@@ -964,12 +955,12 @@ function TimelineBlock({ block, top, height, colors, onRemove }) {
             {block.title}
           </p>
           {height >= 52 && block.notes && (
-            <p className="text-[9px] mt-0.5 leading-tight" style={{ color: '#4b5563' }}>
+            <p className="text-[9px] mt-0.5 leading-tight" style={{ color: 'var(--text-muted)' }}>
               {block.notes}
             </p>
           )}
           {height >= 44 && block.duration && (
-            <p className="text-[8px] font-mono mt-auto pt-1" style={{ color: '#374151' }}>
+            <p className="text-[8px] font-mono mt-auto pt-1" style={{ color: 'var(--text-secondary)' }}>
               {block.duration >= 60
                 ? `${Math.floor(block.duration / 60)}h${block.duration % 60 ? `${block.duration % 60}m` : ''}`
                 : `${block.duration}m`}
@@ -1002,7 +993,7 @@ function BlockCardImage({ title, tripName, visible }) {
   return (
     <div style={{ height: visible ? 120 : 0, overflow: 'hidden', transition: 'height 0.2s ease', position: 'relative', flexShrink: 0 }}>
       {loading && visible && (
-        <div className="animate-pulse" style={{ position: 'absolute', inset: 0, background: '#1a2030' }} />
+        <div className="animate-pulse" style={{ position: 'absolute', inset: 0, background: 'var(--surface)' }} />
       )}
       {image?.url && (
         <>
@@ -1069,10 +1060,10 @@ function ActivityBlock({ block, isGhost, isActive, onDragStart, onDragEnd, onRem
       <div className="px-2.5 pb-2">
         <p className="text-xs font-semibold text-white leading-tight">{block.title}</p>
         {block.notes && (
-          <p className="text-[10px] mt-1 leading-relaxed" style={{ color: '#4b5563' }}>{block.notes}</p>
+          <p className="text-[10px] mt-1 leading-relaxed" style={{ color: 'var(--text-muted)' }}>{block.notes}</p>
         )}
         {block.duration && (
-          <p className="text-[9px] font-mono mt-1.5" style={{ color: '#374151' }}>
+          <p className="text-[9px] font-mono mt-1.5" style={{ color: 'var(--text-secondary)' }}>
             {block.duration >= 60
               ? `${Math.floor(block.duration / 60)}h${block.duration % 60 ? `${block.duration % 60}m` : ''}`
               : `${block.duration}m`}
@@ -1084,7 +1075,7 @@ function ActivityBlock({ block, isGhost, isActive, onDragStart, onDragEnd, onRem
         <div className="flex items-center gap-1 px-2 pb-2" style={{ borderTop: '1px solid #1e2328' }}>
           <button
             onClick={e => { e.stopPropagation(); onRemove(); }}
-            className="text-[9px] font-mono px-2 py-0.5 rounded border border-transparent text-slate-600 hover:text-red-400 hover:border-red-800/40 transition-colors tracking-widest ml-auto"
+            className="text-[9px] font-mono px-2 py-0.5 rounded border border-transparent text-[var(--text-muted)] hover:text-red-400 hover:border-red-800/40 transition-colors tracking-widest ml-auto"
           >
             ✕
           </button>
@@ -1232,7 +1223,7 @@ function AddCard({ draft, onChange, onAdd, onCancel, matchedCity }) {
         <select
           value={draft.category}
           onChange={e => onChange(p => ({ ...p, category: e.target.value }))}
-          className="bg-[#0E1012] border border-[#2a2f36] rounded px-2 py-1 text-[11px] font-mono text-slate-300 focus:outline-none focus:border-[#E67E22]"
+          className="bg-[#0E1012] border border-[#2a2f36] rounded px-2 py-1 text-[11px] font-mono text-[var(--text-secondary)] focus:outline-none focus:border-[#E67E22]"
         >
           {Object.keys(CATEGORY_COLORS).filter(k => k !== 'default').map(c => (
             <option key={c} value={c}>{c}</option>
@@ -1255,14 +1246,14 @@ function AddCard({ draft, onChange, onAdd, onCancel, matchedCity }) {
         {showSuggestions && (
           <div
             className="absolute z-10 left-0 right-0 top-full mt-0.5 rounded border overflow-hidden"
-            style={{ background: '#111316', borderColor: '#2a2f36' }}
+            style={{ background: 'var(--surface)', borderColor: '#2a2f36' }}
           >
             {suggestions.map(s => (
               <button
                 key={s}
                 type="button"
                 onMouseDown={() => pickSuggestion(s)}
-                className="w-full text-left px-2.5 py-1.5 text-[11px] font-mono text-slate-300 hover:text-[#E67E22] hover:bg-[#E67E22]/5 transition-colors"
+                className="w-full text-left px-2.5 py-1.5 text-[11px] font-mono text-[var(--text-secondary)] hover:text-[#E67E22] hover:bg-[#E67E22]/5 transition-colors"
               >
                 {s}
               </button>
@@ -1273,12 +1264,12 @@ function AddCard({ draft, onChange, onAdd, onCancel, matchedCity }) {
       {wdHint?.description && (
         <div
           className="rounded px-2 py-1.5 text-[10px] font-mono leading-relaxed"
-          style={{ background: '#0c0e10', border: '1px solid #1e2328', color: '#6b7280' }}
+          style={{ background: 'var(--bg)', border: '1px solid #1e2328', color: 'var(--text-muted)' }}
         >
           <span style={{ color: '#E67E22' }}>✦ </span>
           {wdHint.description}
           {wdHint.instance_of && (
-            <span className="ml-2 text-[8px] tracking-widest uppercase" style={{ color: '#374151' }}>
+            <span className="ml-2 text-[8px] tracking-widest uppercase" style={{ color: 'var(--text-secondary)' }}>
               [{wdHint.instance_of}]
             </span>
           )}
@@ -1299,11 +1290,11 @@ function AddCard({ draft, onChange, onAdd, onCancel, matchedCity }) {
         {showLocationDropdown && (
           <div
             className="absolute z-20 left-0 right-0 top-full mt-0.5 rounded border overflow-hidden"
-            style={{ background: '#111316', borderColor: '#2a2f36' }}
+            style={{ background: 'var(--surface)', borderColor: '#2a2f36' }}
           >
             {localResults.length > 0 && (
               <>
-                <div className="px-2.5 py-1 text-[8px] font-mono tracking-widest text-slate-600 uppercase border-b border-[#1e2328]">
+                <div className="px-2.5 py-1 text-[8px] font-mono tracking-widest text-[var(--text-muted)] uppercase border-b border-[#1e2328]">
                   NEARBY — {matchedCity.name}
                 </div>
                 {localResults.map(poi => (
@@ -1311,17 +1302,17 @@ function AddCard({ draft, onChange, onAdd, onCancel, matchedCity }) {
                     key={poi.id}
                     type="button"
                     onMouseDown={() => pickLocation(poi.name, poi.coords ?? null, poi)}
-                    className="w-full text-left px-2.5 py-1.5 text-[11px] font-mono text-slate-300 hover:text-[#E67E22] hover:bg-[#E67E22]/5 transition-colors flex items-center gap-2"
+                    className="w-full text-left px-2.5 py-1.5 text-[11px] font-mono text-[var(--text-secondary)] hover:text-[#E67E22] hover:bg-[#E67E22]/5 transition-colors flex items-center gap-2"
                   >
                     <span className="flex-1">{poi.name}</span>
-                    {poi.duration_min && <span className="text-[9px] text-slate-600">{poi.duration_min}min</span>}
+                    {poi.duration_min && <span className="text-[9px] text-[var(--text-muted)]">{poi.duration_min}min</span>}
                   </button>
                 ))}
               </>
             )}
             {remoteResults.length > 0 && (
               <>
-                <div className="px-2.5 py-1 text-[8px] font-mono tracking-widest text-slate-600 uppercase border-b border-[#1e2328]">
+                <div className="px-2.5 py-1 text-[8px] font-mono tracking-widest text-[var(--text-muted)] uppercase border-b border-[#1e2328]">
                   SEARCH
                 </div>
                 {remoteResults.map((r, i) => (
@@ -1329,7 +1320,7 @@ function AddCard({ draft, onChange, onAdd, onCancel, matchedCity }) {
                     key={i}
                     type="button"
                     onMouseDown={() => pickLocation(r.label, r.coords)}
-                    className="w-full text-left px-2.5 py-1.5 text-[11px] font-mono text-slate-300 hover:text-[#E67E22] hover:bg-[#E67E22]/5 transition-colors"
+                    className="w-full text-left px-2.5 py-1.5 text-[11px] font-mono text-[var(--text-secondary)] hover:text-[#E67E22] hover:bg-[#E67E22]/5 transition-colors"
                   >
                     {r.label}
                   </button>
@@ -1337,7 +1328,7 @@ function AddCard({ draft, onChange, onAdd, onCancel, matchedCity }) {
               </>
             )}
             {remoteLoading && (
-              <div className="px-2.5 py-1.5 text-[10px] font-mono text-slate-600">Searching…</div>
+              <div className="px-2.5 py-1.5 text-[10px] font-mono text-[var(--text-muted)]">Searching…</div>
             )}
           </div>
         )}
@@ -1362,7 +1353,7 @@ function AddCard({ draft, onChange, onAdd, onCancel, matchedCity }) {
         </button>
         <button
           onClick={onCancel}
-          className="px-3 py-1 text-[10px] font-mono tracking-widest rounded border border-[#2a2f36] text-slate-500 hover:text-slate-300 transition-colors"
+          className="px-3 py-1 text-[10px] font-mono tracking-widest rounded border border-[#2a2f36] text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors"
         >
           ✕
         </button>
