@@ -30,6 +30,7 @@ export const moodboard = {
     { use: 'Tactical Mode', avoid: 'offline mode / low-power mode' },
     { use: 'Launch Sequence', avoid: 'onboarding / setup / checklist' },
     { use: 'Basecamp', avoid: 'home / starting point' },
+    { use: 'Wild Pitch', avoid: 'wild camping / dispersed camping' },
   ],
 
   colors: [
@@ -45,6 +46,7 @@ export const moodboard = {
     { cssVar: '--text-secondary', name: 'Text Secondary', usage: 'Subheads, captions', group: 'semantic' },
     { cssVar: '--text-muted', name: 'Text Muted', usage: 'Faint, disabled', group: 'semantic' },
     { cssVar: '--sandstone', name: 'Sandstone', usage: 'Warm trail surface, accent ground', group: 'semantic' },
+    { cssVar: '--spruce', name: 'Spruce', usage: 'Camp / wild stay accent — CampLens header, camp waypoint pins, camp gear rows', group: 'semantic' },
     { cssVar: '--status-ok', name: 'Status OK', usage: 'Confirmation, on-track', group: 'semantic' },
     { cssVar: '--status-warn', name: 'Status Warn', usage: 'Caution, weather alert', group: 'semantic' },
     { cssVar: '--status-alert', name: 'Status Alert', usage: 'Critical, abort', group: 'semantic' },
@@ -57,6 +59,7 @@ export const moodboard = {
     { name: 'Golden Hour', hex: '#F2C94C', usage: 'Notification pulse — pulse-gold keyframe' },
     { name: 'Sandstone', hex: '#D9C5B2', usage: 'Trail surface, Day-mode accents' },
     { name: 'Tactical Amber', hex: '#F2A900', usage: 'Tactical Mode HUD highlight' },
+    { name: 'Spruce', hex: '#3A6B5C', usage: 'Camp / wild stays — CampLens header, camp waypoint pins, camp gear cascade accent' },
   ],
 
   fonts: [

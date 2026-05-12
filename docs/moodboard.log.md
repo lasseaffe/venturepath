@@ -2,6 +2,19 @@
 
 > Newest entries on top. Every design change (tokens, fonts, components, modes, voice, motion, icons) must be logged here in the same task, with both `### Changed` and `### Ideas / next steps`.
 
+## 2026-05-12 — Phase 2 Camping: Spruce token + CampLens
+
+### Changed
+- Added Spruce `#3A6B5C` token — camp/wild stay accent color for CampLens, camp waypoint pins, PackingEngine camp gear rows
+- Added `--spruce` CSS variable to all three themes in `index.css`
+- Added `Wild Pitch` to VP-1 vocabulary contract (Apple 4.3 compliance — differentiates from generic "wild camping")
+- `CampLens` component uses Spruce as brand color for camp intelligence header and row indicators
+
+### Ideas / next steps
+- Phase 3: terrain-colored trail icons (Spruce for forest legs, Sandstone for desert legs)
+- Consider using Spruce as CalendarStrip node color for camp nights
+- Squad sleep arrangement dnd-kit UI (deferred from Phase 2 — needs squad data in store first)
+
 ## 2026-05-11 — Bootstrap: in-app living moodboard system
 
 ### Changed

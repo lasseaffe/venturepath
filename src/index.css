@@ -47,6 +47,7 @@
   --text-secondary: #8A8680;
   --text-muted:     #484440;
   --sandstone:      #D9C5B2;
+  --spruce:         #3A6B5C;   /* Camp intelligence accent */
   --trail:          #8B6914;     /* warm tan — trail surface in ElevationStrip */
   --status-ok:      #5C9A6A;
   --status-warn:    #E67E22;
@@ -69,6 +70,7 @@
   --text-primary:   #2E2720;   /* warm near-black */
   --text-secondary: #6B5D52;
   --text-muted:     #9E8E82;
+  --spruce:         #3A6B5C;   /* Camp intelligence accent */
   --status-ok:      #4A7A5A;
   --status-warn:    #C8782A;
   --status-alert:   #B03030;
@@ -90,6 +92,7 @@
   --text-primary:   #FFFFFF;
   --text-secondary: #94a3b8;
   --text-muted:     #4b5563;
+  --spruce:         #3A6B5C;   /* Camp intelligence accent */
   --status-ok:      #64dc82;
   --status-warn:    #ffc850;
   --status-alert:   #ff6b6b;
