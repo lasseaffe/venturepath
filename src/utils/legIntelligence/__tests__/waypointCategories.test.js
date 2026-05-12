@@ -42,4 +42,37 @@ describe('waypointCategories', () => {
   it('returns Ember color for platform category', () => {
     expect(getCategoryStyle('platform').color).toBe('#E67E22');
   });
+
+  // Cycling waypoint categories
+  it('exposes bike_shop category with Ember color and wrench icon', () => {
+    expect(WAYPOINT_CATEGORIES).toHaveProperty('bike_shop');
+    const style = getCategoryStyle('bike_shop');
+    expect(style.color).toBe('#E67E22');
+    expect(style.icon).toBe('🔧');
+    expect(style.label).toBe('Bike shop');
+  });
+
+  it('exposes shop category with Sandstone color and shopping bag icon', () => {
+    expect(WAYPOINT_CATEGORIES).toHaveProperty('shop');
+    const style = getCategoryStyle('shop');
+    expect(style.color).toBe('#D9C5B2');
+    expect(style.icon).toBe('🛒');
+    expect(style.label).toBe('Shop');
+  });
+
+  it('exposes food category with Sandstone color and fork/knife icon', () => {
+    expect(WAYPOINT_CATEGORIES).toHaveProperty('food');
+    const style = getCategoryStyle('food');
+    expect(style.color).toBe('#D9C5B2');
+    expect(style.icon).toBe('🍽');
+    expect(style.label).toBe('Food');
+  });
+
+  it('exposes toilet category with Spruce color and toilet icon', () => {
+    expect(WAYPOINT_CATEGORIES).toHaveProperty('toilet');
+    const style = getCategoryStyle('toilet');
+    expect(style.color).toBe('#3A6B5C');
+    expect(style.icon).toBe('🚽');
+    expect(style.label).toBe('Toilet');
+  });
 });

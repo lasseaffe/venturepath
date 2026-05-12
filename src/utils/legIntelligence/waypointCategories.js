@@ -16,6 +16,10 @@ export const WAYPOINT_CATEGORIES = {
   transfer:  { color: '#D9C5B2', icon: '🔄', label: 'Transfer' },
   layover:   { color: '#D9C5B2', icon: '⏳', label: 'Layover' },
   platform:  { color: '#E67E22', icon: '🚉', label: 'Platform' },
+  // Cycling waypoint categories
+  bike_shop: { color: '#E67E22', icon: '🔧', label: 'Bike shop' },
+  shop:      { color: '#D9C5B2', icon: '🛒', label: 'Shop' },
+  toilet:    { color: '#3A6B5C', icon: '🚽', label: 'Toilet' },
 };
 
 const FALLBACK = { color: '#D9C5B2', icon: '•', label: 'Waypoint' };
