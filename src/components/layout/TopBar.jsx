@@ -1,5 +1,5 @@
 // src/components/layout/TopBar.jsx
-export default function TopBar({ onBackToDashboard, onOpenProfile, onOpenSettings }) {
+export default function TopBar({ onBackToDashboard, onOpenProfile, onOpenSettings, onOpenNotifications }) {
   return (
     <header
       style={{
@@ -16,7 +16,7 @@ export default function TopBar({ onBackToDashboard, onOpenProfile, onOpenSetting
     >
       {/* Logo */}
       <button
-        onClick={onBackToDashboard}
+        onClick={() => onBackToDashboard?.()}
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -49,6 +49,7 @@ export default function TopBar({ onBackToDashboard, onOpenProfile, onOpenSetting
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         {/* Premium pill */}
         <button
+          onClick={() => {}}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -73,7 +74,7 @@ export default function TopBar({ onBackToDashboard, onOpenProfile, onOpenSetting
         </button>
 
         {/* Profile */}
-        <TopBarBtn onClick={onOpenProfile} title="Architect Profile">
+        <TopBarBtn onClick={() => onOpenProfile?.()} title="Architect Profile">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.3">
             <circle cx="8" cy="5" r="3" />
             <path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" strokeLinecap="round" />
@@ -81,7 +82,7 @@ export default function TopBar({ onBackToDashboard, onOpenProfile, onOpenSetting
         </TopBarBtn>
 
         {/* Settings */}
-        <TopBarBtn onClick={onOpenSettings} title="Settings">
+        <TopBarBtn onClick={() => onOpenSettings?.()} title="Settings">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.3">
             <circle cx="8" cy="8" r="2.5" />
             <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.1 3.1l1.4 1.4M11.5 11.5l1.4 1.4M3.1 12.9l1.4-1.4M11.5 4.5l1.4-1.4" strokeLinecap="round" />
@@ -90,7 +91,7 @@ export default function TopBar({ onBackToDashboard, onOpenProfile, onOpenSetting
 
         {/* Notifications */}
         <div style={{ position: 'relative' }}>
-          <TopBarBtn title="Notifications">
+          <TopBarBtn onClick={() => onOpenNotifications?.()} title="Notifications">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.3">
               <path d="M8 1a5 5 0 0 1 5 5v3l1.5 2H1.5L3 9V6a5 5 0 0 1 5-5Z" strokeLinecap="round" />
               <path d="M6.5 13a1.5 1.5 0 0 0 3 0" strokeLinecap="round" />
@@ -119,6 +120,7 @@ function TopBarBtn({ onClick, title, children }) {
     <button
       onClick={onClick}
       title={title}
+      aria-label={title}
       style={{
         width: 32,
         height: 32,
