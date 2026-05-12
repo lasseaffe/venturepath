@@ -58,7 +58,7 @@ function reducer(state, action) {
         : 0;
       return {
         ...initialState,
-        trip: { name: t.name, destination: t.destination, startDate: t.startDate, endDate: t.endDate, days, climate: t.climate ?? 'temperate', status: 'PLANNING' },
+        trip: { name: t.name, destination: t.destination, startDate: t.startDate, endDate: t.endDate, days, climate: t.climate ?? 'temperate', status: 'PLANNING', planningMode: t.planningMode ?? 'semi' },
         legs: [],
         objectives: [],
         manifestSettings: { climate: t.climate ?? 'temperate', days, hasChildren: false },
@@ -90,6 +90,7 @@ function reducer(state, action) {
       const t = action.payload;
       return {
         ...state,
+        dayLoops: [],   // cloned expedition starts with no day loops
         cloning: true,
         trip: { ...DEFAULT_TRIP, ...t.destinationMetadata },
         legs: t.legs ?? DEFAULT_LEGS,
@@ -178,6 +179,8 @@ function reducer(state, action) {
       return { ...state, dayLoops, pois };
     }
     case 'REMOVE_STOP_FROM_DAY_LOOP': {
+      // Note: intentionally leaves the POI in state.pois — it may be referenced
+      // by other dayLoops or placed independently via addPoi().
       const { dayLoopId, stopId } = action.payload;
       const dayLoops = state.dayLoops.map(dl =>
         dl.id === dayLoopId
