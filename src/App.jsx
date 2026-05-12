@@ -45,13 +45,18 @@ function AppRouter() {
         manifestSettings,
       });
     }
-    setView('dashboard');
+    setView('select');
   }
 
   if (view === 'select') {
     return (
       <ExpeditionSelectScreen
         onEnter={handleEnterExpedition}
+        onNavigate={handleNavigate}
+        onBackToDashboard={() => setView('dashboard')}
+        onOpenVault={() => setView('vault')}
+        onOpenProfile={() => setView('profile')}
+        onOpenExpeditions={() => {}}
       />
     );
   }

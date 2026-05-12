@@ -6,6 +6,7 @@ import NewTripModal from './NewTripModal';
 import { useDestinationImage } from '../../hooks/useDestinationImage';
 import ImageAttribution from '../ui/ImageAttribution';
 import ReportButton from '../inspire/ReportButton';
+import Sidebar from '../layout/Sidebar';
 
 // ── Trip-type detection from destination text ──────────────────────────────────
 const CITY_KEYWORDS = ['hamburg', 'berlin', 'paris', 'london', 'tokyo', 'new york', 'rome', 'amsterdam', 'barcelona', 'madrid', 'lisbon', 'vienna', 'prague', 'warsaw', 'budapest', 'city', 'downtown', 'metro'];
@@ -305,7 +306,7 @@ function ExpeditionCard({ exp, i, tripType, Icon, onLoad, onEdit, onDelete }) {
   );
 }
 
-export default function ExpeditionSelectScreen({ onEnter }) {
+export default function ExpeditionSelectScreen({ onEnter, onBackToDashboard, onOpenVault, onOpenProfile, onOpenExpeditions }) {
   const { trip, legs, objectives, manifestSettings, loadExpedition } = useTripStore();
   const { expeditions, saveExpedition, deleteExpedition } = useExpeditionList();
   const [showNew, setShowNew] = useState(false);
@@ -348,9 +349,18 @@ export default function ExpeditionSelectScreen({ onEnter }) {
 
   return (
     <div
-      className="min-h-screen flex flex-col"
+      className="min-h-screen flex"
       style={{ background: 'var(--bg)', color: 'var(--text-primary)' }}
     >
+      <Sidebar
+        activeItem="onOpenExpeditions"
+        onBackToDashboard={onBackToDashboard}
+        onOpenProfile={onOpenProfile}
+        onOpenVault={onOpenVault}
+        onOpenExpeditions={() => {}}
+      />
+
+      <div className="flex flex-col flex-1 min-w-0">
       {/* Header */}
       <div
         className="border-b px-6 py-5 flex items-center justify-between"
@@ -452,7 +462,8 @@ export default function ExpeditionSelectScreen({ onEnter }) {
         )}
       </AnimatePresence>
 
-      {/* Delete confirm */}
+      {/* Delete confirm — rendered outside inner flex column so it overlays full screen */}
+      </div>{/* end inner flex column */}
       <AnimatePresence>
         {confirmDelete && (
           <motion.div
