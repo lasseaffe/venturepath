@@ -7,7 +7,6 @@ import ItineraryMap from './ItineraryMap';
 import { useExpedition } from '../../context/ExpeditionContext';
 import CategoryIcon from './CategoryIcon';
 import { geocodeLocation } from '../../utils/geocodeEngine';
-import BlockHub from './BlockHub';
 import useLocationSearch from '../../hooks/useLocationSearch';
 import { useInspireData, matchCity } from '../../hooks/useInspireData';
 import { useDestinationImage } from '../../hooks/useDestinationImage';
@@ -1013,26 +1012,6 @@ function DropLine() {
 }
 
 // ── Activity block (kanban card) ──────────────────────────────────────────────
-
-function BlockCardImage({ title, tripName, visible }) {
-  const query = title || tripName;
-  const { image, loading } = useDestinationImage(query, 'poi', 3);
-
-  return (
-    <div style={{ height: visible ? 120 : 0, overflow: 'hidden', transition: 'height 0.2s ease', position: 'relative', flexShrink: 0 }}>
-      {loading && visible && (
-        <div className="animate-pulse" style={{ position: 'absolute', inset: 0, background: 'var(--surface)' }} />
-      )}
-      {image?.url && (
-        <>
-          <img src={image.url} alt={title} className="absolute inset-0 w-full h-full object-cover" />
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(14,16,18,0.05) 0%, rgba(14,16,18,0.45) 100%)' }} />
-          {image.author && <ImageAttribution attribution={image} />}
-        </>
-      )}
-    </div>
-  );
-}
 
 function ActivityBlock({ block, isGhost, isActive, onDragStart, onDragEnd, onRemove, onToggleExpand }) {
   const [hovered, setHovered] = useState(false);
