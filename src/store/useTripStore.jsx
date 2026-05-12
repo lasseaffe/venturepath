@@ -99,6 +99,10 @@ function reducer(state, action) {
         legs: e.legs ?? [],
         objectives: e.objectives ?? [],
         manifestSettings: e.manifestSettings ?? initialState.manifestSettings,
+        stays: e.stays ?? initialState.stays,
+        pois: e.pois ?? initialState.pois,
+        alerts: e.alerts ?? initialState.alerts,
+        budget: e.budget ?? initialState.budget,
       };
     }
     case 'RESET_TRIP':
@@ -133,8 +137,9 @@ function reducer(state, action) {
       return { ...state, alerts: [] };
     case 'ADD_BUDGET_ITEM': {
       const item = { ...action.payload, id: action.payload.id ?? crypto.randomUUID() };
-      const newTotal = state.budget.total + (item.amount ?? 0);
-      return { ...state, budget: { total: newTotal, items: [...state.budget.items, item] } };
+      const items = [...state.budget.items, item];
+      const total = items.reduce((s, i) => s + (i.amount ?? 0), 0);
+      return { ...state, budget: { total, items } };
     }
     default:
       return state;
