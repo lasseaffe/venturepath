@@ -145,6 +145,20 @@ export function buildCascadePreviews(payload) {
 //   allStops: resolved POI objects for all stopIds in the dayLoop
 //   dispatch: the store dispatch function
 export function onStopAdded({ dayLoop, stop, homebaseCoords, allStops, mode, dispatch }) {
+  if (mode === 'manual') {
+    // Emit event so tools can observe the stop was added, but do not build legs or cascade
+    sentinelBus.emit(HOMEBASE_STOP_ADDED, {
+      dayLoopId: dayLoop.id,
+      dayLoop,
+      stop,
+      legs: [],
+      homebaseCoords,
+      totalDistanceKm: 0,
+      mode,
+    });
+    return { previews: null, legs: [] };
+  }
+
   const legs = buildLegs(dayLoop.id, homebaseCoords, allStops);
   const totalDistanceKm = legs.reduce((s, l) => s + l.distanceKm, 0);
 
@@ -157,12 +171,6 @@ export function onStopAdded({ dayLoop, stop, homebaseCoords, allStops, mode, dis
     totalDistanceKm,
     mode,
   };
-
-  if (mode === 'manual') {
-    // Emit event so tools can observe, but do not build legs or cascade
-    sentinelBus.emit(HOMEBASE_STOP_ADDED, { ...payload, legs: [] });
-    return { previews: null, legs: [] };
-  }
 
   // Build legs and commit them to the store in both semi and full modes
   dispatch({ type: 'SET_AUTO_LEGS', payload: { dayLoopId: dayLoop.id, legs } });
