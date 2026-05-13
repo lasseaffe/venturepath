@@ -1,4 +1,4 @@
-// src/components/vault/TicketBarcodeRenderer.jsx
+// src/components/dossier/TicketBarcodeRenderer.jsx
 import { useEffect, useRef } from 'react';
 import bwipjs from 'bwip-js';
 

@@ -17,7 +17,7 @@ const CAT_LABELS = {
   document: 'Docs',
 };
 
-export default function PassportVault({ expeditionFilter }) {
+export default function PassportDossier({ expeditionFilter }) {
   const { tickets } = useTripStore();
   const { theme } = useTheme();
   const isTactical = theme === 'tactical';
@@ -30,7 +30,7 @@ export default function PassportVault({ expeditionFilter }) {
   // Cache soon-departing tickets for offline access in Tactical Mode
   useEffect(() => {
     cacheSoonTickets(tickets).catch(err =>
-      console.warn('[PassportVault] IndexedDB cache failed:', err)
+      console.warn('[PassportDossier] IndexedDB cache failed:', err)
     );
   }, [tickets]);
 
@@ -75,7 +75,7 @@ export default function PassportVault({ expeditionFilter }) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="font-playfair text-2xl">PassportVault</h2>
+          <h2 className="font-playfair text-2xl">Passport Dossier</h2>
           {urgentCount > 0 && (
             <p className="font-mono text-xs text-[#E67E22] mt-0.5">
               {urgentCount} ticket{urgentCount > 1 ? 's' : ''} active soon
@@ -126,7 +126,7 @@ export default function PassportVault({ expeditionFilter }) {
         <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
           <span className="text-4xl">🎫</span>
           <p className="font-playfair text-lg text-[#D9C5B2]">
-            No tickets in your Vault
+            No tickets in your Dossier
           </p>
           <p className="font-mono text-xs text-[#D9C5B2]/60">
             Add flights, passes, and confirmations to keep them at your fingertips.

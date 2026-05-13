@@ -1,4 +1,4 @@
-// src/components/vault/DocumentManifest.jsx
+// src/components/dossier/DocumentManifest.jsx
 import { useState } from 'react';
 import { useTripStore } from '../../store/useTripStore';
 import TicketDetailDrawer from './TicketDetailDrawer';
@@ -34,7 +34,7 @@ export default function DocumentManifest({ expeditionId }) {
         <>
           {scoped.length === 0 ? (
             <p className="font-mono text-xs text-[#D9C5B2]/60">
-              No documents. Add tickets to your PassportVault.
+              No documents. Add tickets to your Passport Dossier.
             </p>
           ) : (
             <div className="flex flex-col gap-2">

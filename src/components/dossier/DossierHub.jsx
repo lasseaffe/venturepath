@@ -1,7 +1,7 @@
-// src/components/vault/VaultHub.jsx
+// src/components/dossier/DossierHub.jsx
 import { useState } from 'react';
 import { useTripStore } from '../../store/useTripStore';
-import VaultIngest from './VaultIngest';
+import DossierIngest from './DossierIngest';
 import MedicAccessBadge from './MedicAccessBadge';
 
 const TYPE_ICONS = { flight: '✈', hotel: '🏨', permit: '📋', insurance: '🛡', medical: '🩺' };
@@ -44,7 +44,7 @@ function DocCard({ doc, userRole, legs }) {
   );
 }
 
-export default function VaultHub() {
+export default function DossierHub() {
   const { vault, userRole, legs } = useTripStore();
   const [showIngest, setShowIngest] = useState(false);
 
@@ -57,7 +57,7 @@ export default function VaultHub() {
   return (
     <div className="p-4 text-white">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="font-playfair text-2xl">Vault</h2>
+        <h2 className="font-playfair text-2xl">Dossier</h2>
         <button
           onClick={() => setShowIngest(true)}
           className="px-4 py-2 bg-[#E67E22] text-black font-mono text-sm rounded"
@@ -69,7 +69,7 @@ export default function VaultHub() {
       {Object.keys(grouped).length === 0 && (
         <div className="text-center py-16 text-[#D9C5B2]">
           <p className="text-4xl mb-3">🗄</p>
-          <p className="font-playfair text-lg mb-1">Your Vault is empty</p>
+          <p className="font-playfair text-lg mb-1">Your Dossier is empty</p>
           <p className="text-sm font-mono">Paste booking confirmations or upload PDFs to auto-create Legs.</p>
         </div>
       )}
@@ -87,7 +87,7 @@ export default function VaultHub() {
         </div>
       ))}
 
-      {showIngest && <VaultIngest onClose={() => setShowIngest(false)} />}
+      {showIngest && <DossierIngest onClose={() => setShowIngest(false)} />}
     </div>
   );
 }

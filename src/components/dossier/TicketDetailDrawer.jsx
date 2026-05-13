@@ -1,4 +1,4 @@
-// src/components/vault/TicketDetailDrawer.jsx
+// src/components/dossier/TicketDetailDrawer.jsx
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import TicketBarcodeRenderer from './TicketBarcodeRenderer';

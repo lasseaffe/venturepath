@@ -1,4 +1,4 @@
-// src/components/vault/VaultIngest.jsx
+// src/components/dossier/DossierIngest.jsx
 import { useState } from 'react';
 import { extractVaultDocument } from '../../utils/vaultExtractor';
 import { useTripStore } from '../../store/useTripStore';
@@ -8,7 +8,7 @@ import { VAULT_DOCUMENT_ADDED } from '../../utils/sentinelBusEvents';
 const TABS = ['Paste Text', 'Upload File'];
 const DOC_TYPES = ['flight', 'hotel', 'permit', 'insurance', 'medical'];
 
-export default function VaultIngest({ onClose }) {
+export default function DossierIngest({ onClose }) {
   const { dispatch, legs } = useTripStore();
   const [tab, setTab] = useState(0);
   const [raw, setRaw] = useState('');
@@ -77,7 +77,7 @@ export default function VaultIngest({ onClose }) {
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
       <div className="bg-[#0E1012] border border-[#E67E22]/30 rounded-lg p-6 w-full max-w-lg">
-        <h2 className="font-playfair text-white text-xl mb-4">Add Document to Vault</h2>
+        <h2 className="font-playfair text-white text-xl mb-4">Add Document to Dossier</h2>
 
         <div className="flex gap-2 mb-4 flex-wrap">
           {DOC_TYPES.map(t => (
@@ -142,7 +142,7 @@ export default function VaultIngest({ onClose }) {
           <button onClick={onClose} className="px-4 py-2 text-sm font-mono text-[#D9C5B2] border border-white/10 rounded">Cancel</button>
           {extracted && (
             <button onClick={handleConfirm} className="px-4 py-2 text-sm font-mono bg-[#E67E22] text-black rounded">
-              Save to Vault
+              Save to Dossier
             </button>
           )}
         </div>

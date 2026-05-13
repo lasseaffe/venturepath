@@ -1,4 +1,4 @@
-// src/components/vault/TicketImportModal.jsx
+// src/components/dossier/TicketImportModal.jsx
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTripStore } from '../../store/useTripStore';

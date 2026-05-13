@@ -1,4 +1,4 @@
-// src/components/vault/MedicAccessBadge.jsx
+// src/components/dossier/MedicAccessBadge.jsx
 import { useState } from 'react';
 
 const TACTICAL_VAULT_KEY = 'tactical_vault';

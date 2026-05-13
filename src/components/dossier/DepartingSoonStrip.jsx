@@ -1,4 +1,4 @@
-// src/components/vault/DepartingSoonStrip.jsx
+// src/components/dossier/DepartingSoonStrip.jsx
 import { useTripStore } from '../../store/useTripStore';
 
 /**
