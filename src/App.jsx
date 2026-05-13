@@ -11,6 +11,7 @@ import ArchitectProfile from './components/social/ArchitectProfile';
 import VentureVault from './components/discovery/VentureVault';
 import ExpeditionSelectScreen from './components/trip/ExpeditionSelectScreen';
 import Moodboard from './pages/Moodboard';
+import Studio from './pages/Studio.jsx';
 
 function AppRouter() {
   const [view, setView] = useState('dashboard');
@@ -30,6 +31,8 @@ function AppRouter() {
       setView('vault');
     } else if (key === 'profile') {
       setView('profile');
+    } else if (key === 'studio') {
+      setView('studio');
     } else if (key === 'tactical' || key === 'ar' || key === 'ledger') {
       setView('select');
     }
@@ -74,6 +77,10 @@ function AppRouter() {
     return <Moodboard onBackToDashboard={() => setView('dashboard')} />;
   }
 
+  if (view === 'studio') {
+    return <Studio onBack={() => setView('dashboard')} />;
+  }
+
   if (view === 'profile') {
     return <ArchitectProfile onClose={() => setView('dashboard')} />;
   }
@@ -99,6 +106,7 @@ function AppRouter() {
       onOpenVault={() => setView('vault')}
       onOpenChat={() => setView('planner')}
       onOpenProfile={() => setView('profile')}
+      onOpenStudio={() => setView('studio')}
       onNavigate={handleNavigate}
     />
   );
