@@ -54,7 +54,51 @@ export default function TrackStudio({ trackId }) {
 }
 
 function ClickHandler({ tool, track, dispatch }) {
-  // Filled in by Task 10 (drawing) and Task 11 (editing). Render nothing for now.
-  useMapEvents({});
+  useMapEvents({
+    async click(e) {
+      if (tool !== 'draw') return;
+      const { lat, lng } = e.latlng;
+      const last = track.points[track.points.length - 1];
+
+      // First click: drop a single starting point
+      if (!last) {
+        dispatch({
+          type: 'tracks/APPEND_POINTS',
+          payload: {
+            trackId: track.id,
+            points: [{ lat, lng, ele: null, time: null }],
+            engine: 'manual',
+            profile: track.profile,
+          },
+        });
+        return;
+      }
+
+      // Subsequent clicks: ask routing engine for a path from `last` to clicked point
+      const { routeBetween } = await import('../../services/routingEngine.js');
+      const { hydrateElevations } = await import('../../services/elevationEngine.js');
+
+      const res = await routeBetween({
+        from: { lat: last.lat, lng: last.lng },
+        to:   { lat, lng },
+        profile: track.profile,
+      });
+      // Skip the first point of the segment (it's `last`, already in the track)
+      const newPoints = res.points.slice(1);
+      dispatch({
+        type: 'tracks/APPEND_POINTS',
+        payload: { trackId: track.id, points: newPoints, engine: res.engine, profile: track.profile },
+      });
+
+      // Fire-and-forget elevation hydration for the new points
+      const eles = await hydrateElevations(newPoints);
+      const startIdx = track.points.length;
+      const fullEles = new Array(startIdx).fill(null).concat(eles);
+      dispatch({
+        type: 'tracks/HYDRATE_ELEVATION',
+        payload: { trackId: track.id, elevations: fullEles },
+      });
+    },
+  });
   return null;
 }
