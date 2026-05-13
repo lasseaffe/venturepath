@@ -106,7 +106,6 @@ function AppRouter() {
       onOpenVault={() => setView('vault')}
       onOpenChat={() => setView('planner')}
       onOpenProfile={() => setView('profile')}
-      onOpenStudio={() => setView('studio')}
       onNavigate={handleNavigate}
     />
   );
