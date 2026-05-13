@@ -2,6 +2,18 @@
 
 > Newest entries on top. Every design change (tokens, fonts, components, modes, voice, motion, icons) must be logged here in the same task, with both `### Changed` and `### Ideas / next steps`.
 
+## 2026-05-13 — Curated Expeditions Foundation (Spec 0)
+
+### Changed
+- **Vocabulary**: `components/vault/` (personal tickets/passport docs) renamed to `components/dossier/`. `VentureVault` (marketplace, in `components/discovery/`) keeps the brand word. Display copy "PassportVault" → "Passport Dossier" in `PassportDossier.jsx` and `DocumentManifest.jsx`. New `Dossier` entry in `moodboard.config.js` vocabulary list.
+- **Routing**: introduced hybrid react-router. `/explore`, `/explore/:theme`, `/expedition/:slug` route to lazy stub pages; all legacy state-views render under a catch-all and behave identically.
+- **Schema**: `pro_paths` gains `slug`, `gpx_storage_path`, `theme_category` (movie/historical/thematic/city/geographical), `tags text[]`, `provenance jsonb`, `safety_meta jsonb`, `narrative_blocks jsonb`. New tables `pro_path_waypoints` + `pro_path_attempts`. RLS enabled on all three. Storage bucket `gpx` added with `pro_paths.is_curated`-gated public read.
+
+### Ideas / next steps
+- Spec 1 — Discovery surface: replace `VentureVault.jsx` SEO canonical URLs (`https://venturepath.app/vault/...` at [VentureVault.jsx:56](C:/Users/lasse/Desktop/venturepath/src/components/discovery/VentureVault.jsx#L56) and `:74`) to `/explore` and `/expedition/:slug`. Rename `DepartingSoonStrip`'s `onOpenVault` prop when navigation is rewritten.
+- Spec 3 — seed first 10 routes (Camino, Wild Atlantic Way, Iceland Ring, Romantic Road, Via Francigena, Route 66, Cabot Trail, Garden Route SA, Grand Tour Switzerland, Tulip Route) — all tourism-board / Overpass / NPS sources.
+- Audit dev-only logs that still reference "Vault" in places we missed (run grep after Spec 1).
+
 ## 2026-05-12 — Phase 2 Camping: Spruce token + CampLens
 
 ### Changed

@@ -31,6 +31,7 @@ export const moodboard = {
     { use: 'Launch Sequence', avoid: 'onboarding / setup / checklist' },
     { use: 'Basecamp', avoid: 'home / starting point' },
     { use: 'Wild Pitch', avoid: 'wild camping / dispersed camping' },
+    { use: 'Dossier', avoid: 'personal vault / docs folder — distinct from VentureVault (marketplace)' },
   ],
 
   colors: [
