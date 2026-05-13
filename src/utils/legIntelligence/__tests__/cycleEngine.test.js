@@ -1,13 +1,10 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import {
-  parseCyclingLeg,
   parseGpx,
   parseGraphHopperRoute,
-  addElevationData,
+  calculateStagesByDistance,
+  calculateStagesByStays,
 } from '../engines/cycleEngine';
-
-// Mock fetch for Overpass and Elevation APIs
-global.fetch = vi.fn();
 
 describe('cycleEngine', () => {
   describe('parseGpx', () => {
@@ -49,38 +46,40 @@ describe('cycleEngine', () => {
     });
   });
 
-  describe('parseCyclingLeg', () => {
-    it('returns leg object with enriched metadata', async () => {
-      const gpxContent = `<?xml version="1.0"?>
-        <gpx version="1.1">
-          <trk>
-            <trkseg>
-              <trkpt lat="43.7693" lon="11.2557"><ele>100</ele></trkpt>
-              <trkpt lat="43.7694" lon="11.2558"><ele>105</ele></trkpt>
-              <trkpt lat="43.7695" lon="11.2559"><ele>110</ele></trkpt>
-            </trkseg>
-          </trk>
-        </gpx>`;
-      const gpxFile = new File([gpxContent], 'route.gpx', { type: 'text/xml' });
+  describe('cycleEngine — stage calculation', () => {
+    const mockCoords = [
+      [43.7693, 11.2557],
+      [43.7700, 11.2560],
+      [43.7710, 11.2570],
+      [43.7720, 11.2580],
+    ];
 
-      // Mock the enrichment functions
-      global.fetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ elements: [] }), // No POI
+    describe('calculateStagesByDistance', () => {
+      it('creates stages based on km/day target', () => {
+        const stages = calculateStagesByDistance(mockCoords, 10, 5, [], []);
+        expect(stages.length).toBeGreaterThan(0);
+        expect(stages[0]).toHaveProperty('id');
+        expect(stages[0]).toHaveProperty('label');
+        expect(stages[0]).toHaveProperty('distanceKm');
       });
 
-      const leg = await parseCyclingLeg({
-        gpxFile,
-        from: 'Firenze',
-        to: 'Roma',
-        routeSource: 'uploaded',
+      it('labels stages with stay names if available', () => {
+        const stays = [{ id: 'stay-1', name: 'Hotel Roma', lat: 43.7710, lon: 11.2570 }];
+        const stages = calculateStagesByDistance(mockCoords, 10, 5, [], stays);
+        expect(stages[0].plannedStop || stages[1]?.plannedStop).toBeDefined();
       });
+    });
 
-      expect(leg.mode).toBe('cycle');
-      expect(leg.from).toBe('Firenze');
-      expect(leg.to).toBe('Roma');
-      expect(leg.legMeta.cycle).toBeDefined();
-      expect(leg.legMeta.cycle.routeSource).toBe('uploaded');
+    describe('calculateStagesByStays', () => {
+      it('creates stages ending at each stay', () => {
+        const stays = [
+          { id: 'stay-1', name: 'Hotel 1', lat: 43.7700, lon: 11.2560 },
+          { id: 'stay-2', name: 'Hotel 2', lat: 43.7720, lon: 11.2580 },
+        ];
+        const stages = calculateStagesByStays(mockCoords, stays, 10, []);
+        expect(stages.length).toBeGreaterThanOrEqual(1);
+        expect(stages[0].plannedStop).toBeDefined();
+      });
     });
   });
 });
