@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="VenturePath GPX Builder"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.topografix.com/GPX/1/1"
+  xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <metadata>
+    <name>Sahara Dunes Traverse</name>
+    <desc>Merzouga dunes offroading trail</desc>
+    <time>2026-05-13T02:14:23.150053Z</time>
+  </metadata>
+  <trk>
+    <name>Sahara Dunes Traverse</name>
+    <trkseg>
+    <trkpt lat="31.95" lon="-4.266"><ele>100</ele><time>2026-05-13T02:14:23.150053Z</time></trkpt>
+    <trkpt lat="31.92" lon="-4.2"><ele>101</ele><time>2026-05-13T02:14:23.150053Z</time></trkpt>
+    <trkpt lat="31.88" lon="-4.1"><ele>102</ele><time>2026-05-13T02:14:23.150053Z</time></trkpt>
+    <trkpt lat="31.85" lon="-4.05"><ele>103</ele><time>2026-05-13T02:14:23.150053Z</time></trkpt>
+    </trkseg>
+  </trk>
+</gpx>

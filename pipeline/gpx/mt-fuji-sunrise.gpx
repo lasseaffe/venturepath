@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="VenturePath GPX Builder"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.topografix.com/GPX/1/1"
+  xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <metadata>
+    <name>Mt Fuji Sunrise Route</name>
+    <desc>Mount Fuji climbing route from Kawaguchi Lake</desc>
+    <time>2026-05-13T02:14:23.149036Z</time>
+  </metadata>
+  <trk>
+    <name>Mt Fuji Sunrise Route</name>
+    <trkseg>
+    <trkpt lat="35.321" lon="138.727"><ele>100</ele><time>2026-05-13T02:14:23.149036Z</time></trkpt>
+    <trkpt lat="35.356" lon="138.727"><ele>101</ele><time>2026-05-13T02:14:23.149036Z</time></trkpt>
+    <trkpt lat="35.362" lon="138.729"><ele>102</ele><time>2026-05-13T02:14:23.149036Z</time></trkpt>
+    <trkpt lat="35.36" lon="138.731"><ele>103</ele><time>2026-05-13T02:14:23.149036Z</time></trkpt>
+    <trkpt lat="35.321" lon="138.727"><ele>104</ele><time>2026-05-13T02:14:23.149036Z</time></trkpt>
+    </trkseg>
+  </trk>
+</gpx>

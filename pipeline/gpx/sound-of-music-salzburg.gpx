@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="VenturePath GPX Builder"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.topografix.com/GPX/1/1"
+  xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <metadata>
+    <name>Sound of Music Salzburg Tour</name>
+    <desc>Sound of Music filming locations</desc>
+    <time>2026-05-13T02:14:23.155033Z</time>
+  </metadata>
+  <trk>
+    <name>Sound of Music Salzburg Tour</name>
+    <trkseg>
+    <trkpt lat="48.261" lon="13.045"><ele>100</ele><time>2026-05-13T02:14:23.155033Z</time></trkpt>
+    <trkpt lat="48.226" lon="13.024"><ele>101</ele><time>2026-05-13T02:14:23.155033Z</time></trkpt>
+    <trkpt lat="48.299" lon="13.082"><ele>102</ele><time>2026-05-13T02:14:23.155033Z</time></trkpt>
+    <trkpt lat="48.208" lon="12.848"><ele>103</ele><time>2026-05-13T02:14:23.155033Z</time></trkpt>
+    </trkseg>
+  </trk>
+</gpx>
