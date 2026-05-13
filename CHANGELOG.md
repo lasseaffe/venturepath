@@ -1,5 +1,24 @@
 # VenturePath — CHANGELOG
 
+## [Unreleased] — 2026-05-13 — Curated Expeditions Foundation (Spec 0)
+
+### Added
+- Migration `supabase/migrations/20260513_curated_expeditions_foundation.sql`: `pro_paths` gains `slug` (unique, backfilled), `gpx_storage_path`, `theme_category` (movie/historical/thematic/city/geographical enum), `tags text[]`, `provenance jsonb`, `safety_meta jsonb`, `narrative_blocks jsonb`. New tables `pro_path_waypoints` and `pro_path_attempts`. RLS enabled on all three with public-read-where-curated + architect-write policies.
+- Migration `supabase/migrations/20260513_gpx_storage_bucket.sql`: Storage bucket `gpx` with `is_curated`-gated public read and architect-only write.
+- `react-router-dom@^7` dependency. New `src/router/AppRouter.jsx` exposes `/explore`, `/explore/:theme`, `/expedition/:slug` as lazy-loaded stub pages; catch-all renders existing state-view tree (extracted to `src/LegacyApp.jsx`) unchanged.
+- Stub pages `src/pages/Explore.jsx`, `ExploreTheme.jsx`, `ExpeditionDetail.jsx`.
+- Tests: `pipeline/__tests__/schema.test.js` (7 assertions on migration text), `src/router/__tests__/AppRouter.test.jsx` (4 route-render assertions).
+
+### Changed
+- Renamed `src/components/vault/` → `src/components/dossier/`. Components renamed: `VaultHub → DossierHub`, `VaultIngest → DossierIngest`, `PassportVault → PassportDossier`. Display copy "Vault" / "PassportVault" → "Dossier" / "Passport Dossier" in headers, empty states, and modal titles. Other files in the directory keep their names (only directory moved). Utility `src/utils/vaultExtractor.js` unchanged (internal, not user-facing).
+- `src/App.jsx`: legacy state-view router extracted to `src/LegacyApp.jsx`; root component now wraps `<AppRouter />`.
+- `src/pages/moodboard/moodboard.config.js`: added `Dossier` vocabulary entry distinguishing it from `VentureVault`.
+
+### Notes
+- `seedCurated.js` pipeline uses `SUPABASE_SERVICE_KEY` (service role) and bypasses RLS — no pipeline regression.
+- Spec 1 (Discovery surface) must update the canonical SEO URLs in `src/components/discovery/VentureVault.jsx` lines 56 + 74 (`https://venturepath.app/vault/...` → `/explore` and `/expedition/:slug`) and rename `DepartingSoonStrip`'s `onOpenVault` prop.
+- Pre-existing baseline test failures (4 files: gpxParser/waymarkedEngine missing `@xmldom/xmldom` dep, LegLens flight-mode placeholder, legIntelligence hydrateLeg flight-now-supported) were already failing before this PR and are out of scope.
+
 ## [Unreleased] — 2026-05-13 — Feature: Gatherings Phase 3 — Social Depth
 
 ### New SQL
