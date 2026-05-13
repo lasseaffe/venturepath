@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="VenturePath GPX Builder"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.topografix.com/GPX/1/1"
+  xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <metadata>
+    <name>Skyfall Glencoe Locations</name>
+    <desc>Skyfall filming locations, Scotland</desc>
+    <time>2026-05-13T02:14:23.156034Z</time>
+  </metadata>
+  <trk>
+    <name>Skyfall Glencoe Locations</name>
+    <trkseg>
+    <trkpt lat="56.676" lon="-4.947"><ele>100</ele><time>2026-05-13T02:14:23.156034Z</time></trkpt>
+    <trkpt lat="56.659" lon="-5.11"><ele>101</ele><time>2026-05-13T02:14:23.156034Z</time></trkpt>
+    <trkpt lat="56.643" lon="-4.82"><ele>102</ele><time>2026-05-13T02:14:23.156034Z</time></trkpt>
+    </trkseg>
+  </trk>
+</gpx>

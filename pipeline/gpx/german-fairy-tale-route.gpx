@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="VenturePath GPX Builder"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.topografix.com/GPX/1/1"
+  xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <metadata>
+    <name>German Fairy Tale Route</name>
+    <desc>Deutsche M‰rchenstraﬂe, Germany</desc>
+    <time>2026-05-13T02:14:23.163549Z</time>
+  </metadata>
+  <trk>
+    <name>German Fairy Tale Route</name>
+    <trkseg>
+    <trkpt lat="50.312" lon="9.512"><ele>100</ele><time>2026-05-13T02:14:23.163549Z</time></trkpt>
+    <trkpt lat="50.291" lon="9.697"><ele>101</ele><time>2026-05-13T02:14:23.163549Z</time></trkpt>
+    <trkpt lat="51.166" lon="10.02"><ele>102</ele><time>2026-05-13T02:14:23.163549Z</time></trkpt>
+    <trkpt lat="51.537" lon="9.938"><ele>103</ele><time>2026-05-13T02:14:23.163549Z</time></trkpt>
+    </trkseg>
+  </trk>
+</gpx>
