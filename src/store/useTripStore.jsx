@@ -16,11 +16,11 @@ const DEFAULT_TRIP = {
 };
 
 const DEFAULT_LEGS = [
-  { id: 1, from: 'Home Base',        to: 'Gateway City',     mode: 'flight', durationH: 11, distanceKm: 8400, status: 'confirmed' },
-  { id: 2, from: 'Gateway City',     to: 'Trailhead Camp',   mode: 'bus',    durationH: 6,  distanceKm: 320,  status: 'confirmed' },
-  { id: 3, from: 'Trailhead Camp',   to: 'Summit Approach',  mode: 'foot',   durationH: 8,  distanceKm: 22,   status: 'pending'   },
-  { id: 4, from: 'Summit Approach',  to: 'Base Camp Alpha',  mode: 'foot',   durationH: 5,  distanceKm: 12,   status: 'pending'   },
-  { id: 5, from: 'Base Camp Alpha',  to: 'Home Base',        mode: 'flight', durationH: 13, distanceKm: 9100, status: 'pending'   },
+  { id: 1, from: 'Home Base',        to: 'Gateway City',     mode: 'flight', durationH: 11, distanceKm: 8400, status: 'confirmed', waypoints: [] },
+  { id: 2, from: 'Gateway City',     to: 'Trailhead Camp',   mode: 'bus',    durationH: 6,  distanceKm: 320,  status: 'confirmed', waypoints: [] },
+  { id: 3, from: 'Trailhead Camp',   to: 'Summit Approach',  mode: 'foot',   durationH: 8,  distanceKm: 22,   status: 'pending',   waypoints: [] },
+  { id: 4, from: 'Summit Approach',  to: 'Base Camp Alpha',  mode: 'foot',   durationH: 5,  distanceKm: 12,   status: 'pending',   waypoints: [] },
+  { id: 5, from: 'Base Camp Alpha',  to: 'Home Base',        mode: 'flight', durationH: 13, distanceKm: 9100, status: 'pending',   waypoints: [] },
 ];
 
 const DEFAULT_OBJECTIVES = [
@@ -45,6 +45,8 @@ const initialState = {
   alerts: [],    // { id, type, severity, coords, message }
   budget: { total: 0, items: [] }, // items: { id, label, amount, currency, legId? }
   dayLoops: [],  // { id, date, homebaseStayId, stopIds, autoLegIds, label, planningMode }
+  heroImagePositions: {},  // { [imageUrl]: { x: number, y: number } }
+  vault: [],     // { id, name, mimeType, data: base64, uploadedAt }
 };
 
 let nextLegId = 100; // start above seeded leg IDs so there's no collision
@@ -67,7 +69,12 @@ function reducer(state, action) {
     case 'UPDATE_TRIP':
       return { ...state, trip: { ...state.trip, ...action.payload } };
     case 'ADD_LEG': {
-      const leg = { ...action.payload, id: action.payload.id ?? nextLegId++, status: action.payload.status ?? 'pending' };
+      const leg = {
+        ...action.payload,
+        id: action.payload.id ?? nextLegId++,
+        status: action.payload.status ?? 'pending',
+        waypoints: action.payload.waypoints ?? [],
+      };
       return { ...state, legs: [...state.legs, leg] };
     }
     case 'UPDATE_LEG': {
@@ -84,6 +91,92 @@ function reducer(state, action) {
     }
     case 'REMOVE_LEG': {
       const legs = state.legs.filter(l => l.id !== action.payload);
+      return { ...state, legs };
+    }
+    case 'ADD_WAYPOINT': {
+      const { legId, waypoint } = action.payload;
+      const wp = {
+        ...waypoint,
+        id: waypoint.id ?? crypto.randomUUID(),
+        legId,
+        status: waypoint.status ?? 'planned',
+        source: waypoint.source ?? 'user',
+      };
+      const legs = state.legs.map(l =>
+        l.id === legId
+          ? { ...l, waypoints: [...(l.waypoints ?? []), wp] }
+          : l
+      );
+      return { ...state, legs };
+    }
+    case 'UPDATE_WAYPOINT': {
+      const { legId, waypointId, patch } = action.payload;
+      const legs = state.legs.map(l =>
+        l.id !== legId ? l : {
+          ...l,
+          waypoints: (l.waypoints ?? []).map(w =>
+            w.id === waypointId ? { ...w, ...patch } : w
+          ),
+        }
+      );
+
+      // Auto-create budget line item when a waypoint is confirmed with a cost
+      const updatedWp = legs
+        .find(l => l.id === legId)
+        ?.waypoints?.find(w => w.id === waypointId);
+      const shouldAddBudget =
+        patch.status === 'confirmed' &&
+        updatedWp?.estCost > 0 &&
+        !state.budget.items.some(i => i.id === waypointId);
+
+      if (shouldAddBudget) {
+        const newItem = {
+          id: waypointId,
+          label: updatedWp.name,
+          amount: updatedWp.estCost,
+          currency: 'EUR',
+          legId,
+          category: updatedWp.category,
+        };
+        const items = [...state.budget.items, newItem];
+        const total = items.reduce((s, i) => s + (i.amount ?? 0), 0);
+        return { ...state, legs, budget: { total, items } };
+      }
+
+      return { ...state, legs };
+    }
+    case 'REMOVE_WAYPOINT': {
+      const { legId, waypointId } = action.payload;
+      const legs = state.legs.map(l =>
+        l.id !== legId ? l : { ...l, waypoints: (l.waypoints ?? []).filter(w => w.id !== waypointId) }
+      );
+      return { ...state, legs };
+    }
+    case 'SET_LEG_META': {
+      const { legId, legMeta } = action.payload;
+      const legs = state.legs.map(l =>
+        l.id === legId ? { ...l, legMeta } : l
+      );
+      return { ...state, legs };
+    }
+    case 'REPLACE_LEG_ROUTE': {
+      const { legId, route } = action.payload;
+      const legs = state.legs.map(l => {
+        if (l.id !== legId) return l;
+        return {
+          ...l,
+          coords: route.polyline ?? l.coords,
+          durationH: route.durationH ?? l.durationH,
+          distanceKm: route.distanceKm ?? l.distanceKm,
+          waypoints: (route.waypoints ?? []).map(w => ({
+            ...w,
+            id: w.id ?? crypto.randomUUID(),
+            legId,
+            status: w.status ?? 'planned',
+            source: w.source ?? 'auto',
+          })),
+        };
+      });
       return { ...state, legs };
     }
     case 'CLONE_PATH': {
@@ -108,7 +201,7 @@ function reducer(state, action) {
       return {
         ...initialState,
         trip: e.trip ?? initialState.trip,
-        legs: e.legs ?? [],
+        legs: (e.legs ?? []).map(l => ({ ...l, waypoints: l.waypoints ?? [] })),
         objectives: e.objectives ?? [],
         manifestSettings: e.manifestSettings ?? initialState.manifestSettings,
         stays: e.stays ?? initialState.stays,
@@ -116,6 +209,7 @@ function reducer(state, action) {
         alerts: e.alerts ?? initialState.alerts,
         budget: e.budget ?? initialState.budget,
         dayLoops: e.dayLoops ?? [],
+        vault: e.vault ?? [],
       };
     }
     case 'RESET_TRIP':
@@ -131,11 +225,31 @@ function reducer(state, action) {
     case 'REPLACE_LEGS':
       return { ...state, legs: action.payload };
     case 'ADD_STAY': {
-      const stay = { ...action.payload, id: action.payload.id ?? crypto.randomUUID() };
+      const stay = { ...action.payload, id: action.payload.id ?? crypto.randomUUID(), kind: action.payload.kind ?? 'hotel' };
       return { ...state, stays: [...state.stays, stay] };
     }
     case 'REMOVE_STAY':
       return { ...state, stays: state.stays.filter(s => s.id !== action.payload) };
+    case 'ADD_VAULT_FILE': {
+      const file = {
+        ...action.payload,
+        id: action.payload.id ?? crypto.randomUUID(),
+        uploadedAt: action.payload.uploadedAt ?? new Date().toISOString(),
+      };
+      return { ...state, vault: [...state.vault, file] };
+    }
+    case 'SET_CAMP_META': {
+      const { stayId, campMeta } = action.payload;
+      const stays = state.stays.map(s => s.id === stayId ? { ...s, campMeta } : s);
+      return { ...state, stays };
+    }
+    case 'UPDATE_CAMP_META': {
+      const { stayId, patch } = action.payload;
+      const stays = state.stays.map(s =>
+        s.id === stayId ? { ...s, campMeta: { ...(s.campMeta ?? {}), ...patch } } : s
+      );
+      return { ...state, stays };
+    }
     case 'ADD_POI': {
       const poi = { ...action.payload, id: action.payload.id ?? crypto.randomUUID() };
       return { ...state, pois: [...state.pois, poi] };
@@ -219,6 +333,10 @@ function reducer(state, action) {
     }
     case 'SET_TRIP_PLANNING_MODE':
       return { ...state, trip: { ...state.trip, planningMode: action.payload } };
+    case 'SET_HERO_IMAGE_POSITION': {
+      const { url, x, y } = action.payload;
+      return { ...state, heroImagePositions: { ...state.heroImagePositions, [url]: { x, y } } };
+    }
     default:
       return state;
   }
@@ -236,7 +354,9 @@ function loadState() {
     // nextLegId must stay above any saved leg ids to avoid collisions
     const maxId = (saved.legs ?? []).reduce((m, l) => Math.max(m, l.id ?? 0), 99);
     if (maxId >= nextLegId) nextLegId = maxId + 1;
-    return { ...initialState, ...saved };
+    const merged = { ...initialState, ...saved };
+    merged.legs = (merged.legs ?? []).map(l => ({ ...l, waypoints: l.waypoints ?? [] }));
+    return merged;
   } catch {
     return initialState;
   }
@@ -258,6 +378,7 @@ export function TripStoreProvider({ children }) {
         alerts: state.alerts,
         budget: state.budget,
         dayLoops: state.dayLoops,
+        heroImagePositions: state.heroImagePositions,
       }));
     } catch { /* storage full or unavailable */ }
   }, [state]);
@@ -273,6 +394,16 @@ export function TripStoreProvider({ children }) {
   const addLeg = (data) => dispatch({ type: 'ADD_LEG', payload: data });
   const updateLeg = (data) => dispatch({ type: 'UPDATE_LEG', payload: data });
   const removeLeg = (id) => dispatch({ type: 'REMOVE_LEG', payload: id });
+  const addWaypoint = (legId, waypoint) =>
+    dispatch({ type: 'ADD_WAYPOINT', payload: { legId, waypoint } });
+  const updateWaypoint = (legId, waypointId, patch) =>
+    dispatch({ type: 'UPDATE_WAYPOINT', payload: { legId, waypointId, patch } });
+  const removeWaypoint = (legId, waypointId) =>
+    dispatch({ type: 'REMOVE_WAYPOINT', payload: { legId, waypointId } });
+  const setLegMeta = (legId, legMeta) =>
+    dispatch({ type: 'SET_LEG_META', payload: { legId, legMeta } });
+  const replaceLegRoute = (legId, route) =>
+    dispatch({ type: 'REPLACE_LEG_ROUTE', payload: { legId, route } });
   const resetTrip = () => dispatch({ type: 'RESET_TRIP' });
   const setRole = (role) => dispatch({ type: 'SET_ROLE', payload: role });
   const updateLegStatus = (id, status) =>
@@ -281,6 +412,10 @@ export function TripStoreProvider({ children }) {
 
   const addStay = (data) => dispatch({ type: 'ADD_STAY', payload: data });
   const removeStay = (id) => dispatch({ type: 'REMOVE_STAY', payload: id });
+  const setCampMeta = (stayId, campMeta) =>
+    dispatch({ type: 'SET_CAMP_META', payload: { stayId, campMeta } });
+  const updateCampMeta = (stayId, patch) =>
+    dispatch({ type: 'UPDATE_CAMP_META', payload: { stayId, patch } });
   const addPoi = (data) => dispatch({ type: 'ADD_POI', payload: data });
   const removePoi = (id) => dispatch({ type: 'REMOVE_POI', payload: id });
   const addAlert = (data) => dispatch({ type: 'ADD_ALERT', payload: data });
@@ -300,15 +435,21 @@ export function TripStoreProvider({ children }) {
   const setTripPlanningMode = (mode) =>
     dispatch({ type: 'SET_TRIP_PLANNING_MODE', payload: mode });
 
+  const setHeroImagePosition = (url, x, y) =>
+    dispatch({ type: 'SET_HERO_IMAGE_POSITION', payload: { url, x, y } });
+
+  const addVaultFile = (payload) => dispatch({ type: 'ADD_VAULT_FILE', payload });
+
   return (
     <TripStoreContext.Provider value={{
       ...state,
       dispatch,    // expose raw dispatch for onStopAdded()
-      clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, resetTrip,
-      setRole, updateLegStatus, loadExpedition, replaceLegs, addStay, removeStay,
+      clonePath, createTrip, updateTrip, addLeg, updateLeg, removeLeg, addWaypoint, updateWaypoint, removeWaypoint, setLegMeta, replaceLegRoute, resetTrip,
+      setRole, updateLegStatus, loadExpedition, replaceLegs, addStay, removeStay, setCampMeta, updateCampMeta,
       addPoi, removePoi, addAlert, clearAlerts, addBudgetItem,
       addDayLoop, addStopToDayLoop, removeStopFromDayLoop, setAutoLegs,
-      setDayLoopMode, removeDayLoop, setTripPlanningMode,
+      setDayLoopMode, removeDayLoop, setTripPlanningMode, setHeroImagePosition,
+      addVaultFile,
     }}>
       {children}
     </TripStoreContext.Provider>

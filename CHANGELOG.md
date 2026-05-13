@@ -1,5 +1,99 @@
 # VenturePath — CHANGELOG
 
+## [Unreleased] — 2026-05-13 — Curated Expeditions Foundation (Spec 0)
+
+### Added
+- Migration `supabase/migrations/20260513_curated_expeditions_foundation.sql`: `pro_paths` gains `slug` (unique, backfilled), `gpx_storage_path`, `theme_category` (movie/historical/thematic/city/geographical enum), `tags text[]`, `provenance jsonb`, `safety_meta jsonb`, `narrative_blocks jsonb`. New tables `pro_path_waypoints` and `pro_path_attempts`. RLS enabled on all three with public-read-where-curated + architect-write policies.
+- Migration `supabase/migrations/20260513_gpx_storage_bucket.sql`: Storage bucket `gpx` with `is_curated`-gated public read and architect-only write.
+- `react-router-dom@^7` dependency. New `src/router/AppRouter.jsx` exposes `/explore`, `/explore/:theme`, `/expedition/:slug` as lazy-loaded stub pages; catch-all renders existing state-view tree (extracted to `src/LegacyApp.jsx`) unchanged.
+- Stub pages `src/pages/Explore.jsx`, `ExploreTheme.jsx`, `ExpeditionDetail.jsx`.
+- Tests: `pipeline/__tests__/schema.test.js` (7 assertions on migration text), `src/router/__tests__/AppRouter.test.jsx` (4 route-render assertions).
+
+### Changed
+- Renamed `src/components/vault/` → `src/components/dossier/`. Components renamed: `VaultHub → DossierHub`, `VaultIngest → DossierIngest`, `PassportVault → PassportDossier`. Display copy "Vault" / "PassportVault" → "Dossier" / "Passport Dossier" in headers, empty states, and modal titles. Other files in the directory keep their names (only directory moved). Utility `src/utils/vaultExtractor.js` unchanged (internal, not user-facing).
+- `src/App.jsx`: legacy state-view router extracted to `src/LegacyApp.jsx`; root component now wraps `<AppRouter />`.
+- `src/pages/moodboard/moodboard.config.js`: added `Dossier` vocabulary entry distinguishing it from `VentureVault`.
+
+### Notes
+- `seedCurated.js` pipeline uses `SUPABASE_SERVICE_KEY` (service role) and bypasses RLS — no pipeline regression.
+- Spec 1 (Discovery surface) must update the canonical SEO URLs in `src/components/discovery/VentureVault.jsx` lines 56 + 74 (`https://venturepath.app/vault/...` → `/explore` and `/expedition/:slug`) and rename `DepartingSoonStrip`'s `onOpenVault` prop.
+- Pre-existing baseline test failures (4 files: gpxParser/waymarkedEngine missing `@xmldom/xmldom` dep, LegLens flight-mode placeholder, legIntelligence hydrateLeg flight-now-supported) were already failing before this PR and are out of scope.
+
+## [Unreleased] — 2026-05-13 — Feature: Gatherings Phase 3 — Social Depth
+
+### New SQL
+- **`supabase/migrations/20260513_gatherings_social.sql`** — New:
+  - `gathering_messages` table (Realtime chat: body, reply_to, attachments)
+  - `gathering_proposals` table (Ledger votes: field/value/votes JSONB, status)
+  - `cast_proposal_vote(p_id, p_vote)` RPC — atomic vote update via jsonb_set
+  - Realtime publication for `gathering_messages`, `gathering_proposals`, `gathering_beacons`
+  - Full RLS (select via `can_view_gathering`, self-only writes, convener-only resolves)
+
+### New components
+- **`src/components/gatherings/GatheringChat.jsx`** — Realtime threaded chat, reply-to, @mention highlight, self-delete, auto-scroll
+- **`src/components/gatherings/GatheringLedger.jsx`** — Vote on proposals (time/location/menu/gear/custom). Convener can adopt/reject. Adopted time/location auto-applied to parent Gathering.
+- **`src/components/gatherings/ArcEditor.jsx`** — Convener-only Arc block management with up/down reorder, edit-in-place, role tagging
+- **`src/lib/gatherings/tacticalCache.js`** — Offline localStorage cache (`cacheGatherings`, `readCachedGatherings`, `nextCachedGathering`)
+
+### Modified
+- **`src/lib/gatherings/api.js`** — Added: listMessages, postMessage, deleteMessage, subscribeToMessages, listProposals, createProposal, castVote, resolveProposal, deleteProposal, subscribeToProposals, postBeacon, listBeacons, subscribeToBeacons, listArcBlocks, createArcBlock, updateArcBlock, deleteArcBlock, reorderArcBlocks, addGear, deleteGear, claimGear, unclaimGear, bulkAddGear. Streak emissions: `gathering_hosted` on create, `gathering_attended` on RSVP=yes.
+- **`src/lib/gatherings/useGatherings.js`** — Writes to tactical cache on every reload
+- **`src/components/gatherings/Beacon.jsx`** — Live mode unlocked at IMMINENT/LIVE state: Arrived/En Route/Late broadcast with optional GPS share, realtime roster of latest beacons per Pioneer
+- **`src/components/gatherings/GatheringDetail.jsx`** — Refactored into tabbed modal (Overview / Chat / Ledger / Arc / Gear). Gear tab: convener-add, claim/drop, "+ FROM PACKING MANIFEST" pull (de-duped, capped at 30, tagged `source: 'packing_manifest'`)
+- **`src/utils/streakEmitter.js`** — Added `emitGatheringHosted`, `emitGatheringAttended`
+- **`src/components/logistics/PackingHudScreen.jsx`** — Accepts `gatherings` prop, displays bound-Gathering count banner
+- **`src/components/ui/TacticalMode.jsx`** — Reads cached Gatherings: surfaces UPCOMING GATHERINGS section with next 3, includes next Gathering's title/location/coords/time in SOS template. Works fully offline.
+- **`src/pages/TripPlanner.jsx`** — Passes `tripGatherings` to PackingManifest
+
+### Apple / VP Compliance
+- Beacon.jsx + tacticalCache.js + TacticalMode.jsx all tagged `// TACTICAL-CRITICAL: this component must work offline`
+- Beacon coords share tagged `// REQUIRES LOCATION USAGE DESCRIPTION IN APP STORE CONNECT`
+- All UI strings use VP-1 vocabulary (Pioneer/Convener/Roster/Beacon/Arc/Ledger). No generic "user"/"event" language.
+- Apple Rule 2: every Gathering tab has ≥ 2 interactive elements (chat: send/reply/delete; ledger: vote/adopt/reject; arc: add/edit/reorder/delete; gear: add/claim/drop/import)
+
+## [Unreleased] — 2026-05-13 — Feature: Gatherings (Phase 1 + Phase 2)
+
+### Phase 1 — Auth & Architect Profiles
+
+- **`supabase/migrations/20260512_profiles_auth.sql`** — New:
+  - `public.profiles` table (id, handle, display_name, avatar_url, region, bio, sabbath_aware, verified)
+  - `handle_new_user()` trigger: auto-creates `architect_<8hex>` draft profile on sign-up
+  - `is_handle_available(p_handle)` RPC for debounced availability check
+  - `my_profile_export` view for GDPR self-export
+  - RLS: authenticated select all; self-only update; insert blocked (trigger only)
+- **`src/context/AuthContext.jsx`** — New: Supabase auth wrapper exposing status, architect, profile, needsHandleSetup, signIn/signUp/signOut/Google/updateProfile/isHandleAvailable/exportMyData
+- **`src/pages/Auth.jsx`** — New: Architect auth UI (RESUME/ENLIST, magic-link/passphrase, Google OAuth, VP vocabulary)
+- **`src/pages/Profile.jsx`** — New: Architect Dossier page (handle picker with debounce availability, region, ethos, sabbath toggle, GDPR export)
+- **`src/App.jsx`** — Modified: Added AuthProvider wrap, Events/Auth/Profile routes, HandleSetupNudge fixed-position chip
+
+### Phase 2 — Core Gatherings
+
+- **`supabase/migrations/20260512_gatherings.sql`** — New: 6 tables (gatherings, gathering_arc_blocks, gathering_roles, gathering_attendees, gathering_gear, gathering_beacons, gathering_reports) + helper functions (can_view_gathering, is_gathering_convener) + full RLS
+- **`src/lib/gatherings/templates.js`** — New: 7 archetype templates (campfire, summit_push, basecamp_dinner, stargaze, trail_crew, ritual_sendoff, custom) with default Arc/Roles/Gear
+- **`src/lib/gatherings/api.js`** — New: Full CRUD + inviteByHandle, setRsvp, claimRole, unclaimRole, reportGathering, getGatheringBundle
+- **`src/lib/gatherings/useGatherings.js`** — Now fully wired (AuthContext + api imports resolved)
+- **`src/components/gatherings/TemplatePicker.jsx`** — New: 7-template archetype grid picker
+- **`src/components/gatherings/CreateGatheringForm.jsx`** — New: Two-step form (archetype → details) with sabbath Sunday warning, coords parser, privacy selector
+- **`src/components/gatherings/GatheringCard.jsx`** — New: Card with template accent, privacy/status badges, date/location
+- **`src/components/gatherings/GatheringDetail.jsx`** — New: Full modal (Banner, Beacon, RSVP, Arc, Roles claim, Roster, Gear, invite-by-handle, report, delete)
+- **`src/components/gatherings/Beacon.jsx`** — New: Day-of state stub (LIVE/IMMINENT/STANDBY, relative time, pulsing dot; tagged TACTICAL-CRITICAL + location usage comment)
+- **`src/components/gatherings/GatheringsHub.jsx`** — New: List/Upcoming switcher + create modal + empty state with VP copy
+- **`src/components/gatherings/GatheringPinpointLayer.jsx`** — New: Leaflet Markers for all Gatherings with coords; Ember for upcoming, Golden Hour for live/imminent
+- **`src/pages/Events.jsx`** — New: Standalone /events route showing all Architect Gatherings, auth-gated
+- **`src/components/dashboard/ActionList.jsx`** — Modified: Added Gatherings entry with Ember accent
+- **`src/components/layout/StickyNav.jsx`** — Modified: Added 'gatherings' step between discovery and itinerary
+- **`src/pages/TripPlanner.jsx`** — Modified: Added useTripGatherings hook, section-gatherings tab, GatheringsHub + GatheringDetail rendering, RouteMap gatherings/onGatheringOpen props, TimelinePath gatherings prop
+- **`src/components/itinerary/RouteMap.jsx`** — Modified: Added gatherings + onGatheringOpen props, renders GatheringPinpointLayer inside MapContainer
+- **`src/components/itinerary/TimelinePath.jsx`** — Modified: Added gatherings prop; Gathering milestones merged + sorted by time into timeline; distinct GATHERING label and Ember accent styling
+
+### Apple / VP Compliance
+- All UI strings use VP-1 vocabulary (Gathering, Convener, Pioneer, Roster, Arc, Beacon, Pinpoint, Banner)
+- Every Gathering view has ≥ 2 interactive elements (Apple Rule 2)
+- Beacon.jsx tagged `// TACTICAL-CRITICAL` + `// REQUIRES LOCATION USAGE DESCRIPTION IN APP STORE CONNECT`
+- GatheringDetail.jsx tagged `// REQUIRES UGC POLICY LINK IN APP STORE METADATA`
+- Public privacy options locked to Phase 4 (no UGC feed before verification)
+- Empty state: "No Gatherings yet. Light one up — pick a Campfire, Stargaze, or Trail Crew template."
+
 ## [Unreleased] — 2026-05-12 — Fix: AppShell BottomNav Props
 
 ### AppShell Component (Fix)

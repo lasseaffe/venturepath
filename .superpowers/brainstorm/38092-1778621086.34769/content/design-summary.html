@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VenturePath UX Redesign — Full Design</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0E1012; color: #d9c5b2; font-family: 'Inter', system-ui, sans-serif; padding: 40px; line-height: 1.6; }
+  h1 { font-family: 'Playfair Display', Georgia, serif; color: #fff; font-size: 28px; margin-bottom: 6px; }
+  .subtitle { color: #888; font-size: 13px; margin-bottom: 40px; }
+  h2 { font-family: 'Playfair Display', Georgia, serif; color: #fff; font-size: 18px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #2a2a2a; }
+  .section { margin-bottom: 48px; }
+  .label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #666; margin-bottom: 8px; }
+  .ember { color: #e67e22; }
+  .green { color: #2ecc71; }
+  .red { color: #e74c3c; }
+
+  /* App shell mockup */
+  .shell { display: flex; height: 480px; border: 1px solid #2a2a2a; border-radius: 10px; overflow: hidden; background: #0E1012; }
+  .rail { width: 56px; background: #111315; border-right: 1px solid #1e2022; display: flex; flex-direction: column; align-items: center; padding: 12px 0; gap: 4px; flex-shrink: 0; }
+  .rail-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #555; cursor: pointer; transition: all 0.15s; border: 1px solid transparent; }
+  .rail-icon.active { background: rgba(230,126,34,0.15); color: #e67e22; border-color: rgba(230,126,34,0.3); }
+  .rail-icon:not(.active):hover { background: #1a1c1f; color: #aaa; }
+  .rail-spacer { flex: 1; }
+  .rail-divider { width: 32px; height: 1px; background: #222; margin: 4px 0; }
+  .expanded { width: 192px; background: #111315; border-right: 1px solid #1e2022; padding: 16px 10px; flex-shrink: 0; font-size: 11px; }
+  .group-label { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: #444; padding: 0 6px; margin: 12px 0 4px; }
+  .nav-item { padding: 5px 8px; border-radius: 5px; color: #888; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+  .nav-item.active { background: rgba(230,126,34,0.12); color: #e67e22; }
+  .nav-item:not(.active):hover { background: #1a1c1f; color: #ccc; }
+  .nav-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: 0.6; }
+  .content-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+  /* Dashboard top */
+  .dashboard { padding: 20px 24px; }
+  .trip-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+  .trip-title { font-size: 17px; font-weight: 600; color: #fff; font-family: 'Playfair Display', Georgia, serif; }
+  .trip-meta { font-size: 11px; color: #666; margin-top: 2px; }
+  .overview-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .stat-card { background: #111315; border: 1px solid #1e2022; border-radius: 7px; padding: 10px 12px; }
+  .stat-val { font-size: 20px; font-weight: 700; color: #fff; font-family: 'JetBrains Mono', monospace; }
+  .stat-label { font-size: 10px; color: #555; letter-spacing: 0.06em; text-transform: uppercase; margin-top: 2px; }
+  .route-bar { background: #111315; border: 1px solid #1e2022; border-radius: 7px; padding: 10px 14px; font-size: 11px; color: #666; display: flex; align-items: center; gap: 10px; }
+  .route-dot { width: 8px; height: 8px; border-radius: 50%; background: #e67e22; flex-shrink: 0; }
+  .route-line { flex: 1; height: 1px; background: linear-gradient(90deg, #e67e22, #2980b9); }
+  .route-dot-end { width: 8px; height: 8px; border-radius: 50%; background: #2980b9; flex-shrink: 0; }
+
+  /* Stepper */
+  .stepper-bar { background: #0a0c0e; border-top: 1px solid #1e2022; padding: 0 20px; display: flex; align-items: center; }
+  .step { display: flex; align-items: center; padding: 12px 14px; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #555; cursor: pointer; border-bottom: 2px solid transparent; gap: 7px; flex: 1; justify-content: center; white-space: nowrap; }
+  .step.done { color: #2ecc71; }
+  .step.active { color: #e67e22; border-bottom-color: #e67e22; }
+  .step-marker { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 9px; flex-shrink: 0; }
+  .step.done .step-marker { background: #2ecc71; border-color: #2ecc71; color: #000; }
+  .step-content { background: #111315; flex: 1; padding: 20px 24px; font-size: 12px; color: #666; display: flex; align-items: center; justify-content: center; }
+
+  /* Part 2 — sidebar items table */
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { text-align: left; padding: 8px 12px; color: #666; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 1px solid #2a2a2a; }
+  td { padding: 8px 12px; border-bottom: 1px solid #1a1a1a; color: #ccc; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  .group-row td { background: #111315; color: #e67e22; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 10px 12px 4px; }
+
+  /* Part 3 — SEO */
+  .seo-row { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid #1a1a1a; font-size: 12px; }
+  .seo-row:last-child { border-bottom: none; }
+  .seo-route { font-family: 'JetBrains Mono', monospace; color: #e67e22; min-width: 160px; font-size: 11px; }
+  .seo-tags { color: #888; flex: 1; }
+  .tag { display: inline-block; background: #1a1c1f; border: 1px solid #2a2a2a; border-radius: 3px; padding: 1px 6px; font-size: 10px; color: #aaa; margin: 2px 2px 2px 0; font-family: monospace; }
+
+  /* Approval bar */
+  .approval { margin-top: 40px; padding: 20px; background: #111315; border: 1px solid #2a2a2a; border-radius: 8px; text-align: center; }
+  .approval p { font-size: 13px; color: #888; margin-bottom: 14px; }
+  .btn { display: inline-block; padding: 9px 24px; border-radius: 6px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; cursor: pointer; margin: 0 6px; }
+  .btn-primary { background: #e67e22; color: #000; }
+  .btn-secondary { background: transparent; border: 1px solid #444; color: #aaa; }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<h1>VenturePath — UX Redesign</h1>
+<p class="subtitle">Full design proposal. Three sections. Review each and confirm in terminal.</p>
+
+<!-- SECTION 1: APP SHELL -->
+<div class="section">
+  <h2>Part 1 — App Shell &amp; Navigation</h2>
+
+  <div class="shell">
+    <!-- Icon rail -->
+    <div class="rail">
+      <div class="rail-icon active" title="Dashboard">⌂</div>
+      <div class="rail-icon" title="Trip Planner">⊞</div>
+      <div class="rail-divider"></div>
+      <div class="rail-icon" title="VentureVault">♦</div>
+      <div class="rail-icon" title="AR Ghost Tours">◎</div>
+      <div class="rail-icon" title="Inspire">✦</div>
+      <div class="rail-divider"></div>
+      <div class="rail-icon" title="Tactical Mode">⚡</div>
+      <div class="rail-spacer"></div>
+      <div class="rail-icon" title="Profile" style="width:32px;height:32px;border-radius:50%;background:#d9c5b2;color:#0E1012;font-size:11px;font-weight:700;">A</div>
+    </div>
+
+    <!-- Expanded sidebar (hover state) -->
+    <div class="expanded">
+      <div style="padding: 8px 6px 12px; border-bottom: 1px solid #1e2022; margin-bottom: 4px;">
+        <div style="font-size: 11px; font-weight: 600; color: #e67e22; font-family: 'Playfair Display', serif;">VenturePath</div>
+        <div style="font-size: 9px; color: #444; margin-top: 1px;">ARCHITECT MODE</div>
+      </div>
+      <div class="group-label">Plan</div>
+      <div class="nav-item active"><span class="nav-dot"></span>Dashboard</div>
+      <div class="nav-item"><span class="nav-dot"></span>Trip Planner</div>
+      <div class="nav-item"><span class="nav-dot"></span>Ledger Workbench</div>
+      <div class="group-label">Explore</div>
+      <div class="nav-item"><span class="nav-dot"></span>VentureVault</div>
+      <div class="nav-item"><span class="nav-dot"></span>AR Ghost Tours</div>
+      <div class="nav-item"><span class="nav-dot"></span>Inspire</div>
+      <div class="group-label">Tools</div>
+      <div class="nav-item"><span class="nav-dot"></span>Tactical Mode</div>
+      <div class="nav-item"><span class="nav-dot"></span>Settings</div>
+    </div>
+
+    <!-- Content area -->
+    <div class="content-area">
+      <div class="dashboard">
+        <div class="trip-header">
+          <div>
+            <div class="trip-title">Tokyo + Kyoto Expedition</div>
+            <div class="trip-meta">Mar 14–24, 2026 &nbsp;·&nbsp; 4 Pioneers &nbsp;·&nbsp; 10 days</div>
+          </div>
+          <div style="font-size: 10px; color: #e67e22; border: 1px solid rgba(230,126,34,0.3); padding: 4px 10px; border-radius: 4px;">PLANNING</div>
+        </div>
+        <div class="route-bar">
+          <div class="route-dot"></div>
+          <div style="font-size: 11px; color: #aaa;">Salt Lake City</div>
+          <div class="route-line"></div>
+          <div style="font-size: 10px; color: #555; white-space: nowrap;">14h 30m · JAL 61</div>
+          <div class="route-line"></div>
+          <div style="font-size: 11px; color: #aaa;">Tokyo Narita</div>
+          <div class="route-dot-end"></div>
+        </div>
+        <div class="overview-grid" style="margin-top: 10px;">
+          <div class="stat-card"><div class="stat-val">$2,840</div><div class="stat-label">Budget Remaining</div></div>
+          <div class="stat-card"><div class="stat-val">3/5</div><div class="stat-label">Steps Complete</div></div>
+          <div class="stat-card"><div class="stat-val">4</div><div class="stat-label">Squad Members</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 12px; font-size: 12px; color: #666; line-height: 1.8;">
+    <span class="ember">Rail (56px):</span> always visible — icon-only, tooltips on hover. &nbsp;|&nbsp;
+    <span class="ember">Expanded panel (192px):</span> appears on hover or pin-click, persisted to localStorage. &nbsp;|&nbsp;
+    <span class="ember">Ledger Workbench</span> moves from COMMAND group to PLAN group (it IS a planning tool). &nbsp;|&nbsp;
+    <span class="ember">Deletes:</span> CommandRail.jsx + Sidebar.jsx → replaced by AppShell.jsx
+  </div>
+</div>
+
+<!-- SECTION 2: TRIPPLANNER TABS -->
+<div class="section">
+  <h2>Part 2 — TripPlanner: Journey Stepper</h2>
+
+  <div class="shell" style="height: 320px;">
+    <div class="content-area">
+      <div style="padding: 16px 24px 0; background: #0a0c0e; border-bottom: 1px solid #1e2022;">
+        <div style="font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 12px; font-family: 'Playfair Display', serif;">Tokyo + Kyoto Expedition</div>
+        <div class="stepper-bar" style="background: transparent; padding: 0; border: none; margin: 0 -24px; padding: 0 24px;">
+          <div class="step done"><div class="step-marker">✓</div>Transport</div>
+          <div class="step done"><div class="step-marker">✓</div>Accommodation</div>
+          <div class="step active"><div class="step-marker">●</div>Discovery</div>
+          <div class="step"><div class="step-marker"></div>Itinerary</div>
+          <div class="step"><div class="step-marker"></div>Logistics</div>
+        </div>
+      </div>
+      <div class="step-content">
+        <div style="text-align: center;">
+          <div style="font-size: 11px; color: #e67e22; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px;">Discovery</div>
+          <div style="font-size: 13px; color: #ccc;">MustSee attractions · LocalFlavor · VibeCheck · AR Ghost Tours</div>
+          <div style="margin-top: 12px; font-size: 11px; color: #444;">← Flights booked &amp; hotel confirmed · Add your must-sees now →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 16px; font-size: 12px;">
+    <table>
+      <tr><th>Tab</th><th>Renamed from</th><th>Contains</th></tr>
+      <tr><td class="ember">TRANSPORT</td><td style="color:#666;">TRANSPORT (was buried at tab 5)</td><td>Flights, public transport, vehicle, booking matrix</td></tr>
+      <tr><td class="ember">ACCOMMODATION</td><td style="color:#666;">STAYS</td><td>Hotel search, accommodation cards</td></tr>
+      <tr><td class="ember">DISCOVERY</td><td style="color:#666;">Discovery (was tab 6, lowercase)</td><td>MustSee, LocalFlavor, VibeCheck, AR Ghost Tours, Basecamp Scout</td></tr>
+      <tr><td class="ember">ITINERARY</td><td style="color:#666;">ITINERARY (was tab 2)</td><td>Day loops, kanban board, transit map, leg guide, budget loom</td></tr>
+      <tr><td class="ember">LOGISTICS</td><td style="color:#666;">LOGISTICS (expanded)</td><td>Packing Manifest + Budget Loom (merged from Itinerary)</td></tr>
+      <tr><td style="color:#666; text-decoration: line-through;">VAULT</td><td style="color:#666;">tab 7</td><td style="color:#555;">→ Moved to sidebar under EXPLORE</td></tr>
+      <tr><td style="color:#666; text-decoration: line-through;">OVERVIEW</td><td style="color:#666;">tab 1</td><td style="color:#555;">→ Dissolved into Dashboard</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- SECTION 3: SEO -->
+<div class="section">
+  <h2>Part 3 — SEO: VentureVault Route Meta Tags</h2>
+  <p style="font-size: 12px; color: #666; margin-bottom: 16px;">Add <code>react-helmet-async</code> for dynamic meta tags. Since this is a Vite SPA, full crawler indexing requires SSR — but og:* tags handle social sharing immediately. Critical for VentureVault Pro-Path listings shared on social media.</p>
+
+  <div class="seo-row">
+    <div class="seo-route">/vault</div>
+    <div class="seo-tags">
+      <span class="tag">og:title</span><span class="tag">og:description</span><span class="tag">og:image</span><span class="tag">canonical</span>
+      <div style="margin-top: 4px; color: #666;">VentureVault — Discover Pro-Path Expedition Templates | VenturePath</div>
+    </div>
+  </div>
+  <div class="seo-row">
+    <div class="seo-route">/vault/:pathId</div>
+    <div class="seo-tags">
+      <span class="tag">og:title</span><span class="tag">og:description</span><span class="tag">og:image</span><span class="tag">canonical</span><span class="tag">schema:Product</span>
+      <div style="margin-top: 4px; color: #666;">Dynamic per Pro-Path: title, route preview image, architect name, difficulty, leg count</div>
+    </div>
+  </div>
+  <div class="seo-row">
+    <div class="seo-route">/dashboard</div>
+    <div class="seo-tags">
+      <span class="tag">og:title</span><span class="tag">canonical</span>
+      <div style="margin-top: 4px; color: #666;">VenturePath — Expedition Planning for Pioneers</div>
+    </div>
+  </div>
+
+  <div style="margin-top: 12px; padding: 12px; background: #111315; border-radius: 6px; font-size: 11px; color: #666;">
+    <span class="ember">Install:</span> <code>npm install react-helmet-async</code> &nbsp;·&nbsp;
+    <span class="ember">Wrap App.jsx</span> in <code>&lt;HelmetProvider&gt;</code> &nbsp;·&nbsp;
+    <span class="ember">Add &lt;Helmet&gt;</span> to VentureVault listing view &nbsp;·&nbsp;
+    <span class="ember">Future:</span> vite-plugin-prerender for static Vault listings if full indexing needed
+  </div>
+</div>
+
+<div class="approval">
+  <p>Does this design match what you had in mind? Any section you want to adjust before I write the spec doc?</p>
+  <div style="font-size: 12px; color: #555;">Tell me in terminal — "looks good", or call out what to change.</div>
+</div>
+
+</body>
+</html>

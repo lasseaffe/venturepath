@@ -1,0 +1,29 @@
+// Phase 1 categories. Phases 2+ add: transfer, resupply, camp, permit.
+// Colors must match VP-5 brand tokens — never use raw Tailwind defaults.
+export const WAYPOINT_CATEGORIES = {
+  fuel:      { color: '#E67E22', icon: '⛽', label: 'Fuel' },
+  charge:    { color: '#E67E22', icon: '🔌', label: 'Charge' },
+  rest:      { color: '#D9C5B2', icon: '🅿',  label: 'Rest area' },
+  food:      { color: '#D9C5B2', icon: '🍽',  label: 'Food' },
+  view:      { color: '#F2C94C', icon: '📷', label: 'Viewpoint' },
+  toll:      { color: '#F2A900', icon: '💶', label: 'Toll' },
+  border:    { color: '#F2A900', icon: '🛂', label: 'Border' },
+  hazard:    { color: '#dc2626', icon: '⚠',  label: 'Hazard' },
+  emergency: { color: '#dc2626', icon: '🆘', label: 'Emergency' },
+  water:     { color: '#3A6B5C', icon: '💧', label: 'Water source' },
+  resupply:  { color: '#D9C5B2', icon: '🎒', label: 'Resupply' },
+  permit:    { color: '#F2C94C', icon: '📋', label: 'Permit check' },
+  transfer:  { color: '#D9C5B2', icon: '🔄', label: 'Transfer' },
+  layover:   { color: '#D9C5B2', icon: '⏳', label: 'Layover' },
+  platform:  { color: '#E67E22', icon: '🚉', label: 'Platform' },
+  // Cycling waypoint categories
+  bike_shop: { color: '#E67E22', icon: '🔧', label: 'Bike shop' },
+  shop:      { color: '#D9C5B2', icon: '🛒', label: 'Shop' },
+  toilet:    { color: '#3A6B5C', icon: '🚽', label: 'Toilet' },
+};
+
+const FALLBACK = { color: '#D9C5B2', icon: '•', label: 'Waypoint' };
+
+export function getCategoryStyle(category) {
+  return WAYPOINT_CATEGORIES[category] ?? FALLBACK;
+}

@@ -16,6 +16,7 @@ export default function PackingHudScreen({
   days = 7,
   hasChildren = false,
   poiTags = [],
+  gatherings = [],
 }) {
   const { trip } = useTripStore();
   const destination = trip?.destination ?? '';
@@ -134,6 +135,19 @@ export default function PackingHudScreen({
             }}
           >+ ADD BAG</button>
         </div>
+
+        {/* Gathering gear sync notice */}
+        {gatherings.length > 0 && (
+          <div style={{
+            padding: '8px 10px',
+            background: 'rgba(230,126,34,0.06)',
+            border: '1px solid rgba(230,126,34,0.3)',
+            display: 'flex', alignItems: 'center', gap: 8,
+            fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: '#E67E22',
+          }}>
+            <span>◈ {gatherings.length} Gathering{gatherings.length !== 1 ? 's' : ''} bound to this expedition — open each one's gear list to coordinate squad provisions</span>
+          </div>
+        )}
 
         {/* Empty state */}
         {bags.length === 0 && (

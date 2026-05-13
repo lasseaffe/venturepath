@@ -103,3 +103,40 @@ export async function fetchRoutes(fromCoords, toCoords) {
   setCached(cacheKey, results);
   return results;
 }
+
+const VARIANT_OPTIONS = {
+  'fastest':   undefined,
+  'toll-free': { avoid_features: ['tollways'] },
+  'scenic':    undefined,   // placeholder — Phase 1 uses fastest geometry; future versions add scenic-hint waypoints
+};
+
+export async function fetchRouteVariant(fromCoords, toCoords, variant) {
+  const profile = ORS_PROFILE.car;
+  const key = import.meta.env.VITE_ORS_API_KEY ?? '';
+  if (!key) return { variant, durationH: null, distanceKm: null, geometry: null };
+  const body = {
+    coordinates: [
+      [fromCoords.lng, fromCoords.lat],
+      [toCoords.lng, toCoords.lat],
+    ],
+  };
+  if (VARIANT_OPTIONS[variant]) body.options = VARIANT_OPTIONS[variant];
+  try {
+    const res = await fetch(`${ORS_BASE}/${profile}`, {
+      method: 'POST',
+      headers: { 'Authorization': key, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) return { variant, durationH: null, distanceKm: null, geometry: null };
+    const json = await res.json();
+    const summary = json.routes?.[0]?.summary;
+    return {
+      variant,
+      durationH:  summary ? Math.round((summary.duration / 3600) * 10) / 10 : null,
+      distanceKm: summary ? Math.round(summary.distance / 1000) : null,
+      geometry:   json.routes?.[0]?.geometry ?? null,
+    };
+  } catch {
+    return { variant, durationH: null, distanceKm: null, geometry: null };
+  }
+}
