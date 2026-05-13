@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="VenturePath GPX Builder"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.topografix.com/GPX/1/1"
+  xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <metadata>
+    <name>Tulip Route</name>
+    <desc>Tulip route cycling, Netherlands</desc>
+    <time>2026-05-13T02:14:23.164551Z</time>
+  </metadata>
+  <trk>
+    <name>Tulip Route</name>
+    <trkseg>
+    <trkpt lat="52.605" lon="5.115"><ele>100</ele><time>2026-05-13T02:14:23.164551Z</time></trkpt>
+    <trkpt lat="52.535" lon="5.226"><ele>101</ele><time>2026-05-13T02:14:23.164551Z</time></trkpt>
+    <trkpt lat="52.65" lon="5.205"><ele>102</ele><time>2026-05-13T02:14:23.164551Z</time></trkpt>
+    </trkseg>
+  </trk>
+</gpx>

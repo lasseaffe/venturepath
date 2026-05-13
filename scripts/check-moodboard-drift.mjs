@@ -38,7 +38,7 @@ const inConfigOnly = [...configVars].filter((v) => !cssVars.has(v)).sort();
 // VP's index.css declares a few mechanical helpers — don't flag them.
 const ignored = new Set([
   "--accent-dim", "--accent-rule", "--border-strong",
-  "--trail", "--radius-card", "--shadow-card",
+  "--trail", "--radius-card", "--shadow-card", "--font-mono",
 ]);
 const drifted = inCssOnly.filter((v) => !ignored.has(v));
 

@@ -58,5 +58,5 @@ export function useDestinationImage(query, type = 'city', index = 0) {
 
   // Guard on query so stale images don't show when query clears
   const image = (query?.trim() && images?.length > 0) ? images[index % images.length] : null;
-  return { image, loading, error };
+  return { image, images, loading, error };
 }

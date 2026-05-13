@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="VenturePath GPX Builder"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.topografix.com/GPX/1/1"
+  xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <metadata>
+    <name>Everest Base Camp Trek</name>
+    <desc>EBC Classic Trek, Nepal</desc>
+    <time>2026-05-13T02:14:23.151035Z</time>
+  </metadata>
+  <trk>
+    <name>Everest Base Camp Trek</name>
+    <trkseg>
+    <trkpt lat="27.986" lon="86.855"><ele>100</ele><time>2026-05-13T02:14:23.151035Z</time></trkpt>
+    <trkpt lat="27.948" lon="86.853"><ele>101</ele><time>2026-05-13T02:14:23.151035Z</time></trkpt>
+    <trkpt lat="27.89" lon="86.822"><ele>102</ele><time>2026-05-13T02:14:23.151035Z</time></trkpt>
+    <trkpt lat="27.838" lon="86.765"><ele>103</ele><time>2026-05-13T02:14:23.151035Z</time></trkpt>
+    <trkpt lat="27.99" lon="86.937"><ele>104</ele><time>2026-05-13T02:14:23.151035Z</time></trkpt>
+    </trkseg>
+  </trk>
+</gpx>

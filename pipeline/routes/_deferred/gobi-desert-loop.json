@@ -1,0 +1,10 @@
+{
+  "slug": "gobi-desert-loop",
+  "name": "Gobi Desert Loop",
+  "deferred_reason": "premium_partnership_required",
+  "provenance": {
+    "source": "world_expeditions_partner",
+    "source_url": "https://worldexpeditions.com/Mongolia",
+    "license": "requires_partnership"
+  }
+}

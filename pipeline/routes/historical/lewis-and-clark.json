@@ -1,0 +1,19 @@
+{
+  "slug": "lewis-and-clark",
+  "name": "Lewis & Clark Trail",
+  "destination": "Wood River, IL → Cape Disappointment, WA, USA",
+  "theme_category": "historical",
+  "tags": ["pilgrimage", "long_distance", "scenic_drive", "car"],
+  "climate": "temperate",
+  "difficulty": "Moderate",
+  "squad_min": 1,
+  "squad_max": 6,
+  "gpx_file": "lewis-and-clark.gpx",
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "nps",
+    "source_url": "https://www.nps.gov/lecl/planyourvisit/maps.htm",
+    "license": "public_domain",
+    "downloaded_at": "2026-05-13"
+  }
+}

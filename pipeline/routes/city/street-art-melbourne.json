@@ -1,0 +1,25 @@
+{
+  "slug": "street-art-melbourne",
+  "name": "Melbourne Street Art Walk",
+  "destination": "Melbourne CBD, Australia",
+  "theme_category": "city",
+  "tags": ["city", "art", "foot", "walk"],
+  "climate": "temperate",
+  "difficulty": "Easy",
+  "squad_min": 1,
+  "squad_max": 6,
+  "trace_coords": [
+    [-37.8136, 144.9631],
+    [-37.8141, 144.9665],
+    [-37.8163, 144.9683],
+    [-37.8174, 144.9647],
+    [-37.8156, 144.9613]
+  ],
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "manual_trace",
+    "source_url": "https://whatson.melbourne.vic.gov.uk/article/melbournes-best-street-art",
+    "license": "manual_research",
+    "downloaded_at": "2026-05-13"
+  }
+}

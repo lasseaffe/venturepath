@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import StickyNav from '../components/layout/StickyNav';
 import ToastContainer from '../components/ui/Toast';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -34,7 +34,7 @@ import LegHud from '../components/logistics/LegHud';
 import VibeCheck from '../components/discovery/VibeCheck';
 import SafetyTicker from '../components/logistics/SafetyTicker';
 import ARGhostTours from '../components/ar/ARGhostTours';
-import { DESTINATION_CENTERS, DESTINATION_HEROES } from '../utils/destinationEngine';
+import { DESTINATION_CENTERS, DESTINATION_HEROES, normalizeHero } from '../utils/destinationEngine';
 import { searchAttractions, searchFood } from '../utils/osmEngine.js';
 import DiscoveryMap from '../components/discovery/DiscoveryMap.jsx';
 import InspirePanel from '../components/inspire/InspirePanel';
@@ -44,20 +44,50 @@ import { DayLoopPanel } from '../components/itinerary/DayLoopPanel';
 import { CascadeConfirmSheet } from '../components/itinerary/CascadeConfirmSheet';
 import { AddStopFlow } from '../components/itinerary/AddStopFlow';
 import { onStopAdded } from '../utils/homebaseEngine';
+import { LegLens } from '../components/legLens/LegLens.jsx';
+import { hydrateLeg } from '../utils/legIntelligence/index.js';
+import GatheringsHub from '../components/gatherings/GatheringsHub';
+import GatheringDetail from '../components/gatherings/GatheringDetail';
+import { useTripGatherings } from '../lib/gatherings/useGatherings';
+import { useAuth } from '../context/AuthContext';
+import { createGathering as apiCreateGathering } from '../lib/gatherings/api';
+import { CampMetaEditor } from '../components/logistics/CampMetaEditor';
+import { emitLegConfirmed, emitCampPitched, emitExpeditionLogged } from '../utils/streakEmitter.js';
+import { emitCrossApp } from '../utils/crossAppEmitter.js';
 
 function TripHeroImage({ destination, heroImageUrl }) {
   const [bleedOpacity, setBleedOpacity] = useState(1);
   const [imgIndex, setImgIndex] = useState(0);
   const [hovered, setHovered] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [draftPos, setDraftPos] = useState(null);
+  const [searching, setSearching] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const heroRef = useRef(null);
+  const dragOrigin = useRef(null);
+
+  const { heroImagePositions, setHeroImagePosition } = useTripStore();
 
   const city = destination?.split(',')[0]?.trim() ?? '';
   const key = destination?.split(',')[0]?.trim().toLowerCase().replace(/[^a-z]/g, '') ?? '';
   const candidates = heroImageUrl
-    ? [heroImageUrl]
-    : (DESTINATION_HEROES[key] ?? DESTINATION_HEROES.default);
+    ? [normalizeHero(heroImageUrl)]
+    : (DESTINATION_HEROES[key] ?? DESTINATION_HEROES.default).map(normalizeHero);
   const total = candidates.length;
-  const imgSrc = candidates[imgIndex];
+  const imgSrc = candidates[imgIndex].url;
+  const savedPos = heroImagePositions[imgSrc] ?? { x: 50, y: 40 };
+  const displayPos = draftPos ?? savedPos;
+
+  // Photo picker filter
+  const allPhotos = (DESTINATION_HEROES[key] ?? DESTINATION_HEROES.default).map(normalizeHero);
+  const pickerResults = searchQuery.trim() === ''
+    ? allPhotos
+    : allPhotos.filter(p => {
+        const q = searchQuery.toLowerCase();
+        return p.tags.some(t => t.includes(q))
+          || p.credit.toLowerCase().includes(q)
+          || p.source.includes(q);
+      });
 
   useEffect(() => {
     const main = heroRef.current?.closest('main');
@@ -71,13 +101,35 @@ function TripHeroImage({ destination, heroImageUrl }) {
     return () => main.removeEventListener('scroll', onScroll);
   }, []);
 
-  function prev(e) {
-    e.stopPropagation();
-    setImgIndex(i => (i - 1 + total) % total);
+  function prev(e) { e.stopPropagation(); setImgIndex(i => (i - 1 + total) % total); }
+  function next(e) { e.stopPropagation(); setImgIndex(i => (i + 1) % total); }
+
+  function startDrag(e) {
+    if (!editing) return;
+    e.preventDefault();
+    const pos = draftPos ?? savedPos;
+    dragOrigin.current = { mouseX: e.clientX, mouseY: e.clientY, startX: pos.x, startY: pos.y };
+    window.addEventListener('mousemove', onDrag);
+    window.addEventListener('mouseup', stopDrag);
   }
-  function next(e) {
-    e.stopPropagation();
-    setImgIndex(i => (i + 1) % total);
+  function onDrag(e) {
+    if (!dragOrigin.current || !heroRef.current) return;
+    // Edit mode uses 130% img size → 30% overflow in both axes.
+    // Sensitivity = 1:1 with overflow pixels so drag feels direct.
+    const cw = heroRef.current.clientWidth;
+    const ch = heroRef.current.clientHeight || 340;
+    const x = Math.max(0, Math.min(100,
+      dragOrigin.current.startX - ((e.clientX - dragOrigin.current.mouseX) / (cw * 0.3)) * 100
+    ));
+    const y = Math.max(0, Math.min(100,
+      dragOrigin.current.startY - ((e.clientY - dragOrigin.current.mouseY) / (ch * 0.3)) * 100
+    ));
+    setDraftPos({ x, y });
+  }
+  function stopDrag() {
+    dragOrigin.current = null;
+    window.removeEventListener('mousemove', onDrag);
+    window.removeEventListener('mouseup', stopDrag);
   }
 
   const chevronBase = {
@@ -88,107 +140,256 @@ function TripHeroImage({ destination, heroImageUrl }) {
     border: '1px solid rgba(217,197,178,0.18)',
     color: '#D9C5B2', cursor: 'pointer',
     transition: 'opacity 0.18s ease, background 0.15s ease',
-    opacity: hovered ? 1 : 0,
+    opacity: hovered && !editing ? 1 : 0,
     zIndex: 10,
   };
 
   return (
-    <div
-      ref={heroRef}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{ position: 'relative', height: 340, overflow: 'hidden', flexShrink: 0 }}
-    >
-      <img
-        key={imgSrc}
-        src={imgSrc}
-        alt={city}
-        style={{
-          width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 40%',
-          display: 'block', transition: 'opacity 0.3s ease',
-        }}
-      />
+    <>
+      <div
+        ref={heroRef}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        style={{ position: 'relative', height: 340, overflow: 'hidden', flexShrink: 0 }}
+      >
+        <img
+          key={imgSrc}
+          src={imgSrc}
+          alt={city}
+          onMouseDown={startDrag}
+          style={editing ? {
+            // 130% × 130% creates 30% overflow in both axes so objectPosition X can work.
+            // left/top map the 0-100 position range to the 0-30% overflow range.
+            position: 'absolute',
+            width: '130%', height: '130%',
+            objectFit: 'cover',
+            left: `${-(displayPos.x / 100) * 30}%`,
+            top: `${-(displayPos.y / 100) * 30}%`,
+            display: 'block', cursor: 'grab', userSelect: 'none',
+          } : {
+            width: '100%', height: '100%', objectFit: 'cover',
+            objectPosition: `${displayPos.x}% ${displayPos.y}%`,
+            display: 'block', transition: 'opacity 0.3s ease',
+            cursor: 'default', userSelect: 'none',
+          }}
+        />
 
-      {/* Scroll-driven bottom bleed */}
-      <div style={{
-        position: 'absolute', inset: 0,
-        background: 'linear-gradient(to bottom, transparent 30%, var(--bg) 100%)',
-        opacity: bleedOpacity, transition: 'opacity 0.08s linear', pointerEvents: 'none',
-      }} />
-
-      {/* Chevron — previous */}
-      {total > 1 && (
-        <button onClick={prev} style={{ ...chevronBase, left: 14 }} aria-label="Previous photo">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-      )}
-
-      {/* Chevron — next */}
-      {total > 1 && (
-        <button onClick={next} style={{ ...chevronBase, right: 14 }} aria-label="Next photo">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-      )}
-
-      {/* Dot indicators */}
-      {total > 1 && (
+        {/* Scroll-driven bottom bleed */}
         <div style={{
-          position: 'absolute', bottom: 14, right: 20,
-          display: 'flex', gap: 5, alignItems: 'center',
-          opacity: bleedOpacity * (hovered ? 1 : 0.55),
-          transition: 'opacity 0.18s ease',
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(to bottom, transparent 30%, var(--bg) 100%)',
+          opacity: bleedOpacity, transition: 'opacity 0.08s linear', pointerEvents: 'none',
+        }} />
+
+        {/* Edit mode dashed border */}
+        {editing && (
+          <div style={{
+            position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 11,
+            border: '2px dashed rgba(230,126,34,0.7)', boxSizing: 'border-box',
+          }} />
+        )}
+
+        {/* Pencil — enter edit mode */}
+        {!editing && (
+          <button
+            onClick={e => { e.stopPropagation(); setDraftPos(savedPos); setEditing(true); }}
+            aria-label="Adjust image position"
+            style={{
+              position: 'absolute', top: 10, right: 10, zIndex: 12,
+              width: 30, height: 30, borderRadius: 7,
+              background: 'rgba(14,16,18,0.65)', backdropFilter: 'blur(6px)',
+              border: '1px solid rgba(217,197,178,0.2)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', opacity: hovered ? 1 : 0,
+              transition: 'opacity 0.18s ease', color: '#D9C5B2',
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M9.5 2.5l2 2L4 12H2v-2L9.5 2.5z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+        )}
+
+        {/* Chevron — previous */}
+        {total > 1 && (
+          <button onClick={prev} style={{ ...chevronBase, left: 14 }} aria-label="Previous photo">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+        )}
+
+        {/* Chevron — next */}
+        {total > 1 && (
+          <button onClick={next} style={{ ...chevronBase, right: 14 }} aria-label="Next photo">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+        )}
+
+        {/* Dot indicators */}
+        {total > 1 && !editing && (
+          <div style={{
+            position: 'absolute', bottom: 14, right: 20,
+            display: 'flex', gap: 5, alignItems: 'center',
+            opacity: bleedOpacity * (hovered ? 1 : 0.55),
+            transition: 'opacity 0.18s ease',
+          }}>
+            {candidates.map((photo, i) => (
+              <button
+                key={i}
+                onClick={e => { e.stopPropagation(); setImgIndex(i); }}
+                aria-label={photo.credit ? `Photo by ${photo.credit}` : `Photo ${i + 1}`}
+                style={{
+                  width: i === imgIndex ? 18 : 6, height: 6,
+                  borderRadius: 3, border: 'none', padding: 0, cursor: 'pointer',
+                  background: i === imgIndex ? '#E67E22' : 'rgba(217,197,178,0.45)',
+                  transition: 'width 0.2s ease, background 0.2s ease',
+                }}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Destination label */}
+        <div style={{
+          position: 'absolute', bottom: 16, left: 20,
+          fontFamily: "'JetBrains Mono', monospace",
+          fontSize: '0.6rem', letterSpacing: '0.14em', textTransform: 'uppercase',
+          color: 'rgba(217,197,178,0.7)',
+          opacity: bleedOpacity, transition: 'opacity 0.08s linear',
         }}>
-          {candidates.map((_, i) => (
+          {city}
+        </div>
+      </div>
+
+      {/* Edit toolbar */}
+      {editing && (
+        <div style={{
+          display: 'flex', gap: 8, padding: '8px 14px',
+          background: 'rgba(14,16,18,0.95)', borderBottom: '1px solid rgba(217,197,178,0.1)',
+          alignItems: 'center',
+        }}>
+          <button
+            onClick={() => { setEditing(false); setDraftPos(null); setSearching(false); }}
+            style={{ background: 'transparent', border: '1px solid rgba(217,197,178,0.2)', borderRadius: 6, padding: '4px 12px', color: '#888', cursor: 'pointer', fontSize: '0.72rem', fontFamily: "'JetBrains Mono', monospace", letterSpacing: '.04em' }}
+          >
+            Cancel
+          </button>
+          <div style={{ flex: 1 }} />
+          {allPhotos.length >= 2 && (
             <button
-              key={i}
-              onClick={e => { e.stopPropagation(); setImgIndex(i); }}
-              aria-label={`Photo ${i + 1}`}
-              style={{
-                width: i === imgIndex ? 18 : 6, height: 6,
-                borderRadius: 3, border: 'none', padding: 0, cursor: 'pointer',
-                background: i === imgIndex ? '#E67E22' : 'rgba(217,197,178,0.45)',
-                transition: 'width 0.2s ease, background 0.2s ease',
-              }}
-            />
-          ))}
+              onClick={() => { setSearchQuery(city.toLowerCase()); setSearching(s => !s); }}
+              style={{ background: 'transparent', border: '1px solid #E67E22', borderRadius: 6, padding: '4px 12px', color: '#E67E22', cursor: 'pointer', fontSize: '0.72rem', fontFamily: "'JetBrains Mono', monospace", letterSpacing: '.04em' }}
+            >
+              🔍 Change photo
+            </button>
+          )}
+          <button
+            onClick={() => {
+              const p = draftPos ?? savedPos;
+              setHeroImagePosition(imgSrc, p.x, p.y);
+              setEditing(false);
+              setDraftPos(null);
+              setSearching(false);
+            }}
+            style={{ background: '#E67E22', border: 'none', borderRadius: 6, padding: '4px 14px', color: '#fff', cursor: 'pointer', fontSize: '0.72rem', fontFamily: "'JetBrains Mono', monospace", letterSpacing: '.04em', fontWeight: 600 }}
+          >
+            Save
+          </button>
         </div>
       )}
 
-      {/* Destination label */}
-      <div style={{
-        position: 'absolute', bottom: 16, left: 20,
-        fontFamily: "'JetBrains Mono', monospace",
-        fontSize: '0.6rem', letterSpacing: '0.14em', textTransform: 'uppercase',
-        color: 'rgba(217,197,178,0.7)',
-        opacity: bleedOpacity, transition: 'opacity 0.08s linear',
-      }}>
-        {city}
-      </div>
-    </div>
+      {/* Photo picker panel */}
+      {editing && searching && (
+        <div style={{ background: 'rgba(10,9,8,0.97)', borderBottom: '1px solid rgba(217,197,178,0.08)' }}>
+          <div style={{ display: 'flex', gap: 8, padding: '8px 14px 6px' }}>
+            <input
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder={`Search ${city} photos…`}
+              style={{
+                flex: 1, background: '#1c1a17', border: '1px solid rgba(217,197,178,0.15)',
+                borderRadius: 6, padding: '5px 10px', color: '#D9C5B2',
+                fontFamily: "'JetBrains Mono', monospace", fontSize: '0.72rem', outline: 'none',
+              }}
+            />
+          </div>
+          <div style={{ display: 'flex', gap: 8, padding: '0 14px 10px', overflowX: 'auto' }}>
+            {pickerResults.length === 0 && (
+              <span style={{ color: '#555', fontSize: '0.7rem', fontFamily: "'JetBrains Mono', monospace", padding: '8px 0' }}>
+                No photos match "{searchQuery}"
+              </span>
+            )}
+            {pickerResults.map((photo, i) => (
+              <div
+                key={photo.url}
+                onClick={() => {
+                  const idx = candidates.findIndex(c => c.url === photo.url);
+                  if (idx >= 0) setImgIndex(idx);
+                  setDraftPos({ x: 50, y: 40 });
+                  setSearching(false);
+                }}
+                style={{ position: 'relative', flexShrink: 0, cursor: 'pointer' }}
+              >
+                <img
+                  src={`${photo.url.split('?')[0]}?auto=compress&cs=tinysrgb&w=200&h=120&fit=crop`}
+                  alt={photo.credit || `Photo ${i + 1}`}
+                  style={{
+                    width: 90, height: 58, objectFit: 'cover', borderRadius: 5, display: 'block',
+                    border: photo.url === imgSrc ? '2px solid #E67E22' : '2px solid transparent',
+                    transition: 'border-color 0.15s ease',
+                  }}
+                />
+                <span style={{
+                  position: 'absolute', bottom: 3, left: 3,
+                  background: 'rgba(0,0,0,0.65)', borderRadius: 3,
+                  padding: '1px 4px', fontSize: '0.55rem',
+                  fontFamily: "'JetBrains Mono', monospace", color: '#D9C5B2',
+                  letterSpacing: '.04em', textTransform: 'uppercase',
+                }}>
+                  {photo.source}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
 export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
+  const { architect } = useAuth();
   const { trip, legs, stays, pois, dayLoops, manifestSettings, cloning,
-          addStopToDayLoop, addDayLoop, setTripPlanningMode, dispatch } = useTripStore();
+          addStopToDayLoop, addDayLoop, setTripPlanningMode, dispatch,
+          addWaypoint, updateWaypoint, setLegMeta, replaceLegRoute } = useTripStore();
   const destinationId = trip.destination?.split(',')[0].toLowerCase().replace(/[^a-z]/g, '') ?? 'default';
-  const mapCenter = DESTINATION_CENTERS[destinationId] ?? DESTINATION_CENTERS.patagonia;
+  const mapCenter = DESTINATION_CENTERS[destinationId] ?? DESTINATION_CENTERS.default;
   const { theme } = useTheme();
   const labels = useLabels();
   const [launched, setLaunched] = useState(false);
-  const [activeSection, setActiveSection] = useState('section-overview');
-  const overviewRef   = useRef(null);
-  const itineraryRef  = useRef(null);
-  const logisticsRef  = useRef(null);
-  const staysRef      = useRef(null);
-  const transportRef  = useRef(null);
-  const vaultRef      = useRef(null);
-  const discoveryRef  = useRef(null);
+  const [activeTab, setActiveTab] = useState(
+    () => localStorage.getItem('vp_last_tab') ?? 'transport'
+  );
+  const discoveryRef     = useRef(null);
   const discoveryFetched = useRef(false);
+
+  // Trip ID: use trip name as stable client-side identifier
+  const tripId = trip?.name ?? null;
+  const { items: tripGatherings, loading: gatheringsLoading, reload: reloadGatherings } = useTripGatherings(tripId);
+  const [openGatheringId, setOpenGatheringId] = useState(null);
+
+  const completion = useMemo(() => ({
+    transport:     legs.some(l => l.status === 'confirmed'),
+    accommodation: stays.length > 0,
+    discovery:     pois.length > 0 || attractions.length > 0,
+    gatherings:    tripGatherings.length > 0,
+    itinerary:     dayLoops.some(dl => (dl.stopIds?.length ?? 0) > 0),
+    logistics:     (manifestSettings?.items?.length ?? 0) > 0,
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }), [legs, stays, pois, attractions, tripGatherings, dayLoops, manifestSettings]);
   const [tacticalMode, setTacticalMode] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -196,6 +397,7 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
   const [inspireOpen, setInspireOpen]   = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [activeLegId, setActiveLegId] = useState(null);
+  const [legLensOpen, setLegLensOpen] = useState(false);
   const [attractions, setAttractions]               = useState([]);
   const [food, setFood]                             = useState([]);
   const [attractionsLoading, setAttractionsLoading] = useState(false);
@@ -227,60 +429,27 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
     });
   }, [stays, dayLoops, addDayLoop]);
 
+  // Persist active tab across refreshes
   useEffect(() => {
-    if (!trip?.destination) return;
-    discoveryFetched.current = false;
+    localStorage.setItem('vp_last_tab', activeTab);
+  }, [activeTab]);
+
+  // Lazy-fetch discovery data when the Discovery tab becomes active
+  useEffect(() => {
+    if (activeTab !== 'discovery' || !trip?.destination) return;
+    if (discoveryFetched.current) return;
+    discoveryFetched.current = true;
     const city = trip.destination.split(',')[0].trim();
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !discoveryFetched.current) {
-          discoveryFetched.current = true;
-          setAttractionsLoading(true);
-          searchAttractions(city, attractionCategory)
-            .then(setAttractions)
-            .finally(() => setAttractionsLoading(false));
-          setFoodLoading(true);
-          searchFood(city, foodCategory)
-            .then(setFood)
-            .finally(() => setFoodLoading(false));
-        }
-      },
-      { threshold: 0.05 }
-    );
-
-    if (discoveryRef.current) observer.observe(discoveryRef.current);
-    return () => observer.disconnect();
-  }, [trip?.destination]);
-
-  useEffect(() => {
-    const sections = [
-      { ref: overviewRef,   id: 'section-overview' },
-      { ref: itineraryRef,  id: 'section-itinerary' },
-      { ref: logisticsRef,  id: 'section-logistics' },
-      { ref: staysRef,      id: 'section-stays' },
-      { ref: transportRef,  id: 'section-transport' },
-      { ref: discoveryRef,  id: 'section-discovery' },
-      { ref: vaultRef,      id: 'section-vault' },
-    ];
-
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      { threshold: 0.2, rootMargin: '-48px 0px 0px 0px' }
-    );
-
-    sections.forEach(({ ref }) => {
-      if (ref.current) observer.observe(ref.current);
-    });
-
-    return () => observer.disconnect();
-  }, []);
+    setAttractionsLoading(true);
+    searchAttractions(city, attractionCategory)
+      .then(setAttractions)
+      .finally(() => setAttractionsLoading(false));
+    setFoodLoading(true);
+    searchFood(city, foodCategory)
+      .then(setFood)
+      .finally(() => setFoodLoading(false));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab, trip?.destination]);
 
   // Refetch when category filters change, but only if initial fetch already ran
   useEffect(() => {
@@ -306,6 +475,80 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
     document.getElementById(`discovery-card-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
+  async function handleLegHydrate(legId) {
+    const leg = legs.find(l => l.id === legId);
+    if (!leg) return;
+    const { legMeta, waypoints: wps } = await hydrateLeg(leg);
+    if (legMeta) setLegMeta(legId, legMeta);
+    wps.forEach(wp => addWaypoint(legId, wp));
+  }
+
+  function handleVariantSelect(legId, variant) {
+    const leg = legs.find(l => l.id === legId);
+    if (!leg?.legMeta?.routeVariants) return;
+    const chosen = leg.legMeta.routeVariants.find(v => v.variant === variant);
+    if (!chosen) return;
+    // Update activeVariant in legMeta and replace route
+    setLegMeta(legId, { ...leg.legMeta, activeVariant: variant });
+    replaceLegRoute(legId, { durationH: chosen.durationH, distanceKm: chosen.distanceKm });
+  }
+
+  function handleWaypointConfirm(waypointId) {
+    const leg = legs.find(l => (l.waypoints ?? []).some(w => w.id === waypointId));
+    if (!leg) return;
+    updateWaypoint(leg.id, waypointId, { status: 'confirmed' });
+    emitLegConfirmed({ legId: leg.id });
+  }
+
+  function handleWaypointBook(waypointId) {
+    const leg = legs.find(l => (l.waypoints ?? []).some(w => w.id === waypointId));
+    if (!leg) return;
+    updateWaypoint(leg.id, waypointId, { status: 'confirmed', bookingRef: `booking-${Date.now()}` });
+    emitLegConfirmed({ legId: leg.id });
+  }
+
+  // Phase 5: expedition_logged emission + WC context push on trip name change
+  useEffect(() => {
+    if (!trip?.name) return;
+    emitExpeditionLogged({ tripName: trip.name });
+    const campNights = stays
+      .filter(s => ['camp', 'wild', 'shelter'].includes(s.kind))
+      .map(s => ({
+        date: s.checkin ?? null,
+        firePermitted: s.campMeta?.fireRules?.permitted ?? true,
+        waterTreatRequired: s.campMeta?.waterSource?.treatRequired ?? false,
+      }));
+    const fuelStops = legs.flatMap(l =>
+      (l.legMeta?.fuelPlan?.stops ?? []).map(stop => ({ name: stop.name, coords: stop.coords, legId: l.id }))
+    );
+    emitCrossApp('http://localhost:3002/api/cross-app/expedition-context', {
+      tripName: trip.name,
+      startDate: trip.startDate,
+      endDate: trip.endDate,
+      destination: trip.destination,
+      fuelStops,
+      campNights,
+    });
+  }, [trip?.name]);
+
+  // Phase 5: camp_pitched emission when a new camp/wild/shelter stay is added
+  const prevStayCountRef = useRef(stays.length);
+  useEffect(() => {
+    if (stays.length > prevStayCountRef.current) {
+      const newStay = stays[stays.length - 1];
+      if (newStay && ['camp', 'wild', 'shelter'].includes(newStay.kind)) {
+        emitCampPitched({ stayId: newStay.id });
+      }
+    }
+    prevStayCountRef.current = stays.length;
+  }, [stays.length]);
+
+  function handleWaypointDismiss(waypointId) {
+    const leg = legs.find(l => (l.waypoints ?? []).some(w => w.id === waypointId));
+    if (!leg) return;
+    updateWaypoint(leg.id, waypointId, { status: 'skipped' });
+  }
+
   if (tacticalMode) {
     return <TacticalMode onExit={() => setTacticalMode(false)} />;
   }
@@ -320,19 +563,20 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
 
       <div className={`transition-opacity duration-700 ${launched ? 'opacity-100' : 'opacity-0'}`}>
         <AppShell
-          activeItem="onOpenExpeditions"
-          activeSection={activeSection}
-          onBackToDashboard={onBackToDashboard}
-          onOpenExpeditions={onBackToDashboard}
-          onOpenVault={() => {}}
-          onOpenProfile={() => setProfileOpen(true)}
-          onOpenInspire={() => setInspireOpen(true)}
-          onOpenTactical={() => setTacticalMode(true)}
-          onOpenSettings={() => setSettingsOpen(true)}
+          activeView="select"
+          onNavigate={key => {
+            if (key === 'dashboard' || key === 'select') onBackToDashboard();
+            if (key === 'profile')  setProfileOpen(true);
+            if (key === 'inspire')  setInspireOpen(true);
+            if (key === 'tactical') setTacticalMode(true);
+            if (key === 'settings') setSettingsOpen(true);
+          }}
         >
           {/* Destination hero image — scroll-driven bleed fade */}
           <TripHeroImage destination={trip.destination} heroImageUrl={trip.heroImageUrl} />
-          <StickyNav activeSection={activeSection} />
+
+          {/* Journey stepper — replaces old 7-section scroll nav */}
+          <StickyNav activeTab={activeTab} onTabChange={setActiveTab} completion={completion} />
 
           {/* Trip header bar */}
           <header
@@ -438,7 +682,7 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
             </div>
           </div>
 
-          {/* CalendarStrip — always visible */}
+          {/* CalendarStrip — persistent above all tabs */}
           <CalendarStrip
             trip={trip}
             dayLoops={dayLoops}
@@ -447,9 +691,10 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
             onSelectDate={setSelectedDate}
           />
 
-          {/* Scrollable sections — all always rendered */}
-          <section id="section-overview" ref={overviewRef} style={{ scrollMarginTop: 48, padding: '24px 24px 0' }}>
-            <div className="space-y-3">
+          {/* ── Tab panels — only active tab renders ── */}
+
+          {activeTab === 'transport' && (
+            <div className="space-y-4" style={{ padding: '24px 24px 0' }}>
               <div style={{ display: 'flex', gap: 12, alignItems: 'stretch' }}>
                 <div style={{ flex: '0 0 70%', position: 'relative', minHeight: 320 }}>
                   <RouteMap
@@ -458,6 +703,8 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
                     dayLoops={dayLoops}
                     stays={stays}
                     pois={pois}
+                    gatherings={tripGatherings}
+                    onGatheringOpen={setOpenGatheringId}
                   />
                   <AnimatePresence>
                     {activeLegId && (
@@ -472,7 +719,15 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
                       {legs.filter(l => l.status === 'confirmed').map(l => (
                         <button
                           key={l.id}
-                          onClick={() => setActiveLegId(activeLegId === l.id ? null : l.id)}
+                          onClick={() => {
+                            if (activeLegId === l.id) {
+                              setActiveLegId(null);
+                              setLegLensOpen(false);
+                            } else {
+                              setActiveLegId(l.id);
+                              setLegLensOpen(true);
+                            }
+                          }}
                           style={{
                             fontFamily: "'JetBrains Mono', monospace",
                             fontSize: 9, letterSpacing: '0.08em',
@@ -490,17 +745,106 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
                   )}
                 </div>
                 <div style={{ flex: 1, overflow: 'hidden' }}>
-                  <TimelinePath />
+                  <TimelinePath gatherings={tripGatherings} />
                 </div>
+                {legLensOpen && activeLegId && (() => {
+                  const nextCampStay = stays.find(s => ['camp', 'wild', 'shelter'].includes(s.kind)) ?? null;
+                  return (
+                    <LegLens
+                      leg={legs.find(l => l.id === activeLegId) ?? null}
+                      nextStay={nextCampStay}
+                      onVariantSelect={handleVariantSelect}
+                      onWaypointConfirm={handleWaypointConfirm}
+                      onWaypointBook={handleWaypointBook}
+                      onWaypointDismiss={handleWaypointDismiss}
+                      onHydrate={handleLegHydrate}
+                      onClose={() => { setLegLensOpen(false); setActiveLegId(null); }}
+                    />
+                  );
+                })()}
               </div>
               <GpxPanel />
               <ElevationStrip />
               <SafetyTicker destinationId={destinationId} center={mapCenter} zoom={8} />
+              <PublicTransport destination={trip.destination} />
             </div>
-          </section>
+          )}
 
-          <section id="section-itinerary" ref={itineraryRef} style={{ scrollMarginTop: 48, padding: '24px 24px 0' }}>
-            <div className="space-y-6">
+          {activeTab === 'accommodation' && (
+            <div className="max-w-2xl space-y-4" style={{ padding: '24px 24px 0' }}>
+              <AccommodationSearch destination={trip.destination} />
+              {stays.filter(s => ['camp','wild','shelter'].includes(s.kind)).length > 0 && (
+                <div>
+                  <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.6rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 8 }}>
+                    Camp Configuration
+                  </div>
+                  {stays
+                    .filter(s => ['camp','wild','shelter'].includes(s.kind))
+                    .map(s => <CampMetaEditor key={s.id} stay={s} />)
+                  }
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'discovery' && (
+            <div ref={discoveryRef} className="space-y-4" style={{ padding: '24px 24px 0' }}>
+              <DiscoveryMap
+                attractionPins={attractions}
+                foodPins={food}
+                selectedId={selectedDiscoveryId}
+                onPinClick={handleDiscoveryPinClick}
+                destinationKey={destinationId}
+              />
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                <MustSee
+                  attractions={attractions}
+                  loading={attractionsLoading}
+                  selectedId={selectedDiscoveryId}
+                  onCategoryChange={setAttractionCategory}
+                  onSelect={handleDiscoveryPinClick}
+                />
+                <LocalFlavor
+                  food={food}
+                  loading={foodLoading}
+                  selectedId={selectedDiscoveryId}
+                  onCategoryChange={setFoodCategory}
+                  onSelect={handleDiscoveryPinClick}
+                />
+                <VibeCheck destinationId={trip.destination?.split(',')[0].trim() ?? destinationId} tripName={trip.name} />
+                <ARGhostTours destinationId={destinationId} center={mapCenter} />
+                <BasecampScout destination={trip.destination} />
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'gatherings' && (
+            <div style={{ padding: '0' }}>
+              <GatheringsHub
+                items={tripGatherings}
+                loading={gatheringsLoading}
+                tripId={tripId}
+                onCreate={async (input) => {
+                  if (!architect?.id) return { error: new Error('Sign in to create Gatherings.') };
+                  const result = await apiCreateGathering(input, { convenerId: architect.id });
+                  if (!result.error) reloadGatherings();
+                  return result;
+                }}
+                onReload={reloadGatherings}
+              />
+            </div>
+          )}
+
+          {openGatheringId && (
+            <GatheringDetail
+              gatheringId={openGatheringId}
+              onClose={() => setOpenGatheringId(null)}
+              onDeleted={() => { setOpenGatheringId(null); reloadGatherings(); }}
+            />
+          )}
+
+          {activeTab === 'itinerary' && (
+            <div className="space-y-6" style={{ padding: '24px 24px 0' }}>
               {selectedDate ? (() => {
                 const dayLoop = dayLoops.find(dl => dl.date === selectedDate);
                 const stay    = stays.find(s => s.id === dayLoop?.homebaseStayId);
@@ -556,63 +900,15 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
                 <div className="lg:col-span-2"><TransitMap /></div>
                 <div className="lg:col-span-3"><LegGuide /></div>
               </div>
+            </div>
+          )}
+
+          {activeTab === 'logistics' && (
+            <div className="space-y-4" style={{ padding: '24px 24px 0' }}>
+              <PackingManifest climate={manifestSettings.climate} days={manifestSettings.days} gatherings={tripGatherings} />
               <BudgetLoom />
             </div>
-          </section>
-
-          <section id="section-logistics" ref={logisticsRef} style={{ scrollMarginTop: 48, padding: '24px 24px 0' }}>
-            <div className="space-y-4">
-              <PackingManifest climate={manifestSettings.climate} days={manifestSettings.days} />
-            </div>
-          </section>
-
-          <section id="section-stays" ref={staysRef} style={{ scrollMarginTop: 48, padding: '24px 24px 0' }}>
-            <div className="max-w-2xl space-y-4">
-              <AccommodationSearch destination={trip.destination} />
-            </div>
-          </section>
-
-          <section id="section-transport" ref={transportRef} style={{ scrollMarginTop: 48, padding: '24px 24px 0' }}>
-            <div className="max-w-2xl space-y-4">
-              <PublicTransport destination={trip.destination} />
-            </div>
-          </section>
-
-          <section id="section-discovery" ref={discoveryRef} style={{ scrollMarginTop: 48, padding: '24px 24px 0' }}>
-            <div className="space-y-4">
-              <DiscoveryMap
-                attractionPins={attractions}
-                foodPins={food}
-                selectedId={selectedDiscoveryId}
-                onPinClick={handleDiscoveryPinClick}
-              />
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                <MustSee
-                  attractions={attractions}
-                  loading={attractionsLoading}
-                  selectedId={selectedDiscoveryId}
-                  onCategoryChange={setAttractionCategory}
-                  onSelect={handleDiscoveryPinClick}
-                />
-                <LocalFlavor
-                  food={food}
-                  loading={foodLoading}
-                  selectedId={selectedDiscoveryId}
-                  onCategoryChange={setFoodCategory}
-                  onSelect={handleDiscoveryPinClick}
-                />
-                <VibeCheck destinationId={trip.destination?.split(',')[0].trim() ?? destinationId} tripName={trip.name} />
-                <ARGhostTours destinationId={destinationId} center={mapCenter} />
-                <BasecampScout destination={trip.destination} />
-              </div>
-            </div>
-          </section>
-
-          <section id="section-vault" ref={vaultRef} style={{ scrollMarginTop: 48, padding: '24px' }}>
-            <VentureVault onCloneComplete={() => {
-              document.getElementById('section-overview')?.scrollIntoView({ behavior: 'smooth' });
-            }} />
-          </section>
+          )}
         </AppShell>
       </div>
 

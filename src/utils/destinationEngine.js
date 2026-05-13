@@ -58,14 +58,164 @@ export const DESTINATION_POIS = {
   ],
 };
 
+// Normalize a hero entry — accepts legacy string or new object shape { url, source, credit, tags }.
+export function normalizeHero(entry) {
+  if (typeof entry === 'string') {
+    return { url: entry, source: 'pexels', credit: '', tags: [] };
+  }
+  return entry;
+}
+
+// Curated high-resolution hero images per destination (Pexels/Unsplash CDN — no auth required).
+// Hamburg uses the typed object shape; all others remain legacy strings and are coerced by normalizeHero.
+// Use scripts/fetch-destination-photos.js to generate candidates for new destinations.
+export const DESTINATION_HEROES = {
+  lille: [
+    'https://images.pexels.com/photos/5370571/pexels-photo-5370571.jpeg?auto=compress&cs=tinysrgb&w=2560',
+    'https://images.pexels.com/photos/7599735/pexels-photo-7599735.jpeg?auto=compress&cs=tinysrgb&w=2560',
+    'https://images.pexels.com/photos/4388164/pexels-photo-4388164.jpeg?auto=compress&cs=tinysrgb&w=2560',
+    'https://images.pexels.com/photos/2082103/pexels-photo-2082103.jpeg?auto=compress&cs=tinysrgb&w=2560',
+    'https://images.pexels.com/photos/161901/paris-france-city-architecture-161901.jpeg?auto=compress&cs=tinysrgb&w=2560',
+  ],
+  hamburg: [
+    { url: 'https://images.pexels.com/photos/4144197/pexels-photo-4144197.jpeg?auto=compress&cs=tinysrgb&w=2560', source: 'pexels', credit: 'Nick Kwan', tags: ['speicherstadt', 'canal', 'warehouse', 'red brick'] },
+    { url: 'https://images.pexels.com/photos/1769408/pexels-photo-1769408.jpeg?auto=compress&cs=tinysrgb&w=2560', source: 'pexels', credit: 'Nextvoyage', tags: ['elbphilharmonie', 'harbor', 'hafencity', 'elbe'] },
+    { url: 'https://images.pexels.com/photos/3566208/pexels-photo-3566208.jpeg?auto=compress&cs=tinysrgb&w=2560', source: 'pexels', credit: 'Vladyslav Dukhin', tags: ['landungsbruecken', 'harbor', 'docks', 'elbe'] },
+    { url: 'https://images.pexels.com/photos/1437489/pexels-photo-1437489.jpeg?auto=compress&cs=tinysrgb&w=2560', source: 'pexels', credit: 'Nextvoyage', tags: ['alster', 'lake', 'city hall', 'rathaus'] },
+    { url: 'https://images.pexels.com/photos/2846217/pexels-photo-2846217.jpeg?auto=compress&cs=tinysrgb&w=2560', source: 'pexels', credit: 'Dmitriy Ganin', tags: ['hamburger dom', 'city', 'aerial'] },
+    { url: 'https://images.pexels.com/photos/4502967/pexels-photo-4502967.jpeg?auto=compress&cs=tinysrgb&w=2560', source: 'pexels', credit: 'Alexandr Podvalny', tags: ['hafencity', 'modern', 'architecture'] },
+    { url: 'https://images.pexels.com/photos/2574681/pexels-photo-2574681.jpeg?auto=compress&cs=tinysrgb&w=2560', source: 'pexels', credit: 'Nextvoyage', tags: ['speicherstadt', 'night', 'reflections', 'canal'] },
+    { url: 'https://images.pexels.com/photos/3566182/pexels-photo-3566182.jpeg?auto=compress&cs=tinysrgb&w=2560', source: 'pexels', credit: 'Vladyslav Dukhin', tags: ['speicherstadt', 'canal', 'bridge'] },
+  ],
+  patagonia: [
+    'https://images.pexels.com/photos/1761279/pexels-photo-1761279.jpeg?auto=compress&cs=tinysrgb&w=2560',
+    'https://images.pexels.com/photos/3225517/pexels-photo-3225517.jpeg?auto=compress&cs=tinysrgb&w=2560',
+    'https://images.pexels.com/photos/4916640/pexels-photo-4916640.jpeg?auto=compress&cs=tinysrgb&w=2560',
+    'https://images.pexels.com/photos/2088205/pexels-photo-2088205.jpeg?auto=compress&cs=tinysrgb&w=2560',
+    'https://images.pexels.com/photos/1770809/pexels-photo-1770809.jpeg?auto=compress&cs=tinysrgb&w=2560',
+  ],
+  svalbard: [
+    'https://images.pexels.com/photos/1559821/pexels-photo-1559821.jpeg?auto=compress&cs=tinysrgb&w=2560',
+    'https://images.pexels.com/photos/1612351/pexels-photo-1612351.jpeg?auto=compress&cs=tinysrgb&w=2560',
+    'https://images.pexels.com/photos/3023211/pexels-photo-3023211.jpeg?auto=compress&cs=tinysrgb&w=2560',
+    'https://images.pexels.com/photos/54202/pexels-photo-54202.jpeg?auto=compress&cs=tinysrgb&w=2560',
+    'https://images.pexels.com/photos/1685718/pexels-photo-1685718.jpeg?auto=compress&cs=tinysrgb&w=2560',
+  ],
+  namib: [
+    'https://images.pexels.com/photos/1029604/pexels-photo-1029604.jpeg?auto=compress&cs=tinysrgb&w=2560',
+    'https://images.pexels.com/photos/3369526/pexels-photo-3369526.jpeg?auto=compress&cs=tinysrgb&w=2560',
+    'https://images.pexels.com/photos/3408744/pexels-photo-3408744.jpeg?auto=compress&cs=tinysrgb&w=2560',
+    'https://images.pexels.com/photos/259412/pexels-photo-259412.jpeg?auto=compress&cs=tinysrgb&w=2560',
+    'https://images.pexels.com/photos/3389783/pexels-photo-3389783.jpeg?auto=compress&cs=tinysrgb&w=2560',
+  ],
+  amazon: [
+    'https://images.pexels.com/photos/975771/pexels-photo-975771.jpeg?auto=compress&cs=tinysrgb&w=2560',
+    'https://images.pexels.com/photos/3408744/pexels-photo-3408744.jpeg?auto=compress&cs=tinysrgb&w=2560',
+    'https://images.pexels.com/photos/2739664/pexels-photo-2739664.jpeg?auto=compress&cs=tinysrgb&w=2560',
+    'https://images.pexels.com/photos/147411/italy-mountains-dawn-daylight-147411.jpeg?auto=compress&cs=tinysrgb&w=2560',
+    'https://images.pexels.com/photos/1659438/pexels-photo-1659438.jpeg?auto=compress&cs=tinysrgb&w=2560',
+  ],
+  karakorum: [
+    'https://images.pexels.com/photos/3617500/pexels-photo-3617500.jpeg?auto=compress&cs=tinysrgb&w=2560',
+    'https://images.pexels.com/photos/1612351/pexels-photo-1612351.jpeg?auto=compress&cs=tinysrgb&w=2560',
+    'https://images.pexels.com/photos/2335126/pexels-photo-2335126.jpeg?auto=compress&cs=tinysrgb&w=2560',
+    'https://images.pexels.com/photos/3408354/pexels-photo-3408354.jpeg?auto=compress&cs=tinysrgb&w=2560',
+    'https://images.pexels.com/photos/3617500/pexels-photo-3617500.jpeg?auto=compress&cs=tinysrgb&w=2560',
+  ],
+  default: [
+    'https://images.pexels.com/photos/1285625/pexels-photo-1285625.jpeg?auto=compress&cs=tinysrgb&w=2560',
+    'https://images.pexels.com/photos/3278215/pexels-photo-3278215.jpeg?auto=compress&cs=tinysrgb&w=2560',
+    'https://images.pexels.com/photos/1603650/pexels-photo-1603650.jpeg?auto=compress&cs=tinysrgb&w=2560',
+    'https://images.pexels.com/photos/2356045/pexels-photo-2356045.jpeg?auto=compress&cs=tinysrgb&w=2560',
+    'https://images.pexels.com/photos/1591373/pexels-photo-1591373.jpeg?auto=compress&cs=tinysrgb&w=2560',
+  ],
+};
+
+/**
+ * Returns the best hero image URL for a destination.
+ * Normalises the city name to match DESTINATION_HEROES keys.
+ * Falls back to 'default' if no specific set is found.
+ */
+export function getDestinationHeroUrl(destination) {
+  if (!destination) return DESTINATION_HEROES.default[0];
+  const key = destination.split(',')[0].trim().toLowerCase().replace(/[^a-z]/g, '');
+  const candidates = DESTINATION_HEROES[key] ?? DESTINATION_HEROES.default;
+  return candidates[0];
+}
+
 export const DESTINATION_CENTERS = {
   hamburg:   [53.5511, 9.9937],
+  lille:     [50.6292, 3.0573],
   patagonia: [-50.97, -73.0],
   svalbard:  [78.22, 15.64],
   namib:     [-24.0, 15.5],
   amazon:    [-3.5, -62.2],
   karakorum: [36.8, 74.8],
+  default:   [20.0, 0.0],
 };
+
+export function normalizeDestinationKey(destination) {
+  if (!destination) return 'default';
+  const key = destination.split(',')[0].trim().toLowerCase().replace(/[^a-z]/g, '');
+  return key in DESTINATION_CENTERS ? key : 'default';
+}
+
+export const DESTINATION_DAYS = {
+  hamburg: [
+    { id: 'd-hh-1', label: 'Day 1 — Harbor & Elbphilharmonie', image: null, blocks: [] },
+    { id: 'd-hh-2', label: 'Day 2 — Speicherstadt & HafenCity', image: null, blocks: [] },
+    { id: 'd-hh-3', label: 'Day 3 — Altona & Schanzenviertel',  image: null, blocks: [] },
+    { id: 'd-hh-4', label: 'Day 4 — Blankenese Day Trip',        image: null, blocks: [] },
+    { id: 'd-hh-5', label: 'Day 5 — Museums Quarter',            image: null, blocks: [] },
+  ],
+  lille: [
+    { id: 'd-lil-1', label: 'Day 1 — Vieux-Lille Old Town',     image: null, blocks: [] },
+    { id: 'd-lil-2', label: 'Day 2 — Wazemmes Market',          image: null, blocks: [] },
+    { id: 'd-lil-3', label: 'Day 3 — Citadel & Parks',          image: null, blocks: [] },
+    { id: 'd-lil-4', label: 'Day 4 — Day Trip to Arras/Roubaix',image: null, blocks: [] },
+  ],
+  patagonia: [
+    { id: 'd-pat-1', label: 'Day 1 — Gateway City Layover',     image: null, blocks: [] },
+    { id: 'd-pat-2', label: 'Day 2 — Transfer & Trailhead',     image: null, blocks: [] },
+    { id: 'd-pat-3', label: 'Day 3 — Scout Day',                image: null, blocks: [] },
+    { id: 'd-pat-4', label: 'Day 4 — Summit Push',              image: null, blocks: [] },
+    { id: 'd-pat-5', label: 'Day 5 — Rest & Resupply',          image: null, blocks: [] },
+  ],
+  svalbard: [
+    { id: 'd-sval-1', label: 'Day 1 — Longyearbyen Arrival',   image: null, blocks: [] },
+    { id: 'd-sval-2', label: 'Day 2 — Seed Vault & Glacier',   image: null, blocks: [] },
+    { id: 'd-sval-3', label: 'Day 3 — Snowmobile Expedition',  image: null, blocks: [] },
+    { id: 'd-sval-4', label: 'Day 4 — Aurora Observation',     image: null, blocks: [] },
+  ],
+  namib: [
+    { id: 'd-nam-1', label: 'Day 1 — Swakopmund Base',         image: null, blocks: [] },
+    { id: 'd-nam-2', label: 'Day 2 — Sossusvlei Dunes',        image: null, blocks: [] },
+    { id: 'd-nam-3', label: 'Day 3 — Deadvlei & Pan Walk',     image: null, blocks: [] },
+    { id: 'd-nam-4', label: 'Day 4 — NamibRand Reserve',       image: null, blocks: [] },
+  ],
+  amazon: [
+    { id: 'd-amz-1', label: 'Day 1 — Manaus Gateway',          image: null, blocks: [] },
+    { id: 'd-amz-2', label: 'Day 2 — River Lodge Transfer',    image: null, blocks: [] },
+    { id: 'd-amz-3', label: 'Day 3 — Canopy Walk & Wildlife',  image: null, blocks: [] },
+    { id: 'd-amz-4', label: 'Day 4 — Night Safari',            image: null, blocks: [] },
+  ],
+  karakorum: [
+    { id: 'd-kk-1', label: 'Day 1 — Islamabad Briefing',       image: null, blocks: [] },
+    { id: 'd-kk-2', label: 'Day 2 — Gilgit Arrival',           image: null, blocks: [] },
+    { id: 'd-kk-3', label: 'Day 3 — Hunza Valley',             image: null, blocks: [] },
+    { id: 'd-kk-4', label: 'Day 4 — Khunjerab Pass',           image: null, blocks: [] },
+  ],
+  default: [
+    { id: 'd-def-1', label: 'Day 1', image: null, blocks: [] },
+    { id: 'd-def-2', label: 'Day 2', image: null, blocks: [] },
+    { id: 'd-def-3', label: 'Day 3', image: null, blocks: [] },
+  ],
+};
+
+export function getDestinationDays(destination) {
+  const key = normalizeDestinationKey(destination);
+  return (DESTINATION_DAYS[key] ?? DESTINATION_DAYS.default).map(d => ({ ...d, blocks: [] }));
+}
 
 const DESTINATIONS = [
   {

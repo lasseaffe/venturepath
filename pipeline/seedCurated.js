@@ -1,149 +1,180 @@
 #!/usr/bin/env node
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+// pipeline/seedCurated.js
+// VentureVault Curated Content Pipeline — Spec 3.
+// Reads pipeline/routes/<theme>/*.json, parses paired GPX (or synthesizes from
+// trace_coords), drafts prose with LLM, upserts to pro_paths + pro_path_waypoints.
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { createClient } from '@supabase/supabase-js';
+import { parseGpx } from './lib/parseGpx.js';
+import { mapCategory } from './lib/mapCategory.js';
+import { uploadGpx } from './lib/uploadGpx.js';
+import { draftFromGpx } from './lib/draftFromGpx.js';
+import { upsertRoute } from './lib/upsertRoute.js';
+import { graphhopperSnap } from './lib/graphhopperSnap.js';
+import { scoreQuality } from './scoreQuality.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Load env from .env.local (existing pattern from run.js)
 const envPath = path.join(__dirname, '..', '.env.local');
 if (fs.existsSync(envPath)) {
-  const lines = fs.readFileSync(envPath, 'utf8').split('\n');
-  for (const line of lines) {
-    const [key, ...rest] = line.split('=');
-    if (key && rest.length) process.env[key.trim()] = rest.join('=').trim();
+  for (const line of fs.readFileSync(envPath, 'utf8').split('\n')) {
+    const [k, ...rest] = line.split('=');
+    if (k && rest.length) process.env[k.trim()] = rest.join('=').trim();
   }
 }
 
-const supabase = createClient(
-  process.env.VITE_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY,
-  { auth: { persistSession: false } }
-);
+const ROUTES_DIR = path.join(__dirname, 'routes');
+const GPX_DIR = path.join(__dirname, 'gpx');
+const THEMES = ['movie', 'historical', 'thematic', 'city', 'geographical'];
 
-const SEED_PATHS = [
-  {
-    name: 'Patagonia W-Trek',
-    destination: 'Torres del Paine, Chile',
-    architect_name: 'Ana M.',
-    difficulty: 'Expert',
-    distance_km: 72,
-    days: 5,
-    squad_min: 2,
-    squad_max: 4,
-    price_usd: 7,
-    clones: 168,
-    rating: 4.9,
-    climate: 'temperate',
-    cover_image_url: null,
-    description: 'The iconic W circuit through Torres del Paine — granite towers, glaciers, and wild Patagonian weather. Expert-level terrain demands full squad commitment.',
-    legs: [
-      { from: 'Puerto Natales', to: 'Paine Grande', mode: 'boat', durationH: 3, distanceKm: 45, status: 'confirmed' },
-      { from: 'Paine Grande', to: 'Grey Glacier', mode: 'foot', durationH: 7, distanceKm: 18, status: 'confirmed' },
-      { from: 'Grey Glacier', to: 'Las Torres', mode: 'foot', durationH: 9, distanceKm: 20, status: 'pending' },
-    ],
-    objectives: [],
-    manifest_settings: { climate: 'temperate', days: 5, hasChildren: false },
-    is_curated: true,
-    is_community: false,
-    source: 'manual',
-    llm_quality_score: 0.88,
-  },
-  {
-    name: 'Icelandic Ring Road',
-    destination: 'Iceland Ring Road',
-    architect_name: 'Erik T.',
-    difficulty: 'Moderate',
-    distance_km: 1332,
-    days: 10,
-    squad_min: 2,
-    squad_max: 6,
-    price_usd: 8,
-    clones: 214,
-    rating: 4.8,
-    climate: 'subarctic',
-    cover_image_url: null,
-    description: 'The full Ring Road circuit — waterfalls, lava fields, geysers, and the midnight sun. A moderate endurance test best tackled with a squad of 4.',
-    legs: [
-      { from: 'Reykjavik', to: 'Akureyri', mode: 'bus', durationH: 5, distanceKm: 390, status: 'confirmed' },
-      { from: 'Akureyri', to: 'Egilsstaðir', mode: 'bus', durationH: 3, distanceKm: 270, status: 'confirmed' },
-      { from: 'Egilsstaðir', to: 'Reykjavik', mode: 'bus', durationH: 6, distanceKm: 672, status: 'pending' },
-    ],
-    objectives: [],
-    manifest_settings: { climate: 'subarctic', days: 10, hasChildren: false },
-    is_curated: true,
-    is_community: false,
-    source: 'manual',
-    llm_quality_score: 0.88,
-  },
-  {
-    name: 'Swiss Alps Haute Route',
-    destination: 'Swiss Alps, Switzerland',
-    architect_name: 'Lena K.',
-    difficulty: 'Hard',
-    distance_km: 180,
-    days: 7,
-    squad_min: 1,
-    squad_max: 3,
-    price_usd: 6,
-    clones: 87,
-    rating: 4.7,
-    climate: 'alpine',
-    cover_image_url: null,
-    description: 'Chamonix to Zermatt on foot. Seven days of alpine cols, high refuges, and the Matterhorn as your finish line.',
-    legs: [
-      { from: 'Chamonix', to: 'Verbier', mode: 'foot', durationH: 48, distanceKm: 90, status: 'confirmed' },
-      { from: 'Verbier', to: 'Zermatt', mode: 'foot', durationH: 40, distanceKm: 90, status: 'pending' },
-    ],
-    objectives: [],
-    manifest_settings: { climate: 'alpine', days: 7, hasChildren: false },
-    is_curated: true,
-    is_community: false,
-    source: 'manual',
-    llm_quality_score: 0.75,
-  },
-  {
-    name: 'Mt. Fuji Sunrise',
-    destination: 'Mt. Fuji, Japan',
-    architect_name: 'Yuki S.',
-    difficulty: 'Moderate',
-    distance_km: 22,
-    days: 2,
-    squad_min: 1,
-    squad_max: 8,
-    price_usd: 4,
-    clones: 453,
-    rating: 4.9,
-    climate: 'alpine',
-    cover_image_url: null,
-    description: 'The classic Fujinomiya ascent timed for the summit sunrise. Start at midnight, reach the crater at dawn. Japan\'s most-cloned expedition.',
-    legs: [
-      { from: 'Fujinomiya 5th Station', to: 'Summit', mode: 'foot', durationH: 6, distanceKm: 11, status: 'confirmed' },
-      { from: 'Summit', to: 'Fujinomiya 5th Station', mode: 'foot', durationH: 3, distanceKm: 11, status: 'pending' },
-    ],
-    objectives: [],
-    manifest_settings: { climate: 'alpine', days: 2, hasChildren: false },
-    is_curated: true,
-    is_community: false,
-    source: 'manual',
-    llm_quality_score: 0.88,
-  },
-];
+const args = process.argv.slice(2);
+const routeArg = args.find((a) => a.startsWith('--route='))?.slice('--route='.length);
+const approveOnly = args.includes('--approve');
+const smoke = args.includes('--smoke');
 
-async function seed() {
-  // Check existing names to avoid duplicates
-  const names = SEED_PATHS.map(p => p.name);
-  const { data: existing } = await supabase.from('pro_paths').select('name').in('name', names);
-  const existingNames = new Set((existing ?? []).map(r => r.name));
-  const toInsert = SEED_PATHS.filter(p => !existingNames.has(p.name));
+function supa() {
+  return createClient(process.env.VITE_SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY, {
+    auth: { persistSession: false },
+  });
+}
 
-  if (toInsert.length === 0) {
-    console.log('All curated paths already seeded — nothing to insert.');
+function loadAllRoutes() {
+  const out = [];
+  for (const theme of THEMES) {
+    const dir = path.join(ROUTES_DIR, theme);
+    if (!fs.existsSync(dir)) continue;
+    for (const file of fs.readdirSync(dir).filter((f) => f.endsWith('.json'))) {
+      const json = JSON.parse(fs.readFileSync(path.join(dir, file), 'utf8'));
+      out.push({ ...json, _theme: theme, _file: path.join(dir, file) });
+    }
+  }
+  return out;
+}
+
+async function processRoute(supabase, route) {
+  console.log(`\n► [${route._theme}] ${route.slug}`);
+
+  // Resolve GPX file: either pre-existing or synthesized from trace_coords
+  let gpxPath = path.join(GPX_DIR, route.gpx_file ?? `${route.slug}.gpx`);
+  if (route.trace_coords && !fs.existsSync(gpxPath)) {
+    console.log(`  synthesizing GPX via GraphHopper (${route.trace_coords.length} coords)`);
+    const gpxXml = await graphhopperSnap({
+      coords: route.trace_coords,
+      slug: route.slug,
+      profile: route.tags?.includes('foot') ? 'foot' : route.tags?.includes('bike') ? 'bike' : 'car',
+    });
+    fs.mkdirSync(GPX_DIR, { recursive: true });
+    fs.writeFileSync(gpxPath, gpxXml);
+    await new Promise((r) => setTimeout(r, 2000)); // rate limit
+  }
+  if (!fs.existsSync(gpxPath)) {
+    throw new Error(`GPX file missing for ${route.slug}: ${gpxPath}`);
+  }
+
+  // Parse GPX deterministically (distance, elevation gain, named waypoints)
+  const stats = parseGpx(gpxPath);
+  console.log(`  parsed: ${stats.distanceKm}km, +${stats.elevationGain}m gain, ${stats.waypoints.length} wpts, ${stats.trackpointCount} trkpts`);
+
+  // LLM draft — description + legs + days estimate from GPX-derived facts
+  const draft = await draftFromGpx(route, stats);
+
+  // Assemble pro_paths row
+  const row = {
+    slug:              route.slug,
+    name:              route.name,
+    destination:       route.destination,
+    architect_name:    route.architect_name ?? 'VenturePath Curator',
+    architect_id:      null,
+    theme_category:    route.theme_category,
+    tags:              route.tags ?? [],
+    climate:           route.climate,
+    difficulty:        route.difficulty,
+    squad_min:         route.squad_min,
+    squad_max:         route.squad_max,
+    distance_km:       Math.round(stats.distanceKm),
+    days:              draft.days,
+    description:       draft.description,
+    legs:              draft.legs,
+    manifest_settings: { climate: route.climate, days: draft.days, hasChildren: false },
+    objectives:        [],
+    narrative_blocks: [],
+    safety_meta:       {},
+    provenance:        route.provenance ?? {},
+    cover_image_url:   null,
+    is_curated:        false,
+    is_community:      false,
+    source:            'pipeline',
+    llm_quality_score: scoreQuality(draft),
+  };
+
+  // Assemble waypoint rows (without path_id — upsertRoute fills it)
+  const waypointRows = stats.waypoints.map((wpt, i) => ({
+    ord:              i,
+    lat:              wpt.lat,
+    lon:              wpt.lon,
+    elevation_m:      wpt.ele,
+    name:             wpt.name,
+    category:         mapCategory(wpt.sym),
+    trigger_radius_m: 20,
+  }));
+
+  // Upsert
+  const upserted = await upsertRoute({ supabase, row, waypoints: waypointRows });
+  console.log(`  upserted pro_paths.id=${upserted.id}`);
+
+  // Upload GPX to Supabase Storage as <id>.gpx (Spec 0 RLS keys on this naming)
+  const storagePath = await uploadGpx({ supabase, proPathId: upserted.id, localGpxPath: gpxPath });
+  await supabase.from('pro_paths').update({ gpx_storage_path: storagePath }).eq('id', upserted.id);
+  console.log(`  uploaded ${storagePath}`);
+
+  return upserted;
+}
+
+async function approveAll(supabase) {
+  const { count, error } = await supabase
+    .from('pro_paths')
+    .update({ is_curated: true }, { count: 'exact' })
+    .eq('source', 'pipeline')
+    .eq('is_curated', false)
+    .select('*', { count: 'exact', head: true });
+  if (error) throw error;
+  console.log(`Approved ${count ?? 0} pipeline rows.`);
+}
+
+async function main() {
+  const supabase = supa();
+
+  if (approveOnly) {
+    await approveAll(supabase);
     return;
   }
 
-  const { error } = await supabase.from('pro_paths').insert(toInsert);
-  if (error) { console.error('Seed failed:', error.message); process.exit(1); }
-  console.log(`Seeded ${toInsert.length} curated paths.`);
+  let routes = loadAllRoutes();
+  if (routeArg) routes = routes.filter((r) => r.slug === routeArg);
+  if (smoke) routes = routes.slice(0, 1);
+  if (routes.length === 0) {
+    console.log('No routes matched filters.');
+    return;
+  }
+  console.log(`\nVentureVault — ingesting ${routes.length} routes\n`);
+
+  let ok = 0, fail = 0;
+  for (const route of routes) {
+    try {
+      await processRoute(supabase, route);
+      ok++;
+    } catch (err) {
+      console.error(`  ✗ ${route.slug}: ${err.message}`);
+      fail++;
+    }
+  }
+  console.log(`\nDone. ✓ ${ok}  ✗ ${fail}`);
 }
 
-seed();
+main().catch((err) => {
+  console.error('Pipeline failure:', err);
+  process.exit(1);
+});

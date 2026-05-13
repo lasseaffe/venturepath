@@ -1,0 +1,19 @@
+{
+  "slug": "harry-potter-jacobite",
+  "name": "Harry Potter — Jacobite Steam Train",
+  "destination": "Fort William → Mallaig, Scotland",
+  "theme_category": "movie",
+  "tags": ["film_locations", "train", "scenic"],
+  "climate": "temperate",
+  "difficulty": "Easy",
+  "squad_min": 1,
+  "squad_max": 8,
+  "gpx_file": "harry-potter-jacobite.gpx",
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "osm_overpass",
+    "source_url": "https://www.openstreetmap.org/relation/4045906",
+    "license": "ODbL",
+    "downloaded_at": "2026-05-13"
+  }
+}

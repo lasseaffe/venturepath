@@ -1,0 +1,10 @@
+{
+  "slug": "silk-road",
+  "name": "The Silk Road",
+  "deferred_reason": "premium_partnership_required",
+  "provenance": {
+    "source": "komoot_partner",
+    "source_url": "https://www.komoot.com/user/silkroadmountainrace",
+    "license": "requires_komoot_partner_api"
+  }
+}

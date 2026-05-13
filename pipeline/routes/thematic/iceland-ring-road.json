@@ -1,0 +1,19 @@
+{
+  "slug": "iceland-ring-road",
+  "name": "Iceland Ring Road",
+  "destination": "Iceland (Ring Road / Route 1)",
+  "theme_category": "thematic",
+  "tags": ["scenic_drive", "long_distance", "car", "coastal"],
+  "climate": "subarctic",
+  "difficulty": "Moderate",
+  "squad_min": 2,
+  "squad_max": 6,
+  "gpx_file": "iceland-ring-road.gpx",
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "osm_overpass",
+    "source_url": "https://www.openstreetmap.org/relation/162777",
+    "license": "ODbL",
+    "downloaded_at": "2026-05-13"
+  }
+}

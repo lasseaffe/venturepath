@@ -1,0 +1,25 @@
+{
+  "slug": "venice-canals",
+  "name": "Venice Hidden Canals",
+  "destination": "Venice, Italy",
+  "theme_category": "city",
+  "tags": ["city", "coastal", "foot", "walk"],
+  "climate": "temperate",
+  "difficulty": "Easy",
+  "squad_min": 1,
+  "squad_max": 4,
+  "trace_coords": [
+    [45.4408, 12.3155],
+    [45.4339, 12.3401],
+    [45.4408, 12.3257],
+    [45.4374, 12.3358],
+    [45.4393, 12.3413]
+  ],
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "manual_trace",
+    "source_url": "https://www.veneziaunica.it/en/content/walking-itineraries",
+    "license": "manual_research",
+    "downloaded_at": "2026-05-13"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "slug": "oregon-trail",
+  "name": "The Oregon Trail",
+  "destination": "Independence, MO → Oregon City, OR, USA",
+  "theme_category": "historical",
+  "tags": ["pilgrimage", "long_distance", "scenic_drive", "car"],
+  "climate": "temperate",
+  "difficulty": "Moderate",
+  "squad_min": 1,
+  "squad_max": 6,
+  "gpx_file": "oregon-trail.gpx",
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "nps",
+    "source_url": "https://www.nps.gov/oreg/index.htm",
+    "license": "public_domain",
+    "downloaded_at": "2026-05-13"
+  }
+}

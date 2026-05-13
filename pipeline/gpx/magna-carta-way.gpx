@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="VenturePath GPX Builder"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.topografix.com/GPX/1/1"
+  xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <metadata>
+    <name>Magna Carta Way</name>
+    <desc>Historic walking trail, UK</desc>
+    <time>2026-05-13T02:14:23.159550Z</time>
+  </metadata>
+  <trk>
+    <name>Magna Carta Way</name>
+    <trkseg>
+    <trkpt lat="51.397" lon="-0.603"><ele>100</ele><time>2026-05-13T02:14:23.159550Z</time></trkpt>
+    <trkpt lat="51.24" lon="-0.505"><ele>101</ele><time>2026-05-13T02:14:23.159550Z</time></trkpt>
+    <trkpt lat="51.145" lon="-0.596"><ele>102</ele><time>2026-05-13T02:14:23.159550Z</time></trkpt>
+    </trkseg>
+  </trk>
+</gpx>

@@ -7,6 +7,8 @@ import StopEditor from '../trip/StopEditor';
 import { geocodeLocation } from '../../utils/geocodeEngine';
 import NearbyMapOverlay from '../nearby/NearbyMapOverlay';
 import ScoutPinsLayer from '../map/ScoutPinsLayer';
+import GatheringPinpointLayer from '../gatherings/GatheringPinpointLayer';
+import { getCategoryStyle } from '../../utils/legIntelligence/waypointCategories.js';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -66,6 +68,21 @@ function makePin(num, color, isActive) {
       ">
         <span style="transform:rotate(45deg);font-size:13px;font-weight:700;color:#0d1b2a;">${num}</span>
       </div>`,
+  });
+}
+
+function makeWaypointPin(waypoint) {
+  const { color, icon } = getCategoryStyle(waypoint.category);
+  return L.divIcon({
+    className: '',
+    iconAnchor: [12, 12],
+    popupAnchor: [0, -16],
+    html: `<div style="
+      width:24px;height:24px;border-radius:50%;
+      background:${color};display:flex;align-items:center;justify-content:center;
+      font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,0.7);
+      border:1px solid rgba(255,255,255,0.2);
+    ">${icon}</div>`,
   });
 }
 
@@ -134,7 +151,7 @@ function FlyToStop({ pois, dayLoops, selectedDate }) {
   return null;
 }
 
-export default function RouteMap({ className = '', style, selectedDate, dayLoops = [], stays = [], pois = [] }) {
+export default function RouteMap({ className = '', style, selectedDate, dayLoops = [], stays = [], pois = [], gatherings = [], onGatheringOpen }) {
   const { legs, trip } = useTripStore();
   const [selectedLegId, setSelectedLegId] = useState(null);
   const [editorOpen, setEditorOpen] = useState(false);
@@ -347,6 +364,46 @@ export default function RouteMap({ className = '', style, selectedDate, dayLoops
             );
           })}
 
+          {/* Waypoint pins */}
+          {visibleLegs.flatMap(l =>
+            (l.waypoints ?? [])
+              .filter(wp => wp.coords && wp.status !== 'skipped')
+              .map(wp => (
+                <Marker
+                  key={wp.id}
+                  position={wp.coords}
+                  icon={makeWaypointPin(wp)}
+                >
+                  <Popup>
+                    <div style={{ fontFamily: 'monospace', fontSize: 12, minWidth: 140 }}>
+                      <div style={{ fontWeight: 700, color: getCategoryStyle(wp.category).color, marginBottom: 4 }}>
+                        {getCategoryStyle(wp.category).icon} {wp.name}
+                      </div>
+                      {wp.kmFromStart != null && (
+                        <div style={{ color: '#888' }}>{wp.kmFromStart} km from start</div>
+                      )}
+                      {wp.estCost != null && wp.estCost > 0 && (
+                        <div style={{ color: getCategoryStyle(wp.category).color, marginTop: 2 }}>
+                          Est. €{wp.estCost.toFixed(2)}
+                        </div>
+                      )}
+                      <div style={{
+                        marginTop: 4,
+                        padding: '1px 5px',
+                        display: 'inline-block',
+                        borderRadius: 2,
+                        fontSize: 10,
+                        background: 'rgba(255,255,255,0.08)',
+                        color: '#aaa',
+                      }}>
+                        {wp.status?.toUpperCase()}
+                      </div>
+                    </div>
+                  </Popup>
+                </Marker>
+              ))
+          )}
+
           {/* Homebase distance ring for active day */}
           {selectedDate && (() => {
             const loop = dayLoops.find(dl => dl.date === selectedDate);
@@ -379,6 +436,7 @@ export default function RouteMap({ className = '', style, selectedDate, dayLoops
             />
           )}
           <ScoutPinsLayer destination={trip?.destination} visible={scoutPinsVisible} />
+          <GatheringPinpointLayer gatherings={gatherings} onOpen={onGatheringOpen} />
         </MapContainer>
 
         {/* Scout Pins toggle */}

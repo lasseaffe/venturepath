@@ -1,7 +1,8 @@
 // TACTICAL-CRITICAL: this component must work offline
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTripStore } from '../../store/useTripStore';
 import { useTheme } from '../../context/ThemeContext';
+import { readCachedGatherings, nextCachedGathering } from '../../lib/gatherings/tacticalCache';
 
 const CACHED_MESSAGES = [
   'Scout: River crossing waist-deep as of 07:30',
@@ -48,14 +49,26 @@ export default function TacticalMode({ onExit }) {
     ?? legs.find(l => l.status !== 'confirmed')
     ?? legs[0];
 
-  const sosText = [
+  // Offline-cached upcoming Gatherings
+  const cachedGatherings = useMemo(() => readCachedGatherings(), []);
+  const nextGathering    = useMemo(() => nextCachedGathering(), []);
+
+  const sosLines = [
     `[SOS] VenturePath Emergency Beacon`,
     `Time: ${time.toISOString()}`,
     `Coords: ${coords.lat}, ${coords.lng}`,
     `Trip: ${trip?.name ?? 'Unknown expedition'}`,
     `Active Leg: ${activeLeg?.from?.label ?? activeLeg?.from ?? '?'} → ${activeLeg?.to?.label ?? activeLeg?.to ?? '?'}`,
-    `Status: EMERGENCY — REQUIRES ASSISTANCE`,
-  ].join('\n');
+  ];
+  if (nextGathering) {
+    sosLines.push(`Next Gathering: ${nextGathering.title}${nextGathering.location_label ? ' @ ' + nextGathering.location_label : ''}`);
+    if (nextGathering.coords) {
+      sosLines.push(`Gathering Coords: ${nextGathering.coords[1]}, ${nextGathering.coords[0]}`);
+    }
+    sosLines.push(`Gathering Time: ${new Date(nextGathering.starts_at).toISOString()}`);
+  }
+  sosLines.push(`Status: EMERGENCY — REQUIRES ASSISTANCE`);
+  const sosText = sosLines.join('\n');
 
   const handleSOS = () => {
     setSosReady(true);
@@ -111,6 +124,24 @@ export default function TacticalMode({ onExit }) {
           <div style={{ fontSize: 12, color: '#666' }}>No active leg</div>
         )}
       </div>
+
+      {/* Cached Gatherings (next 7 days) */}
+      {cachedGatherings.length > 0 && (
+        <div style={{ borderLeft: '2px solid #2a2a2a', paddingLeft: 10, marginBottom: 12 }}>
+          <div style={{ fontSize: 9, color: '#666', letterSpacing: '0.1em', marginBottom: 4 }}>
+            UPCOMING GATHERINGS — CACHED ({cachedGatherings.length})
+          </div>
+          {cachedGatherings.slice(0, 3).map(g => (
+            <div key={g.id} style={{ fontSize: 11, color: '#F2A900', marginBottom: 4 }}>
+              ◈ {g.title}
+              {g.location_label && <span style={{ color: '#888' }}> @ {g.location_label}</span>}
+              <span style={{ color: '#666', marginLeft: 6 }}>
+                {new Date(g.starts_at).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Squad comms */}
       <div style={{ flex: 1, marginBottom: 16 }}>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="VenturePath GPX Builder"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.topografix.com/GPX/1/1"
+  xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <metadata>
+    <name>Via Francigena</name>
+    <desc>Pilgrimage route to Rome</desc>
+    <time>2026-05-13T02:14:23.160550Z</time>
+  </metadata>
+  <trk>
+    <name>Via Francigena</name>
+    <trkseg>
+    <trkpt lat="50.894" lon="2.286"><ele>100</ele><time>2026-05-13T02:14:23.160550Z</time></trkpt>
+    <trkpt lat="48.852" lon="2.349"><ele>101</ele><time>2026-05-13T02:14:23.160550Z</time></trkpt>
+    <trkpt lat="45.464" lon="9.192"><ele>102</ele><time>2026-05-13T02:14:23.160550Z</time></trkpt>
+    <trkpt lat="41.902" lon="12.496"><ele>103</ele><time>2026-05-13T02:14:23.160550Z</time></trkpt>
+    </trkseg>
+  </trk>
+</gpx>

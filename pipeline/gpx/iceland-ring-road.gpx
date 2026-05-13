@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="VenturePath GPX Builder"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.topografix.com/GPX/1/1"
+  xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <metadata>
+    <name>Iceland Ring Road</name>
+    <desc>Route 1, Iceland</desc>
+    <time>2026-05-13T02:14:23.164551Z</time>
+  </metadata>
+  <trk>
+    <name>Iceland Ring Road</name>
+    <trkseg>
+    <trkpt lat="64.128" lon="-21.942"><ele>100</ele><time>2026-05-13T02:14:23.164551Z</time></trkpt>
+    <trkpt lat="64.083" lon="-16.203"><ele>101</ele><time>2026-05-13T02:14:23.164551Z</time></trkpt>
+    <trkpt lat="63.884" lon="-19.015"><ele>102</ele><time>2026-05-13T02:14:23.164551Z</time></trkpt>
+    <trkpt lat="63.881" lon="-22.449"><ele>103</ele><time>2026-05-13T02:14:23.164551Z</time></trkpt>
+    </trkseg>
+  </trk>
+</gpx>

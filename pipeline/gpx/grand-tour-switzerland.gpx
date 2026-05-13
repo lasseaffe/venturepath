@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="VenturePath GPX Builder"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.topografix.com/GPX/1/1"
+  xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <metadata>
+    <name>Grand Tour of Switzerland</name>
+    <desc>Grand Tour scenic route</desc>
+    <time>2026-05-13T02:14:23.165550Z</time>
+  </metadata>
+  <trk>
+    <name>Grand Tour of Switzerland</name>
+    <trkseg>
+    <trkpt lat="47.551" lon="7.588"><ele>100</ele><time>2026-05-13T02:14:23.165550Z</time></trkpt>
+    <trkpt lat="46.801" lon="8.628"><ele>101</ele><time>2026-05-13T02:14:23.165550Z</time></trkpt>
+    <trkpt lat="46.493" lon="8.225"><ele>102</ele><time>2026-05-13T02:14:23.165550Z</time></trkpt>
+    <trkpt lat="47.551" lon="7.588"><ele>103</ele><time>2026-05-13T02:14:23.165550Z</time></trkpt>
+    </trkseg>
+  </trk>
+</gpx>

@@ -1,0 +1,27 @@
+{
+  "slug": "istanbul-seven-hills",
+  "name": "Istanbul Seven Hills",
+  "destination": "Istanbul, Turkey",
+  "theme_category": "city",
+  "tags": ["city", "historical", "foot", "walk", "long_distance"],
+  "climate": "temperate",
+  "difficulty": "Moderate",
+  "squad_min": 1,
+  "squad_max": 6,
+  "trace_coords": [
+    [41.0082, 28.9784],
+    [41.0086, 28.9802],
+    [41.0117, 28.9655],
+    [41.0125, 28.9498],
+    [41.0107, 28.9583],
+    [41.0151, 28.9468],
+    [41.0070, 28.9602]
+  ],
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "manual_trace",
+    "source_url": "https://serifyenen.com/tours/seven-hills-of-istanbul-and-theodosian-walls/",
+    "license": "manual_research",
+    "downloaded_at": "2026-05-13"
+  }
+}

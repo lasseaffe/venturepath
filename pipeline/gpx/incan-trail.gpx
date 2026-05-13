@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="VenturePath GPX Builder"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.topografix.com/GPX/1/1"
+  xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <metadata>
+    <name>Inca Trail</name>
+    <desc>Inca Trail to Machu Picchu, Peru</desc>
+    <time>2026-05-13T02:14:23.160550Z</time>
+  </metadata>
+  <trk>
+    <name>Inca Trail</name>
+    <trkseg>
+    <trkpt lat="-13.163" lon="-72.545"><ele>100</ele><time>2026-05-13T02:14:23.160550Z</time></trkpt>
+    <trkpt lat="-13.164" lon="-72.546"><ele>101</ele><time>2026-05-13T02:14:23.160550Z</time></trkpt>
+    <trkpt lat="-13.143" lon="-72.547"><ele>102</ele><time>2026-05-13T02:14:23.160550Z</time></trkpt>
+    </trkseg>
+  </trk>
+</gpx>

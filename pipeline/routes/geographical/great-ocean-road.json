@@ -1,0 +1,19 @@
+{
+  "slug": "great-ocean-road",
+  "name": "Great Ocean Road",
+  "destination": "Torquay → Allansford, Australia",
+  "theme_category": "geographical",
+  "tags": ["coastal", "scenic_drive", "car"],
+  "climate": "temperate",
+  "difficulty": "Easy",
+  "squad_min": 1,
+  "squad_max": 6,
+  "gpx_file": "great-ocean-road.gpx",
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "osm_overpass",
+    "source_url": "https://www.openstreetmap.org/relation/2069089",
+    "license": "ODbL",
+    "downloaded_at": "2026-05-13"
+  }
+}

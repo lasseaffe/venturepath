@@ -1,0 +1,28 @@
+{
+  "slug": "amelies-montmartre",
+  "name": "Amélie — A Montmartre Walk",
+  "destination": "Montmartre, Paris, France",
+  "theme_category": "movie",
+  "tags": ["film_locations", "city", "foot", "walk"],
+  "climate": "temperate",
+  "difficulty": "Easy",
+  "squad_min": 1,
+  "squad_max": 4,
+  "trace_coords": [
+    [48.8867, 2.3431],
+    [48.8861, 2.3424],
+    [48.8848, 2.3399],
+    [48.8841, 2.3380],
+    [48.8836, 2.3370],
+    [48.8829, 2.3358],
+    [48.8821, 2.3349],
+    [48.8814, 2.3340]
+  ],
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "manual_trace",
+    "source_url": "https://homeselect.paris/en/blog/amelie-poulain-lieu-de-tournage/",
+    "license": "manual_research",
+    "downloaded_at": "2026-05-13"
+  }
+}

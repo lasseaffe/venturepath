@@ -84,6 +84,13 @@ export default function ActionList({ onNavigate, onEnterTrip, onOpenVault }) {
       />
 
       <ActionRow
+        label="Gatherings"
+        sub="Convene the squad — campfires, summits, stargazes"
+        accentColor="rgba(230,126,34,0.35)"
+        onClick={() => onNavigate('events')}
+      />
+
+      <ActionRow
         label="AR Ghost Tours"
         sub="Walk through location-anchored history"
         accentColor="rgba(255,255,255,0.1)"

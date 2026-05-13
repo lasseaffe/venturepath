@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useTripStore } from '../../store/useTripStore';
+import { deriveCampingGear } from '../../utils/campingGear';
 
 const DEFAULT_ITEMS = [
   { id: 1, name: 'Passport',     category: 'Docs',  packed: false, remindBy: '2026-04-20T17:00' },
@@ -8,12 +10,40 @@ const DEFAULT_ITEMS = [
 ];
 
 export default function PackingEngine() {
-  const [items, setItems] = useState(DEFAULT_ITEMS);
+  const { stays } = useTripStore();
+  const [manualItems, setManualItems] = useState(DEFAULT_ITEMS);
+  const [packedCampIds, setPackedCampIds] = useState(new Set());
 
-  const toggle = (id) => setItems(prev =>
-    prev.map(i => i.id === id ? { ...i, packed: !i.packed } : i)
-  );
+  // Derive camp gear from stay metadata
+  const campGear = useMemo(() => deriveCampingGear(stays), [stays]);
 
+  // Merge manual + camp items for display
+  const allItems = useMemo(() => {
+    const campItems = campGear.map((g, i) => ({
+      id: `camp-${g.id}`,
+      name: g.name,
+      category: g.category,
+      packed: packedCampIds.has(g.id),
+      campDriven: true,
+      reason: g.reason,
+    }));
+    return [...manualItems, ...campItems];
+  }, [manualItems, campGear, packedCampIds]);
+
+  const toggle = (id) => {
+    if (typeof id === 'string' && id.startsWith('camp-')) {
+      const campId = id.slice(5);
+      setPackedCampIds(prev => {
+        const next = new Set(prev);
+        if (next.has(campId)) next.delete(campId); else next.add(campId);
+        return next;
+      });
+    } else {
+      setManualItems(prev => prev.map(i => i.id === id ? { ...i, packed: !i.packed } : i));
+    }
+  };
+
+  const items = allItems; // use allItems below
   const pct = Math.round((items.filter(i => i.packed).length / items.length) * 100);
   const pending = items.filter(i => !i.packed);
   const stowed  = items.filter(i => i.packed);
@@ -48,6 +78,11 @@ export default function PackingEngine() {
                 {item.remindBy && (
                   <div className="text-[9px] font-mono text-[#E67E22] mt-0.5">
                     REMIND: {new Date(item.remindBy).toLocaleDateString()}
+                  </div>
+                )}
+                {item.campDriven && (
+                  <div className="text-[9px] font-mono mt-0.5" style={{ color: '#3A6B5C' }}>
+                    ⛺ {item.reason}
                   </div>
                 )}
               </div>

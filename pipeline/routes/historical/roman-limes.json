@@ -1,0 +1,19 @@
+{
+  "slug": "roman-limes",
+  "name": "The Roman Limes",
+  "destination": "Mainz → Regensburg, Germany",
+  "theme_category": "historical",
+  "tags": ["pilgrimage", "long_distance", "bike", "architecture"],
+  "climate": "temperate",
+  "difficulty": "Moderate",
+  "squad_min": 1,
+  "squad_max": 4,
+  "gpx_file": "roman-limes.gpx",
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "tourism_board_cc",
+    "source_url": "https://www.limesstrasse.de/en/german-limes-road/home",
+    "license": "tourism_board_terms",
+    "downloaded_at": "2026-05-13"
+  }
+}

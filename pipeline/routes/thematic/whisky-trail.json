@@ -1,0 +1,19 @@
+{
+  "slug": "whisky-trail",
+  "name": "Speyside Malt Whisky Trail",
+  "destination": "Aberlour → Forres, Scotland",
+  "theme_category": "thematic",
+  "tags": ["food_drink", "scenic_drive", "car"],
+  "climate": "temperate",
+  "difficulty": "Easy",
+  "squad_min": 1,
+  "squad_max": 4,
+  "gpx_file": "whisky-trail.gpx",
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "tourism_board_cc",
+    "source_url": "https://maltwhiskytrail.com/map/",
+    "license": "tourism_board_terms",
+    "downloaded_at": "2026-05-13"
+  }
+}

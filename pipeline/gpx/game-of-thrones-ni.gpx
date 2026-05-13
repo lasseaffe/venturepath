@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="VenturePath GPX Builder"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.topografix.com/GPX/1/1"
+  xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <metadata>
+    <name>Game of Thrones Locations NI</name>
+    <desc>GoT filming tour, Northern Ireland</desc>
+    <time>2026-05-13T02:14:23.153035Z</time>
+  </metadata>
+  <trk>
+    <name>Game of Thrones Locations NI</name>
+    <trkseg>
+    <trkpt lat="54.598" lon="-5.927"><ele>100</ele><time>2026-05-13T02:14:23.153035Z</time></trkpt>
+    <trkpt lat="54.444" lon="-6.234"><ele>101</ele><time>2026-05-13T02:14:23.153035Z</time></trkpt>
+    <trkpt lat="54.349" lon="-6.199"><ele>102</ele><time>2026-05-13T02:14:23.153035Z</time></trkpt>
+    <trkpt lat="54.214" lon="-6.024"><ele>103</ele><time>2026-05-13T02:14:23.153035Z</time></trkpt>
+    <trkpt lat="54.415" lon="-5.923"><ele>104</ele><time>2026-05-13T02:14:23.153035Z</time></trkpt>
+    </trkseg>
+  </trk>
+</gpx>

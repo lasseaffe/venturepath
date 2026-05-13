@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTripStore } from '../../store/useTripStore';
 import { useSquadSync } from '../../hooks/useSquadSync';
@@ -40,17 +41,38 @@ export default function VentureVault({ onCloneComplete }) {
     return <SubmitWizard onComplete={() => { setMode('vault'); refetch(); }} onCancel={() => setMode('vault')} />;
   }
   if (mode === 'cloneEdit' && cloneSource) {
+    const legCount = cloneSource.legs?.length ?? 0;
+    const difficulty = cloneSource.difficulty ?? 'Moderate';
+    const architect = cloneSource.architect ?? 'VenturePath Architect';
+    const destination = cloneSource.destination ?? cloneSource.name;
     return (
-      <CloneEditMode
-        source={cloneSource}
-        onPublish={() => { handleDirectClone(cloneSource); setMode('vault'); refetch(); }}
-        onDiscard={() => { handleDirectClone(cloneSource); setMode('vault'); }}
-      />
+      <>
+        <Helmet>
+          <title>{cloneSource.name} · {destination} — VentureVault</title>
+          <meta property="og:title" content={`${cloneSource.name} · ${destination} — VentureVault`} />
+          <meta property="og:description" content={`${legCount} legs · ${difficulty} · by ${architect}`} />
+          <meta property="og:type" content="website" />
+          {cloneSource.previewImage && <meta property="og:image" content={cloneSource.previewImage} />}
+          <link rel="canonical" href={`https://venturepath.app/vault/${cloneSource.id}`} />
+        </Helmet>
+        <CloneEditMode
+          source={cloneSource}
+          onPublish={() => { handleDirectClone(cloneSource); setMode('vault'); refetch(); }}
+          onDiscard={() => { handleDirectClone(cloneSource); setMode('vault'); }}
+        />
+      </>
     );
   }
 
   return (
     <div data-tour="vault" data-beacon="venture-vault" className="tactical-panel p-5">
+      <Helmet>
+        <title>VentureVault — Expedition Pro-Paths</title>
+        <meta property="og:title" content="VentureVault — Expedition Pro-Paths" />
+        <meta property="og:description" content="Discover Architect-crafted expedition templates for every terrain, budget, and squad size. Clone a Pro-Path and launch your next expedition in minutes." />
+        <meta property="og:type" content="website" />
+        <link rel="canonical" href="https://venturepath.app/vault" />
+      </Helmet>
       <div className="flex items-center justify-between mb-5">
         <div>
           <h2 className="label-tag mb-1">VentureVault</h2>
