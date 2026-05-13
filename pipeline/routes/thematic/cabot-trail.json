@@ -1,0 +1,19 @@
+{
+  "slug": "cabot-trail",
+  "name": "The Cabot Trail",
+  "destination": "Cape Breton, Nova Scotia, Canada",
+  "theme_category": "thematic",
+  "tags": ["scenic_drive", "coastal", "car", "wildlife"],
+  "climate": "temperate",
+  "difficulty": "Easy",
+  "squad_min": 1,
+  "squad_max": 6,
+  "gpx_file": "cabot-trail.gpx",
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "osm_overpass",
+    "source_url": "https://www.openstreetmap.org/relation/146487",
+    "license": "ODbL",
+    "downloaded_at": "2026-05-13"
+  }
+}

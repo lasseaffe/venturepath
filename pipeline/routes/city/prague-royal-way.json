@@ -1,0 +1,24 @@
+{
+  "slug": "prague-royal-way",
+  "name": "Prague Royal Way",
+  "destination": "Prague, Czech Republic",
+  "theme_category": "city",
+  "tags": ["city", "historical", "foot", "walk"],
+  "climate": "temperate",
+  "difficulty": "Easy",
+  "squad_min": 1,
+  "squad_max": 6,
+  "trace_coords": [
+    [50.0875, 14.4213],
+    [50.0865, 14.4239],
+    [50.0863, 14.4180],
+    [50.0908, 14.4055]
+  ],
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "manual_trace",
+    "source_url": "https://www.prague.eu/en/articles/the-royal-route-10526",
+    "license": "manual_research",
+    "downloaded_at": "2026-05-13"
+  }
+}

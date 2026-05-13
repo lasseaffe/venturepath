@@ -1,5 +1,23 @@
 # Premium Partnerships & GPX Source Notes
 
+## Deferred Routes (4)
+
+These routes from the md doc require licensed API access that we don't have in v1.
+They live as stubs under `pipeline/routes/_deferred/` and are not ingested.
+
+| Slug | Source | Partnership Required |
+|---|---|---|
+| `silk-road` | Komoot Partner API | https://www.komoot.com/partners |
+| `alps-haute-route` | Outdooractive Partner | https://www.outdooractive.com/en/partner |
+| `amazon-rainforest` | Adventure World / no GPX | river-based, no meaningful GPX |
+| `gobi-desert-loop` | World Expeditions / Komoot | https://worldexpeditions.com/ |
+
+If a partnership is obtained, move the stub from `_deferred/` into the matching theme folder, add
+`tags`, `climate`, `difficulty`, `squad_min`, `squad_max`, `gpx_file` fields, download the GPX into
+`pipeline/gpx/`, and re-run `npm run seed:curated -- --route=<slug>`.
+
+---
+
 ## Task 15 GPX Acquisition — Source Status (2026-05-13)
 
 ### Direct Downloads Attempted

@@ -1,0 +1,27 @@
+{
+  "slug": "roman-holiday",
+  "name": "Roman Holiday — Audrey Hepburn's Rome",
+  "destination": "Rome, Italy",
+  "theme_category": "movie",
+  "tags": ["film_locations", "city", "foot", "walk"],
+  "climate": "temperate",
+  "difficulty": "Easy",
+  "squad_min": 1,
+  "squad_max": 4,
+  "trace_coords": [
+    [41.9028, 12.4534],
+    [41.9009, 12.4833],
+    [41.8902, 12.4922],
+    [41.8919, 12.4795],
+    [41.8986, 12.4769],
+    [41.9000, 12.4717],
+    [41.9039, 12.4837]
+  ],
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "manual_trace",
+    "source_url": "https://www.gpsmycity.com/tours/roman-holiday-movie-locations-walk-5390.html",
+    "license": "manual_research",
+    "downloaded_at": "2026-05-13"
+  }
+}

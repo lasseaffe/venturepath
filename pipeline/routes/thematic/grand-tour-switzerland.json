@@ -1,0 +1,19 @@
+{
+  "slug": "grand-tour-switzerland",
+  "name": "Grand Tour of Switzerland",
+  "destination": "Switzerland (loop)",
+  "theme_category": "thematic",
+  "tags": ["scenic_drive", "long_distance", "car", "alpine"],
+  "climate": "alpine",
+  "difficulty": "Moderate",
+  "squad_min": 1,
+  "squad_max": 6,
+  "gpx_file": "grand-tour-switzerland.gpx",
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "tourism_board_cc",
+    "source_url": "https://www.myswitzerland.com/en/experiences/experience-tour/grand-tour-of-switzerland/",
+    "license": "tourism_board_terms",
+    "downloaded_at": "2026-05-13"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "slug": "bauhaus-berlin",
+  "name": "Bauhaus Berlin",
+  "destination": "Berlin, Germany",
+  "theme_category": "city",
+  "tags": ["city", "architecture", "foot", "walk"],
+  "climate": "temperate",
+  "difficulty": "Easy",
+  "squad_min": 1,
+  "squad_max": 4,
+  "trace_coords": [
+    [52.5067, 13.3543],
+    [52.5037, 13.4194],
+    [52.5163, 13.3777],
+    [52.5219, 13.4061],
+    [52.4736, 13.4309],
+    [52.5070, 13.3389]
+  ],
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "manual_trace",
+    "source_url": "https://www.visitberlin.de/en/bauhaus-berlin",
+    "license": "manual_research",
+    "downloaded_at": "2026-05-13"
+  }
+}

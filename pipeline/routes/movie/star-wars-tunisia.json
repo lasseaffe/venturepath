@@ -1,0 +1,19 @@
+{
+  "slug": "star-wars-tunisia",
+  "name": "Star Wars — Tatooine Sets in Tunisia",
+  "destination": "Tozeur → Matmata, Tunisia",
+  "theme_category": "movie",
+  "tags": ["film_locations", "desert", "scenic_drive", "car"],
+  "climate": "desert",
+  "difficulty": "Moderate",
+  "squad_min": 1,
+  "squad_max": 6,
+  "gpx_file": "star-wars-tunisia.gpx",
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "manual_research",
+    "source_url": "https://www.starwars.com/news/visiting-the-star-wars-sets-in-tunisia",
+    "license": "manual_research",
+    "downloaded_at": "2026-05-13"
+  }
+}

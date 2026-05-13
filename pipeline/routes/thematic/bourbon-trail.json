@@ -1,0 +1,27 @@
+{
+  "slug": "bourbon-trail",
+  "name": "Kentucky Bourbon Trail",
+  "destination": "Louisville → Lexington, Kentucky, USA",
+  "theme_category": "thematic",
+  "tags": ["food_drink", "scenic_drive", "car"],
+  "climate": "temperate",
+  "difficulty": "Easy",
+  "squad_min": 1,
+  "squad_max": 4,
+  "trace_coords": [
+    [38.2527, -85.7585],
+    [38.0406, -84.4961],
+    [37.7917, -85.4683],
+    [37.6856, -85.8597],
+    [38.0967, -85.0747],
+    [38.0814, -85.6011],
+    [38.1300, -85.6900]
+  ],
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "manual_trace",
+    "source_url": "https://kybourbontrail.com/plan-your-adventure/",
+    "license": "manual_research",
+    "downloaded_at": "2026-05-13"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "slug": "camino-de-santiago",
+  "name": "Camino de Santiago — Camino Francés",
+  "destination": "Sarria → Santiago de Compostela, Spain",
+  "theme_category": "historical",
+  "tags": ["pilgrimage", "long_distance", "foot"],
+  "climate": "temperate",
+  "difficulty": "Moderate",
+  "squad_min": 1,
+  "squad_max": 6,
+  "gpx_file": "camino-de-santiago.gpx",
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "tourism_board_cc",
+    "source_url": "https://www.britishpilgrimage.org/download-gpx",
+    "license": "CC BY-SA 4.0",
+    "downloaded_at": "2026-05-13"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "slug": "high-line-chelsea",
+  "name": "High Line — Chelsea Walk",
+  "destination": "New York City, USA",
+  "theme_category": "city",
+  "tags": ["city", "architecture", "foot", "walk", "short"],
+  "climate": "temperate",
+  "difficulty": "Easy",
+  "squad_min": 1,
+  "squad_max": 8,
+  "gpx_file": "high-line-chelsea.gpx",
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "osm_overpass",
+    "source_url": "https://www.openstreetmap.org/way/40097478",
+    "license": "ODbL",
+    "downloaded_at": "2026-05-13"
+  }
+}

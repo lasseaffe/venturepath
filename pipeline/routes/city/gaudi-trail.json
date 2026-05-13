@@ -1,0 +1,25 @@
+{
+  "slug": "gaudi-trail",
+  "name": "Barcelona Gaudí Trail",
+  "destination": "Barcelona, Spain",
+  "theme_category": "city",
+  "tags": ["city", "architecture", "foot", "walk"],
+  "climate": "temperate",
+  "difficulty": "Easy",
+  "squad_min": 1,
+  "squad_max": 6,
+  "trace_coords": [
+    [41.4036, 2.1744],
+    [41.4148, 2.1527],
+    [41.3915, 2.1650],
+    [41.4080, 2.1525],
+    [41.3851, 2.1734]
+  ],
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "manual_trace",
+    "source_url": "https://www.gpsmycity.com/tours/antoni-gaudis-masterpieces-walking-tour-1895.html",
+    "license": "manual_research",
+    "downloaded_at": "2026-05-13"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "slug": "sound-of-music-salzburg",
+  "name": "The Sound of Music — Salzburg Locations",
+  "destination": "Salzburg, Austria",
+  "theme_category": "movie",
+  "tags": ["film_locations", "city", "walk"],
+  "climate": "temperate",
+  "difficulty": "Easy",
+  "squad_min": 1,
+  "squad_max": 8,
+  "gpx_file": "sound-of-music-salzburg.gpx",
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "tourism_board_cc",
+    "source_url": "https://www.salzburg.info/en/salzburg/the-sound-of-music/filming-locations",
+    "license": "tourism_board_terms",
+    "downloaded_at": "2026-05-13"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "slug": "incan-trail",
+  "name": "Inca Trail to Machu Picchu",
+  "destination": "KM82 → Machu Picchu, Peru",
+  "theme_category": "historical",
+  "tags": ["pilgrimage", "alpine", "foot", "high_altitude"],
+  "climate": "alpine",
+  "difficulty": "Hard",
+  "squad_min": 1,
+  "squad_max": 8,
+  "gpx_file": "incan-trail.gpx",
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "tourism_board_cc",
+    "source_url": "https://www.peru.travel/en/experiences/machu-picchu",
+    "license": "tourism_board_terms",
+    "downloaded_at": "2026-05-13"
+  }
+}

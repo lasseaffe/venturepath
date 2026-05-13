@@ -1,0 +1,25 @@
+{
+  "slug": "jack-the-ripper",
+  "name": "Jack the Ripper Trail",
+  "destination": "Whitechapel, London, England",
+  "theme_category": "city",
+  "tags": ["city", "historical", "foot", "walk", "night"],
+  "climate": "temperate",
+  "difficulty": "Easy",
+  "squad_min": 1,
+  "squad_max": 8,
+  "trace_coords": [
+    [51.5174, -0.0716],
+    [51.5151, -0.0676],
+    [51.5184, -0.0658],
+    [51.5193, -0.0712],
+    [51.5168, -0.0762]
+  ],
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "manual_trace",
+    "source_url": "https://www.jack-the-ripper-tour.com/map-of-whitechapel/",
+    "license": "manual_research",
+    "downloaded_at": "2026-05-13"
+  }
+}

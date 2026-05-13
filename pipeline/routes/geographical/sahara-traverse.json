@@ -1,0 +1,19 @@
+{
+  "slug": "sahara-traverse",
+  "name": "Merzouga Dunes Sahara Traverse",
+  "destination": "Merzouga, Morocco",
+  "theme_category": "geographical",
+  "tags": ["desert", "remote", "camel", "extreme"],
+  "climate": "desert",
+  "difficulty": "Hard",
+  "squad_min": 2,
+  "squad_max": 6,
+  "gpx_file": "sahara-traverse.gpx",
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "wikiloc_cc",
+    "source_url": "https://www.wikiloc.com/offroading-trails/merzouga-dunes-traverse-432109",
+    "license": "CC BY-SA 4.0",
+    "downloaded_at": "2026-05-13"
+  }
+}

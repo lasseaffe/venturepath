@@ -1,0 +1,19 @@
+{
+  "slug": "mt-fuji-sunrise",
+  "name": "Mt. Fuji Sunrise — Fujinomiya Route",
+  "destination": "Mt. Fuji, Japan",
+  "theme_category": "geographical",
+  "tags": ["alpine", "summit", "foot", "overnight"],
+  "climate": "alpine",
+  "difficulty": "Moderate",
+  "squad_min": 1,
+  "squad_max": 8,
+  "gpx_file": "mt-fuji-sunrise.gpx",
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "osm_overpass",
+    "source_url": "https://www.openstreetmap.org/relation/4017823",
+    "license": "ODbL",
+    "downloaded_at": "2026-05-13"
+  }
+}

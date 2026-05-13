@@ -1,0 +1,19 @@
+{
+  "slug": "breaking-bad-abq",
+  "name": "Breaking Bad — Albuquerque",
+  "destination": "Albuquerque, New Mexico, USA",
+  "theme_category": "movie",
+  "tags": ["film_locations", "city", "car"],
+  "climate": "arid",
+  "difficulty": "Easy",
+  "squad_min": 1,
+  "squad_max": 4,
+  "gpx_file": "breaking-bad-abq.gpx",
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "tourism_board_cc",
+    "source_url": "https://www.visitalbuquerque.org/abq365/blog/post/breaking-bad-tour-of-albuquerque/",
+    "license": "tourism_board_terms",
+    "downloaded_at": "2026-05-13"
+  }
+}

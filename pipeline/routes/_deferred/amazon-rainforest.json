@@ -1,0 +1,10 @@
+{
+  "slug": "amazon-rainforest",
+  "name": "Amazon Rainforest Cruise",
+  "deferred_reason": "no_meaningful_gpx_river_based",
+  "provenance": {
+    "source": "adventure_world_partner",
+    "source_url": "https://www.adventureworld.com/en-au/tours/cruising-the-ecuadorian-amazon",
+    "license": "requires_partnership"
+  }
+}

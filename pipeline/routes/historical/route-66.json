@@ -1,0 +1,19 @@
+{
+  "slug": "route-66",
+  "name": "Route 66 — Chicago to Santa Monica",
+  "destination": "Chicago, IL → Santa Monica, CA, USA",
+  "theme_category": "historical",
+  "tags": ["scenic_drive", "long_distance", "car", "americana"],
+  "climate": "temperate",
+  "difficulty": "Easy",
+  "squad_min": 1,
+  "squad_max": 4,
+  "gpx_file": "route-66.gpx",
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "osm_overpass",
+    "source_url": "https://www.openstreetmap.org/relation/3962108",
+    "license": "ODbL",
+    "downloaded_at": "2026-05-13"
+  }
+}

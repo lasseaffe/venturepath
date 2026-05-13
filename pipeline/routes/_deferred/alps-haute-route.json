@@ -1,0 +1,10 @@
+{
+  "slug": "alps-haute-route",
+  "name": "Alps Haute Route — Chamonix to Zermatt",
+  "deferred_reason": "premium_partnership_required",
+  "provenance": {
+    "source": "outdooractive_partner",
+    "source_url": "https://www.outdooractive.com/en/route/alpine-crossing/haute-route-chamonix-zermatt/1376839/",
+    "license": "requires_outdooractive_partner_api"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "slug": "yamanote-loop",
+  "name": "Yamanote Loop Walk",
+  "destination": "Tokyo, Japan",
+  "theme_category": "city",
+  "tags": ["city", "long_distance", "foot", "urban"],
+  "climate": "temperate",
+  "difficulty": "Moderate",
+  "squad_min": 1,
+  "squad_max": 4,
+  "gpx_file": "yamanote-loop.gpx",
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "osm_overpass",
+    "source_url": "https://www.openstreetmap.org/relation/2143229",
+    "license": "ODbL",
+    "downloaded_at": "2026-05-13"
+  }
+}

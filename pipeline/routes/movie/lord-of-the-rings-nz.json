@@ -1,0 +1,19 @@
+{
+  "slug": "lord-of-the-rings-nz",
+  "name": "Middle-earth — Lord of the Rings Locations",
+  "destination": "North & South Islands, New Zealand",
+  "theme_category": "movie",
+  "tags": ["film_locations", "scenic_drive", "car", "multi_day"],
+  "climate": "temperate",
+  "difficulty": "Easy",
+  "squad_min": 1,
+  "squad_max": 6,
+  "gpx_file": "lord-of-the-rings-nz.gpx",
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "tourism_board_cc",
+    "source_url": "https://www.doc.govt.nz/parks-and-recreation/places-to-go/lord-of-the-rings-locations/",
+    "license": "tourism_board_terms",
+    "downloaded_at": "2026-05-13"
+  }
+}

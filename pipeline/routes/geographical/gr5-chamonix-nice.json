@@ -1,0 +1,19 @@
+{
+  "slug": "gr5-chamonix-nice",
+  "name": "GR5 — Chamonix to Nice",
+  "destination": "Chamonix, France → Nice, France",
+  "theme_category": "geographical",
+  "tags": ["alpine", "long_distance", "foot", "hut_to_hut"],
+  "climate": "alpine",
+  "difficulty": "Hard",
+  "squad_min": 1,
+  "squad_max": 4,
+  "gpx_file": "gr5-chamonix-nice.gpx",
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "osm_overpass",
+    "source_url": "https://www.openstreetmap.org/relation/12660861",
+    "license": "ODbL",
+    "downloaded_at": "2026-05-13"
+  }
+}

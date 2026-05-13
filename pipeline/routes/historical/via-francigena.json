@@ -1,0 +1,19 @@
+{
+  "slug": "via-francigena",
+  "name": "Via Francigena — Canterbury to Rome",
+  "destination": "Canterbury → Rome",
+  "theme_category": "historical",
+  "tags": ["pilgrimage", "long_distance", "foot"],
+  "climate": "temperate",
+  "difficulty": "Hard",
+  "squad_min": 1,
+  "squad_max": 6,
+  "gpx_file": "via-francigena.gpx",
+  "architect_name": "VenturePath Curator",
+  "provenance": {
+    "source": "tourism_board_cc",
+    "source_url": "https://www.viefrancigene.org/en/download-gps-tracks/",
+    "license": "CC BY-SA 4.0",
+    "downloaded_at": "2026-05-13"
+  }
+}
