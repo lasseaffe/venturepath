@@ -124,7 +124,7 @@ create policy "pro_path_attempts_self_insert"
   with check (pioneer_id = auth.uid());
 ```
 
-The pipeline uses `SUPABASE_SERVICE_ROLE_KEY` (verify in `pipeline/upsertPath.js` before merging) — service role bypasses RLS, so `npm run pipeline` keeps working with zero changes.
+The pipeline uses `SUPABASE_SERVICE_KEY` (verified in [pipeline/upsertPath.js:5](C:/Users/lasse/Desktop/venturepath/pipeline/upsertPath.js#L5) — note the non-standard name without `_ROLE_`). Service role bypasses RLS, so `npm run pipeline` keeps working with zero changes.
 
 ## 2. Storage bucket — `gpx`
 
