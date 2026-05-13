@@ -4,6 +4,7 @@ import { useTracks } from '../../store/useTripStore.jsx';
 import { SET_TRACK_PROFILE, UNDO, REDO } from '../../store/slices/tracks.js';
 import { downloadTrackGpx } from '../../utils/gpxExporter.v2.js';
 import ToolRail from './ToolRail.jsx';
+import StudioElevationStrip from './StudioElevationStrip.jsx';
 
 export default function TrackStudio({ trackId }) {
   const { tracks, past, future, dispatch } = useTracks();
@@ -67,6 +68,8 @@ export default function TrackStudio({ trackId }) {
         ))}
         <ClickHandler tool={tool} track={track} dispatch={dispatch} />
       </MapContainer>
+
+      <StudioElevationStrip points={track.points} />
 
       <div className="absolute right-4 top-4 z-[1000] rounded-md border border-[#3a2f25] bg-[#0E1012]/95 p-3 font-[JetBrains_Mono] text-xs text-[#D9C5B2]">
         <div className="text-[10px] uppercase tracking-wider text-[#D9C5B2]/60">Composition</div>
