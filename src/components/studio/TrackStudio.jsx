@@ -38,7 +38,32 @@ export default function TrackStudio({ trackId }) {
           <Polyline positions={polyline} pathOptions={{ color: '#E67E22', weight: 4 }} />
         )}
         {track.points.map((p, i) => (
-          <Marker key={i} position={[p.lat, p.lng]} />
+          <Marker
+            key={i}
+            position={[p.lat, p.lng]}
+            draggable={tool === 'edit'}
+            eventHandlers={{
+              dragend: async (ev) => {
+                if (tool !== 'edit') return;
+                const { lat, lng } = ev.target.getLatLng();
+                dispatch({ type: 'tracks/MOVE_POINT', payload: { trackId: track.id, idx: i, lat, lng } });
+
+                // Reroute prev→this and this→next, if neighbors exist
+                const { routeBetween } = await import('../../services/routingEngine.js');
+                const prev = track.points[i - 1];
+                const next = track.points[i + 1];
+                // Note: this is a simplified reroute that warms the routing cache rather than splicing
+                // segments in-range. A future task (Phase 4) will implement true segment splicing once
+                // segment indexing is reworked.
+                if (prev) {
+                  await routeBetween({ from: { lat: prev.lat, lng: prev.lng }, to: { lat, lng }, profile: track.profile });
+                }
+                if (next) {
+                  await routeBetween({ from: { lat, lng }, to: { lat: next.lat, lng: next.lng }, profile: track.profile });
+                }
+              },
+            }}
+          />
         ))}
         <ClickHandler tool={tool} track={track} dispatch={dispatch} />
       </MapContainer>
