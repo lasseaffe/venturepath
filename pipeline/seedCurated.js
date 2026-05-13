@@ -7,8 +7,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createClient } from '@supabase/supabase-js';
-import { graphhopperSnap } from './lib/graphhopperSnap.js';
+import { parseGpx } from './lib/parseGpx.js';
+import { mapCategory } from './lib/mapCategory.js';
+import { uploadGpx } from './lib/uploadGpx.js';
+import { draftFromGpx } from './lib/draftFromGpx.js';
 import { upsertRoute } from './lib/upsertRoute.js';
+import { graphhopperSnap } from './lib/graphhopperSnap.js';
 import { scoreQuality } from './scoreQuality.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -70,21 +74,12 @@ async function processRoute(supabase, route) {
     throw new Error(`GPX file missing for ${route.slug}: ${gpxPath}`);
   }
 
-  // Placeholder: parseGpx module (Task 1)
-  const stats = {
-    distanceKm: route.distance_km || 0,
-    elevationGain: route.elevation_gain || 0,
-    waypoints: [],
-    trackpointCount: 0,
-  };
+  // Parse GPX deterministically (distance, elevation gain, named waypoints)
+  const stats = parseGpx(gpxPath);
   console.log(`  parsed: ${stats.distanceKm}km, +${stats.elevationGain}m gain, ${stats.waypoints.length} wpts, ${stats.trackpointCount} trkpts`);
 
-  // Placeholder: draftFromGpx module (Task 3)
-  const draft = {
-    days: route.days || 1,
-    description: route.description || '',
-    legs: route.legs || [],
-  };
+  // LLM draft — description + legs + days estimate from GPX-derived facts
+  const draft = await draftFromGpx(route, stats);
 
   // Assemble pro_paths row
   const row = {
@@ -99,7 +94,7 @@ async function processRoute(supabase, route) {
     difficulty:        route.difficulty,
     squad_min:         route.squad_min,
     squad_max:         route.squad_max,
-    distance_km:       stats.distanceKm,
+    distance_km:       Math.round(stats.distanceKm),
     days:              draft.days,
     description:       draft.description,
     legs:              draft.legs,
@@ -122,7 +117,7 @@ async function processRoute(supabase, route) {
     lon:              wpt.lon,
     elevation_m:      wpt.ele,
     name:             wpt.name,
-    category:         wpt.category || 'waypoint',
+    category:         mapCategory(wpt.sym),
     trigger_radius_m: 20,
   }));
 
@@ -130,8 +125,8 @@ async function processRoute(supabase, route) {
   const upserted = await upsertRoute({ supabase, row, waypoints: waypointRows });
   console.log(`  upserted pro_paths.id=${upserted.id}`);
 
-  // Placeholder: uploadGpx (Task 2)
-  const storagePath = `pro-paths/${upserted.id}/${route.slug}.gpx`;
+  // Upload GPX to Supabase Storage as <id>.gpx (Spec 0 RLS keys on this naming)
+  const storagePath = await uploadGpx({ supabase, proPathId: upserted.id, localGpxPath: gpxPath });
   await supabase.from('pro_paths').update({ gpx_storage_path: storagePath }).eq('id', upserted.id);
   console.log(`  uploaded ${storagePath}`);
 
