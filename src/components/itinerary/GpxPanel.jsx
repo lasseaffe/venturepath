@@ -1,18 +1,20 @@
 import { useRef, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { useTripStore } from '../../store/useTripStore';
-import { parseGpxToStops, stopsToLegs } from '../../utils/gpxItineraryParser';
+import { parseGpxToTracks } from '../../utils/gpxParser.v2.js';
+import GpxImportDialogV2 from './GpxImportDialog.v2.jsx';
+import { tracksToLegPatch } from '../../services/trackEmitters.js';
+import { ADD_TRACK } from '../../store/slices/tracks.js';
 import { exportLegsToGpx, downloadGpx } from '../../utils/gpxExporter';
-import GpxImportDialog from './GpxImportDialog';
 
 export default function GpxPanel() {
-  const { trip, legs, addLeg, replaceLegs } = useTripStore();
+  const { trip, legs, dispatch, addLeg, replaceLegs } = useTripStore();
   const fileInputRef = useRef(null);
 
   const [importing, setImporting] = useState(false);
   const [exporting, setExporting] = useState(false);
-  const [pendingStops, setPendingStops] = useState(null);
-  const [pendingLegs, setPendingLegs] = useState(null);
+  const [pendingTrack, setPendingTrack] = useState(null);
+  const [multiTrackWarning, setMultiTrackWarning] = useState(false);
   const [error, setError] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
 
@@ -46,11 +48,11 @@ export default function GpxPanel() {
     setImporting(true);
     try {
       const text = await file.text();
-      const stops = parseGpxToStops(text);
-      if (stops.length < 2) throw new Error('GPX file has fewer than 2 usable stops.');
-      const newLegs = stopsToLegs(stops);
-      setPendingStops(stops);
-      setPendingLegs(newLegs);
+      const tracks = parseGpxToTracks(text);
+      const track = tracks[0] ?? null;
+      if (!track) throw new Error('GPX file contains no usable tracks.');
+      setPendingTrack(track);
+      setMultiTrackWarning(tracks.length > 1);
     } catch (e) {
       setError(e.message);
     } finally {
@@ -66,22 +68,19 @@ export default function GpxPanel() {
   }
 
   function handleConfirm(mode) {
-    if (!pendingLegs) return;
-    if (mode === 'replace') {
-      // Assign fresh ids using the store's nextLegId counter — piggyback on addLeg
-      replaceLegs([]);
-      pendingLegs.forEach(l => addLeg(l));
-    } else {
-      pendingLegs.forEach(l => addLeg(l));
+    if (!pendingTrack) return;
+    dispatch({ type: ADD_TRACK, payload: pendingTrack });
+    const legPatch = tracksToLegPatch(pendingTrack);
+    if (legPatch) {
+      if (mode === 'replace-with-leg') {
+        dispatch({ type: 'REPLACE_LEGS', payload: [legPatch] });
+      } else {
+        dispatch({ type: 'ADD_LEG', payload: legPatch });
+      }
     }
-    flashSuccess(`Imported ${pendingLegs.length} leg${pendingLegs.length !== 1 ? 's' : ''}`);
-    setPendingStops(null);
-    setPendingLegs(null);
-  }
-
-  function handleCancel() {
-    setPendingStops(null);
-    setPendingLegs(null);
+    flashSuccess('Track imported as Leg');
+    setPendingTrack(null);
+    setMultiTrackWarning(false);
   }
 
   return (
@@ -178,11 +177,12 @@ export default function GpxPanel() {
       </div>
 
       <AnimatePresence>
-        {pendingStops && (
-          <GpxImportDialog
-            stops={pendingStops}
+        {pendingTrack && (
+          <GpxImportDialogV2
+            track={pendingTrack}
+            multiTrackWarning={multiTrackWarning}
             onConfirm={handleConfirm}
-            onCancel={handleCancel}
+            onCancel={() => { setPendingTrack(null); setMultiTrackWarning(false); }}
           />
         )}
       </AnimatePresence>

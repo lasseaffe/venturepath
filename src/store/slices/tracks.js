@@ -22,17 +22,17 @@ function emptyStats() {
   return { distanceKm: 0, durationH: 0, ascentM: 0, descentM: 0, maxEleM: 0, minEleM: 0, difficulty: 'easy' };
 }
 
-function newTrack({ name, profile }) {
+function newTrack({ id, name, profile, points, waypoints, stats, source } = {}) {
   return {
-    id: crypto.randomUUID(),
+    id: id ?? crypto.randomUUID(),
     legId: null,
     name: name ?? 'Untitled Composition',
     profile: profile ?? 'foot',
-    points: [],
+    points: points ?? [],
     segments: [],
-    waypoints: [],
-    stats: emptyStats(),
-    source: 'drawn',
+    waypoints: waypoints ?? [],
+    stats: stats ?? emptyStats(),
+    source: source ?? 'drawn',
     visibility: 'private',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
