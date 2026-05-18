@@ -1,4 +1,5 @@
 import { createContext, useContext, useReducer, useEffect } from 'react';
+import { tracksReducer, initialTracksState } from './slices/tracks.js';
 
 const STORAGE_KEY = 'vp-trip-store';
 
@@ -46,6 +47,7 @@ const initialState = {
   budget: { total: 0, items: [] }, // items: { id, label, amount, currency, legId? }
   dayLoops: [],  // { id, date, homebaseStayId, stopIds, autoLegIds, label, planningMode }
   heroImagePositions: {},  // { [imageUrl]: { x: number, y: number } }
+  tracks: initialTracksState,
 };
 
 let nextLegId = 100; // start above seeded leg IDs so there's no collision
@@ -224,8 +226,12 @@ function reducer(state, action) {
       const { url, x, y } = action.payload;
       return { ...state, heroImagePositions: { ...state.heroImagePositions, [url]: { x, y } } };
     }
-    default:
+    default: {
+      if (typeof action.type === 'string' && action.type.startsWith('tracks/')) {
+        return { ...state, tracks: tracksReducer(state.tracks, action) };
+      }
       return state;
+    }
   }
 }
 
@@ -328,4 +334,15 @@ export function useTripStore() {
   const ctx = useContext(TripStoreContext);
   if (!ctx) throw new Error('useTripStore must be used within TripStoreProvider');
   return ctx;
+}
+
+export function useTracks() {
+  const ctx = useContext(TripStoreContext);
+  if (!ctx) throw new Error('useTracks must be used within TripStoreProvider');
+  return {
+    tracks: ctx.tracks.tracks,
+    past: ctx.tracks.past,
+    future: ctx.tracks.future,
+    dispatch: ctx.dispatch,
+  };
 }

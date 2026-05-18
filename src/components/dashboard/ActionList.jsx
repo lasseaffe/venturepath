@@ -84,6 +84,13 @@ export default function ActionList({ onNavigate, onEnterTrip, onOpenVault }) {
       />
 
       <ActionRow
+        label="Architect's Studio"
+        sub="Compose tracks with snap-to-trail routing"
+        accentColor="#E67E22"
+        onClick={() => onNavigate('studio')}
+      />
+
+      <ActionRow
         label="AR Ghost Tours"
         sub="Walk through location-anchored history"
         accentColor="rgba(255,255,255,0.1)"
