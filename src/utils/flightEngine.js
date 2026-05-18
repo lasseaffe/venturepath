@@ -1,4 +1,5 @@
 // Merged from venture-path: flightEngine.js + flightScraper.js
+import { nearestAirport } from './iataNearest.js';
 
 export async function searchFlights(origin, destination, _date, priority = 'CHEAPEST') {
   // Replace with real Skyscanner/Amadeus API call when ready
@@ -27,5 +28,18 @@ export function calculateFlightImpact(flight) {
     co2Amount:  flight.co2,
     rating:     flight.co2 < 100 ? 'Low' : flight.co2 < 150 ? 'Medium' : 'High',
     offsetCost: (flight.co2 * 0.15).toFixed(2),
+  };
+}
+
+export function suggestFromCoords({ lat, lng }) {
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+  const a = nearestAirport({ lat, lng });
+  if (!a) return null;
+  return {
+    iata: a.iata,
+    name: a.name,
+    city: a.city,
+    country: a.country,
+    distanceKm: Math.round(a.distanceKm),
   };
 }

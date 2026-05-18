@@ -1,4 +1,5 @@
 import { createContext, useContext, useReducer, useEffect } from 'react';
+import { tracksReducer, initialTracksState, HYDRATE_TRACKS } from './slices/tracks.js';
 
 const STORAGE_KEY = 'vp-trip-store';
 
@@ -45,6 +46,8 @@ const initialState = {
   alerts: [],    // { id, type, severity, coords, message }
   budget: { total: 0, items: [] }, // items: { id, label, amount, currency, legId? }
   dayLoops: [],  // { id, date, homebaseStayId, stopIds, autoLegIds, label, planningMode }
+  heroImagePositions: {},  // { [imageUrl]: { x: number, y: number } }
+  tracks: initialTracksState,
 };
 
 let nextLegId = 100; // start above seeded leg IDs so there's no collision
@@ -130,6 +133,8 @@ function reducer(state, action) {
     }
     case 'REPLACE_LEGS':
       return { ...state, legs: action.payload };
+    case 'UPDATE_MANIFEST_SETTINGS':
+      return { ...state, manifestSettings: { ...state.manifestSettings, ...action.payload } };
     case 'ADD_STAY': {
       const stay = { ...action.payload, id: action.payload.id ?? crypto.randomUUID() };
       return { ...state, stays: [...state.stays, stay] };
@@ -219,8 +224,16 @@ function reducer(state, action) {
     }
     case 'SET_TRIP_PLANNING_MODE':
       return { ...state, trip: { ...state.trip, planningMode: action.payload } };
-    default:
+    case 'SET_HERO_IMAGE_POSITION': {
+      const { url, x, y } = action.payload;
+      return { ...state, heroImagePositions: { ...state.heroImagePositions, [url]: { x, y } } };
+    }
+    default: {
+      if (typeof action.type === 'string' && action.type.startsWith('tracks/')) {
+        return { ...state, tracks: tracksReducer(state.tracks, action) };
+      }
       return state;
+    }
   }
 }
 
@@ -246,6 +259,20 @@ export function TripStoreProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, undefined, loadState);
 
   useEffect(() => {
+    let cancelled = false;
+    import('./tracksPersistence.js').then(({ loadTracks }) => loadTracks()).then(loaded => {
+      if (!cancelled && loaded.length > 0) {
+        dispatch({ type: HYDRATE_TRACKS, payload: loaded });
+      }
+    });
+    return () => { cancelled = true; };
+  }, []);
+
+  useEffect(() => {
+    import('./tracksPersistence.js').then(({ saveTracks }) => saveTracks(state.tracks.tracks));
+  }, [state.tracks.tracks]);
+
+  useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
         trip: state.trip,
@@ -258,6 +285,7 @@ export function TripStoreProvider({ children }) {
         alerts: state.alerts,
         budget: state.budget,
         dayLoops: state.dayLoops,
+        heroImagePositions: state.heroImagePositions,
       }));
     } catch { /* storage full or unavailable */ }
   }, [state]);
@@ -300,6 +328,9 @@ export function TripStoreProvider({ children }) {
   const setTripPlanningMode = (mode) =>
     dispatch({ type: 'SET_TRIP_PLANNING_MODE', payload: mode });
 
+  const setHeroImagePosition = (url, x, y) =>
+    dispatch({ type: 'SET_HERO_IMAGE_POSITION', payload: { url, x, y } });
+
   return (
     <TripStoreContext.Provider value={{
       ...state,
@@ -308,7 +339,7 @@ export function TripStoreProvider({ children }) {
       setRole, updateLegStatus, loadExpedition, replaceLegs, addStay, removeStay,
       addPoi, removePoi, addAlert, clearAlerts, addBudgetItem,
       addDayLoop, addStopToDayLoop, removeStopFromDayLoop, setAutoLegs,
-      setDayLoopMode, removeDayLoop, setTripPlanningMode,
+      setDayLoopMode, removeDayLoop, setTripPlanningMode, setHeroImagePosition,
     }}>
       {children}
     </TripStoreContext.Provider>
@@ -319,4 +350,15 @@ export function useTripStore() {
   const ctx = useContext(TripStoreContext);
   if (!ctx) throw new Error('useTripStore must be used within TripStoreProvider');
   return ctx;
+}
+
+export function useTracks() {
+  const ctx = useContext(TripStoreContext);
+  if (!ctx) throw new Error('useTracks must be used within TripStoreProvider');
+  return {
+    tracks: ctx.tracks.tracks,
+    past: ctx.tracks.past,
+    future: ctx.tracks.future,
+    dispatch: ctx.dispatch,
+  };
 }

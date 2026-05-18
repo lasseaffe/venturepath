@@ -1,16 +1,21 @@
 import { useState, useCallback } from 'react';
+import ErrorBoundary from './ErrorBoundary.jsx';
 import { TripStoreProvider, useTripStore } from './store/useTripStore';
 import { ExpeditionProvider } from './context/ExpeditionContext';
 import { SquadGearProvider } from './context/SquadGearContext';
+import { AuthProvider } from './context/AuthContext.jsx';
 import { useExpeditionList } from './hooks/useExpeditionList';
 import { OnboardingEngine } from './components/onboarding/OnboardingEngine';
 import vpConfig from './config/venturepath.onboarding.config';
 import LaunchDashboard from './components/dashboard/LaunchDashboard';
 import TripPlanner from './pages/TripPlanner';
-import ArchitectProfile from './components/social/ArchitectProfile';
 import VentureVault from './components/discovery/VentureVault';
 import ExpeditionSelectScreen from './components/trip/ExpeditionSelectScreen';
 import Moodboard from './pages/Moodboard';
+import Studio from './pages/Studio.jsx';
+import Events from './pages/Events.jsx';
+import Auth from './pages/Auth.jsx';
+import Profile from './pages/Profile.jsx';
 
 function AppRouter() {
   const [view, setView] = useState('dashboard');
@@ -30,6 +35,12 @@ function AppRouter() {
       setView('vault');
     } else if (key === 'profile') {
       setView('profile');
+    } else if (key === 'studio') {
+      setView('studio');
+    } else if (key === 'events') {
+      setView('events');
+    } else if (key === 'auth') {
+      setView('auth');
     } else if (key === 'tactical' || key === 'ar' || key === 'ledger') {
       setView('select');
     }
@@ -37,13 +48,7 @@ function AppRouter() {
 
   function handleBackFromPlanner() {
     if (activeExpeditionId) {
-      saveExpedition({
-        id: activeExpeditionId,
-        trip,
-        legs,
-        objectives,
-        manifestSettings,
-      });
+      saveExpedition({ id: activeExpeditionId, trip, legs, objectives, manifestSettings });
     }
     setView('select');
   }
@@ -70,13 +75,11 @@ function AppRouter() {
     );
   }
 
-  if (view === 'moodboard') {
-    return <Moodboard onBackToDashboard={() => setView('dashboard')} />;
-  }
-
-  if (view === 'profile') {
-    return <ArchitectProfile onClose={() => setView('dashboard')} />;
-  }
+  if (view === 'moodboard') return <Moodboard onBackToDashboard={() => setView('dashboard')} />;
+  if (view === 'studio')    return <Studio onBack={() => setView('dashboard')} />;
+  if (view === 'auth')      return <Auth onSuccess={() => setView('dashboard')} />;
+  if (view === 'profile')   return <Profile onClose={() => setView('dashboard')} onSignedOut={() => setView('dashboard')} />;
+  if (view === 'events')    return <Events onBack={() => setView('dashboard')} />;
 
   if (view === 'vault') {
     return (
@@ -106,14 +109,18 @@ function AppRouter() {
 
 function App() {
   return (
-    <TripStoreProvider>
-      <SquadGearProvider>
-        <ExpeditionProvider>
-          <OnboardingEngine config={vpConfig} />
-          <AppRouter />
-        </ExpeditionProvider>
-      </SquadGearProvider>
-    </TripStoreProvider>
+    <ErrorBoundary>
+      <TripStoreProvider>
+        <SquadGearProvider>
+          <ExpeditionProvider>
+            <AuthProvider>
+              <OnboardingEngine config={vpConfig} />
+              <AppRouter />
+            </AuthProvider>
+          </ExpeditionProvider>
+        </SquadGearProvider>
+      </TripStoreProvider>
+    </ErrorBoundary>
   );
 }
 

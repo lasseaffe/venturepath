@@ -9,7 +9,8 @@ const SECTIONS = [
   { id: 'section-stays',      label: 'STAYS' },
   { id: 'section-transport',  label: 'TRANSPORT' },
   { id: 'section-discovery',  label: 'Discovery' },
-  { id: 'section-vault',      label: 'VAULT' },
+  { id: 'section-vault',        label: 'VAULT' },
+  { id: 'section-gatherings',  label: 'GATHERINGS' },
 ];
 
 export default function StickyNav({ activeSection }) {

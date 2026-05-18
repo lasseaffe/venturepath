@@ -1,6 +1,6 @@
 // src/components/dashboard/CommandRail.jsx
 import { useRef, useState } from 'react';
-import { Map, Users, BookOpen, Crosshair, Camera, Scale, User, Moon, Sun } from 'lucide-react';
+import { Map, Users, BookOpen, Crosshair, Camera, Scale, User, Moon, Sun, Flame } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { useTripStore } from '../../store/useTripStore';
 import { useSquadGear } from '../../context/SquadGearContext';
@@ -17,6 +17,7 @@ const NAV_GROUPS = [
     group: 'Discover',
     items: [
       { key: 'vault',      label: 'VentureVault',      icon: BookOpen },
+      { key: 'events',     label: 'Gatherings',        icon: Flame    },
       { key: 'ar',         label: 'AR Ghost Tours',    icon: Camera   },
     ],
   },

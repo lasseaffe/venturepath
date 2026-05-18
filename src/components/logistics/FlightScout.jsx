@@ -45,7 +45,7 @@ function useLocationAutocomplete(query) {
   return { suggestions, searching, clear: () => setSuggestions([]) };
 }
 
-export default function FlightScout({ destination = '', budgetLimit = 2000 }) {
+export default function FlightScout({ destination = '', budgetLimit = 2000, suggestedOrigin = null, onApplyOrigin }) {
   const [priority, setPriority] = useState('CHEAPEST');
   const [showRebook, setShowRebook] = useState(false);
   const [origin, setOrigin] = useState('');
@@ -77,6 +77,24 @@ export default function FlightScout({ destination = '', budgetLimit = 2000 }) {
       </AnimatePresence>
 
       <div className="tactical-panel p-5 space-y-4">
+        {suggestedOrigin && (
+          <div className="mb-3 rounded border border-[#E67E22]/40 bg-[#E67E22]/10 p-3 font-[JetBrains_Mono,monospace] text-xs text-[#D9C5B2]">
+            <div className="mb-1 text-[10px] uppercase tracking-wider text-[#E67E22]">
+              Origin near track start
+            </div>
+            <div>
+              <span className="font-bold text-[#F2EDE8]">{suggestedOrigin.iata}</span>
+              {' — '}{suggestedOrigin.name}, {suggestedOrigin.city} ({suggestedOrigin.distanceKm} km from track start)
+            </div>
+            <button
+              onClick={() => onApplyOrigin?.(suggestedOrigin.iata)}
+              className="mt-2 rounded bg-[#E67E22] px-3 py-1 text-[10px] uppercase tracking-wider text-[#0E1012]"
+            >
+              Use as origin
+            </button>
+          </div>
+        )}
+
         <div className="flex items-center justify-between">
           <h2 className="label-tag">Flight Scout</h2>
           <button
