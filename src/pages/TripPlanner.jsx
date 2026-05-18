@@ -1,4 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
+// gatherings
+import GatheringsHub from '../components/gatherings/GatheringsHub.jsx';
+import { useTripGatherings } from '../lib/gatherings/useGatherings.js';
 import StickyNav from '../components/layout/StickyNav';
 import ToastContainer from '../components/ui/Toast';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -18,6 +21,9 @@ import PublicTransport from '../components/logistics/PublicTransport';
 import VehicleSearch from '../components/logistics/VehicleSearch';
 import PackingEngine from '../components/logistics/PackingEngine';
 import AccommodationSearch from '../components/logistics/AccommodationSearch';
+import FlightScout from '../components/logistics/FlightScout';
+import { suggestFromCoords } from '../utils/flightEngine.js';
+import { useTracks } from '../store/useTripStore.jsx';
 import MustSee from '../components/discovery/MustSee';
 import LocalFlavor from '../components/discovery/LocalFlavor';
 import BasecampScout from '../components/discovery/BasecampScout';
@@ -350,11 +356,30 @@ function TripHeroImage({ destination, heroImageUrl }) {
   );
 }
 
+function TripGatherings() {
+  const { trip } = useTripStore();
+  const { items, loading, reload } = useTripGatherings(trip?.id ?? null);
+  return (
+    <GatheringsHub
+      items={items}
+      loading={loading}
+      tripId={trip?.id ?? null}
+      onReload={reload}
+    />
+  );
+}
+
 export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
   const { trip, legs, stays, pois, dayLoops, manifestSettings, cloning,
           addStopToDayLoop, addDayLoop, setTripPlanningMode, dispatch } = useTripStore();
   const destinationId = trip.destination?.split(',')[0].toLowerCase().replace(/[^a-z]/g, '') ?? 'default';
   const mapCenter = DESTINATION_CENTERS[destinationId] ?? DESTINATION_CENTERS.default;
+  const { tracks } = useTracks();
+  const lastTrack = tracks[tracks.length - 1];
+  const suggestedOrigin = lastTrack?.points?.[0]
+    ? suggestFromCoords({ lat: lastTrack.points[0].lat, lng: lastTrack.points[0].lng })
+    : null;
+
   const { theme } = useTheme();
   const labels = useLabels();
   const [launched, setLaunched] = useState(false);
@@ -364,7 +389,8 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
   const logisticsRef  = useRef(null);
   const staysRef      = useRef(null);
   const transportRef  = useRef(null);
-  const vaultRef      = useRef(null);
+  const vaultRef        = useRef(null);
+  const gatheringsRef   = useRef(null);
   const discoveryRef  = useRef(null);
   const discoveryFetched = useRef(false);
   const [tacticalMode, setTacticalMode] = useState(false);
@@ -439,7 +465,8 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
       { ref: staysRef,      id: 'section-stays' },
       { ref: transportRef,  id: 'section-transport' },
       { ref: discoveryRef,  id: 'section-discovery' },
-      { ref: vaultRef,      id: 'section-vault' },
+      { ref: vaultRef,        id: 'section-vault' },
+      { ref: gatheringsRef,   id: 'section-gatherings' },
     ];
 
     const observer = new IntersectionObserver(
@@ -741,6 +768,11 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
           <section id="section-logistics" ref={logisticsRef} style={{ scrollMarginTop: 48, padding: '24px 24px 0' }}>
             <div className="space-y-4">
               <PackingManifest climate={manifestSettings.climate} days={manifestSettings.days} />
+              <FlightScout
+                destination={trip.destination}
+                suggestedOrigin={suggestedOrigin}
+                onApplyOrigin={(iata) => {/* origin applied via banner */}}
+              />
             </div>
           </section>
 
@@ -791,6 +823,10 @@ export default function TripPlanner({ onBackToDashboard, onOpenMoodboard }) {
             <VentureVault onCloneComplete={() => {
               document.getElementById('section-overview')?.scrollIntoView({ behavior: 'smooth' });
             }} />
+          </section>
+
+          <section id="section-gatherings" ref={gatheringsRef} style={{ scrollMarginTop: 48, padding: '24px' }}>
+            <TripGatherings />
           </section>
         </AppShell>
       </div>
