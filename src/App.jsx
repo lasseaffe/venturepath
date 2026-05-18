@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import ErrorBoundary from './ErrorBoundary.jsx';
 import { TripStoreProvider, useTripStore } from './store/useTripStore';
 import { ExpeditionProvider } from './context/ExpeditionContext';
 import { SquadGearProvider } from './context/SquadGearContext';
@@ -108,16 +109,18 @@ function AppRouter() {
 
 function App() {
   return (
-    <TripStoreProvider>
-      <SquadGearProvider>
-        <ExpeditionProvider>
-          <AuthProvider>
-            <OnboardingEngine config={vpConfig} />
-            <AppRouter />
-          </AuthProvider>
-        </ExpeditionProvider>
-      </SquadGearProvider>
-    </TripStoreProvider>
+    <ErrorBoundary>
+      <TripStoreProvider>
+        <SquadGearProvider>
+          <ExpeditionProvider>
+            <AuthProvider>
+              <OnboardingEngine config={vpConfig} />
+              <AppRouter />
+            </AuthProvider>
+          </ExpeditionProvider>
+        </SquadGearProvider>
+      </TripStoreProvider>
+    </ErrorBoundary>
   );
 }
 
