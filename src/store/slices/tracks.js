@@ -6,6 +6,7 @@ export const DELETE_POINT_RANGE= 'tracks/DELETE_POINT_RANGE';
 export const ADD_WAYPOINT_TO_TRACK = 'tracks/ADD_WAYPOINT';
 export const SET_TRACK_PROFILE = 'tracks/SET_PROFILE';
 export const HYDRATE_ELEVATION = 'tracks/HYDRATE_ELEVATION';
+export const HYDRATE_TRACKS    = 'tracks/HYDRATE';
 export const UNDO              = 'tracks/UNDO';
 export const REDO              = 'tracks/REDO';
 
@@ -151,6 +152,9 @@ export function tracksReducer(state = initialTracksState, action) {
         points: t.points.map((p, i) => elevations[i] != null ? { ...p, ele: elevations[i] } : p),
       }));
       return { ...state, tracks };
+    }
+    case HYDRATE_TRACKS: {
+      return { tracks: action.payload ?? [], past: [], future: [] };
     }
     case UNDO: {
       if (state.past.length === 0) return state;

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { tracksReducer, initialTracksState, ADD_TRACK, APPEND_POINTS, UNDO, REDO, REMOVE_TRACK } from '../../../store/slices/tracks.js';
+import { tracksReducer, initialTracksState, ADD_TRACK, APPEND_POINTS, UNDO, REDO, REMOVE_TRACK, HYDRATE_TRACKS } from '../../../store/slices/tracks.js';
 
 describe('tracks slice', () => {
   it('ADD_TRACK appends a new track with generated id and empty points', () => {
@@ -46,5 +46,17 @@ describe('tracks slice', () => {
     const id = a.tracks[0].id;
     const b = tracksReducer(a, { type: REMOVE_TRACK, payload: { trackId: id } });
     expect(b.tracks).toHaveLength(0);
+  });
+
+  it('HYDRATE_TRACKS replaces the tracks array and clears history', () => {
+    const seed = tracksReducer(initialTracksState, { type: ADD_TRACK, payload: { name: 'X', profile: 'foot' } });
+    const hydrated = tracksReducer(seed, {
+      type: HYDRATE_TRACKS,
+      payload: [{ id: 'h', name: 'Hydrated', profile: 'foot', points: [], segments: [], waypoints: [], stats: { distanceKm: 0, durationH: 0, ascentM: 0, descentM: 0, maxEleM: 0, minEleM: 0, difficulty: 'easy' }, source: 'imported', visibility: 'private', createdAt: '2026-05-13', updatedAt: '2026-05-13' }],
+    });
+    expect(hydrated.tracks).toHaveLength(1);
+    expect(hydrated.tracks[0].id).toBe('h');
+    expect(hydrated.past).toEqual([]);
+    expect(hydrated.future).toEqual([]);
   });
 });

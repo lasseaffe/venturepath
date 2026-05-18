@@ -1,5 +1,5 @@
 import { createContext, useContext, useReducer, useEffect } from 'react';
-import { tracksReducer, initialTracksState } from './slices/tracks.js';
+import { tracksReducer, initialTracksState, HYDRATE_TRACKS } from './slices/tracks.js';
 
 const STORAGE_KEY = 'vp-trip-store';
 
@@ -255,6 +255,20 @@ function loadState() {
 
 export function TripStoreProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, undefined, loadState);
+
+  useEffect(() => {
+    let cancelled = false;
+    import('./tracksPersistence.js').then(({ loadTracks }) => loadTracks()).then(loaded => {
+      if (!cancelled && loaded.length > 0) {
+        dispatch({ type: HYDRATE_TRACKS, payload: loaded });
+      }
+    });
+    return () => { cancelled = true; };
+  }, []);
+
+  useEffect(() => {
+    import('./tracksPersistence.js').then(({ saveTracks }) => saveTracks(state.tracks.tracks));
+  }, [state.tracks.tracks]);
 
   useEffect(() => {
     try {
