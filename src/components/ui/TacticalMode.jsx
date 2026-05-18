@@ -1,7 +1,9 @@
 // TACTICAL-CRITICAL: this component must work offline
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTripStore } from '../../store/useTripStore';
 import { useTheme } from '../../context/ThemeContext';
+import { readCachedGatherings, nextCachedGathering } from '../../lib/gatherings/tacticalCache.js';
+import { loadTacticalTracks } from '../../store/tacticalTrackCache.js';
 
 const CACHED_MESSAGES = [
   'Scout: River crossing waist-deep as of 07:30',
@@ -28,6 +30,9 @@ export default function TacticalMode({ onExit }) {
   const { setTheme } = useTheme();
   const [time, setTime] = useState(new Date());
 
+  const cachedGatherings = useMemo(() => readCachedGatherings(), []);
+  const nextGathering    = useMemo(() => nextCachedGathering(), []);
+
   useEffect(() => {
     setTheme('tactical');
     return () => setTheme('default');
@@ -37,10 +42,15 @@ export default function TacticalMode({ onExit }) {
   const [freshness] = useState('14 min ago');
   const [sosReady, setSosReady] = useState(false);
   const [sosCopied, setSosCopied] = useState(false);
+  const [cachedTracks, setCachedTracks] = useState([]);
 
   useEffect(() => {
     const id = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(id);
+  }, []);
+
+  useEffect(() => {
+    loadTacticalTracks().then(setCachedTracks).catch(() => {});
   }, []);
 
   // Prefer active/in-progress legs over completed; fall back to first if none match
@@ -54,8 +64,16 @@ export default function TacticalMode({ onExit }) {
     `Coords: ${coords.lat}, ${coords.lng}`,
     `Trip: ${trip?.name ?? 'Unknown expedition'}`,
     `Active Leg: ${activeLeg?.from?.label ?? activeLeg?.from ?? '?'} → ${activeLeg?.to?.label ?? activeLeg?.to ?? '?'}`,
+    nextGathering ? `Next Gathering: ${nextGathering.title} @ ${nextGathering.location_label ?? 'unknown'} — ${new Date(nextGathering.starts_at).toLocaleString()}` : null,
+    cachedTracks.length > 0
+      ? (() => {
+          const last = cachedTracks[cachedTracks.length - 1];
+          const p = last?.points?.[last.points.length - 1];
+          return p ? `Track last point: ${p.lat.toFixed(5)}, ${p.lng.toFixed(5)} (${last.name})` : null;
+        })()
+      : null,
     `Status: EMERGENCY — REQUIRES ASSISTANCE`,
-  ].join('\n');
+  ].filter(Boolean).join('\n');
 
   const handleSOS = () => {
     setSosReady(true);
@@ -99,6 +117,25 @@ export default function TacticalMode({ onExit }) {
         {coords.lat < 0 ? '−' : '+'}{Math.abs(coords.lat)}° {coords.lat < 0 ? 'S' : 'N'}, {coords.lng < 0 ? '−' : '+'}{Math.abs(coords.lng)}° {coords.lng < 0 ? 'W' : 'E'} &nbsp; ↗ 042° &nbsp; ▲ 1,240m
       </div>
 
+      {/* Cached Routes */}
+      <div style={{ borderTop: '1px solid #F2A900', paddingTop: 12, marginTop: 12, marginBottom: 12 }}>
+        <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, letterSpacing: '0.1em', color: '#F2A900', marginBottom: 8 }}>
+          CACHED ROUTES
+        </div>
+        {cachedTracks.length === 0 ? (
+          <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, color: '#555', fontStyle: 'italic' }}>
+            No routes cached — import a GPX in TripPlanner
+          </div>
+        ) : (
+          cachedTracks.map(t => (
+            <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'JetBrains Mono, monospace', fontSize: 11, color: '#D9C5B2', marginBottom: 4 }}>
+              <span>{t.name}</span>
+              <span style={{ color: '#F2A900' }}>{t.points?.length ?? 0} pts</span>
+            </div>
+          ))
+        )}
+      </div>
+
       {/* Current objective */}
       <div style={{ borderLeft: '2px solid #2a2a2a', paddingLeft: 10, marginBottom: 12, opacity: activeLeg ? 1 : 0.4 }}>
         <div style={{ fontSize: 9, color: '#666', letterSpacing: '0.1em', marginBottom: 4 }}>CURRENT OBJECTIVE</div>
@@ -111,6 +148,19 @@ export default function TacticalMode({ onExit }) {
           <div style={{ fontSize: 12, color: '#666' }}>No active leg</div>
         )}
       </div>
+
+      {/* Upcoming Gatherings (offline cache) */}
+      {cachedGatherings.length > 0 && (
+        <div style={{ marginBottom: 16 }}>
+          <div style={{ fontSize: 9, color: '#666', letterSpacing: '0.1em', marginBottom: 8 }}>UPCOMING GATHERINGS — CACHED</div>
+          {cachedGatherings.slice(0, 3).map((g, i) => (
+            <div key={i} style={{ fontSize: 11, color: '#F2A900', marginBottom: 6, borderLeft: '2px solid #F2A900', paddingLeft: 6 }}>
+              {g.title} — {g.starts_at ? new Date(g.starts_at).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '?'}
+              {g.location_label ? ` @ ${g.location_label}` : ''}
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Squad comms */}
       <div style={{ flex: 1, marginBottom: 16 }}>
