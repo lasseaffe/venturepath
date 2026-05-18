@@ -3,12 +3,14 @@ import { AnimatePresence } from 'framer-motion';
 import { useTripStore } from '../../store/useTripStore';
 import { parseGpxToTracks } from '../../utils/gpxParser.v2.js';
 import GpxImportDialogV2 from './GpxImportDialog.v2.jsx';
-import { tracksToLegPatch } from '../../services/trackEmitters.js';
+import { tracksToLegPatch, deriveClimateFromTrack, buildCostEntryForTrack, cacheTrackForTactical } from '../../services/trackEmitters.js';
 import { ADD_TRACK } from '../../store/slices/tracks.js';
+import { useExpedition } from '../../context/ExpeditionContext.jsx';
 import { exportLegsToGpx, downloadGpx } from '../../utils/gpxExporter';
 
 export default function GpxPanel() {
   const { trip, legs, dispatch, addLeg, replaceLegs } = useTripStore();
+  const { nominate } = useExpedition();
   const fileInputRef = useRef(null);
 
   const [importing, setImporting] = useState(false);
@@ -78,6 +80,19 @@ export default function GpxPanel() {
         dispatch({ type: 'ADD_LEG', payload: legPatch });
       }
     }
+    // Climate → PackingManifest
+    const climate = deriveClimateFromTrack(pendingTrack);
+    if (climate) {
+      dispatch({ type: 'UPDATE_MANIFEST_SETTINGS', payload: { climate: climate.climateBand } });
+    }
+
+    // Cost → LedgerWorkbench nomination pool
+    const costEntry = buildCostEntryForTrack(pendingTrack);
+    if (costEntry) nominate(costEntry);
+
+    // Track → TacticalMode offline cache (fire-and-forget)
+    cacheTrackForTactical(pendingTrack);
+
     flashSuccess('Track imported as Leg');
     setPendingTrack(null);
     setMultiTrackWarning(false);

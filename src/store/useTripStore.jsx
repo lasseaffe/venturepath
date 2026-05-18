@@ -133,6 +133,8 @@ function reducer(state, action) {
     }
     case 'REPLACE_LEGS':
       return { ...state, legs: action.payload };
+    case 'UPDATE_MANIFEST_SETTINGS':
+      return { ...state, manifestSettings: { ...state.manifestSettings, ...action.payload } };
     case 'ADD_STAY': {
       const stay = { ...action.payload, id: action.payload.id ?? crypto.randomUUID() };
       return { ...state, stays: [...state.stays, stay] };

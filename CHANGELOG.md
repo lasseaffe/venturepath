@@ -366,3 +366,45 @@
 - transitEngine: 4 tests (resolveStop, searchConnections)
 - disruptionEngine: 9 tests (fetchAlerts, checkCascade + cascade propagation)
 - alternativeEngine: 3 tests (Rome2rio success, 429 fallback, both-fail empty)
+
+## 2026-05-18 — Gatherings: All 4 Phases Complete (Auth + Social + Public Discovery + Charters)
+
+### New system
+A full-stack **Gatherings** subsystem — event planning that lives inside expeditions and as standalone socials.
+
+### New SQL migrations
+- `supabase/migrations/20260518_gatherings_public.sql` — Phase 4: verification columns, charter columns, geo-discovery function (`discover_gatherings` via PostGIS `ST_DWithin`), `publish_as_charter` RPC, `clone_charter` RPC, public RLS policies
+
+### New directories
+- `src/lib/gatherings/` — `templates.js`, `api.js` (60+ functions), `useGatherings.js`, `tacticalCache.js`
+- `src/components/gatherings/` — full component tree (10 components)
+- `src/context/AuthContext.jsx` — Supabase Auth wrapper with profile management
+- `src/pages/Auth.jsx`, `src/pages/Profile.jsx`, `src/pages/Events.jsx`
+
+### New components
+- `GatheringsHub` — list/create/filter hub (My Gatherings view)
+- `GatheringCard` — accent-colored card with status dot and privacy badge
+- `GatheringDetail` — 5-tab modal: OVERVIEW / CHAT / LEDGER / ARC / GEAR
+- `GatheringChat` — Supabase Realtime threaded chat with @mention highlight and reply-to
+- `GatheringLedger` — vote on time/location/menu/gear proposals; convener adopts → auto-applies to Gathering
+- `ArcEditor` — drag-free agenda blocks (up▲/down▼) with role tagging
+- `Beacon` — live day-of check-in: Arrived / En Route / Running Late / SOS; GPS-optional
+- `CreateGatheringForm` — 2-step: TemplatePicker → details; sabbath-aware Sunday warning
+- `TemplatePicker` — 7 templates: campfire, summit_push, basecamp_dinner, stargaze, trail_crew, ritual_sendoff, custom
+- `PublicDiscovery` — geo-feed (PostGIS radius query, approximate coords for non-attendees, sabbath filter) + Charter library
+
+### Cross-tool wiring
+- `TacticalMode` — reads `readCachedGatherings()` / `nextCachedGathering()` from localStorage; SOS text extended with next Gathering coords
+- `CommandRail` — Gatherings nav item (Flame icon) routes to Events page
+- `StickyNav` — GATHERINGS step added to TripPlanner scroll nav
+- `TripPlanner` — `section-gatherings` with `TripGatherings` component using `useTripGatherings(trip.id)`
+- `App.jsx` — AuthProvider wrap; events/auth/profile view cases
+- Cross-app streak emission: `gathering_hosted`, `gathering_attended` → HolyFlex `/api/streak/tick`
+
+### Apple compliance
+- All UI copy uses VP dialect: Gathering, Convener, Pioneer, Roster, Arc, Charter, Pinpoint, Beacon
+- Public Gatherings tagged `// REQUIRES UGC POLICY LINK IN APP STORE METADATA`
+- Beacon GPS usage tagged `// REQUIRES LOCATION USAGE DESCRIPTION IN APP STORE CONNECT`
+- Tactical Mode files tagged `// TACTICAL-CRITICAL: this component must work offline`
+- Empty state: "No Gatherings yet. Light one up — pick a Campfire, Stargaze, or Trail Crew template."
+- Every view has ≥ 2 interactive elements
